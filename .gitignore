@@ -1,0 +1,8 @@
+# Remember tooling state (session logs, scratch, pids)
+.remember/logs/
+.remember/tmp/
+**/.remember/logs/
+**/.remember/tmp/
+
+# OS / editor cruft
+.DS_Store
