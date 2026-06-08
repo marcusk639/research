@@ -22,7 +22,7 @@ status: draft — pending gap confirmation
 - **Occupational exposures:** jet fuel (JP-8), hydraulic fluid, oils, solvents and
   other chemicals associated with fighter-aircraft (F-15) maintenance
 - **Deployment:** None
-- **Discharge characterization:** NOT PROVIDED — **critical gap** (see below)
+- **Discharge characterization:** Honorable Discharge — **critical gap** (see below)
 
 ## Current Conditions — CONFIRMED (as reported)
 
