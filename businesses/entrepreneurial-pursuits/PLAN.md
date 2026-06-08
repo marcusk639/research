@@ -1,134 +1,160 @@
-# Research Plan — Venture Viability v2 (Monetization-Aware)
+# Execution Plan of Record — Entrepreneurial Portfolio
 
-**Created:** 2026-06-07
-**Owner:** Marcus
-**Supersedes scope of:** `REPORT.md` (v1) — which assessed the A/B/C venture slate but did
-**not** ingest the current monetization/GTM docs, the treatment-industry software/AI gap, the
-recovery-app→treatment-center bridge, the brother's network beyond CPA firms, or McNeese.
+**Owner:** Marcus · **Created:** 2026-06-08 · **Horizon:** 0–24 months
+**Derived from:** `REPORT.md` v2 §8 (ranking & sequencing) + §9 (open questions).
+**Evidence:** `research-dossier-v2.md`. **History:** `archive/PLAN-research-v2.md` (the
+research plan that produced the v2 report), `archive/REPORT-v1.md`.
 
-This plan grounds every phase in docs already extracted (see Phase 0) and targets the five gaps
-v1 left open. Phases are self-contained and run consecutively; each cites its inputs.
-
----
-
-## Phase 0 — Documentation Grounding (DONE — captured below)
-
-The three venture monetization corpora and the v1 research were read and extracted in full.
-Canonical figures to carry forward (do **not** re-derive):
-
-### detox-recovery = **Next Step Recovery** (nextsteprecovery.io)
-
-- Non-clinical peer-navigation practice + digital products + B2B consulting + veteran pathway. Solo founder.
-- Pricing: $50 support call (live) · $150 nav call (Q3'26) · $450 nav package (Q2'27) · $9.99–19.99 PDFs · **B2B $4k/engagement (range $1.5k–7.5k)** · $1.5k/mo retainer · $20/mo group sub · ~$30 VA Community Care session.
-- Base projection: Y1 ~$18k · Y2 ~$56k · Y3 ~$139k. Profitable Month 3–4, **no external capital**.
-- Capacity ceiling on calls ~$5,100/mo → B2B, digital, grants are the uncapped levers.
-- **Existential risk:** non-clinical scope-of-practice framing (consult attorney Y1).
-- Veteran pathway adds +$42k cumulative/3yr (VA PSS cert, VSO speaking, SAMHSA/Woodruff/Sinise grants).
-
-### regroup = **B2B SaaS for sober-living / Oxford House management** (a.k.a. RATS)
-
-- Operator pays, not resident. Recommended **Option 2 (Balanced)**: Traditional $69/$129/$249, Oxford $49/$89/$299 (chapter).
-- Current pricing ~$20/mo captures only 1–2% of value delivered ($900–2,000/mo).
-- Projection (recommended): Y1 ~$230k rev / breakeven · Y2 ~$864k (54% net) · Y3 ~$1.79M.
-- **Second revenue stream:** Stripe payment processing on resident rent (+$132k→$528k/yr by Y3 at 60% adoption) — take-rate undefined.
-- Moat claims: GPS meeting verification, 300K meetings dataset, **Oxford House World Services partnership**, claimed no direct competitor.
-- **Doc inconsistency to resolve:** Option-2 ARR shows $315k (detail) vs $204k (summary table). Reconcile before relying.
-- No CAC/LTV anywhere. Ecosystem links to detox-recovery/homegroups absent in these files.
-
-### homegroups = **Peer-support app** (AA/NA/SMART tracking; referral engine)
-
-- Freemium + Institutional B2B: Free / $4.99-mo or $39-yr Premium / $9.99-mo Group-Org / **$150–500/mo Institutional**.
-- Role in flywheel: crisis/relapse users → Next Step Recovery; alumni tracking → treatment-center Institutional tier.
-- v1 verdict: "most ambitious, most dangerous" (B2). **Do not start Year 1** — attention black hole, EKRA/42 CFR Part 2 exposure.
-
-### v1 founder facts (locked)
-
-- Tinnitus SC at **10% → already SDVOSB-eligible** (no minimum % required). Pursuing 50%+ separately.
-- USAF F-15 crew chief 2009–13; senior SWE (Meta "Greatly Exceeds", YC, CGI Federal, ad-tech); CS in 3 yrs; autism + high EQ; lived recovery (10+ inpatient).
-- In motion: AI/automation role at brother's ~20-person CPA firm, **$50k base + verbal** raise/revenue-share on advisory line (A3). Lake Charles, LA firm; New Orleans home base.
-- v1 portfolio rank: **1. A3(+A1) advisory $90–120k · 2. B1 sober-living app · 3. B3 coaching · 4. SDVOSB cert · 5. A2 · 6. B2/homegroups.** "Sequence, don't parallelize. A funds B."
-
-### NEW inputs (this session — user-supplied)
-
-- **Brother's firm = TWK CPA Firm** (twk-cpafirm.com), Lake Charles. Stack: **Karbon (workflow) + SharePoint (docs) + Microsoft Teams (comms)**. A1 is already scoped: see `cpa-consulting/.../CPA_Firm_AI_Efficiency_Roadmap_Proposal.md` — 15 ranked initiatives, 4 phases, recommended first pilot = "Tax Season Intake & Workflow Automation" (engagement dashboard + doc intake + missing-item detection + follow-up drafts). Highest-revenue line is Bookkeeping Exception Review + Advisory Report Drafting (the A3 advisory hook).
-- **Brother's network = BOTH broad+high-value AND accounting clients** — cross-industry SWLA owners with real budgets AND a concentrated CPA book. Treat as a warm B2B channel for productized AI/automation/software/consulting, not just accounting referrals.
-- **McNeese (alumnus) angles to pursue:** (1) sell AI/automation/software/consulting to the university; (2) recovery/health-program partnership (nursing/counseling/campus recovery); (3) alumni credibility for regional BD; (4) **adjunct/associate professor — teach or pitch SWE/AI courses** (credibility + talent pipeline + recurring income).
-
-### Five gaps v1 did NOT cover (this plan's targets)
-
-1. Current monetization/GTM for the three ventures (no CAC/funnel/take-rate sizing).
-2. Treatment-industry (rehab/outpatient) software & AI gaps — no incumbent teardown, no TAM.
-3. Recovery-app → treatment-center bridge — named, never designed; EKRA-constrained.
-4. Brother's network **beyond** CPA firms — wealthy Lake Charles business owners, low local tech competition.
-5. McNeese University (alumni) channel — services, recovery/health programs, adjunct teaching.
+> **The one rule:** sequence, don't parallelize — **the CPA engine funds everything else.**
+> The binding constraint is **Marcus's delivery hours**, not demand. Every new track
+> competes for the same time; this plan exists to stop parallelization from starving #1.
+>
+> **The single highest-leverage action in the entire plan:** _paper the verbal TWK
+> revenue-share_ (Decision D1 + Task in Track 1). Until that is in writing, the income
+> engine that funds the whole portfolio is an unmanaged risk.
 
 ---
 
-## Phase 1 — Treatment-Industry Software & AI Gap (the central bet)
+## Decisions to Resolve (gate the plan — only Marcus can answer)
 
-**Goal:** map what rehab/detox/outpatient (SUD) treatment centers actually buy, where incumbents are weak, and where an AI-native builder with lived + technical credibility can win.
+Each maps to `REPORT.md` §9. Resolve the **🔴 blockers** before the work they gate.
 
-**Tasks (copy the question framing, don't assume):**
-
-- Incumbent teardown: Kipu, Sunwave, BestNotes, Ritten, Alleva, NextGen/behavioral, Lightning Step, CaredFor (aftercare), Sobriety Hub (sober-living, $75/staff user). For each: what it does, pricing if public, segment, and stated weaknesses (G2/Capterra complaints, review counts, last-meaningful-update signals).
-- AI-adoption gap: where SUD/behavioral EHR + RCM + aftercare tooling lacks AI (intake automation, clinical note generation, utilization review/auth, census/occupancy prediction, relapse-risk, documentation compliance).
-- Market sizing: # of US SUD treatment facilities (SAMHSA N-SSATS/NSUMHSS), outpatient vs residential split, behavioral-health IT spend, RCM denial-rate pain.
-- Buyer & budget: who signs (owner/operator vs clinical director vs billing), willingness-to-pay, switching cost off an EHR.
-
-**Verification:** every incumbent claim cited to a review platform or vendor page; every market number cited to SAMHSA or a named market report. Flag anything unverifiable as `[VERIFY]`.
-
-**Anti-patterns:** do not assume a product gap exists because incumbents "look dated" — corroborate with review complaints. Do not size TAM from a single blog.
-
----
-
-## Phase 2 — Recovery-App ↔ Treatment-Center Bridge (legally)
-
-**Goal:** design the mechanism connecting homegroups/regroup/detox-recovery to treatment centers without tripping EKRA (§220, up to $200k + 10yr) or 42 CFR Part 2 (post Feb 2026 HIPAA-aligned breach rules).
-
-**Tasks:**
-
-- Map lawful models: SaaS-license-to-center (center pays flat, no per-referral) vs bill-families-direct vs grant-funded. Confirm which of regroup/homegroups Institutional tiers are EKRA-safe.
-- Aftercare-continuity package: treatment center licenses homegroups for alumni tracking + regroup for sober-living placement as a **post-discharge product the center pays for** (not referral fees).
-- Consent/data architecture under 42 CFR Part 2 + BAAs.
-
-**Verification:** cite EKRA statute text + a healthcare-attorney secondary source; cite 42 CFR Part 2 Final Rule. Mark the "needs an attorney sign-off" line explicitly.
+| ID    | Decision                                                                                 | Gates                            | Status |
+| ----- | ---------------------------------------------------------------------------------------- | -------------------------------- | ------ |
+| 🔴 D1 | Will the TWK advisory revenue-share be papered, and on what split?                       | Track 1 (whole engine)           | OPEN   |
+| 🔴 D2 | Real weekly hours available beyond the $50k TWK base role?                               | every track's pace               | OPEN   |
+| D3    | Does the Oxford House World Services partnership exist **in writing**, exclusive?        | Track 3 (regroup)                | OPEN   |
+| 🔴 D4 | Willing to fund a healthcare-regulatory attorney before any treatment-center revenue?    | Track 4, Track 9                 | OPEN   |
+| D5    | Appetite for federal-contracting overhead (SAM, compliance, slow cycles)?                | Track 5 rank                     | OPEN   |
+| D6    | Will the brother **actively co-sell** (the one-sentence audit pitch) or just give names? | Track 1 ceiling ($120k vs $200k) | OPEN   |
+| D7    | Is SDVOSB paperwork (rating docs, SAM/VetCert) actually in hand?                         | Track 5, Track 7                 | OPEN   |
+| D8    | Risk tolerance for recovery-venture scope-of-practice / EKRA exposure?                   | Tracks 4, 6, 9                   | OPEN   |
 
 ---
 
-## Phase 3 — Monetization/GTM Stress-Test (the three ventures)
+## Phase 1 — Months 0–6: Stand up the income engine
 
-**Goal:** pressure-test the doc projections against external benchmarks; fill the missing CAC/LTV/take-rate.
-**Tasks:** benchmark regroup's Option-2 ARR vs Sobriety Hub per-staff-user economics; size the Stripe rent-processing take-rate (typical 2.9%+30¢ → net spread); reconcile the $315k vs $204k discrepancy; sanity-check Next Step Recovery's organic-only funnel (4% lead-magnet, 35% fit→paid) vs published norms; verify EHR/SaaS B2B sales-cycle length for SMB behavioral health.
-**Verification:** each benchmark cited; each doc number marked confirmed / optimistic / unsupported.
+**Theme:** ship proof inside TWK, paper the deal, convert the warm channel to first retainers.
+**Success = first 2–3 advisory retainers signed + revenue-share in writing.**
 
-## Phase 4 — Brother's Network Beyond CPA + Local Tech Vacuum (Lake Charles / SWLA)
+### Track 1 — CPA advisory/automation engine (RANK 1) — _primary focus_
 
-**Goal:** size the warm-channel opportunity the brother's relationships open beyond accounting clients.
-**Tasks:** Lake Charles / SWLA economic base (LNG, petrochemical, healthcare, construction); count of mid-market firms ($5–50M rev) that buy custom AI/automation/software; local tech-services competition density; what "money business with little tech competition" actually buys (AI ops automation, internal tools, data/RCM). Frame A3 advisory as the delivery vehicle.
-**Verification:** cite regional economic-development / Census County Business Patterns data for firm counts.
+- [ ] **Paper the verbal revenue-share** (D1). Written split, what counts as attributable
+      revenue, review cadence, separate from $50k base. **Do this first.**
+- [ ] **Capture TWK baseline metrics** (week 1) before changing anything: document-chase
+      hours, blocked engagements, extension rate, time-to-ready-for-prep.
+- [ ] **Ship the first TWK automation:** the roadmap's recommended pilot —
+      **"Tax Season Intake & Workflow Automation"** (engagement dashboard + document intake + missing-item detection + follow-up drafts) on the Karbon + SharePoint + Teams stack.
+      Source: `~/dev/cpa-consulting/.../CPA_Firm_AI_Efficiency_Roadmap_Proposal.md`.
+- [ ] **Produce one shareable before/after result** by Day 60 ("40 blocked engagements → 12").
+- [ ] **Launch the A3 advisory line:** the "AI Back-Office Audit + Automation Sprint" ladder
+      ($2.5–5k diagnostic → $6–15k sprint → $3–5k/mo retainer). Highest-revenue hook =
+      Bookkeeping Exception Review + Advisory Report Drafting.
+- [ ] **Brother co-sells 3–5 client audits** (D6) — one-sentence intro to the CPA book.
+- **Advance trigger:** first paid advisory engagement. **Kill/pivot:** zero advisory
+  traction by Month 12 → treat TWK as an internal ops job, reassess.
 
-## Phase 5 — McNeese University Channel
+### Track 5/7 — SDVOSB (RANK 5 + 7, cross-cutting) — _parallel, low-effort_
 
-**Goal:** find concrete alumni/partnership entry points across the four user-named angles.
-**Tasks:**
+- [ ] Confirm SDVOSB paperwork in hand (D7); **register SAM.gov + complete SBA VetCert**
+      (~12-day processing). Stack the LED Veteran Initiative / Hudson cert (free; not a
+      hard set-aside — don't overweight).
 
-- **Sell to the university:** McNeese IT/procurement, vendor onboarding, any AI/automation/admin-efficiency pilots; Louisiana higher-ed purchasing norms.
-- **Recovery/health programs:** McNeese nursing, counseling/psychology, social-work, and any collegiate-recovery community — partnership/channel for the recovery apps or lived-experience programming.
-- **Adjunct/associate professor:** McNeese Dept. of Computer Science / Engineering & Computer Science — adjunct hiring path, qualifications (MS typically required; industry-experience waivers?), pitching a SWE/AI course, typical adjunct pay, and the credibility + talent-pipeline value of the title.
-- **Alumni + SBDC:** Louisiana SBDC at McNeese (client referrals to A3 advisory), alumni-business directory, entrepreneurship/veteran-services programs, any incubator/innovation hub.
-  **Verification:** cite McNeese .edu pages, the CS/ECE department page, Louisiana SBDC, and any HR/adjunct posting.
+### Track 8 — McNeese credibility flywheel (RANK 8) — _parallel, low-effort_
 
-## Phase 6 — Synthesis & Opportunities Not Yet Considered
+- [ ] Email **Dr. Srinivasan Ambatipati** (sambatipati@mcneese.edu, ENCS Dept Head) offering
+      a guest CS/AI lecture — de-risks the adjunct credential question (SACSCOC
+      "tested-experience" path).
+- [ ] Email/call **LSBDC at McNeese** (lsbdc.msu@louisianasbdc.org / 337-475-5529), introduce
+      to new director **Dean Day** — two-way referral channel into Track 1. _Best McNeese angle._
 
-**Goal:** integrate Phases 1–5 into a revised portfolio ranking + surface adjacent opportunities matched to the founder's edge (SDVOSB + AI + lived recovery + brother's network + military network).
-**Deliverable:** update `REPORT.md` with a v2 verdict and a ranked, sequenced opportunity set; keep `research-findings.md` as the cited evidence ledger.
-**Verification:** every recommendation traces to a phase finding; flag remaining `[VERIFY]`s and user-only facts (brother's network specifics, military network, McNeese contacts).
+### Track 7b — Content engine — _cheap, compounding_
+
+- [ ] Start the lived-recovery + AI content engine (solves the unmodeled organic-traffic
+      problem for Track 6; doubles as recovery-product distribution). Keep it time-boxed.
 
 ---
 
-## Open questions only the user can answer
+## Phase 2 — Months 6–12: Stack retainers, validate the next bets
 
-- Brother's network: **named** sectors/companies and how warm each intro actually is (breadth confirmed as broad+high-value AND accounting clients; specifics still needed for targeting).
-- Specific McNeese contacts/alumni ties; whether he holds (or can earn) the credential an adjunct post requires.
-- Military network composition (who, where, what they'd buy/refer).
-- Treatment-center contacts already in the NOLA/Lake Charles recovery network.
+**Theme:** reach the $120–200k run-rate; validate (don't build) the expansion tracks.
+**Success = run-rate ≥ $120k + ≥1 validated expansion track.**
+
+### Track 1 (continue)
+
+- [ ] Stack project clients into retainers (62% of SMBs convert project→retainer within 6 mo).
+      Watch the **time collision** — this is the bandwidth ceiling (D2).
+
+### Track 2 — Productize CPA AI-roadmap for other firms (RANK 2)
+
+- [ ] **Validate WTP with 2–3 non-TWK firms** using TWK as the live reference build. Do not
+      build a product until WTP is confirmed. **Kill:** no firm will pay for productized
+      (vs. bespoke) by end of window.
+
+### Track 3 — regroup / sober-living SaaS (RANK 3) — _only if Track 1 cash is flowing_
+
+- [ ] **Gate:** start only if advisory cash is flowing **and** OHWS partnership is in writing (D3).
+- [ ] Resolve the "Regroup" iOS **name collision**; reposition off "no competitor."
+- [ ] Reprice to **flat per-house ~$59–79** (drop per-bed framing; anchor vs Sobriety Hub $65 flat).
+- [ ] Land **one design-partner house** in the brother's network with free migration.
+- [ ] Model Stripe rent-processing as a **pass-through retention feature, not net revenue.**
+- **Reality:** contested market (6+ incumbents), realistic Y1 = low tens of logos (~$30–60k),
+  **not** the $204k/$315k docs. GTM must be partnership/warm-network-led (LTV ~$3.3k → CAC < ~$1,100).
+
+### Track 4 — BH RCM/denial-prevention copilot (RANK 4) — _validate only, no build_
+
+- [ ] Validate WTP with **3–5 treatment-center clients from the CPA book** (% of recovered revenue).
+- [ ] **[VERIFY] 42 CFR Part 2 + HIPAA LLM architecture** — confirm a viable BAA-covered /
+      de-identified model path _before_ any code (D4).
+- **Do not write code this phase.** Best wedge found, but validation-gated.
+
+---
+
+## Phase 3 — Months 12–24: Scale what's validated
+
+**Theme:** scale #1/#2; build only what cleared its gate.
+
+- [ ] **Track 1/2:** scale with 1–2 contractors **only if** an $80–150k custom build appears
+      (the first move toward the fair-wage, people-employing mission). Mind the time collision.
+- [ ] **Track 5:** pursue first SDVOSB **subcontract-to-prime** on-ramp (no past-performance solo).
+- [ ] **Track 4:** if WTP validated **and** Part 2 architecture cleared → build the MVP.
+- [ ] **Track 6 — Next Step Recovery (RANK 6):** keep **strictly D2C / operator-pays**;
+      non-clinical scope-of-practice firewall intact (D8); attorney-reviewed.
+- [ ] **Track 9 — homegroups / aftercare bridge (RANK 9):** remains **deferred / gated behind
+      counsel** (D4). Treat as a flywheel feature, not a standalone B2B line. Incumbents
+      (Kipu, Ritten $35M) are consolidating this adjacency — do not fight the EHR core solo.
+
+---
+
+## Attorney Gate (load-bearing — blocks all treatment-center revenue)
+
+Before **any** dollar from a treatment center or **any** Part 2 data moving between parties
+(Tracks 4 & 9): a licensed healthcare-regulatory attorney (EKRA + AKS + 42 CFR Part 2 +
+**Louisiana** patient-brokering) must bless, in writing: the flat-fee license + FMV memo, the
+§1001.952(d) consulting contract, the TPO + counseling-notes consent + BAA templates, and
+confirm no routing logic steers patients to payers. EKRA is **intent-based**; Louisiana is in
+the **5th Circuit** (has _not_ adopted the defense-friendly _Schena_ reading); penalty
+$200k + 10 yr per occurrence. This gate is D4.
+
+---
+
+## Mission Check (revisit each phase)
+
+The fair-wage, people-employing goal is best realized by **Track 1 → a standalone
+automation/advisory firm that hires** (Phase 3 contractors are the first step). SaaS (Tracks
+2/3/4) and solo coaching (Track 6) employ few. Fastest income and best mission vehicle are the
+same track — the only tension is patience.
+
+---
+
+## Scoreboard (update monthly)
+
+| Metric                            | Target         | Current |
+| --------------------------------- | -------------- | ------- |
+| Revenue-share papered (D1)        | Yes            | —       |
+| TWK reference automation shipped  | Day 60         | —       |
+| Advisory retainers signed         | 2–3 by Mo 6    | —       |
+| Annualized run-rate               | $120k by Mo 12 | —       |
+| SAM.gov + VetCert                 | Mo 3           | —       |
+| Validated expansion track (2 / 4) | ≥1 by Mo 12    | —       |
+| Weekly delivery hours (D2)        | [set]          | —       |
