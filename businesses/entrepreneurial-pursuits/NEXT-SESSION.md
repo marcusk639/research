@@ -27,6 +27,10 @@ people-employing business). Two research passes done:
 4. **`revenue-share-term-sheet.md`** — draft for papering the TWK deal (D1).
 5. Supporting: `research-findings.md` (v1 evidence), `archive/` (v1 report, research plan,
    superseded slate). CPA internal-role detail: `~/dev/cpa-consulting/`.
+6. **Knowledge agent (claude-mem):** corpus `venture-portfolio-v2` is built + primed (33
+   observations). Query it instead of re-reading the dossier for quick lookups —
+   `query_corpus name="venture-portfolio-v2" question="..."`. Rebuild + reprime if new
+   observations accrue.
 
 ## 3. The verdict in five lines
 
