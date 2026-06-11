@@ -60,10 +60,39 @@ and un-ironic — which is precisely the gap the founder's voice can take. That 
 strongest replicable-advantage argument in the set, but it is a positioning bet, not
 a measured outcome.
 
+## 4. Sam Lansky — _The Gilded Razor_ (traditional-publishing debut; positioning template)
+
+> Added in Run 2 (`wf_de68c90b-098`; **verified 3-0**).
+
+- **Path:** Debut prescription-pill addiction memoir (2016, Simon & Schuster), with
+  mainstream pickup — People, Vanity Fair, EW Must List.
+- **How:** Explicit positioning **inside an existing confessional lane** — S&S copy
+  reads "In the vein of Elizabeth Wurtzel and Augusten Burroughs... a powerful new
+  voice to the confessional genre."
+- **Caveat (survivorship):** Lansky was a young writer/editor with **media-industry
+  proximity** — not a true cold start. Use this as a **positioning template** (anchor
+  the work to known confessional authors so readers/agents can place it), not as a
+  from-zero growth case.
+- Source: https://www.goodreads.com/book/show/23492666-the-gilded-razor
+
+## The genre-saturation finding (the backdrop all four sit against)
+
+Run 2's most important case-study finding isn't a person — it's the **genre's
+fatigue**. The standard arc (first use → escalating recklessness → rock bottom →
+epiphany → redemption) is so worn that readers "dismiss new entries before reading"
+(Ringer/Jamison, **verified 2-1**; corroborated by Five Books / Matt Rowland Hill).
+What lets a memoir transcend it is **voice and style, not the story** — Knapp's
+"spare, frank style," Hepola's "wit and candor" (**verified 3-0**); editors confirm
+"writing quality trumps unique story." This is the single most important strategic
+fact in the file: **the wedge is tonal**, and it is the one variable the founder has
+external signal on.
+
 ## Survivorship-bias note
 
 Public case studies over-represent winners. For every _Recovering_ there are
 thousands of abandoned sober Substacks with <100 subscribers that leave no
 trace — consistent with the platform-wide data in [`REPORT.md`](./REPORT.md)
 §Business Model (only ~10,000 publications have ever crossed 1,000 paid subs). Read
-these three as the **upper envelope** of plausible outcomes, not the median.
+these four as the **upper envelope** of plausible outcomes, not the median. Run 2
+captured **no verified _failed_ creators by name** — a real gap; the power-law
+earnings data is the only proxy for the bottom of the distribution.
