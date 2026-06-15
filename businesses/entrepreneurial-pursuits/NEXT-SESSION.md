@@ -25,6 +25,7 @@ people-employing business). Two research passes done:
    advance/kill triggers, attorney gate, scoreboard. _This is what to act from._
 3. **`research-dossier-v2.md`** — 923-line cited evidence ledger (every claim).
 4. **`revenue-share-term-sheet.md`** — draft for papering the TWK deal (D1).
+   _Moved to the `cpa-consulting` repo: `firm-operations/engagement-offer/` (local-only)._
 5. Supporting: `research-findings.md` (v1 evidence), `archive/` (v1 report, research plan,
    superseded slate). CPA internal-role detail: `~/dev/cpa-consulting/`.
 6. **Knowledge agent (claude-mem):** corpus `venture-portfolio-v2` is built + primed (33
@@ -47,7 +48,8 @@ people-employing business). Two research passes done:
 
 ## 4. The single highest-leverage next action
 
-**Paper the verbal TWK revenue-share (Decision D1)** using `revenue-share-term-sheet.md`.
+**Paper the verbal TWK revenue-share (Decision D1)** using `revenue-share-term-sheet.md`
+(now in the `cpa-consulting` repo at `firm-operations/engagement-offer/`).
 The entire portfolio's funding rests on this unwritten agreement. Do this first.
 
 ## 5. Open decisions only Marcus can answer (gate the plan)
