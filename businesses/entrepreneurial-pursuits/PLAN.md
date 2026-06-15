@@ -19,16 +19,66 @@ research plan that produced the v2 report), `archive/REPORT-v1.md`.
 
 Each maps to `REPORT.md` §9. Resolve the **🔴 blockers** before the work they gate.
 
-| ID    | Decision                                                                                 | Gates                            | Status |
-| ----- | ---------------------------------------------------------------------------------------- | -------------------------------- | ------ |
-| 🔴 D1 | Will the TWK advisory revenue-share be papered, and on what split?                       | Track 1 (whole engine)           | OPEN   |
-| 🔴 D2 | Real weekly hours available beyond the $50k TWK base role?                               | every track's pace               | OPEN   |
-| D3    | Does the Oxford House World Services partnership exist **in writing**, exclusive?        | Track 3 (regroup)                | OPEN   |
-| 🔴 D4 | Willing to fund a healthcare-regulatory attorney before any treatment-center revenue?    | Track 4, Track 9                 | OPEN   |
-| D5    | Appetite for federal-contracting overhead (SAM, compliance, slow cycles)?                | Track 5 rank                     | OPEN   |
-| D6    | Will the brother **actively co-sell** (the one-sentence audit pitch) or just give names? | Track 1 ceiling ($120k vs $200k) | OPEN   |
-| D7    | Is SDVOSB paperwork (rating docs, SAM/VetCert) actually in hand?                         | Track 5, Track 7                 | OPEN   |
-| D8    | Risk tolerance for recovery-venture scope-of-practice / EKRA exposure?                   | Tracks 4, 6, 9                   | OPEN   |
+| ID    | Decision                                                                                 | Gates                            | Status                                                                                                  |
+| ----- | ---------------------------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| 🔴 D1 | Will the TWK advisory revenue-share be papered, and on what split?                       | Track 1 (whole engine)           | IN PROGRESS — Marcus + brother meeting to decide split; not yet papered                                 |
+| 🔴 D2 | Real weekly hours available beyond the $50k TWK base role?                               | every track's pace               | ANSWERED (yes) — now split into two numbers; see **Execution Capacity** below. Both counts still [set]  |
+| D3    | Does the Oxford House World Services partnership exist **in writing**, exclusive?        | Track 3 (regroup)                | OPEN                                                                                                    |
+| 🔴 D4 | Willing to fund a healthcare-regulatory attorney before any treatment-center revenue?    | Track 4, Track 9                 | CONDITIONAL — yes _iff_ Track 4 treatment-center revenue proves realistic; gated on that WTP validation |
+| D5    | Appetite for federal-contracting overhead (SAM, compliance, slow cycles)?                | Track 5 rank                     | OPEN                                                                                                    |
+| D6    | Will the brother **actively co-sell** (the one-sentence audit pitch) or just give names? | Track 1 ceiling ($120k vs $200k) | OPEN                                                                                                    |
+| D7    | Is SDVOSB paperwork (rating docs, SAM/VetCert) actually in hand?                         | Track 5, Track 7                 | OPEN                                                                                                    |
+| D8    | Risk tolerance for recovery-venture scope-of-practice / EKRA exposure?                   | Tracks 4, 6, 9                   | OPEN                                                                                                    |
+
+---
+
+## Execution Capacity & Automation (reframes D2)
+
+**The setup:** two Macs — an M4 Pro (48GB) workhorse + an M5 Air (24GB) runner,
+SSH-linked for dual control — running parallel Claude Code / Hermes agent workflows,
+with each project automated toward an autonomous loop "to the extent possible."
+
+**Why this changes D2 but does not dissolve it.** The plan's binding constraint
+(lines 8–9) was always Marcus's _irreplaceable_ hours, not raw throughput. An agent
+fleet adds throughput, so D2 is no longer one number — it is **two**:
+
+| Capacity bucket                       | What it covers                                                                                                               | Automatable?                        | Gates                                                            |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ---------------------------------------------------------------- |
+| **C1 — Non-automatable client hours** | Discovery calls, advisory judgment, the brother co-sell relationship, regulatory-sensitive calls (§7216, EKRA), TWK delivery | **No** — this is the real ceiling   | Track 1 retainer ceiling ($120k↔$200k), all client-facing pace   |
+| **C2 — Agent-supervised hours**       | Prompting, reviewing, course-correcting, integrating autonomous workflows; building/maintaining the fleet                    | Partially — supervision ≠ zero cost | The parallel low-effort tracks (5/7, 8, 7b) + Track 1 collateral |
+
+**The number that still gates the plan is C1.** Two machines add zero C1 hours —
+they can't take a client call or own the brother relationship. So the retainer
+ceiling (lines 85–86) and the contractor-hire trigger (lines 117–119) are still
+priced in C1, unchanged.
+
+**What the fleet genuinely buys: leverage on C2 work.** Good fit for the tracks the
+plan already tags _parallel, low-effort_ — content engine (7b), SDVOSB paperwork
+drafting (5/7), McNeese outreach drafts (8), validation research — and, highest-value,
+**Track 1's own automatable deliverables** (the TWK reference automation, the
+before/after audit collateral, diagnostic deliverables).
+
+**Two guardrails (load-bearing):**
+
+1. **Point the fleet _at_ Track 1, not away from it.** Tracks 3/4/6/9 are
+   validate-only / gated / deferred (lines 94–125). Pouring even _automated_
+   engineering into them builds what the plan says not to build yet. Highest leverage
+   is accelerating Track 1's collateral, not spreading the fleet across deferred bets.
+2. **"Autonomous" is not "free" — supervision is paid in C2, which competes with C1.**
+   Managing a fleet across many projects can become its own time sink that starves the
+   CPA engine — the exact failure mode "sequence, don't parallelize" (line 8) exists to
+   prevent. Automation lowers a parallel track's _marginal_ cost; it does not zero it.
+
+**Security gate (TWK = real financial PII):** an SSH-linked, multi-machine,
+autonomous-agent setup over §7216-covered client data is a live exposure (data
+governance was load-bearing in the back-office offer). Sandbox the agents, scope their
+filesystem/network permissions, and keep client data off any box running unattended
+workflows.
+
+**Net:** the two-machine fleet is a force-multiplier on **C2** and on Track 1's
+automatable collateral — treat it as _how the parallel tracks get executed cheaply_,
+not as permission to violate sequence-don't-parallelize. The plan still owes a **C1
+number** (non-automatable client hours/week) before it can pace anything.
 
 ---
 
@@ -43,9 +93,21 @@ Each maps to `REPORT.md` §9. Resolve the **🔴 blockers** before the work they
       revenue, review cadence, separate from $50k base. **Do this first.**
 - [ ] **Capture TWK baseline metrics** (week 1) before changing anything: document-chase
       hours, blocked engagements, extension rate, time-to-ready-for-prep.
-- [ ] **Ship the first TWK automation:** the roadmap's recommended pilot —
-      **"Tax Season Intake & Workflow Automation"** (engagement dashboard + document intake + missing-item detection + follow-up drafts) on the Karbon + SharePoint + Teams stack.
-      Source: `~/dev/cpa-consulting/.../CPA_Firm_AI_Efficiency_Roadmap_Proposal.md`.
+- [ ] **§7216 data-path gate (pre-build, blocking):** confirm the automation processes
+      taxpayer return information **inside the firm's existing M365 tenant**; do NOT pipe
+      client docs to an external LLM API unless the firm signs off and the architecture
+      qualifies under §7216's auxiliary-service-provider exception. Resolve the data path
+      _before_ writing code, not after.
+- [ ] **Ship the first TWK automation — narrowed wedge (not the full 5-part bundle):**
+      **Missing-Item Detection + Client Follow-Up Draft Generator, scoped to individual
+      1040s**, draft-only with human approval, on the existing SharePoint + Karbon. Chosen
+      because it removes the staff's #1 daily drudgery (so adoption is _pull, not push_), needs
+      no accounting-system integration, and is shippable solo inside the C1 ceiling. Source:
+      `~/dev/cpa-consulting/docs/CPA_Firm_AI_Efficiency_Roadmap_Proposal.md` (initiatives #2 + #3).
+- [ ] **Fast-follow (not first):** the **engagement dashboard** (roadmap exec-priority #1) is
+      the strategic backbone but its value accrues to partners, not line staff — weaker first
+      adoption. Let a thin "what's blocked" view fall out of the wedge above; build the full
+      dashboard only after the wedge earns trust.
 - [ ] **Produce one shareable before/after result** by Day 60 ("40 blocked engagements → 12").
 - [ ] **Launch the A3 advisory line:** the "AI Back-Office Audit + Automation Sprint" ladder
       ($2.5–5k diagnostic → $6–15k sprint → $3–5k/mo retainer). Highest-revenue hook =
@@ -157,4 +219,5 @@ same track — the only tension is patience.
 | Annualized run-rate               | $120k by Mo 12 | —       |
 | SAM.gov + VetCert                 | Mo 3           | —       |
 | Validated expansion track (2 / 4) | ≥1 by Mo 12    | —       |
-| Weekly delivery hours (D2)        | [set]          | —       |
+| Weekly C1 client hours (D2)       | [set]          | —       |
+| Weekly C2 agent-supervised hours  | [set]          | —       |
