@@ -6,3 +6,8 @@
 
 # OS / editor cruft
 .DS_Store
+
+# Sensitive personal records (SSN, DOB, medical/PHI) — never track in git
+va-disability/personal-records/
+va-disability/ClaudeDisabilityAssets/
+va-disability/ClaudeChat/
