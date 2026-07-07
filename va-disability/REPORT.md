@@ -177,6 +177,36 @@ Poquette would confirm in-service disclosure timing, which his actual executed s
 and the personal statement and the 21-0781 don't agree with each other on which facilities their claimed
 records release covers. Both are awareness items for the veteran/VSO, not things fixable by editing a file.
 
+## 2026-07-06 update — projected reassessment if all findings are resolved
+
+**[`PROJECTED-REASSESSMENT-2026-07-06.md`](./PROJECTED-REASSESSMENT-2026-07-06.md)** is a hypothetical,
+not-yet-real scenario analysis: it assumes every `CLAIM-ASSESSMENT.md` finding gets a resolution and that
+Erica's forthcoming statement adds concrete OCD, despair, cognitive, and hygiene detail plus a December
+2024 elaboration, then re-scores the odds and action plan against that assumed future state. It does not
+change anything about the claim as it actually stands today — read the documents above for that. Key
+takeaway: Erica's statement is now one of the last remaining channels for written symptom detail, since
+the personal statement and Cherie's nexus letter are already signed; and the sleep study remains the
+single highest-leverage action regardless of how the mental-health rating lands.
+
+## 2026-07-06 update — veteran clarifications on SUD origin, MST disclosure, and WHODAS
+
+Three new facts from the veteran, applied across `COMPREHENSIVE-FINDINGS-2026-07.md` §0.3/§0.4/§0.7,
+`CLAIM-ASSESSMENT.md` §1.1/§1.4, `PRE-POST-SERVICE-SEVERITY-CONTRAST.md`, `MASTER-STRATEGY.md`, and
+`CP-EXAM-PREP-MENTAL-HEALTH.md`:
+
+- **A separate pre-service prescribed-medication episode**, distinct from the Kratom self-report already
+  in the record — a medication prescribed for an unrelated reason that he didn't know was an opioid until
+  told so later in treatment, causing zero SUD issues at the time. His actual SUD began only after
+  discharge and the 2012 assault. This is the veteran's own account, not yet corroborated by a specific
+  document, but consistent with (not contradicting) the existing clinical-record self-reports.
+- **His own explanation for the MST non-disclosure pattern:** genuine denial and active avoidance at the
+  time, a recognized pattern specifically for male MST survivors, which Cherie can corroborate clinically.
+- **A signed WHODAS 2.0 assessment reportedly exists**, from a psychologist, confirming high-severity
+  GAD/MDD scores — status update only, no file provided to this corpus yet.
+
+Also noted: Erica's statement is being finalized with concrete, factually-recalled examples (status
+update, no file yet).
+
 ## Superseded / historical
 
 [`knowledge-base.md`](./knowledge-base.md), [`veteran-profile.md`](./veteran-profile.md),

@@ -93,6 +93,14 @@ explain the 2015 explicit denial and the repeated "none reported" trauma screens
 clinical literature on delayed male-MST disclosure (already cited in the existing Cherie-letter guides).
 Leaving this for a VA rater or C&P examiner to discover unaddressed is the second-largest risk in the file.
 
+**The veteran's own explanation (2026-07-06):** he states the denials reflect genuine denial and active
+avoidance of discussing the assault at the time — not a fabricated cover story — and that this is a
+recognized, common pattern specifically for male MST survivors. Cherie Mills is able to corroborate this
+clinically from her own treatment relationship with him. Her received nexus letter already states this
+kind of framing generally ("commonly not categorized... as 'assault,'" `personal-records/supporting-docs/
+nexus-letter-cherie.md`); the veteran's own personal statement / C&P exam answer should say the same thing
+in his own words — denial and avoidance, not concealment of a fabricated event.
+
 ### 0.4 The SUD "iatrogenic onset" theory conflicts with self-reported age-18 first use
 
 The personal statement and multiple prep documents lean on a theory that the May 2011 in-service ankle
@@ -117,6 +125,21 @@ claim-consistency-checker pass confirmed the denial is asserted as fact in the *
 personal statement** and the **actual VA Form 21-0781** — both already submitted or submission-ready. See
 §0.8 for the specifics and why this changes the urgency of resolving this from "pick the better theory" to
 "decide what to do about an already-signed document that asserts the weaker one."
+
+**NEW clarification per the veteran (2026-07-06):** in addition to the Kratom self-report above, there was a
+**separate, distinct pre-service episode** — a medication prescribed for an unrelated reason, which the
+veteran states he did not know was an opioid until told so later, during treatment. Per the veteran, this
+prescribed use caused **zero substance-use disorder or associated problems at the time** — it was taken as
+directed, with no misuse. The veteran states his actual SUD (the diagnosable disorder) only began **after
+discharge and after the 2012 in-service assault** — consistent with the secondary-to-PTSD/MDD/GAD theory,
+not a pre-existing disorder. **This is the veteran's own account, not yet corroborated by a specific document
+in this corpus** — no Victory/Starlite record reviewed so far describes a prescribed medication this way
+(the existing self-reports describe "first opiate/heroin use at age 18" and "Kratom" without this framing).
+This isn't a contradiction to resolve by picking one account over the other — both the clinical records'
+phrasing and the veteran's fuller account can be true simultaneously (a prescribed medication is a distinct,
+separate fact from recreational Kratom experimentation) — but the veteran's fuller context should be reflected
+honestly in his own personal statement and in what he tells Cherie/the C&P examiner, since the bare clinical-
+record phrasing alone reads more ambiguously than his actual account.
 
 ### 0.5 OCD is a real, clinically diagnosed condition — but it's missing from the claim's core documents
 
@@ -158,6 +181,12 @@ functional-assessment data point referenced anywhere in the file set (it's liste
 `Materials_Reviewed_for_Cherie.pdf`, but the actual file is unusable). **Re-download this from whatever
 platform generated it** (likely the "Recover" FMLA-vendor portal, since the DASS-21 and psych-eval documents
 trace to the same source) before it's needed for the claim.
+
+**UPDATE (2026-07-06):** per the veteran, a signed WHODAS 2.0 assessment from a psychologist now exists,
+confirming high-severity GAD and MDD scores on each subscale. **No file has been provided to this corpus
+yet** — this is a status update, not a received document. Once the actual file is available, add it to
+`personal-records/supporting-docs/` and get it reviewed (via `va-claim-document-analyst`, the same process
+used for the nexus letter) before treating its specific figures as confirmed for use in the claim.
 
 ### 0.8 NEW (2026-07-05) — Signed documents already assert the contradicted opioid-origin claim
 
@@ -591,7 +620,9 @@ task. It didn't affect any finding above — noted here only for the record.
    independent evidence. Also still needed: fix the letter's DOB/name/phone errors (§0.13).
 4. **Obtain Goff's buddy statement.**
 5. **Resolve the F15.20 Amphetamine SUD diagnosis** with Harmony Junction Recovery.
-6. **Re-download the WHODAS 2.0 assessment.**
+6. ~~Re-download the WHODAS 2.0 assessment.~~ **UPDATE (2026-07-06):** per the veteran, a signed
+   psychologist assessment now exists confirming high-severity GAD/MDD scores — file not yet provided
+   to this corpus; add and review it (see §0.7) once available.
 7. ~~**Verify the correct DC code for OCD** (9403 vs. 9404) against the current CFR.~~ — **DONE (2026-07-05):
    it's 9404** (see §9 item 10 above).
 8. **Confirm Reyes's own DD-214/service-date overlap** through late 2013.
@@ -604,7 +635,10 @@ task. It didn't affect any finding above — noted here only for the record.
 11. **Pursue the sleep apnea secondary claim** (described repeatedly as the single highest-value lever
     after the core mental health rating) — get a sleep study scheduled if not already done.
 12. **Reconcile the pre-service (age 18) anxiety/depression self-reports** with the direct-service-connection
-    theory for MDD/GAD, since an examiner may notice this and ask about it.
+    theory for MDD/GAD, since an examiner may notice this and ask about it. **UPDATE (2026-07-06):** the
+    veteran has also clarified a separate pre-service prescribed-medication episode (see §0.4) that
+    strengthens the no-pre-existing-disorder framing for SUD specifically — say this in his own words in
+    the personal statement.
 13. ~~Decide, with a VSO/VA-accredited attorney, what to do about the signed personal statement and 21-0781
     already asserting the contradicted opioid-origin claim (§0.8).~~ **RESOLVED 2026-07-06** (veteran
     confirmation) — see Task B1.

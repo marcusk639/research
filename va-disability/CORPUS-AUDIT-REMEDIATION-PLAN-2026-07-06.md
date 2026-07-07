@@ -230,6 +230,10 @@ itself as a first draft — that needs a real answer before this is treated as c
 `DOCUMENT-PROVENANCE.md` to log the new artifact's real origin, and mark the current
 `Erica Personal Statement.md`/`Spouse_Statement_Draft_Erica.converted.txt` as superseded
 (or deleted, per the veteran's decision in Task B3).
+**STATUS (2026-07-06, per the veteran):** the statement is being finalized to include concrete
+examples Erica can factually recall herself. No file has been provided to this corpus yet —
+this is a status update, not a received document. Once the file exists, apply this plan's role
+above.
 
 ### Task B3: Decide whether to delete/mark superseded the scripted Erica draft
 
