@@ -11,6 +11,12 @@ rating without TDIU**, on realistic, truthfully-documented evidence?
 
 ## Start here
 
+**[`PATH-TO-MAXIMUM-RATING-2026-07-06.md`](./PATH-TO-MAXIMUM-RATING-2026-07-06.md)** is
+the single consolidated, sequenced roadmap — read this first if you want "what do I do,
+in order, to reach the maximum rating." It doesn't replace the documents below; it points
+into each of them at the right moment and gives one prioritized task list plus the current,
+honestly-labeled odds for 70%/90%/100%.
+
 **[`MASTER-STRATEGY.md`](./MASTER-STRATEGY.md)** is the current working strategy —
 it supersedes `strategy.md`, `CLAIM-EXECUTION-PLAN.md`, `knowledge-base.md`, and
 `DO-THIS-WEEK.md` (kept for history, not for use).
@@ -237,6 +243,32 @@ and her care shouldn't wait on the claim timeline.
 update her letter to reflect both delusions, and Erica's forthcoming statement is expected to
 independently corroborate them. Neither exists yet in this form; treat the current framing as provisional
 until the actual updated letter and Erica's actual statement are in hand.
+
+## 2026-07-06 update (later same day) — Poquette/Cherie corrections confirmed expected; Erica's content specifics confirmed as fact; C&P prep expanded to the full 4.130 criteria
+
+Three developments, applied to `PROJECTED-REASSESSMENT-2026-07-06.md` and `CP-EXAM-PREP-MENTAL-HEALTH.md`:
+
+- **Poquette will correct/supplement his statement, and Cherie's nexus letter will be corrected** — both
+  confirmed expected by the veteran, not yet-executed documents. The Poquette correction's evidentiary
+  value is genuinely uncertain: if his statement affirmatively restores in-service disclosure timing, it
+  helps; if he honestly can't recall (a normal, credible answer after 13+ years), that doesn't move
+  anything, and shouldn't be pressed for more precision than he actually has. A planned edit to lessen
+  Poquette's "doing well now" language was confirmed a legitimate accuracy fix (clarifying "now finally in
+  therapy for it" vs. a misreadable "successfully coping"), not a §0.1-style suppression of true favorable
+  facts — this was checked directly given the pattern's history in this corpus.
+- **Erica's OCD/despair/cognitive/hygiene/December-2024 additions are now confirmed specific facts, not
+  just planned statement content:** she regularly helps him with hygiene/self-care (a direct match to
+  38 CFR 4.130's 100%-tier "intermittent inability to perform ADLs" language — the first anchor of this
+  kind anywhere in this corpus), passive suicidal ideation occurs twice daily (morning and night) plus
+  additional episodes triggered by panic attacks or shame/guilt, and the December 2024 job loss is
+  attributed to his depression and SUD specifically, not a separate economic event. `PROJECTED-
+REASSESSMENT-2026-07-06.md`'s odds were revised accordingly: 90% MH to ≈60–70%, 100% schedular MH to
+  ≈35–45% (both REASONED ESTIMATEs, up from the same document's first-draft figures of ≈50–60% and
+  ≈25–35%) — the biggest single driver of that increase is the hygiene/ADL detail specifically.
+- **`CP-EXAM-PREP-MENTAL-HEALTH.md` now includes the complete 38 CFR 4.130 70%/100%-tier symptom lists**,
+  each mapped against where the veteran currently stands, so nothing genuinely present goes unmentioned at
+  the C&P exam out of habit or self-censorship — not a target list to reach for, per _Mauerhan_/
+  _Vazquez-Claudio_'s existing guidance already in that document.
 
 ## Superseded / historical
 
