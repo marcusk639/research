@@ -23,7 +23,7 @@ A claim that only makes the occupational case will map more naturally to a lower
 - **Depression:** frequency, duration, what a depressive episode actually looks like day-to-day, anhedonia, sleep/appetite/energy changes.
 - **Anxiety/panic:** frequency of panic attacks, physical symptoms (racing heart, chest tightness, shortness of breath), what triggers them, how long they last, whether they occur in specific settings (work, crowds) or unpredictably.
 - **Obsessions/compulsions (OCD) — don't leave this out.** If genuinely present: describe intrusive thoughts, any rituals or checking behaviors, how much time they consume, and how they interfere with routine activities or work. VA's own rating criteria specifically list "obsessional rituals which interfere with routine activities" as a named symptom — this is directly relevant if it's real for you.
-- **Hypervigilance/avoidance:** startle response, scanning environments, avoiding reminders of the stressor, avoiding certain people/situations/topics.
+- **Hypervigilance/avoidance:** startle response, scanning environments, avoiding reminders of the stressor, avoiding certain people/situations/topics. This includes persistently monitoring your surroundings to check that no one is present who intends harm to you or your family — a well-established, core PTSD symptom, straightforward to describe honestly.
 - **Intrusion/flashbacks:** nightmares, intrusive memories, dissociation.
 - **Sleep:** current sleep pattern, medications, how long-standing the disruption is (note the in-service Ambien/Restoril treatment as historical continuity if relevant).
 - **Substance use:** be honest about current status. Frame it, if genuinely true, as connected to managing the psychiatric symptoms rather than a separate, unrelated problem — this is the theory the actual treatment record supports.
@@ -31,21 +31,29 @@ A claim that only makes the occupational case will map more naturally to a lower
 - **Concentration/memory:** difficulty focusing, forgetfulness, difficulty completing tasks. You've indicated you rely on Erica to help you remember certain things — describe this concretely and honestly (what kinds of things, how often). Be precise about severity: general forgetfulness/reliance on a spouse supports the overall severity picture and the "deficiencies in most areas" (70%-tier) language; the regulation's specific 100%-tier language ("memory loss for names of close relatives, own occupation, or own name") describes something more severe and specific — only describe it that way if it's genuinely that severe. Don't round up.
 - **Negative, catastrophic beliefs about the world (a real PTSD symptom — describe it accurately, not as "delusions"):** you've indicated a persistent, exaggerated conviction that the world is on the brink of destruction, headed toward civil war or dictatorship. This maps to a well-documented PTSD symptom category — DSM-5 Criterion D's "persistent and exaggerated negative beliefs or expectations about oneself, others, or the world" (its own example: "the world is completely dangerous"). **Important distinction, confirmed with you directly:** you describe this as anxious, catastrophic preoccupation that you can recognize as probably excessive when you step back — not a fixed, unshakeable certainty. That's the accurate way to describe it to Cherie and the examiner. Avoid the word "delusional" — clinically, a delusion is a fixed false belief resistant to contrary evidence, which is a different (and much rarer) thing than catastrophic/anxious preoccupation, and using that specific word inaccurately risks inviting scrutiny for something else entirely rather than accurately conveying a real, already-recognized PTSD symptom.
 
-## A separate, more serious symptom — talk to Cherie before the exam, not just at it
+## Two separate, more serious symptoms — talk to Cherie before the exam, not just at it
 
-If you're planning to describe a fixed belief that a specific person is following you and plans to
-kill you (with corresponding protective plans), **stop and talk to Cherie about this before the C&P
-exam, not for the first time during it.** You've confirmed directly that this feels true regardless
-of evidence, not something you can reason your way past — that's clinically a persecutory delusion,
-which is a different and more serious thing than the catastrophic-worldview item above, and it isn't
-currently reflected anywhere in Cherie's letter or in the record this corpus has reviewed. Two
-separate reasons this matters, in order of importance: (1) this deserves real, direct clinical
-attention as its own matter, independent of anything about the claim; (2) introducing something
-this specific and severe for the first time at the exam, with nothing in the record backing it up,
-risks reading as inconsistent rather than as strong evidence — even though "persistent delusions" is
-explicit 100%-tier language if it's genuinely documented and connected to your service-connected
-conditions. Confirm with Cherie first whether/how this should be reflected in her clinical notes or
-diagnosis. See `COMPREHENSIVE-FINDINGS-2026-07.md` §0.14 and `CLAIM-ASSESSMENT.md` §0.4.
+You've described two distinct fixed beliefs, confirmed as genuine delusions rather than anxious
+preoccupations:
+
+- **Persecutory:** a specific person is following you and plans to kill you (with corresponding
+  protective plans). Not yet reflected in Cherie's letter or any record this corpus has reviewed —
+  she's aware of it, but it isn't yet in her signed letter or documented notes as far as this corpus
+  can see.
+- **Grandiose:** a belief in special importance, power, or a special mission/identity. Confirmed as
+  already part of Cherie's own clinical assessment — she has assessed this and will document it — but
+  it's also not in the signed letter this corpus has in hand.
+
+**Stop and talk to Cherie about both before the C&P exam, not for the first time during it.** Two
+reasons, in order of importance: (1) these deserve real, direct clinical attention as their own
+matter, independent of anything about the claim; (2) introducing something this specific and severe
+for the first time at the exam, without it appearing anywhere in the record or her letter, risks
+reading as inconsistent rather than as strong evidence — even though "persistent delusions" is
+explicit 100%-tier language if genuinely documented and connected to your service-connected
+conditions, and having two distinct delusion domains is more than one. Confirm with Cherie first
+whether/how each should be reflected in her clinical notes, and whether her letter should be
+supplemented to include what she's already assessed for the grandiose one specifically. See
+`COMPREHENSIVE-FINDINGS-2026-07.md` §0.14 and `CLAIM-ASSESSMENT.md` §0.4.
 
 ## Be ready for these specific questions
 

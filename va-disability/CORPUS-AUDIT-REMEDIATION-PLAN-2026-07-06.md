@@ -336,25 +336,31 @@ Depending on her answer, the veteran/VSO may want to ask her for a corrected add
 that also fixes the DOB/name/phone errors (Task B10) and restates the SUD rationale in her
 own words for the version actually submitted.
 
-### Task B15: NEW (2026-07-06) — Confirm with Cherie whether/how the fixed persecutory belief should be reflected in the clinical record
+### Task B15: NEW (2026-07-06) — Confirm with Cherie whether/how two confirmed delusions (persecutory and grandiose) should be reflected in the clinical record
 
 **Blocked on:** Cherie Mills (or whichever treatment provider is already aware) + veteran.
-**What this is:** the veteran states he intends to describe at the C&P exam a fixed, certain
-belief that a specific person is following him and plans to kill him over something from ~18
-years ago, plus corresponding protective plans (a nuclear bunker). He confirms directly this is
-a fixed belief, not an anxious overestimation — clinically a persecutory delusion, not a
-standard PTSD/GAD/MDD/OCD symptom — and that a treatment provider is already aware of it. See
-`COMPREHENSIVE-FINDINGS-2026-07.md` §0.14 for the full context and why this needs care, not just
-logging as evidence.
-**What unblocks it:** confirm directly with Cherie (a) whether this is reflected in her ongoing
-treatment notes and current diagnostic picture, and (b) whether her letter/diagnosis should be
-supplemented or amended to accurately capture it — for the veteran's actual clinical care first,
-and only secondarily for how it's presented at the C&P exam. **This should happen before the
-exam** — introducing a symptom this specific and severe for the first time at the exam, with
-no grounding anywhere in the existing clinical record or Cherie's letter, is the same
-credibility-risk pattern this corpus has flagged elsewhere (undocumented severe symptom
-appearing only under exam pressure), and more importantly, his actual care shouldn't wait on
-the claim timeline.
+**What this is:** the veteran describes two distinct confirmed delusions, at different stages of
+documentation:
+
+1. **Persecutory** — a fixed, certain belief that a specific person is following him and plans
+   to kill him over something from ~18 years ago, plus corresponding protective plans (a nuclear
+   bunker). Confirmed as a fixed belief, not an anxious overestimation. A treatment provider is
+   aware of it, but it's not yet in Cherie's signed letter or documented notes as far as this
+   corpus can see.
+2. **Grandiose** — a belief in special importance, power, or a special mission/identity.
+   Confirmed as **already part of Cherie's own clinical assessment** — a materially different
+   confirmation status than item 1 — but also not yet in her signed letter.
+
+Neither is a standard PTSD/GAD/MDD/OCD symptom. See `COMPREHENSIVE-FINDINGS-2026-07.md` §0.14
+for the full context and why this needs care, not just logging as evidence.
+**What unblocks it:** confirm directly with Cherie (a) whether both are reflected in her ongoing
+treatment notes and current diagnostic picture — especially the persecutory one, whose
+documentation status is less clear than the grandiose one — and (b) whether her letter/diagnosis
+should be supplemented or amended to accurately capture what she's already assessed. **This
+should happen before the exam** — introducing symptoms this specific and severe for the first
+time at the exam, with no grounding in the letter actually in hand, is the same credibility-risk
+pattern this corpus has flagged elsewhere, and more importantly, his actual care shouldn't wait
+on the claim timeline.
 
 ---
 

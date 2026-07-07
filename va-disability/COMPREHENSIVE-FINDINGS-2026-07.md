@@ -289,26 +289,44 @@ Three lower-severity, uncontested clerical errors (wrong DOB, patient surname sp
 letter, transposed phone number) remain in the letter but are confirmed by the veteran as minor and not a
 submission blocker.
 
-### 0.14 NEW (2026-07-06) — A fixed persecutory belief, confirmed as a genuine delusion, not yet reflected anywhere in the corpus
+### 0.14 NEW (2026-07-06) — Two distinct confirmed delusions (persecutory and grandiose), at different stages of clinical documentation
 
 The veteran states he intends to describe at the C&P exam a **fixed, certain belief that a specific person
 is following him and plans to kill him over something from approximately 18 years ago** (which would predate
 his November 2009 enlistment), along with corresponding real-world protective action (plans for a nuclear
-bunker). **Directly confirmed with the veteran (2026-07-06):** this is a fixed belief that feels true
-regardless of evidence, not an anxious overestimation he recognizes as possibly exaggerated — clinically,
-this is a **persecutory delusion**, not the catastrophic-worldview symptom addressed at §0.13-adjacent notes
-in `CP-EXAM-PREP-MENTAL-HEALTH.md`. **The veteran also confirms Cherie (or another treatment provider) is
-already aware of this** — it is not new information to his care team.
+bunker). Directly confirmed with the veteran: this is a fixed belief that feels true regardless of evidence,
+not an anxious overestimation he recognizes as possibly exaggerated — clinically, this is a **persecutory
+delusion**, not the catastrophic-worldview symptom addressed in `CP-EXAM-PREP-MENTAL-HEALTH.md`. He also
+confirms Cherie (or another treatment provider) is aware of it, though it is not yet reflected in her signed
+nexus letter or any record reviewed for this corpus.
 
-**Why this needs careful handling, not just logging as another symptom:**
+**Separately, and confirmed as already Cherie's own clinical assessment (2026-07-06):** the veteran also
+describes **delusions of grandeur** — a belief in special importance, power, or a special mission/identity —
+which he states Cherie has already clinically assessed and will document in her records. This is a genuinely
+distinct symptom category from the persecutory belief above (grandiose vs. persecutory content), and, unlike
+the persecutory belief, is confirmed as an existing clinical characterization rather than something the
+veteran is anticipating. It is not, however, present anywhere in the signed nexus letter this corpus already
+reviewed (`personal-records/supporting-docs/nexus-letter-cherie.md`, 2 July 2026), which lists only standard
+PTSD/GAD/MDD/OCD/SUD symptoms — meaning her broader clinical assessment currently runs ahead of what's in the
+one document this corpus has in hand from her.
+
+**Also confirmed (2026-07-06), and unambiguous, no clarification needed:** persistent hypervigilance —
+constantly monitoring the environment to ensure no one is present who intends harm to the veteran or his
+family. This is a well-established, core PTSD symptom (DSM-5 Criterion E, arousal/reactivity), already listed
+in `CP-EXAM-PREP-MENTAL-HEALTH.md`'s symptom checklist — no distinct clinical question here, unlike the two
+delusion domains above.
+
+**Why the two delusions need careful handling, not just logging as more symptoms:**
 
 - **Persistent delusions are explicitly 100%-tier language** under 38 CFR 4.130 ("persistent delusions or
   hallucinations") — if genuine, clinically documented, and connected to the service-connected psychiatric
-  picture, this is significant evidence. But delusions are **not a standard feature of PTSD, GAD, MDD, or
-  OCD** as currently diagnosed in this record — a persecutory delusion this specific and fixed typically
+  picture, this is significant evidence, and having **two** distinct confirmed delusion domains (persecutory
+  and grandiose) is more than one alone. But delusions are **not a standard feature of PTSD, GAD, MDD, or
+  OCD** as currently diagnosed in this record — content this specific across two different domains typically
   points toward a distinct diagnostic picture (e.g., "PTSD with psychotic features," a real DSM-5 specifier,
-  or a separate psychotic-spectrum consideration), which is not currently reflected in Cherie's nexus letter,
-  the diagnosis ledger (§3), or any of the ~600 pages of records reviewed for this corpus.
+  or its own psychotic-spectrum consideration), which is not currently reflected in Cherie's signed nexus
+  letter, the diagnosis ledger (§3), or any of the ~600 pages of records reviewed for this corpus — even
+  though the grandiose-delusion item is confirmed as already part of Cherie's own clinical assessment.
 - **Introducing this for the first time at the C&P exam, without any grounding in the existing clinical
   record or Cherie's letter, is exactly the pattern this corpus has repeatedly flagged as a credibility
   risk** (cf. the trauma-disclosure-pattern and SI-frequency issues) — a rater/examiner encountering a
@@ -320,9 +338,11 @@ already aware of this** — it is not new information to his care team.
   notes and whether her diagnosis/letter should be updated to accurately capture it — for his actual care,
   independent of anything about the VA claim.
 
-**Not yet resolved — needs the veteran's direct follow-up with Cherie before the C&P exam:** whether her
-letter or diagnosis should be amended or supplemented to reflect this, and whether it should be characterized
-as a specifier of an existing diagnosis or something requiring its own evaluation. See
+**Not yet resolved — needs the veteran's direct follow-up with Cherie before the C&P exam:** for the
+grandiose delusion, confirming whether/how her _letter_ (not just her broader notes) should reflect what
+she's already clinically assessed. For the persecutory delusion, confirming whether it's in her treatment
+notes at all and whether it should be. Either way, whether either or both should be characterized as a
+specifier of an existing diagnosis or something requiring its own evaluation is her clinical call. See
 `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B15.
 
 ---
