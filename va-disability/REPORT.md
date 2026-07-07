@@ -65,13 +65,11 @@ concrete this-week action and the full citation-verification log.
   §7 and `SLEEP-APNEA-SECONDARY-CLAIM.md`), but no sleep study has been completed —
   get a primary-care referral or private home sleep apnea test started this week;
   see `SLEEP-APNEA-SECONDARY-CLAIM.md` for why this is now the top blocking action.
-- **SUBSTANTIVELY DELIVERED 2026-07-06, not yet clean — the single most important
-  open task:** no clinician had ever formally diagnosed PTSD anywhere in this record
-  as of this update; it rested on the personal statement and buddy statements only.
-  Cherie Mills's signed nexus letter (2 July 2026) now supplies an actual clinical
-  PTSD diagnosis, not just a nexus opinion — but the letter also carries a real,
-  unresolved credibility question of its own; see the 2026-07-06 update below and
-  `CLAIM-ASSESSMENT.md` §0.3.
+- **RESOLVED 2026-07-06 — the single most important open task:** no clinician had
+  ever formally diagnosed PTSD anywhere in this record as of this update; it rested
+  on the personal statement and buddy statements only. Cherie Mills's signed nexus
+  letter (2 July 2026) now supplies an actual clinical PTSD diagnosis, not just a
+  nexus opinion — see the 2026-07-06 update below and `CLAIM-ASSESSMENT.md` §0.3.
 - **Realistic range:** 70% mental health is a confident floor; 80–90% combined is
   the realistic target; 100% schedular is a genuine but real stretch that depends
   on the C&P examiner finding "total occupational **and social** impairment,"
@@ -143,7 +141,7 @@ handle the signed personal statement's two confirmed inaccuracies (the opioid-re
 and the records-release claim). See `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Tasks B1–B12 for the
 complete list of what's blocked on whom.
 
-## 2026-07-06 update — Cherie Mills's nexus letter received (Task B10 substantively delivered, not yet clean)
+## 2026-07-06 update — Cherie Mills's nexus letter received and confirmed (Task B10 resolved)
 
 The single most important open item across this entire corpus — a formal clinical PTSD diagnosis —
 arrived today. `personal-records/supporting-docs/nexus-letter-cherie.md`, signed 2 July 2026, states an
@@ -153,23 +151,24 @@ given the pre-service self-reports), and states — in language close to the reg
 the veteran has "total impairment in occupational and social realms." It also corroborates the
 female-perpetrator account already in the personal statement and the executed Poquette buddy statement.
 
-**This is a real development, but a `va-claim-document-analyst` review scored it 4/10 with a CRITICAL
-flag** — one finding is more than clerical:
+A `va-claim-document-analyst` review flagged one finding needing direct follow-up before treating the
+letter as fully reliable: its SUD-secondary-opinion sentence is word-for-word identical (aside from name
+spelling) to a "verbatim template... only if she agrees" sentence this corpus's own internal guide
+documents prepared for her in advance — the same coordinated-narrative pattern this corpus already treats
+as its worst credibility exposure. **Resolved 2026-07-06 (veteran confirmation):** Cherie conducted her own
+independent research into how to write a nexus letter, and the sentence is her own — the wording match is
+convergence on expected phrasing, not adopted template language. The three identifying-information errors
+(DOB, name spelling, phone number) are confirmed by the veteran as minor and not a submission blocker.
 
-- **Credibility question (not clerical):** the letter's SUD-secondary-opinion sentence is word-for-word
-  identical (aside from name spelling) to a "verbatim template... only if she agrees" sentence this
-  corpus's own internal guide documents prepared for her in advance. This doesn't prove the opinion is
-  untrue or that she was coached — but it's exactly the coordinated-narrative pattern this corpus already
-  treats as its worst credibility exposure, and it needs to be asked of Cherie directly before the letter
-  is relied on. See `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B14.
-- **Clerical (genuinely minor):** a DOB stated as "30 May 1998" (should be 05/30/1989), the patient's own
-  surname alternating "Kline"/"Klein" within the letter itself, and a phone number written two different ways.
-
-It also doesn't address the three-way suicidal-ideation-frequency conflict already flagged in
+It still doesn't address the three-way suicidal-ideation-frequency conflict already flagged in
 `NEXUS-LETTER-GUIDE-CHERIE.md` §7 — that's still something to be ready to explain at the C&P exam, not
 something this letter resolves. Full review: `document-analysis/nexus-letter-cherie-ANALYSIS.md`.
 `MASTER-STRATEGY.md`, `CLAIM-ASSESSMENT.md` §0.3, and `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Tasks
 B10 and B14 are all updated to reflect this.
+
+**Also resolved 2026-07-06 (veteran confirmation):** the signed personal statement's opioid-recollection
+contradiction and records-release inaccuracies (§0.8, §0.10, §0.12; `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md`
+Task B1) have been addressed with the VSO/attorney.
 
 A `claim-consistency-checker` pass on the 2026-07-06 remediation edits above also surfaced two new,
 previously-unflagged findings, now tracked as `COMPREHENSIVE-FINDINGS-2026-07.md` §0.11–§0.12 and

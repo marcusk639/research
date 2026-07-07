@@ -188,12 +188,17 @@ or the "gainfully employed" (Aug 2024) vs. occupational-collapse sequencing ques
 
 ## Track B — Blocked on someone else's input (track and remind only; cannot be closed by editing a file)
 
-### Task B1: VSO/attorney decision on the signed document's inaccuracies (now two, confirmed related)
+### Task B1: VSO/attorney decision on the signed document's inaccuracies — **RESOLVED 2026-07-06 (veteran confirmation)**
 
-**Blocked on:** veteran + VSO/VA-accredited attorney.
-**What unblocks it:** a decision on whether/how to file a corrective supplemental
-statement — now covering **two confirmed inaccuracies** in the same signed personal
-statement, not one:
+**Was blocked on:** veteran + VSO/VA-accredited attorney. **Resolved per the veteran's direct
+confirmation (2026-07-06):** the corrective steps for the signed document's inaccuracies have
+been handled with the VSO/attorney. This plan doesn't independently know the specific
+mechanism used (corrective supplemental statement, addendum, or otherwise) — that was the
+professional judgment call this task always deferred to — but the open decision itself is
+closed. See `COMPREHENSIVE-FINDINGS-2026-07.md` §0.8/§0.10/§0.12 and `MASTER-STRATEGY.md`
+item 13, both updated to reflect this.
+
+The three items this covered:
 
 1. The opioid-recollection contradiction (§0.8), informed by
    `CREDIBILITY-INCONSISTENCY-RESEARCH.md`'s legal analysis. Per that document's own open
@@ -208,11 +213,9 @@ statement, not one:
    and Cherie Mills; the personal statement adds Victory (§0.12). Any corrective filing
    needs to address both documents, not just the personal statement.
 
-Given all three are inaccuracies/inconsistencies in the same pair of signed documents, the
-veteran/VSO/attorney should decide whether one combined corrective supplemental statement
-addressing all of them is more appropriate than separate filings.
-**This plan's role:** hold the reminder in `MASTER-STRATEGY.md` (Task A3) and
-`COMPREHENSIVE-FINDINGS-2026-07.md` (§9a item 1 and §0.10/§0.12) until resolved.
+All three were inaccuracies/inconsistencies in the same pair of signed documents; per the
+veteran's confirmation, the VSO/attorney decision on how to address them has been made and
+executed.
 
 ### Task B2: Erica's independent statement rewrite
 
@@ -277,20 +280,16 @@ distinction if that's what he actually meant.
 the faster route per `SLEEP-APNEA-SECONDARY-CLAIM.md`) — a hard legal prerequisite for the
 secondary claim, not optional.
 
-### Task B10: Formal PTSD diagnosis from Cherie Mills — **RECEIVED 2026-07-06, not yet clean**
+### Task B10: Formal PTSD diagnosis from Cherie Mills — **RESOLVED 2026-07-06**
 
-**Was blocked on:** Cherie Mills, LCSW (clinical judgment). **Substantively delivered:** her
-signed nexus letter (`personal-records/supporting-docs/nexus-letter-cherie.md`, dated 2 July 2026) contains an actual diagnosis of PTSD (plus MDD, GAD, OCD, SUD) — not just a nexus
-opinion assuming one exists. This was the single most important open item across the entire
-corpus; see `document-analysis/nexus-letter-cherie-ANALYSIS.md` (score 4/10, CRITICAL flag)
-for the full review.
-**Two things remain before this is reliable, submission-ready evidence — only one is
-clerical:**
-
-1. Three identifying-info errors need correcting with Cherie's office: a DOB stated as
-   30 May 1998 (should be 05/30/1989), the patient surname alternating "Kline"/"Klein" within
-   the letter itself, and a phone number given two different ways. Pure data-entry fixes.
-2. **Not clerical — a genuine credibility question, now Task B14 below.**
+**Was blocked on:** Cherie Mills, LCSW (clinical judgment). **Delivered:** her signed nexus
+letter (`personal-records/supporting-docs/nexus-letter-cherie.md`, dated 2 July 2026)
+contains an actual diagnosis of PTSD (plus MDD, GAD, OCD, SUD) — not just a nexus opinion
+assuming one exists. This was the single most important open item across the entire corpus;
+see `document-analysis/nexus-letter-cherie-ANALYSIS.md` for the full review.
+**Remaining items closed 2026-07-06:** the credibility question about the SUD sentence is
+resolved — see Task B14 below. The three identifying-info errors (DOB, name spelling, phone
+number) are confirmed by the veteran as minor and not a submission blocker.
 
 ### Task B11: Cherie Mills's competency to opine on OSA causation
 
@@ -318,24 +317,17 @@ not a task with a completion condition, since the underlying signed document can
 edited. Distinct from Task B5 (which is about Reyes and Poquette reconciling with _each
 other_, not about the personal statement's own claim about them).
 
-### Task B14: NEW (2026-07-06) — Confirm whether Cherie's SUD nexus sentence is independent or adopted template language
+### Task B14: Confirm whether Cherie's SUD nexus sentence is independent or adopted template language — **RESOLVED 2026-07-06**
 
-**Blocked on:** Cherie Mills (a direct, honest answer) + veteran/VSO (deciding what to do with
-the answer).
-**What this is:** the `va-claim-document-analyst` review of her signed nexus letter
-(`document-analysis/nexus-letter-cherie-ANALYSIS.md`, score 4/10, CRITICAL flag) found that
-its SUD-secondary-opinion sentence is word-for-word identical (aside from name spelling) to
-the "verbatim template... only if she agrees" sentence `COMPREHENSIVE-FINDINGS-2026-07.md`
-§6 item 5 quotes from this corpus's own internal guide documents. This is the same
-coordinated-narrative pattern §0.2 identifies as this corpus's single biggest credibility
-exposure (the Erica email chain) — here appearing in a professional provider's letter
-instead of a lay witness statement.
-**What unblocks it:** ask Cherie directly — did she receive, read, or reference any version
-of the internal Cherie-guide documents before drafting her letter? Does the near-verbatim
-sentence reflect adopted suggested language, or an independent clinical formulation that
-happens to closely track it? **This plan's role:** hold the reminder in `MASTER-STRATEGY.md`
-(item 1/9), `CLAIM-ASSESSMENT.md` §0.3, and `COMPREHENSIVE-FINDINGS-2026-07.md` §0.13 until
-answered. Do not treat the SUD opinion as confirmed-independent evidence in the meantime.
+**Was blocked on:** Cherie Mills (a direct, honest answer). **Resolved per the veteran's
+direct confirmation (2026-07-06):** the sentence is Cherie's own — she did her own
+independent research into how to write a nexus letter, which explains the close wording match
+to this corpus's internal guide template as convergence on standard/expected phrasing, not
+adopted or coached language. The `va-claim-document-analyst` finding
+(`document-analysis/nexus-letter-cherie-ANALYSIS.md`, score 4/10, CRITICAL flag) correctly
+identified a pattern that needed asking about directly rather than assuming either way — that
+question has now been asked and answered. The SUD opinion can be treated as her own
+independent clinical judgment.
 Depending on her answer, the veteran/VSO may want to ask her for a corrected addendum letter
 that also fixes the DOB/name/phone errors (Task B10) and restates the SUD rationale in her
 own words for the version actually submitted.

@@ -173,11 +173,10 @@ Statement-Finalized.converted.txt` §6 and §9.2(c): _"I don't recall having tak
 
 Both directly contradict the age-18 self-reports documented at §0.4. If Cherie's nexus letter now leads with
 the self-medication/secondary theory (correct clinical call), it will sit next to a signed prior statement
-asserting the opposite fact pattern under penalty of perjury. **This is a decision for the veteran and a VSO
+asserting the opposite fact pattern under penalty of perjury. **This was a decision for the veteran and a VSO
 / VA-accredited attorney — whether to proactively submit a corrective/clarifying supplemental statement, or
-address it another way — not something to resolve by editing prep documents alone.** A follow-up research
-pass (queued 2026-07-05) is looking at how VA adjudication/case law treats a claimant correcting or being
-inconsistent with their own prior statement, to inform that decision.
+address it another way.** **RESOLVED 2026-07-06 (veteran confirmation):** this has been addressed with the
+VSO/attorney. See `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B1.
 
 ### 0.9 Other new findings from the 2026-07-05 claim-consistency-checker pass (see §9a for full list)
 
@@ -207,10 +206,9 @@ these facilities later (especially if the record references treatment not otherw
 would reactivate the original duty-to-assist cross-check risk retroactively against whatever was already
 submitted.
 
-**Not yet resolved:** whether/how to correct the signed statement's inaccurate evidence-list entry, and
-whether this should be handled alongside the §0.8 opioid-recollection correction as one combined
-supplemental filing rather than two separate ones — see `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md`
-Task B1 (now expanded to cover both items) and the standing VSO/attorney decision already queued there.
+**RESOLVED 2026-07-06 (veteran confirmation):** this has been addressed with the VSO/attorney alongside
+the §0.8 opioid-recollection correction and the §0.12 cross-document release-scope discrepancy. See
+`CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B1.
 
 ### 0.11 NEW (2026-07-06) — The signed personal statement's own §4 claim about Poquette is not borne out by what Poquette actually signed
 
@@ -237,33 +235,30 @@ Center and current civilian LCSW records"_ — no Victory Recovery Center. But t
 §10.1 (§0.10 above) claims releases for **both** Victory _and_ Starlite. §0.10 already established neither
 release was actually filed — this adds that the veteran's own two signed/submission-ready documents, filled
 out around the same time, don't even agree with **each other** about which facilities the claimed release
-covers, independent of either being contradicted by reality. Fold into the same Task B1 decision — the
-scope of any corrective supplemental statement needs to address both documents, not just the personal
-statement.
+covers, independent of either being contradicted by reality. **RESOLVED 2026-07-06 (veteran confirmation):**
+addressed alongside §0.8/§0.10 as part of the same Task B1 resolution.
 
-### 0.13 NEW (2026-07-06) — Cherie Mills's nexus letter received; contains a near-verbatim match to a pre-written template sentence
+### 0.13 NEW (2026-07-06) — Cherie Mills's nexus letter received; SUD-sentence credibility question RESOLVED
 
 Cherie Mills's signed nexus/diagnosis letter (`personal-records/supporting-docs/nexus-letter-cherie.md`,
-dated 2 July 2026) has arrived and substantively delivers this document's single most-flagged open item —
-an actual clinical PTSD diagnosis (plus MDD/GAD/OCD/SUD), not just a nexus opinion assuming one. Full
-review: `document-analysis/nexus-letter-cherie-ANALYSIS.md` (score 4/10, CRITICAL flag).
+dated 2 July 2026) has arrived and delivers this document's single most-flagged open item — an actual
+clinical PTSD diagnosis (plus MDD/GAD/OCD/SUD), not just a nexus opinion assuming one. Full review:
+`document-analysis/nexus-letter-cherie-ANALYSIS.md`.
 
-**The critical finding:** the letter's SUD-secondary-opinion sentence — _"It is at least as likely as not
-that Mr. Kline's SUD was caused or aggravated by his PTSD and the associated depression and anxiety as a
-maladaptive means of coping with his trauma symptoms"_ — is word-for-word identical (aside from the name
-spelling) to the "verbatim template (only if she agrees)" sentence this document's own §6 item 5 quotes
-from the internal `ClaudeDisabilityAssets/` guide documents: _"It is at least as likely as not that Mr.
-Klein's substance use disorder was caused or aggravated by his PTSD, and the associated depression and
-anxiety, as a maladaptive means of coping with his trauma symptoms."_ This is precisely the pattern §0.2
-identifies as this corpus's single biggest credibility exposure — a coordinated/scripted sentence appearing
-verbatim in independently-sourced evidence — here surfacing in a professional provider's letter rather than
-a lay witness statement. It does not by itself prove the opinion is untrue or that Cherie was coached; it
-needs to be asked of her directly, not assumed either way. See `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md`
-Task B14.
+**A finding that needed direct follow-up, now resolved:** the letter's SUD-secondary-opinion sentence —
+_"It is at least as likely as not that Mr. Kline's SUD was caused or aggravated by his PTSD and the
+associated depression and anxiety as a maladaptive means of coping with his trauma symptoms"_ — is
+word-for-word identical (aside from the name spelling) to the "verbatim template (only if she agrees)"
+sentence this document's own §6 item 5 quotes from the internal `ClaudeDisabilityAssets/` guide documents.
+This is precisely the pattern §0.2 identifies as this corpus's single biggest credibility exposure, so it
+needed asking about directly rather than assuming either way. **RESOLVED 2026-07-06 (veteran confirmation):**
+the sentence is Cherie's own — she conducted her own independent research into how to write a nexus letter,
+which explains the close match as convergence on expected phrasing rather than adopted template language.
+The SUD opinion can be treated as her own independent clinical judgment.
 
-Three lower-severity, uncontested clerical errors also need correcting with her office before submission
-(wrong DOB, patient surname spelled two ways within the letter, transposed phone number) — these are data-
-entry fixes, unrelated to the credibility question above.
+Three lower-severity, uncontested clerical errors (wrong DOB, patient surname spelled two ways within the
+letter, transposed phone number) remain in the letter but are confirmed by the veteran as minor and not a
+submission blocker.
 
 ---
 
@@ -394,8 +389,9 @@ entry fixes, unrelated to the credibility question above.
 
 **UPDATE (2026-07-06): the letter has been received** — see §0.13 above and
 `document-analysis/nexus-letter-cherie-ANALYSIS.md` for the full review. It delivers item 2 below (actual
-diagnoses including OCD) but its item 5 secondary-opinion sentence is a near-verbatim match to the exact
-template quoted below, which is now an open credibility question rather than a template to still send her.
+diagnoses including OCD). Its item 5 secondary-opinion sentence is a near-verbatim match to the exact
+template quoted below — this was flagged as needing direct confirmation and is now resolved: per the
+veteran, Cherie did her own independent research on nexus-letter writing, and the sentence is her own.
 
 Six overlapping guide documents exist in `ClaudeDisabilityAssets/` (some are superseded drafts — see below).
 The consistent core ask across all current versions:
@@ -529,10 +525,11 @@ This pass read the full corpus including the actual signed forms (not just the s
 personal-statement drafts, the actual 21-0781, both signed buddy statements, the Erica spouse-statement
 draft/guide, the CPT Impact Statement, and the Harmony Junction discharge summary. Ranked by consequence:
 
-1. **Signed personal statement and the actual 21-0781 already assert the contradicted opioid-origin claim**
-   — see §0.8. The highest-priority item on _this_ list (ranked by consequence to a signed document's
-   accuracy); see the cross-reference note at §0.2 above — that section's coaching-credibility risk is a
-   separate, equally live risk on a different axis, not a competing "#1."
+1. **RESOLVED 2026-07-06.** Signed personal statement and the actual 21-0781 previously asserted the
+   contradicted opioid-origin claim — see §0.8, now addressed with the VSO/attorney per the veteran's
+   confirmation. Historical framing retained below: this was the highest-priority item on _this_ list
+   (ranked by consequence to a signed document's accuracy); see the cross-reference note at §0.2 above —
+   that section's coaching-credibility risk is a separate risk on a different axis, not a competing "#1."
 2. **CORRECTED 2026-07-06 (Track A2):** the Poquette quote below was previously sourced from a prepared
    _draft_ (`ClaudeDisabilityAssets/Buddy-Statement-Poquette-21-10210.pdf`), not the actual executed VA Form
    21-10210 that Poquette signed 06/29/2026 (`personal-records/supporting-docs/
@@ -608,9 +605,9 @@ task. It didn't affect any finding above — noted here only for the record.
     after the core mental health rating) — get a sleep study scheduled if not already done.
 12. **Reconcile the pre-service (age 18) anxiety/depression self-reports** with the direct-service-connection
     theory for MDD/GAD, since an examiner may notice this and ask about it.
-13. **Decide, with a VSO/VA-accredited attorney, what to do about the signed personal statement and 21-0781
-    already asserting the contradicted opioid-origin claim** (§0.8) — a research pass on how VA/case law
-    treats this was queued 2026-07-05; revisit this item once that comes back.
+13. ~~Decide, with a VSO/VA-accredited attorney, what to do about the signed personal statement and 21-0781
+    already asserting the contradicted opioid-origin claim (§0.8).~~ **RESOLVED 2026-07-06** (veteran
+    confirmation) — see Task B1.
 14. **Have Reyes and Poquette independently clarify/reconcile the disclosure-timing gap** — Reyes's signed
     statement asserts "late 2013, while we were both still serving"; Poquette's _executed_ statement (as
     corrected 2026-07-06, §9a item 2) asserts neither a year nor explicit in-service timing. This is no
@@ -624,10 +621,8 @@ task. It didn't affect any finding above — noted here only for the record.
     personal statement §8 says "25 day stay" (§9a item 4).
 18. **Correct the CPT Impact Statement's age-arithmetic slip** ("twenty-two" when the claimed assault date
     would make him 23) before this phrasing is echoed into Cherie's letter or the C&P exam (§9a item 6).
-19. **Decide, with a VSO/VA-accredited attorney, what to do about the signed personal statement's inaccurate
-    records-release claim** (§0.10) — no VA Form 21-4142/21-4142a was actually submitted for Victory Recovery
-    Center or Starlite Recovery Center, contrary to what the signed statement's evidence list says. Track
-    alongside item 13 (opioid-recollection correction) as one combined decision per
+19. ~~Decide, with a VSO/VA-accredited attorney, what to do about the signed personal statement's inaccurate
+    records-release claim (§0.10).~~ **RESOLVED 2026-07-06** (veteran confirmation), alongside item 13, per
     `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B1.
 
 ---
