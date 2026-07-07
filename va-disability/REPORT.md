@@ -207,6 +207,37 @@ Three new facts from the veteran, applied across `COMPREHENSIVE-FINDINGS-2026-07
 Also noted: Erica's statement is being finalized with concrete, factually-recalled examples (status
 update, no file yet).
 
+## 2026-07-06 update — two confirmed delusions; expected correction to Cherie's letter, not yet resolved
+
+The veteran describes two distinct symptoms confirmed as genuine delusions (not anxious preoccupation),
+applied across `CLAIM-ASSESSMENT.md` §0.4, `COMPREHENSIVE-FINDINGS-2026-07.md` §0.14,
+`MASTER-STRATEGY.md`, `CP-EXAM-PREP-MENTAL-HEALTH.md`, and `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md`
+Task B15:
+
+- **Persecutory** — a fixed, certain belief that a specific person is following him and plans to kill
+  him over something from ~18 years ago, with corresponding protective plans (a nuclear bunker). A
+  treatment provider is aware of it, but it isn't yet in Cherie's signed letter or any record this corpus
+  has reviewed.
+- **Grandiose** — a belief in special importance, power, or a special mission/identity. Confirmed as
+  already part of Cherie's own clinical assessment (a materially different confirmation status than the
+  persecutory one), but also not yet in her signed letter.
+- Also confirmed, and unambiguous: persistent hypervigilance (constantly monitoring the environment for
+  threats to himself or his family) — standard, well-established PTSD symptom language.
+
+**"Persistent delusions or hallucinations" is explicit 100%-tier language under 38 CFR 4.130** — genuine
+and significant if properly documented and connected to the service-connected picture, and two distinct
+delusion domains is more than one. But neither is a standard feature of the currently-diagnosed conditions
+(PTSD/GAD/MDD/OCD), and introducing something this specific and severe for the first time at the C&P exam,
+without it appearing anywhere in the record actually in hand, risks reading as either a care gap or an
+inconsistency — the same pattern already flagged elsewhere in this corpus. The priority throughout is the
+veteran's actual clinical care, not just claim strategy: this needs to be addressed with Cherie directly,
+and her care shouldn't wait on the claim timeline.
+
+**Status (2026-07-06, per the veteran):** confirmed as an expected near-term correction — Cherie will
+update her letter to reflect both delusions, and Erica's forthcoming statement is expected to
+independently corroborate them. Neither exists yet in this form; treat the current framing as provisional
+until the actual updated letter and Erica's actual statement are in hand.
+
 ## Superseded / historical
 
 [`knowledge-base.md`](./knowledge-base.md), [`veteran-profile.md`](./veteran-profile.md),
