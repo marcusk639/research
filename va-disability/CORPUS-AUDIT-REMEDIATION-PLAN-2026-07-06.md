@@ -336,6 +336,26 @@ Depending on her answer, the veteran/VSO may want to ask her for a corrected add
 that also fixes the DOB/name/phone errors (Task B10) and restates the SUD rationale in her
 own words for the version actually submitted.
 
+### Task B15: NEW (2026-07-06) — Confirm with Cherie whether/how the fixed persecutory belief should be reflected in the clinical record
+
+**Blocked on:** Cherie Mills (or whichever treatment provider is already aware) + veteran.
+**What this is:** the veteran states he intends to describe at the C&P exam a fixed, certain
+belief that a specific person is following him and plans to kill him over something from ~18
+years ago, plus corresponding protective plans (a nuclear bunker). He confirms directly this is
+a fixed belief, not an anxious overestimation — clinically a persecutory delusion, not a
+standard PTSD/GAD/MDD/OCD symptom — and that a treatment provider is already aware of it. See
+`COMPREHENSIVE-FINDINGS-2026-07.md` §0.14 for the full context and why this needs care, not just
+logging as evidence.
+**What unblocks it:** confirm directly with Cherie (a) whether this is reflected in her ongoing
+treatment notes and current diagnostic picture, and (b) whether her letter/diagnosis should be
+supplemented or amended to accurately capture it — for the veteran's actual clinical care first,
+and only secondarily for how it's presented at the C&P exam. **This should happen before the
+exam** — introducing a symptom this specific and severe for the first time at the exam, with
+no grounding anywhere in the existing clinical record or Cherie's letter, is the same
+credibility-risk pattern this corpus has flagged elsewhere (undocumented severe symptom
+appearing only under exam pressure), and more importantly, his actual care shouldn't wait on
+the claim timeline.
+
 ---
 
 ## Sequencing

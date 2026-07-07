@@ -289,6 +289,42 @@ Three lower-severity, uncontested clerical errors (wrong DOB, patient surname sp
 letter, transposed phone number) remain in the letter but are confirmed by the veteran as minor and not a
 submission blocker.
 
+### 0.14 NEW (2026-07-06) — A fixed persecutory belief, confirmed as a genuine delusion, not yet reflected anywhere in the corpus
+
+The veteran states he intends to describe at the C&P exam a **fixed, certain belief that a specific person
+is following him and plans to kill him over something from approximately 18 years ago** (which would predate
+his November 2009 enlistment), along with corresponding real-world protective action (plans for a nuclear
+bunker). **Directly confirmed with the veteran (2026-07-06):** this is a fixed belief that feels true
+regardless of evidence, not an anxious overestimation he recognizes as possibly exaggerated — clinically,
+this is a **persecutory delusion**, not the catastrophic-worldview symptom addressed at §0.13-adjacent notes
+in `CP-EXAM-PREP-MENTAL-HEALTH.md`. **The veteran also confirms Cherie (or another treatment provider) is
+already aware of this** — it is not new information to his care team.
+
+**Why this needs careful handling, not just logging as another symptom:**
+
+- **Persistent delusions are explicitly 100%-tier language** under 38 CFR 4.130 ("persistent delusions or
+  hallucinations") — if genuine, clinically documented, and connected to the service-connected psychiatric
+  picture, this is significant evidence. But delusions are **not a standard feature of PTSD, GAD, MDD, or
+  OCD** as currently diagnosed in this record — a persecutory delusion this specific and fixed typically
+  points toward a distinct diagnostic picture (e.g., "PTSD with psychotic features," a real DSM-5 specifier,
+  or a separate psychotic-spectrum consideration), which is not currently reflected in Cherie's nexus letter,
+  the diagnosis ledger (§3), or any of the ~600 pages of records reviewed for this corpus.
+- **Introducing this for the first time at the C&P exam, without any grounding in the existing clinical
+  record or Cherie's letter, is exactly the pattern this corpus has repeatedly flagged as a credibility
+  risk** (cf. the trauma-disclosure-pattern and SI-frequency issues) — a rater/examiner encountering a
+  severe, specific symptom that appears nowhere in the treatment record or the treating clinician's own
+  letter may read it as either undocumented (a genuine gap in care) or inconsistent (raising doubt), neither
+  of which serves the claim or the veteran's actual clinical picture.
+- **This is not primarily a rating-strategy question.** If genuine and already known to Cherie, the more
+  important next step is confirming directly with her whether this is reflected in her ongoing treatment
+  notes and whether her diagnosis/letter should be updated to accurately capture it — for his actual care,
+  independent of anything about the VA claim.
+
+**Not yet resolved — needs the veteran's direct follow-up with Cherie before the C&P exam:** whether her
+letter or diagnosis should be amended or supplemented to reflect this, and whether it should be characterized
+as a specifier of an existing diagnosis or something requiring its own evaluation. See
+`CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B15.
+
 ---
 
 ## 1. Updated Veteran/Claim Profile (supersedes `veteran-profile.md` in these respects)
