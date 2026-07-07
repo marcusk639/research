@@ -338,11 +338,13 @@ delusion domains above.
   notes and whether her diagnosis/letter should be updated to accurately capture it — for his actual care,
   independent of anything about the VA claim.
 
-**Not yet resolved — needs the veteran's direct follow-up with Cherie before the C&P exam:** for the
-grandiose delusion, confirming whether/how her _letter_ (not just her broader notes) should reflect what
-she's already clinically assessed. For the persecutory delusion, confirming whether it's in her treatment
-notes at all and whether it should be. Either way, whether either or both should be characterized as a
-specifier of an existing diagnosis or something requiring its own evaluation is her clinical call. See
+**UPDATE (2026-07-06, per the veteran) — expected near-term correction, not yet in hand:** Cherie will
+update her letter to reflect both delusions, and Erica's forthcoming statement is expected to
+independently corroborate them. Neither document exists yet in this form — the odds and framing
+throughout this corpus should be revised once the actual updated letter and Erica's actual statement are
+in hand, since their evidentiary value depends on what each specifically says, not a guarantee of any
+particular wording. Whether either delusion should be characterized as a specifier of an existing
+diagnosis or something requiring its own evaluation remains Cherie's clinical call. See
 `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B15.
 
 ---

@@ -336,7 +336,7 @@ Depending on her answer, the veteran/VSO may want to ask her for a corrected add
 that also fixes the DOB/name/phone errors (Task B10) and restates the SUD rationale in her
 own words for the version actually submitted.
 
-### Task B15: NEW (2026-07-06) — Confirm with Cherie whether/how two confirmed delusions (persecutory and grandiose) should be reflected in the clinical record
+### Task B15: Confirm with Cherie whether/how two confirmed delusions (persecutory and grandiose) should be reflected in the clinical record — **UPDATE (2026-07-06): expected near-term correction**
 
 **Blocked on:** Cherie Mills (or whichever treatment provider is already aware) + veteran.
 **What this is:** the veteran describes two distinct confirmed delusions, at different stages of
@@ -361,6 +361,16 @@ should happen before the exam** — introducing symptoms this specific and sever
 time at the exam, with no grounding in the letter actually in hand, is the same credibility-risk
 pattern this corpus has flagged elsewhere, and more importantly, his actual care shouldn't wait
 on the claim timeline.
+
+**Update (2026-07-06, per the veteran):** confirmed expected, not just requested — Cherie will
+update her letter to reflect both delusions, and Erica's forthcoming statement is expected to
+independently corroborate them. Carrying this forward as an **expected near-term correction**
+(one tier more confident than "not yet requested," per the same convention
+`PROJECTED-REASSESSMENT-2026-07-06.md` uses for the Poquette/Cherie corrections there) — the
+actual content of Cherie's updated letter and Erica's statement isn't yet in hand, and the value
+of both still depends on what they specifically say, not a guarantee of any particular wording.
+Neither should be told what to say; the expectation here is that the correction/corroboration
+happens, not what it specifically states.
 
 ---
 
