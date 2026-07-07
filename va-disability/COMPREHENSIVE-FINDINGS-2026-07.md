@@ -42,9 +42,17 @@ lay statement go well beyond proofreading. Specific instructed changes include:
 - Explicit instruction to omit any reference to "abuse during service" outside of alcohol consumption
 
 VA Form 21-10210 is signed **under penalty of perjury**. This document's own prior research
-(`claim-maximization-research-2026-06.md`) is emphatic, repeatedly, across at least six of its ten
-research tracks, that manufacturing or coaching evidence is "the paradigm case of VA benefits fraud"
-(18 U.S.C. § 1001) and would **cross-contaminate the credibility of the entire MST/PTSD claim**, which
+(`claim-maximization-research-2026-06.md`) treats manufacturing or coaching evidence like this as a
+potential violation of 18 U.S.C. § 1001 and 38 U.S.C. § 6103 (**corrected 2026-07-06**: the prior
+draft of this passage misattributed the specific "paradigm case of VA benefits fraud" superlative to
+coached witness statements — that source document's own "Fraud Line" section (line 157) actually
+reserves that framing for a different scenario, staging a sham employment transition to manufacture
+TDIU eligibility. Coached witness statements are listed among the same document's § 1001/§ 6103
+concerns, just not singled out with that specific phrase. The substantive conclusion below is
+unaffected — coached evidence is a real, serious fraud exposure either way — only the sourcing of
+the superlative needed correcting; see `document-analysis/COMPREHENSIVE-FINDINGS-2026-07-ANALYSIS.md`
+and the 2026-07-06 citation-verifier pass for the full finding). This would **cross-contaminate the
+credibility of the entire MST/PTSD claim**, which
 rests almost entirely on personal credibility given the ~12-14 year disclosure gap and non-disclosure
 across nearly every clinical record reviewed (see §3 below). **This should be resolved before the spouse
 statement is finalized or submitted** — Erica's statement should describe only what she has personally
@@ -52,6 +60,12 @@ observed, in her own words, without instruction on how to frame or omit facts. I
 ever produced in discovery or an adversarial review, it is difficult to overstate how damaging it would be.
 This is not a moral aside — it is the largest concrete threat to the compensation outcome identified
 anywhere in this corpus.
+
+**Cross-reference (added 2026-07-06, Track A4):** §9a item 1 below separately flags the signed personal
+statement's opioid-recollection contradiction as "the highest-priority item" on its own list. These are two
+different, both-live risks on different axes — this section (§0.2) is about witness-coaching process/
+credibility exposure; §9a item 1 is about a signed document's factual accuracy — not competing claims to the
+single "#1 risk" in the corpus. Both need resolving; neither supersedes the other.
 
 ### 0.3 The MST stressor narrative directly conflicts with a 2015 VA record
 
@@ -126,7 +140,11 @@ overall severity picture toward 70%).
 
 The April–May 2026 Harmony Junction Recovery discharge summary lists **F15.20 — Amphetamine-type substance
 use disorder, Severe** — a diagnosis that **appears nowhere else** in any of the ~600 pages of other
-records, and has zero supporting narrative even within that same discharge summary. This needs to be
+records. **Corrected 2026-07-06 (Track A4):** the discharge summary itself does contain one passing phrase
+— "stabilization from polysubstance use involving opioids, benzodiazepines, and stimulants" (page 2) — so
+"zero supporting narrative" is slightly overstated; the accurate characterization is **essentially
+unsupported, with one unelaborated mention** (one word, no elaboration, no corroborating self-report
+anywhere else in the record). This softening doesn't change the recommendation below. This needs to be
 resolved directly with Harmony Junction (confirm whether this is a coding error, or reflects an undisclosed
 stimulant use episode) before any of these records are submitted to VA — an unexplained severe SUD
 diagnosis with no clinical support is exactly the kind of loose thread an adversarial C&P examiner or rater
@@ -171,23 +189,99 @@ own dates), the **spouse referred to by two different surnames** ("Erica Jure" v
 documents meant to go to VA together, and a **minor age-arithmetic slip** in the CPT Impact Statement. Full
 detail in the new §9a below.
 
+### 0.10 NEW (2026-07-06) — Signed personal statement's records-release claim is confirmed inaccurate
+
+The signed personal statement (§10.1, "Submitted with this claim") states: _"VA Form 21-4142 and 21-4142a
+authorizing release of records from Victory Recovery Center, Starlite Recovery Center, and Cherie Mills,
+LCSW."_ **Confirmed 2026-07-06, veteran + VSO:** no release was ever submitted for Victory Recovery
+Center or Starlite Recovery Center specifically — releases were only submitted for individual treating
+providers/psychiatrists. This is a **third confirmed inaccuracy in the same signed document**, alongside
+the §0.8 opioid-recollection contradiction.
+
+**Practical consequence:** with no release on file for the treatment centers, VA currently has no
+independent channel to pull those records directly — whatever the veteran submits himself (per his own
+stated plan: he has an existing relationship with both facilities and is retrieving and submitting the
+records manually) is the complete record VA will see initially. This does **not** relax the curation-vs-
+cherry-picking guidance in `PRE-POST-SERVICE-SEVERITY-CONTRAST.md` — VA can still request a release for
+these facilities later (especially if the record references treatment not otherwise documented), which
+would reactivate the original duty-to-assist cross-check risk retroactively against whatever was already
+submitted.
+
+**Not yet resolved:** whether/how to correct the signed statement's inaccurate evidence-list entry, and
+whether this should be handled alongside the §0.8 opioid-recollection correction as one combined
+supplemental filing rather than two separate ones — see `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md`
+Task B1 (now expanded to cover both items) and the standing VSO/attorney decision already queued there.
+
+### 0.11 NEW (2026-07-06) — The signed personal statement's own §4 claim about Poquette is not borne out by what Poquette actually signed
+
+Found by an independent `claim-consistency-checker` pass verifying the Track A2 correction against the
+primary documents directly. The **signed** personal statement (06/17/2026) §4 states: _"Wilfredo Reyes and
+Zach Poquette have agreed to provide buddy statements under VA Form 21-10210 confirming that I disclosed
+the assault to them **while we were still in service together**..."_ Poquette signed his statement 12 days
+later, on 06/29/2026 — and his executed statement (see §9a item 2 above) contains **no** "while we were
+still in service" language and no date anchor at all. Reyes's statement does affirmatively say this
+("In late 2013, while we were both still serving..."), so the claim is true of Reyes but not of Poquette.
+
+This is a distinct fact from the Reyes/Poquette disclosure-timing disagreement already tracked at §9a item
+2 — it's not "the two witnesses disagree with each other," it's **the veteran's own already-signed
+statement making a claim about what its corroborating evidence would show that one of the two named pieces
+of evidence doesn't actually show.** The personal statement can't be edited after signing; this is
+information for the veteran/VSO to be aware of, not something to fix by editing a file. Tracked as Task B13
+in `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md`.
+
+### 0.12 NEW (2026-07-06) — The personal statement and the 21-0781 disagree with each other on which facilities the records release covers
+
+Also found by the same pass, reading `personal-records/supporting-docs/VBA-21-0781-revised.pdf` directly.
+Its Section V Remarks (Item 14) states: _"VA Forms 21 4142/4142a authorizing release of Starlite Recovery
+Center and current civilian LCSW records"_ — no Victory Recovery Center. But the signed personal statement
+§10.1 (§0.10 above) claims releases for **both** Victory _and_ Starlite. §0.10 already established neither
+release was actually filed — this adds that the veteran's own two signed/submission-ready documents, filled
+out around the same time, don't even agree with **each other** about which facilities the claimed release
+covers, independent of either being contradicted by reality. Fold into the same Task B1 decision — the
+scope of any corrective supplemental statement needs to address both documents, not just the personal
+statement.
+
+### 0.13 NEW (2026-07-06) — Cherie Mills's nexus letter received; contains a near-verbatim match to a pre-written template sentence
+
+Cherie Mills's signed nexus/diagnosis letter (`personal-records/supporting-docs/nexus-letter-cherie.md`,
+dated 2 July 2026) has arrived and substantively delivers this document's single most-flagged open item —
+an actual clinical PTSD diagnosis (plus MDD/GAD/OCD/SUD), not just a nexus opinion assuming one. Full
+review: `document-analysis/nexus-letter-cherie-ANALYSIS.md` (score 4/10, CRITICAL flag).
+
+**The critical finding:** the letter's SUD-secondary-opinion sentence — _"It is at least as likely as not
+that Mr. Kline's SUD was caused or aggravated by his PTSD and the associated depression and anxiety as a
+maladaptive means of coping with his trauma symptoms"_ — is word-for-word identical (aside from the name
+spelling) to the "verbatim template (only if she agrees)" sentence this document's own §6 item 5 quotes
+from the internal `ClaudeDisabilityAssets/` guide documents: _"It is at least as likely as not that Mr.
+Klein's substance use disorder was caused or aggravated by his PTSD, and the associated depression and
+anxiety, as a maladaptive means of coping with his trauma symptoms."_ This is precisely the pattern §0.2
+identifies as this corpus's single biggest credibility exposure — a coordinated/scripted sentence appearing
+verbatim in independently-sourced evidence — here surfacing in a professional provider's letter rather than
+a lay witness statement. It does not by itself prove the opinion is untrue or that Cherie was coached; it
+needs to be asked of her directly, not assumed either way. See `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md`
+Task B14.
+
+Three lower-severity, uncontested clerical errors also need correcting with her office before submission
+(wrong DOB, patient surname spelled two ways within the letter, transposed phone number) — these are data-
+entry fixes, unrelated to the credibility question above.
+
 ---
 
 ## 1. Updated Veteran/Claim Profile (supersedes `veteran-profile.md` in these respects)
 
-| Field                                                | Old profile said                 | Confirmed by this pass                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| ---------------------------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Full name / identifiers                              | Not given                        | Marcus Edward Klein; SSN 435-75-5617; DOB 1989-05-30                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| Discharge characterization                           | "Critical gap"                   | **Resolved: Honorable**, per DD-214. Separation code MBK, reentry code 1J, narrative reason "completion of required active service."                                                                                                                                                                                                                                                                                                                                                |
-| Rank/AFSC                                            | Not detailed                     | SrA/E-4; AFSC 2A333 (Tactical Aircraft Maintenance, F-15E Crew Chief), 3 yrs 10 mo                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Unit                                                 | Not detailed                     | **4th Equipment Maintenance Squadron (ACC)**, Seymour Johnson AFB, NC (DD-214 is ground truth — reconcile any document that says "4th Aircraft Maintenance Unit" or "4th Maintenance Squadron")                                                                                                                                                                                                                                                                                     |
-| Awards                                               | Not detailed                     | Meritorious Unit Award, AF Outstanding Unit Award, AF Good Conduct Medal, National Defense Service Medal, GWOT Service Medal, BMT Honor Graduate, AF Longevity Service Award, AF Training Ribbon                                                                                                                                                                                                                                                                                    |
-| Dependents                                           | "Critical gap"                   | **Resolved: married to Erica Jure since November 2022** (met 2018 in 12-step recovery; she has 21 years of her own sobriety) — relevant to the 30%+ dependent compensation increment                                                                                                                                                                                                                                                                                                |
-| Employment status                                    | "On FMLA, negotiating severance" | **Materially worse/more developed**: 2018 (near job loss, saved by treatment) → 2023 (job lost, ~6 months unemployed) → spring 2026 (residential treatment, Harmony Junction) → **June 2026 (lost job again)** → **decision made to leave the tech career entirely and relocate** to Lake Charles, LA area (per Erica email chain and a January 2025 Starlite note referencing a remote CTO job offer in Lake Charles). Track record now includes 3-4 job losses in under 10 years. |
-| Current treatment                                    | "Active 2-3x/yr"                 | Far more extensive than previously captured — at least 7 distinct treatment episodes 2018–2026 (see Timeline, §2) plus ongoing outpatient CPT with Cherie Mills, LCSW (Austin, since Feb 2023) and active VA engagement (MHC consult 6/17/26, Community Care MH referral to WellMind PLLC 6/21/26)                                                                                                                                                                                  |
-| MST disclosure                                       | "Lay evidence only, unfiled"     | Disclosed in-service to Wilfredo Reyes and Zachary Poquette (late 2013, while still serving per Reyes's account — **verify this predates his 11/22/2013 separation, since it's currently phrased ambiguously**); a third witness "Goff" is referenced but his statement is **not yet obtained**                                                                                                                                                                                     |
-| **New: OCD**                                         | Not present in profile           | **Confirmed clinical diagnosis, F42.2**, first self-reported ~January 2023, coded in July–August 2023 and July–August 2024 Starlite records                                                                                                                                                                                                                                                                                                                                         |
-| **New: prior psychiatric history predating service** | Not present in profile           | Multiple records (2018 Victory, Jan 2023 Starlite) have Marcus self-reporting **anxiety and depression treatment starting at age 18** (pre-enlistment) — relevant to direct vs. aggravation theory for MDD/GAD                                                                                                                                                                                                                                                                      |
+| Field                                                | Old profile said                 | Confirmed by this pass                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ---------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Full name / identifiers                              | Not given                        | Marcus Edward Klein; SSN 435-75-5617; DOB 1989-05-30                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Discharge characterization                           | "Critical gap"                   | **Resolved: Honorable**, per DD-214. Separation code MBK, reentry code 1J, narrative reason "completion of required active service."                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Rank/AFSC                                            | Not detailed                     | SrA/E-4; AFSC 2A333 (Tactical Aircraft Maintenance, F-15E Crew Chief), 3 yrs 10 mo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Unit                                                 | Not detailed                     | **4th Equipment Maintenance Squadron (ACC)**, Seymour Johnson AFB, NC (DD-214 is ground truth — reconcile any document that says "4th Aircraft Maintenance Unit" or "4th Maintenance Squadron")                                                                                                                                                                                                                                                                                                                                                                     |
+| Awards                                               | Not detailed                     | Meritorious Unit Award, AF Outstanding Unit Award, AF Good Conduct Medal, National Defense Service Medal, GWOT Service Medal, BMT Honor Graduate, AF Longevity Service Award, AF Training Ribbon                                                                                                                                                                                                                                                                                                                                                                    |
+| Dependents                                           | "Critical gap"                   | **Resolved: married to Erica Jure since November 2022** (met 2018 in 12-step recovery; she has 21 years of her own sobriety) — relevant to the 30%+ dependent compensation increment                                                                                                                                                                                                                                                                                                                                                                                |
+| Employment status                                    | "On FMLA, negotiating severance" | **Materially worse/more developed**: 2018 (near job loss, saved by treatment) → 2023 (job lost, ~6 months unemployed) → spring 2026 (residential treatment, Harmony Junction) → **June 2026 (lost job again)** → **decision made to leave the tech career entirely and relocate** to Lake Charles, LA area (per Erica email chain and a January 2025 Starlite note referencing a remote CTO job offer in Lake Charles). Track record now includes 3-4 job losses in under 10 years.                                                                                 |
+| Current treatment                                    | "Active 2-3x/yr"                 | Far more extensive than previously captured — at least 7 distinct treatment episodes 2018–2026 (see Timeline, §2) plus ongoing outpatient CPT with Cherie Mills, LCSW (Austin, since Feb 2023) and active VA engagement (MHC consult 6/17/26, Community Care MH referral to WellMind PLLC 6/21/26). **Note (2026-07-06):** `PRE-POST-SERVICE-SEVERITY-CONTRAST.md` separately states "at least nine" — both figures are correct and not in conflict; this "7" scopes to 2018–2026 only, the "9" additionally includes the two pre-2018 Acadiana stays (2016, 2017). |
+| MST disclosure                                       | "Lay evidence only, unfiled"     | Disclosed in-service to Wilfredo Reyes and Zachary Poquette (late 2013, while still serving per Reyes's account — **verify this predates his 11/22/2013 separation, since it's currently phrased ambiguously**); a third witness "Goff" is referenced but his statement is **not yet obtained**                                                                                                                                                                                                                                                                     |
+| **New: OCD**                                         | Not present in profile           | **Confirmed clinical diagnosis, F42.2**, first self-reported ~January 2023, coded in July–August 2023 and July–August 2024 Starlite records                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **New: prior psychiatric history predating service** | Not present in profile           | Multiple records (2018 Victory, Jan 2023 Starlite) have Marcus self-reporting **anxiety and depression treatment starting at age 18** (pre-enlistment) — relevant to direct vs. aggravation theory for MDD/GAD                                                                                                                                                                                                                                                                                                                                                      |
 
 ---
 
@@ -297,6 +391,11 @@ detail in the new §9a below.
 ---
 
 ## 6. Nexus Letter Status (Cherie Mills, LCSW)
+
+**UPDATE (2026-07-06): the letter has been received** — see §0.13 above and
+`document-analysis/nexus-letter-cherie-ANALYSIS.md` for the full review. It delivers item 2 below (actual
+diagnoses including OCD) but its item 5 secondary-opinion sentence is a near-verbatim match to the exact
+template quoted below, which is now an open credibility question rather than a template to still send her.
 
 Six overlapping guide documents exist in `ClaudeDisabilityAssets/` (some are superseded drafts — see below).
 The consistent core ask across all current versions:
@@ -431,16 +530,27 @@ personal-statement drafts, the actual 21-0781, both signed buddy statements, the
 draft/guide, the CPT Impact Statement, and the Harmony Junction discharge summary. Ranked by consequence:
 
 1. **Signed personal statement and the actual 21-0781 already assert the contradicted opioid-origin claim**
-   — see §0.8. The highest-priority item in this whole list; everything below is lower-consequence.
-2. **The two buddy statements disagree on the disclosure year.** Reyes (signed 06/16/2026): _"In late 2013,
-   while we were both still serving in the Air Force, Marcus disclosed to me..."_ Poquette: _"In 2012, I
-   noticed a change in him... He told me he had been sexually assaulted that summer... This was while we
-   were both still in service at Seymour Johnson."_ Poquette's own statement is also internally ambiguous —
-   it later says _"it wasn't until a couple of years later that the truth came out,"_ which read one way
-   suggests a fuller disclosure post-separation, in tension with his own earlier sentence. Since 38 CFR
-   § 3.304(f)(5)'s evidentiary value turns specifically on in-service vs. post-service timing, this is worth
-   resolving — but per this repo's hard rule, it's for Reyes and Poquette to clarify in their own words, not
-   something to draft language around for them.
+   — see §0.8. The highest-priority item on _this_ list (ranked by consequence to a signed document's
+   accuracy); see the cross-reference note at §0.2 above — that section's coaching-credibility risk is a
+   separate, equally live risk on a different axis, not a competing "#1."
+2. **CORRECTED 2026-07-06 (Track A2):** the Poquette quote below was previously sourced from a prepared
+   _draft_ (`ClaudeDisabilityAssets/Buddy-Statement-Poquette-21-10210.pdf`), not the actual executed VA Form
+   21-10210 that Poquette signed 06/29/2026 (`personal-records/supporting-docs/
+PocketBuddyLetterexportedtextfilled.pdf`). The executed form's Section 17 narrative reads: _"Marcus was
+   the second person that I was introduced to, outside of my in-processing as Seymour Johnson AFB back in
+   2011... After about 8-9 months of seeing him day in and day out, I noticed a change... He vocalized that
+   he was sexually assaulted by one of our friend's wife... Marcus and I stayed in touch here and there, but
+   it wasn't for a couple years until the truth came out."_ **The executed version drops both the "2012" date
+   anchor and the "while we were both still in service" sentence that the draft contained** — meaning
+   Poquette's signed statement does not itself assert either a specific disclosure year or explicit in-service
+   timing. Reyes (signed 06/16/2026) still reads: _"In late 2013, while we were both still serving in the Air
+   Force, Marcus disclosed to me..."_ So the accurate framing is no longer "the two witnesses disagree on the
+   year" — it's that **Reyes affirmatively asserts a year and in-service timing; Poquette's signed statement
+   asserts neither**, which is arguably the more consequential gap for 3.304(f)(5) purposes, since the
+   sentence that would most directly establish in-service disclosure was the one dropped before filing. Per
+   this repo's hard rule, resolving _why_ the draft and executed language differ, and whether either witness
+   wants to clarify further, is for Reyes and Poquette in their own words — not something to draft language
+   around for them. See `document-analysis/Poquette-Buddy-Statement-ANALYSIS.md` for the full comparison.
 3. **Reyes's unit-name fix, already listed as an open task in `CLAIM-ASSESSMENT.md`/`MASTER-STRATEGY.md`,
    has not actually been made in the signed document.** DC-214 confirms "4th Equipment Maintenance
    Squadron"; the signed `VA-Buddy-Form_reyes_complete 2.pdf` (06/16/2026) still reads "4th Maintenance
@@ -476,8 +586,12 @@ task. It didn't affect any finding above — noted here only for the record.
 
 1. **Confirm the supplemental claim's current status** given the ~June 28, 2026 soft deadline has passed (§0.1).
 2. **Resolve the Erica statement coaching issue** — have her write an independent statement in her own words.
-3. **Obtain Cherie Mills's nexus letter**, updated to (a) include OCD, (b) affirmatively address the
-   non-disclosure pattern, (c) use the most current/polished guide document, not the stale "CPT beginning" draft.
+3. ~~Obtain Cherie Mills's nexus letter, updated to (a) include OCD, (b) affirmatively address the
+   non-disclosure pattern, (c) use the most current/polished guide document.~~ **RECEIVED 2026-07-06** —
+   includes OCD; addresses non-disclosure only generally (doesn't name the specific 2015/2018 denials).
+   **New open item, not clerical:** confirm with Cherie whether she referenced a guide document before
+   drafting the SUD-opinion sentence (see §0.13) — do this before treating the letter as reliable
+   independent evidence. Also still needed: fix the letter's DOB/name/phone errors (§0.13).
 4. **Obtain Goff's buddy statement.**
 5. **Resolve the F15.20 Amphetamine SUD diagnosis** with Harmony Junction Recovery.
 6. **Re-download the WHODAS 2.0 assessment.**
@@ -497,12 +611,24 @@ task. It didn't affect any finding above — noted here only for the record.
 13. **Decide, with a VSO/VA-accredited attorney, what to do about the signed personal statement and 21-0781
     already asserting the contradicted opioid-origin claim** (§0.8) — a research pass on how VA/case law
     treats this was queued 2026-07-05; revisit this item once that comes back.
-14. **Have Reyes and Poquette independently clarify/reconcile the disclosure-year conflict** between their
-    two buddy statements (2012 vs. late 2013) in their own words (§9a item 2).
+14. **Have Reyes and Poquette independently clarify/reconcile the disclosure-timing gap** — Reyes's signed
+    statement asserts "late 2013, while we were both still serving"; Poquette's _executed_ statement (as
+    corrected 2026-07-06, §9a item 2) asserts neither a year nor explicit in-service timing. This is no
+    longer simply "two years disagree" — Poquette's signed language doesn't affirmatively establish
+    in-service disclosure at all. Resolve in their own words (§9a item 2).
 15. **Actually apply the Reyes unit-name fix** ("4th Equipment Maintenance Squadron" per DD-214) to the
     signed buddy statement PDF — flagged before, still not done (§9a item 3).
 16. **Confirm Erica's correct current legal surname** ("Jure" vs. "Klein") before she signs VA Form 21-10210
     (§9a item 5).
+17. **Resolve the Harmony Junction stay-length mismatch** — discharge summary computes to 24 days; signed
+    personal statement §8 says "25 day stay" (§9a item 4).
+18. **Correct the CPT Impact Statement's age-arithmetic slip** ("twenty-two" when the claimed assault date
+    would make him 23) before this phrasing is echoed into Cherie's letter or the C&P exam (§9a item 6).
+19. **Decide, with a VSO/VA-accredited attorney, what to do about the signed personal statement's inaccurate
+    records-release claim** (§0.10) — no VA Form 21-4142/21-4142a was actually submitted for Victory Recovery
+    Center or Starlite Recovery Center, contrary to what the signed statement's evidence list says. Track
+    alongside item 13 (opioid-recollection correction) as one combined decision per
+    `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B1.
 
 ---
 

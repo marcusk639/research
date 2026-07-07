@@ -51,11 +51,12 @@ If genuinely present, obsessional rituals or compulsions that interfere with rou
 
 DD-214, service treatment records (if obtained), the VA Form 21-0781 personal statement, buddy statements from fellow service members (Reyes, Poquette, and Goff once his is obtained — see `CLAIM-ASSESSMENT.md` §1.1), spouse statement, prior treatment records (Starlite, Victory Addiction Recovery, Acadiana Addiction Center, Ocean's Luxury Rehab, Harmony Junction Recovery), and the WHODAS 2.0 functional assessment (once re-exported — the current file is a broken export and needs to be regenerated).
 
-### 7. Two things to flag for her awareness, not surprise
+### 7. Things to flag for her awareness, not surprise
 
 - The treatment record contains instances where trauma history was denied or not disclosed at intake (2015 VA record, 2018 Victory Recovery, several Starlite admissions) alongside one partial, internally-inconsistent disclosure in a 2022 intake. If this comes up, the relevant clinical context is that delayed and non-linear disclosure is a well-documented pattern, especially in male MST cases — Cherie may already be well aware of this literature, but it's worth her knowing the specific pattern in the treatment record before she's asked about it.
 - A 2024 Starlite record contains a boilerplate discharge-planning checkbox stating "client is gainfully employed" (accurate at that specific time). His employment situation has changed materially since — this shouldn't be a surprise if it comes up.
 - Some records contain self-reports of anxiety/depression treatment and substance use both starting around age 18, before enlistment. This doesn't rule out service connection (aggravation and secondary theories both remain available, see above), but it's worth her knowing this exists in the record before it's raised by an examiner.
+- **Three data points on suicidal ideation frequency don't line up across the record, and she should know all three before being asked about any one of them:** the FMLA psych eval (5/14/26) records "denies current SI... reports history of passive SI in the past"; the signed personal statement (6/17/26) describes SI as occurring "every day"; a chart note roughly a week later (~6/25/26) records "denies SI." This is presented here as what's in the record, not as something to reconcile or explain on her behalf — real symptom fluctuation is a plausible honest account, but it's her clinical judgment whether and how to address it if raised.
 
 ## What NOT to ask her to do
 

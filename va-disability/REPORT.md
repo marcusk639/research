@@ -1,6 +1,6 @@
 # VA Disability Ratings
 
-> Status: active · Started: 2026-06-06 · Last updated: 2026-07-05
+> Status: active · Started: 2026-06-06 · Last updated: 2026-07-06
 
 ## Research Question
 
@@ -65,11 +65,13 @@ concrete this-week action and the full citation-verification log.
   §7 and `SLEEP-APNEA-SECONDARY-CLAIM.md`), but no sleep study has been completed —
   get a primary-care referral or private home sleep apnea test started this week;
   see `SLEEP-APNEA-SECONDARY-CLAIM.md` for why this is now the top blocking action.
-- **The single most important open task:** no clinician has ever formally
-  diagnosed PTSD anywhere in this record — it currently rests on the personal
-  statement and buddy statements only. Getting a formal diagnosis from Cherie
-  Mills matters more than the nexus opinion itself; see `CLAIM-ASSESSMENT.md`
-  §0.3.
+- **SUBSTANTIVELY DELIVERED 2026-07-06, not yet clean — the single most important
+  open task:** no clinician had ever formally diagnosed PTSD anywhere in this record
+  as of this update; it rested on the personal statement and buddy statements only.
+  Cherie Mills's signed nexus letter (2 July 2026) now supplies an actual clinical
+  PTSD diagnosis, not just a nexus opinion — but the letter also carries a real,
+  unresolved credibility question of its own; see the 2026-07-06 update below and
+  `CLAIM-ASSESSMENT.md` §0.3.
 - **Realistic range:** 70% mental health is a confident floor; 80–90% combined is
   the realistic target; 100% schedular is a genuine but real stretch that depends
   on the C&P examiner finding "total occupational **and social** impairment,"
@@ -91,6 +93,90 @@ concrete this-week action and the full citation-verification log.
   legitimate and supported; manufacturing or coaching evidence is fraud
   (38 U.S.C. § 6103; 18 U.S.C. § 1001) — see `CLAIM-ASSESSMENT.md` Part 0 for a
   specific, live example that needed correcting.
+
+## 2026-07-06 update — corpus audit remediation complete
+
+A full-corpus audit (`CLAIM-CORPUS-AUDIT-2026-07-06.md`, from 16 parallel `va-claim-document-analyst`
+reports in `document-analysis/`, synthesized by `va-claim-corpus-synthesizer`) found several credibility
+risks, a stale citation-verification queue, and internal inconsistencies across the strategy documents.
+`CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` tracks the fix for each finding across two tracks — **Track
+A** (documentation fixes, completed today) and **Track B** (blocked on the veteran, a witness, or a
+provider — tracked, not closeable by editing a file). Track A is now fully done:
+
+- **Citations re-verified (Track A1):** all 10 outstanding case-law/CFR citations in the current working
+  documents (`Vazquez-Claudio`, `Bankhead`, `Barr v. Nicholson`, `Mauerhan`, `Mittleider`, `Rice`, `AZ v.
+Shinseki`, 38 CFR 3.304(f)(5)/3.310/3.306) are **CONFIRMED** against live primary sources — no misstated
+  citations survive in the docs actually in use. The one previously-flagged spelling risk
+  ("Vazquez-Claudio" vs. "Vasquez-Claudio") only ever existed in the superseded `claim-maximization-
+research-2026-06.md`; the current docs already had it right.
+- **Poquette's actual signed statement corrected (Track A2):** `COMPREHENSIVE-FINDINGS-2026-07.md` §9a
+  item 2 previously quoted a prep _draft_, not the executed VA Form 21-10210 Poquette actually signed
+  06/29/2026. The executed form drops the "2012" date and the "while we were both still in service"
+  sentence — so the accurate framing is no longer "Reyes and Poquette disagree on the year," it's that
+  **Reyes's signed statement asserts a year and in-service timing; Poquette's signed statement asserts
+  neither.** `DOCUMENT-PROVENANCE.md` now logs the executed form as the evidence of record.
+- **Internal contradictions and stale task lists fixed (Track A3/A4):** `MASTER-STRATEGY.md`'s task list
+  now explicitly carries every Track B item (opioid-recollection contradiction, the Poquette/Reyes timing
+  gap, Erica's surname, the Harmony Junction stay-length check); `COMPREHENSIVE-FINDINGS-2026-07.md`'s two
+  competing "#1 risk" framings (§0.2 vs. §9a item 1) are now cross-referenced as two different, both-live
+  risks rather than left contradictory, and its open-task list (§10) now includes the Harmony Junction and
+  CPT-worksheet arithmetic items that existed elsewhere in the file but were never promoted there.
+- **Treatment-admission count corrected (Track A6):** `PRE-POST-SERVICE-SEVERITY-CONTRAST.md` undercounted
+  the post-service treatment history as "five admissions" (Starlite's five admissions counted as one
+  entry, 2026 Harmony Junction omitted). Corrected to **at least nine distinct episodes** (Acadiana
+  2016/2017, Victory 2018, five Starlite admissions 2022–2025, Harmony Junction 2026), and its relapse-cause
+  narrative — which overclaimed that every relapse traced to psychiatric symptoms — now acknowledges the
+  record also attributes some relapses to "work stress"/"recently laid off," per
+  `COMPREHENSIVE-FINDINGS-2026-07.md` §5.
+- **C&P exam prep and Cherie's nexus-letter guide filled in (Track A7/A8):** `CP-EXAM-PREP-MENTAL-HEALTH.md`
+  now names the specific 2015/2018 trauma-denial instances (dates, facilities) instead of a generic prompt,
+  and adds prep notes for the age-18 pre-service question, the unexplained F15.20 diagnosis, and the
+  "gainfully employed" (2024) vs. 2025–2026 collapse sequencing. `NEXUS-LETTER-GUIDE-CHERIE.md` §7 now
+  flags the three-way suicidal-ideation frequency conflict (passive-SI history → daily → denies, across
+  three dates) for Cherie's awareness, alongside the trauma-disclosure and employment-status flags already
+  there.
+
+**What's still open** is entirely Track B — blocked on someone other than research/documentation work:
+the formal PTSD diagnosis from Cherie Mills (still the single highest-priority item in this whole corpus),
+Goff's buddy statement, the sleep study for the OSA secondary claim, and a VSO/attorney decision on how to
+handle the signed personal statement's two confirmed inaccuracies (the opioid-recollection contradiction
+and the records-release claim). See `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Tasks B1–B12 for the
+complete list of what's blocked on whom.
+
+## 2026-07-06 update — Cherie Mills's nexus letter received (Task B10 substantively delivered, not yet clean)
+
+The single most important open item across this entire corpus — a formal clinical PTSD diagnosis —
+arrived today. `personal-records/supporting-docs/nexus-letter-cherie.md`, signed 2 July 2026, states an
+actual diagnosis of PTSD, MDD, GAD, and OCD (not just a nexus opinion assuming one), hedges the GAD/MDD/
+OCD/PTSD nexus as "caused by, or chronically aggravated" (the aggravation fallback this corpus recommended
+given the pre-service self-reports), and states — in language close to the regulatory text itself — that
+the veteran has "total impairment in occupational and social realms." It also corroborates the
+female-perpetrator account already in the personal statement and the executed Poquette buddy statement.
+
+**This is a real development, but a `va-claim-document-analyst` review scored it 4/10 with a CRITICAL
+flag** — one finding is more than clerical:
+
+- **Credibility question (not clerical):** the letter's SUD-secondary-opinion sentence is word-for-word
+  identical (aside from name spelling) to a "verbatim template... only if she agrees" sentence this
+  corpus's own internal guide documents prepared for her in advance. This doesn't prove the opinion is
+  untrue or that she was coached — but it's exactly the coordinated-narrative pattern this corpus already
+  treats as its worst credibility exposure, and it needs to be asked of Cherie directly before the letter
+  is relied on. See `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B14.
+- **Clerical (genuinely minor):** a DOB stated as "30 May 1998" (should be 05/30/1989), the patient's own
+  surname alternating "Kline"/"Klein" within the letter itself, and a phone number written two different ways.
+
+It also doesn't address the three-way suicidal-ideation-frequency conflict already flagged in
+`NEXUS-LETTER-GUIDE-CHERIE.md` §7 — that's still something to be ready to explain at the C&P exam, not
+something this letter resolves. Full review: `document-analysis/nexus-letter-cherie-ANALYSIS.md`.
+`MASTER-STRATEGY.md`, `CLAIM-ASSESSMENT.md` §0.3, and `CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Tasks
+B10 and B14 are all updated to reflect this.
+
+A `claim-consistency-checker` pass on the 2026-07-06 remediation edits above also surfaced two new,
+previously-unflagged findings, now tracked as `COMPREHENSIVE-FINDINGS-2026-07.md` §0.11–§0.12 and
+`CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md` Task B13: the signed personal statement's own §4 claims
+Poquette would confirm in-service disclosure timing, which his actual executed statement doesn't bear out;
+and the personal statement and the 21-0781 don't agree with each other on which facilities their claimed
+records release covers. Both are awareness items for the veteran/VSO, not things fixable by editing a file.
 
 ## Superseded / historical
 
