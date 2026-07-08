@@ -173,7 +173,7 @@ stimulant use episode) before any of these records are submitted to VA — an un
 diagnosis with no clinical support is exactly the kind of loose thread an adversarial C&P examiner or rater
 could seize on.
 
-### 0.7 The WHODAS 2.0 functional assessment file is corrupted
+### 0.7 The WHODAS 2.0 functional assessment file is corrupted — **RESOLVED 2026-07-07 (real file now in hand; see the 2026-07-07 update below)**
 
 `personal-records/supporting-docs/psych-assessments-extracted/Recent Psych Assessments/Marcus-WHODAS_2_0-11Jun2026.pdf`
 is not a real PDF — it contains only an expired AWS S3 pre-signed-URL error. This is the **only** WHODAS
@@ -187,6 +187,23 @@ confirming high-severity GAD and MDD scores on each subscale. **No file has been
 yet** — this is a status update, not a received document. Once the actual file is available, add it to
 `personal-records/supporting-docs/` and get it reviewed (via `va-claim-document-analyst`, the same process
 used for the nexus letter) before treating its specific figures as confirmed for use in the claim.
+
+**UPDATE (2026-07-07) — the actual file is now in hand, and it corrects both notes above.** The real WHODAS 2.0
+report (`personal-records/supporting-docs/Marcus-WHODAS_2_0-11Jun2026.pdf`, 11 Jun 2026) has been received and
+read directly — a valid 10-page PDF, not the corrupted S3 export. Two corrections: (1) it is a
+**self-administered, auto-scored functional-disability instrument from the "Recover" leave-support vendor —
+NOT a psychologist-signed diagnostic**, and it measures functional disability (diagnosis-agnostic), not
+"GAD/MDD subscale scores"; (2) **overall functional disability ≈ 69.72%** (complex scoring), all six domains
+in the "high functional limitations" band (understanding 70.83%, mobility 65%, self-care 62.5%, getting-along
+70%, life-activities 75%, participation 75%; the item "making new friends" scores "extreme / cannot do"). It
+is the first objective corroboration of the ADL/hygiene 100%-tier anchor (self-care domain) and the
+total-social-impairment prong (social domains), with the usual vendor-self-report weight caveats (§1.2). Full
+assimilation and strategic use: `PATH-TO-100-PERCENT-2026-07-07.md` §11 / I-14; logged in
+`DOCUMENT-PROVENANCE.md`. If a separate, genuinely psychologist-signed assessment also exists (the veteran's
+original description), `MarcusKleinPsychEval.pdf` in the extracted psych-assessments folder may be it and is
+worth reviewing. **Also confirmed 2026-07-07:** the **DASS-21 (09 Jun 2026) is likewise in hand** — Depression
+36 / Anxiety 34 / Stress 38, all "Extremely severe," 98–100th percentile — which resolves the §6 / §10-item-6
+re-export task for the symptom-severity instrument as well.
 
 ### 0.8 NEW (2026-07-05) — Signed documents already assert the contradicted opioid-origin claim
 
