@@ -83,6 +83,20 @@ this fact pattern, but **no sleep study has been done yet** — nothing else mat
 until a polysomnography-confirmed OSA diagnosis exists. See that file for the
 concrete this-week action and the full citation-verification log.
 
+**[`RESEARCH-MALE-MST-PTSD-SYMPTOMS-2026-07-08.md`](./RESEARCH-MALE-MST-PTSD-SYMPTOMS-2026-07-08.md)**
+is a dedicated `deep-research` pass (25 claims verified 3-0 against VA/NCPTSD and
+peer-reviewed sources) on the clinical presentation of male PTSD from female-perpetrated
+sexual trauma: the DSM-5 symptom clusters with concrete examples, the male-specific overlay
+(shame, masculine-identity threat, distrust-driven non-disclosure), and — the requested
+focus — the paranoia/delusion **continuum** (common hypervigilance/mistrust → rarer ~12%
+frank persecutory delusions → the "with psychotic features"/PTSD-SP differential). Two
+honest load-bearing points: it grounds the non-disclosure explanation (`PATH-TO-100-PERCENT`
+I-2(d)/I-9) in the literature, and it flags that the **grandiose** belief is _not_ explained
+by the trauma-PTSD literature (unlike the persecutory one) and needs the clinician's
+differential assessment. **Educational clinical background, explicitly not a symptom
+checklist to adopt** — diagnosis is the clinician's, symptoms are the veteran's genuine
+experience; re-verify any figure through `citation-verifier` before any filing.
+
 ## Key findings (2026-07-05 update)
 
 - **Claim status:** a Supplemental Claim is open (VSO-filed ~5/19/2026); a VA
