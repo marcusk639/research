@@ -11,6 +11,20 @@ rating without TDIU**, on realistic, truthfully-documented evidence?
 
 ## Start here
 
+**[`PATH-TO-100-PERCENT-2026-07-07.md`](./PATH-TO-100-PERCENT-2026-07-07.md)** is the
+newest and most focused document — the dedicated **schedular-only (no TDIU)** plan for
+reaching **100%**, built on two research passes (2026-07-07). It specifies two convergent
+routes (schedular 100% on the mental-health cluster; and 90% MH + a 50% sleep-apnea
+secondary = 100% combined), a full issue register (every obstacle to 100% with resolution
+options), sequenced execution phases, and honestly-labeled odds. Read this first if the
+question is specifically "how do I get to 100%." It builds on `PATH-TO-MAXIMUM-RATING-2026-07-06.md`
+below and points into the legal-research files rather than replacing them. Two legal
+findings from its research passes are load-bearing and new: (1) under 38 CFR 4.126(a) the
+rater weighs the _whole record_, so a treating clinician's opinion can outweigh a lowball
+C&P examiner (BVA A25038905 template); (2) the 70→100 gap is the "total _social_
+impairment" prong, where a maintained marriage is the veteran's biggest vulnerability
+(reframed as caregiving dependency) — flagged for `citation-verifier` follow-up.
+
 **[`PATH-TO-MAXIMUM-RATING-2026-07-06.md`](./PATH-TO-MAXIMUM-RATING-2026-07-06.md)** is
 the single consolidated, sequenced roadmap — read this first if you want "what do I do,
 in order, to reach the maximum rating." It doesn't replace the documents below; it points
