@@ -25,6 +25,14 @@ C&P examiner (BVA A25038905 template); (2) the 70→100 gap is the "total _socia
 impairment" prong, where a maintained marriage is the veteran's biggest vulnerability
 (reframed as caregiving dependency) — flagged for `citation-verifier` follow-up.
 
+**[`ACTION-CHECKLIST-100-PERCENT.md`](./ACTION-CHECKLIST-100-PERCENT.md)** is the do-it
+companion to that plan — 22 prioritized, checkable action items across five tiers
+(this-week highest-leverage → before-the-C&P documentation → parallel support → at the
+exam → post-decision), each with its owner/dependency and resources, plus a consolidated
+Resources & Citations appendix (VA forms, the Mental Disorders DBQ, status/records/free-help
+links, and the verified case/regulation cites). Use the plan for the reasoning and this for
+the sequence of things to actually do.
+
 **[`PATH-TO-MAXIMUM-RATING-2026-07-06.md`](./PATH-TO-MAXIMUM-RATING-2026-07-06.md)** is
 the single consolidated, sequenced roadmap — read this first if you want "what do I do,
 in order, to reach the maximum rating." It doesn't replace the documents below; it points
