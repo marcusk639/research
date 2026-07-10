@@ -14,6 +14,19 @@
 
 ---
 
+## Canonical facts (single source of truth — cite this, don't re-state)
+
+- **Claim dates:** received **19 May 2026**; VA development letter **29 May 2026**. The VA-recorded receipt date governs the effective date — confirm at the eFolder pull.
+- **WHODAS 2.0:** in-hand, self-administered vendor functional instrument (~69.72% overall; self-care 62.5%); auto-scored — **NOT** psychologist-signed, not a GAD/MDD subscale test, not a broken/expired export.
+- **Odds anchor (per `PATH-TO-100-PERCENT-2026-07-07.md` §9 — REASONED ESTIMATES):** 70% ≈ 90%+, 90% ≈ 60–70%, 100% MH-alone ≈ 40–50%, 100% combined ≈ 50–60%.
+- **PTSD diagnosis:** supplied by Cherie's signed **2 July 2026** letter.
+- **Route 2 framing:** modestly higher-probability than Route 1 **if the sleep study is positive**; inherits the 90%-MH burden; **not a safe fallback**.
+- **Married-veteran BVA balance:** 3 adverse vs 1 favorable — a non-representative sample, **not** weight-of-authority.
+
+Future documents should cite this block rather than re-stating these facts, to prevent drift.
+
+---
+
 ## 0. READ THIS FIRST — Critical, time-sensitive, and high-risk items
 
 ### 0.1 Filing-clock alert (URGENT — verify immediately)

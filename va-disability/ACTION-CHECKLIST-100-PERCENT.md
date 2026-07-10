@@ -42,7 +42,7 @@
 - [ ] **7. Establish and attend the new VA mental-health provider** _(you · I-1(a), Phase 2)_
       Get current symptoms **contemporaneously documented** now (WellMind/PSO referral). This is what converts a symptom from "first-at-exam" (weak) to "documented" (Caluza/Buchanan).
 - [ ] **8. Erica writes her independent statement — her own words, no coaching** _(Erica · I-6, Phase 3)_
-      Only what she genuinely witnessed: the **ADL/hygiene assistance**, the **isolation** (framed honestly as caregiving-dependency, not a reciprocal social life — I-3), the **daily-SI statements** she's heard, the **OCD behaviors**, the **December-2024 job-loss causation**, and any **witnessed sleep-apnea signs** (snoring/gasping/pauses — also helps Tier 1 #1).
+      Only what she genuinely witnessed: the **ADL/hygiene assistance**, the **isolation** (framed honestly as caregiving-dependency, not a reciprocal social life — I-3), the **daily-SI statements** she's heard, the **OCD behaviors**, a **late-2024 job loss only if she genuinely recalls one** (her statement currently describes 2018/2023/2026, not a Dec-2024 event), and any **witnessed sleep-apnea signs** (snoring/gasping/pauses — also helps Tier 1 #1).
       _Resources:_ it goes on **VA Form 21-10210** (Lay/Witness Statement). Competent lay evidence for observable symptoms: **Layno v. Brown; 38 CFR 3.159(a)(2)**. **Hard rule — do not draft or script her wording** (`CLAIM-ASSESSMENT.md` §0.2). Log it in `DOCUMENT-PROVENANCE.md` once done.
 - [ ] **9. Prepare — with the VSO/attorney — your honest explanation for why the records are silent** _(you + VSO · I-2(d), I-9)_
       Your own account: across your ~9 addiction treatments you deliberately **minimized/withheld psychiatric symptoms to avoid involuntary holds, to get through detox, and because you weren't ready and didn't trust intake staff.** This explains the record's silence (it _understates_ your severity) and covers the "denies SI" notes and the MST denials. **Center the genuine reasons and keep it consistent** — the wording matters (I-2(d) caveat). Cherie can corroborate the clinical pattern.
@@ -66,7 +66,7 @@
 - [ ] **15. Confirm the corrective supplemental statement for the opioid-recollection issue** _(you + VSO · I-8)_
       Verify with the VSO/attorney it's been handled; the operative self-medication theory (Cherie's letter) doesn't depend on the contradicted fact. _Resource:_ `CREDIBILITY-INCONSISTENCY-RESEARCH.md`.
 - [ ] **16. Track down `MarcusKleinPsychEval.pdf`** _(you · I-14(c))_
-      If a genuinely **psychologist-signed** assessment exists (your original description of the WHODAS), it carries more weight than the vendor self-report — it may be this file in the extracted psych-assessments folder. Review and, if useful, submit it.
+      If a genuinely **psychologist-signed** assessment exists, it carries more weight than the vendor self-report. Note: this would be a _separate_ document — the WHODAS 2.0 itself is confirmed in hand as a self-administered, vendor-auto-scored functional instrument, **not** psychologist-signed (§I-14). A psychologist-signed assessment, if one exists, may be this file in the extracted psych-assessments folder. Review and, if useful, submit it.
 
 ---
 

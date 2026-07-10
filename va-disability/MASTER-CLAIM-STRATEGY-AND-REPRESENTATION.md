@@ -16,7 +16,7 @@
 
 - **70% mental health ≈ 90%+**
 - **90% mental health ≈ 60–70%**
-- **100% schedular, MH-alone (Route 1) ≈ 40–50%**
+- **100% schedular, MH-alone (Route 1) ≈ 40–50%** (refined by the 2026-07-09 reassessment — see the Status update below: ~25–35% as-documented-today, ~45–50% if the documentation lands)
 - **100% schedular, combined (Route 2) ≈ 50–60%**
 
 **The two hard contingencies that pin these down — read these first:**
@@ -97,15 +97,15 @@ Full detail and the vetting checklist: [`ATTORNEY-AND-LEGAL-RESOURCES-KB.md`](./
 
 - **Right now, the free accredited VSO is the correct representation.** VA accredits three representative types (VSO reps, attorneys, claims agents; 38 CFR 14.629 **[confirmed]**). VSO services are **always free**; attorneys/agents **cannot legally charge a fee for work before VA's initial decision** on a claim (38 U.S.C. § 5904(c)(1) **[confirmed]**).
 - **The synthesis insight:** whether an accredited **attorney can take this claim on contingency now** turns on the _same fact_ as the effective-date question (I-16) — the procedural posture of this claim. Because it is filed as a **Supplemental Claim** (which by definition follows a prior decision — the record notes a 2015 MST denial), a prior decision very likely exists, which would mean **an attorney can be engaged on contingency now** for the supplemental/appeal. Confirm at the eFolder pull (I-16); one lookup settles both the effective-date bucket and representation timing.
-- **Where an attorney adds the most leverage:** hold an accredited attorney **in reserve for a post-decision HLR/Board appeal** arguing the rater failed to weigh Cherie's treating-clinician opinion under 38 CFR 4.126(a)/4.2 and _Nieves-Rodriguez v. Peake_ **[pending citation-verifier]**. Run a free consult now if useful (bring only claim status + condition list; verify accreditation at **ogc.va.gov**; ask about MST/PTSD _schedular_ appeal experience and EAJA). **Never pay upfront on an initial claim (illegal).**
+- **Where an attorney adds the most leverage:** hold an accredited attorney **in reserve for a post-decision HLR/Board appeal** arguing the rater failed to weigh Cherie's treating-clinician opinion under 38 CFR 4.126(a)/4.2 and _Nieves-Rodriguez v. Peake_ **[confirmed — citation-verifier 2026-07-09]**. Run a free consult now if useful (bring only claim status + condition list; verify accreditation at **ogc.va.gov**; ask about MST/PTSD _schedular_ appeal experience and EAJA). **Never pay upfront on an initial claim (illegal).**
 - **Fee rules (citation-verified 2026-07-09):** ≤20% of past-due benefits is presumed reasonable; >33⅓% presumed unreasonable; VA direct-pays an attorney from back-pay only if the fee is contingent, ≤20%, and the attorney is accredited on the fee-allocation-notice date. EAJA (28 U.S.C. § 2412) can shift fees to the government at the CAVC level.
 - **Firms are candidates to vet, not a ranked "best" list** — the deep-research verification could not certify any firm's reputation claims (they're marketing). Vet accreditation yourself; judge fit in the free consult, not by advertised win rates.
 
 ---
 
-## 5. Full gap / issue register (24 issues — every obstacle to 100%, each with an owned solution)
+## 5. Full gap / issue register (30 issues — every obstacle to 100%, each with an owned solution)
 
-_Carried from `PATH-TO-100-PERCENT-2026-07-07.md` §7 (I-1…I-15), extended (I-16…I-19), plus documentation-hygiene items (H-1…H-5). Owners: **Veteran** · **VSO** · **Cherie** (LCSW, treating) · **Erica** (spouse) · **Attorney** (post-decision) · **You/analyst** (corpus edits only). No issue without a concrete solution; **no witness-wording coaching anywhere** — every witness task is open-ended, the witness's own words only._
+_Carried from `PATH-TO-100-PERCENT-2026-07-07.md` §7 (I-1…I-15), extended (I-16…I-25), plus documentation-hygiene items (H-1…H-5). Owners: **Veteran** · **VSO** · **Cherie** (LCSW, treating) · **Erica** (spouse) · **Attorney** (post-decision) · **You/analyst** (corpus edits only). No issue without a concrete solution; **no witness-wording coaching anywhere** — every witness task is open-ended, the witness's own words only._
 
 ### CRITICAL
 
@@ -155,15 +155,25 @@ _Carried from `PATH-TO-100-PERCENT-2026-07-07.md` §7 (I-1…I-15), extended (I-
 
 **I-15 — Claim status is open and receiving evidence** (favorable). **Solution:** VSO flags the moment a C&P is scheduled (hard cutoff); feed evidence as produced; confirm each already-signed document is _actually in the claims file_.
 
+**I-21 (Medium) — Ankle injury date: "May 2011" (personal statement) vs "2012" (2015 VA intake).** Solution: Veteran/VSO reconcile from the underlying records (claim-facing — see CLAIM-RECONCILIATION-WORKLIST.md B2).
+
+**I-22 (Medium) — Reyes buddy form "personal-records" unit name "4th Maintenance Squadron" vs DD-214 "4th Equipment Maintenance Squadron".** Solution: VSO/Reyes correct to the DD-214 (claim-facing — worklist B3a).
+
+**I-23 (Medium) — Spouse surname "Erica Jure" vs "Erica Klein" across documents.** Solution: Veteran confirms legal name before Erica signs a 21-10210 (claim-facing — worklist B3b).
+
+**I-24 (Low) — Harmony stay "25 day" vs discharge dates computing to 24.** Solution: correct if convenient (claim-facing — worklist B3c).
+
+**I-25 (Low) — CPT Impact Statement "age twenty-two" vs age 23 at the assault date (DOB 05/30/1989).** Solution: correct if convenient (claim-facing — worklist B3d).
+
 ### DOCUMENTATION-HYGIENE (corpus-internal; owner = You/analyst; none claim-facing)
 
 - **H-1 —** `COMPREHENSIVE-FINDINGS` §0.1 still treats the ~6/28/2026 soft deadline as urgent though it's mooted → update §0.1 to reflect I-15.
 - **H-2 —** `COMPREHENSIVE-FINDINGS` §0.7 still describes WHODAS as corrupted/"psychologist-signed" despite its own correction → propagate "in hand, self-report functional instrument" through every stale mention.
 - **H-3 (Medium) —** Claim-date inconsistency (MASTER-STRATEGY "filed ~5/19/2026" vs "acknowledged 29 May" vs COMPREHENSIVE-FINDINGS §2 "received 19 May / development letter 29 May") → reconcile to the §2 distinction; VSO confirms the VA-recorded receipt date at the eFolder pull (affects the I-16 effective-date analysis).
 - **H-4 —** Odds-framing tension (MASTER-STRATEGY "80–90% combined" vs PATH-TO-100 §9 per-route anchor) → point MASTER-STRATEGY's odds line at §9 as governing.
-- **H-5 (Medium → Critical if it reaches a filing) —** Unverified new case law in `CLAIM-COMPLETION-PLAN` §2.3/§3 (**Nieves-Rodriguez v. Peake**, § 4.2 quoted text, BVA 1513531/22009295) → dispatch `citation-verifier` before any enters a filed brief or this guide is relied on for filing; kept marked **[pending citation-verifier]** until then.
+- **H-5 (Medium → Critical if it reaches a filing) —** New case law in `CLAIM-COMPLETION-PLAN` §2.3/§3: **Nieves-Rodriguez v. Peake** and **BVA 1513531 / 22009295** are now **[confirmed — citation-verifier 2026-07-09]**; the **§ 4.2 quoted text** remains **[pending citation-verifier]** and must clear before it enters a filed brief or this guide is relied on for filing.
 
-**Register summary:** Critical 3 · High 7 · Medium 7 · Low 3 · Doc-hygiene 5 · **Total 25.**
+**Register summary:** Critical 3 · High 7 · Medium 10 · Low 5 · Doc-hygiene 5 · **Total 30.**
 **Three highest-leverage blockers (★★★):** I-12 (sleep study — _if positive_), I-1 (100%-tier symptoms into Cherie's chart/DBQ before any C&P), I-3 (total-social-impairment prong vs. the marriage).
 
 ---
@@ -206,5 +216,5 @@ This guide was reviewed by two independent agents that did **not** author it, ea
 
 - **Strategy** synthesized from `COMPREHENSIVE-FINDINGS-2026-07.md`, `MASTER-STRATEGY.md`, `PATH-TO-100-PERCENT-2026-07-07.md`, `SLEEP-APNEA-SECONDARY-CLAIM.md`, `CLAIM-COMPLETION-PLAN-2026-07-08.md`, `100-PERCENT-SCHEDULAR-PATHWAY.md`, `CLAIM-MASTER-BRIEF.md`. Odds carried verbatim from `PATH-TO-100-PERCENT` §9.
 - **Representation** from `ATTORNEY-AND-LEGAL-RESOURCES-KB.md` (deep-research `wf_61ae64d6-fdc`, 107 agents; fee-rule + _Landry_ citations **citation-verified 2026-07-09**, all confirmed against Cornell LII / eCFR / Federal Register / govinfo).
-- **Citation labels:** `[confirmed — <source>]` = verified against primary sources in this corpus's prior citation-verifier passes (named source doc); `[pending citation-verifier]` = new/unverified, must clear before any filing. H-5's cites (Nieves-Rodriguez, § 4.2 text, BVA 1513531/22009295) remain pending and must be verified before this guide is relied on for a filing.
+- **Citation labels:** `[confirmed — <source>]` = verified against primary sources in this corpus's prior citation-verifier passes (named source doc); `[pending citation-verifier]` = new/unverified, must clear before any filing. Of H-5's cites, **Nieves-Rodriguez** and **BVA 1513531/22009295** are now confirmed (citation-verifier 2026-07-09); the **§ 4.2 quoted text** remains pending and must be verified before this guide is relied on for a filing.
 - **Reviewed** by an independent consistency checker (no drift) and an independent adversarial critic (all findings resolved — see §6).

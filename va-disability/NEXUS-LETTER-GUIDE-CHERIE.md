@@ -49,7 +49,7 @@ If genuinely present, obsessional rituals or compulsions that interfere with rou
 
 ### 6. Materials available to review
 
-DD-214, service treatment records (if obtained), the VA Form 21-0781 personal statement, buddy statements from fellow service members (Reyes, Poquette, and Goff once his is obtained — see `CLAIM-ASSESSMENT.md` §1.1), spouse statement, prior treatment records (Starlite, Victory Addiction Recovery, Acadiana Addiction Center, Ocean's Luxury Rehab, Harmony Junction Recovery), and the WHODAS 2.0 functional assessment (once re-exported — the current file is a broken export and needs to be regenerated).
+DD-214, service treatment records (if obtained), the VA Form 21-0781 personal statement, buddy statements from fellow service members (Reyes, Poquette, and Goff once his is obtained — see `CLAIM-ASSESSMENT.md` §1.1), spouse statement, prior treatment records (Starlite, Victory Addiction Recovery, Acadiana Addiction Center, Ocean's Luxury Rehab, Harmony Junction Recovery), and the WHODAS 2.0 functional assessment (in hand; a self-administered vendor functional instrument).
 
 ### 7. Things to flag for her awareness, not surprise
 

@@ -38,7 +38,7 @@ The controlling phrase for 100% is **"total occupational AND social impairment"*
 
 This section is evidentiary-tendency, not black-letter law — there's no published numeric threshold; treat it as informed pattern-recognition, not a guarantee.
 
-- **The single most outcome-determinative item is the C&P examiner's own global-impairment selection on the mental disorders DBQ.** A 70% grant typically corresponds to the examiner checking "deficiencies in most areas"; 100% almost always requires the examiner (or a competing private DBQ/IMO) to select "total occupational and social impairment."
+- **The C&P examiner's own global-impairment selection on the mental disorders DBQ is the single most _influential_ item in practice — but it is not dispositive.** Under 38 CFR 4.126(a), the rating agency assigns the evaluation based on **all the evidence of record**, not solely the examiner's assessment at the moment of the exam — so a strong treating-clinician opinion or a competing private DBQ/IMO can outweigh a lowball exam. A 70% grant typically corresponds to the examiner checking "deficiencies in most areas"; 100% almost always requires the examiner (or a competing private DBQ/IMO) to select "total occupational and social impairment."
 - **Both prongs need to be documented** — not just inability to work, but genuine, near-total social isolation. Veterans who are unemployable but maintain some relationships tend to land at 70%, not 100%.
 - **Concrete, corroborated severity** (hospitalization, near-continuous symptoms, consistency between the C&P exam and the treatment record) moves toward 100%; divergence between what the examiner finds and what the records show tends to produce 70% plus a remand, not 100%.
 - Explicitly invoking the 38 CFR 4.7 "more nearly approximates" standard, tied to _Mauerhan_/_Bankhead_, is the standard legal frame for arguing up from 70% to 100%.
@@ -113,7 +113,7 @@ MH 90 + sleep apnea 50 → combines to 95%, **rounds to 100%.** A single 50% sec
 ## Strategy synthesis
 
 1. Primary target: schedular 100% under 4.130, framed explicitly as **total occupational AND social impairment** — both prongs, distinguishing it from a TDIU argument.
-2. The lever: the C&P examiner's (or a private IMO's) global-impairment selection on the DBQ. This is the single most important piece of evidence in the whole case.
+2. The lever: the C&P examiner's (or a private IMO's) global-impairment selection on the DBQ — the single most _influential_ piece of evidence, though under 38 CFR 4.126(a) it is not dispositive: the rater weighs the whole record, so a strong treating-clinician opinion can outweigh a lowball exam.
 3. Use _Mauerhan_ + _Bankhead_ to argue you don't need every 100%-tier example symptom; satisfy _Vazquez-Claudio_ by showing the symptoms you do have genuinely produce total impairment.
 4. Comorbidities (PTSD/GAD/MDD/OCD/SUD) help through breadth of distinguishable symptoms feeding the one score; _Mittleider_ attributes inseparable SUD symptoms to the service-connected psychiatric picture.
 5. Unemployment is legitimate occupational-impairment evidence; accept Rice-raised TDIU consideration as an automatic fallback floor rather than fighting it.

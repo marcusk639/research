@@ -13,7 +13,7 @@ Supplemental Claim on the mental-health cluster (PTSD/MST + MDD + GAD + OCD + SU
 
 ## 1. The whole game, in one paragraph
 
-Two convergent routes to 100%: **Route 1** — schedular 100% on the mental-health cluster alone (requires _total occupational **and** social_ impairment). **Route 2** — 90% MH + a 50% sleep-apnea secondary = 100% combined. Pursue **both**; Route 2 is the more reliable and should be treated as co-equal, not a fallback. Honest odds (REASONED ESTIMATES): 70% ≈ 90%+, 90% ≈ 60–70%, 100% MH-alone ≈ 40–50%, 100% combined ≈ 50–60%. **If you do only four things:** (1) get the sleep study, (2) get the ADL/hygiene dependence + the two delusions into Cherie's chart **and** DBQ before any C&P, (3) have Erica revise her own statement to document isolation _outside_ the marriage, (4) ask the VSO the effective-date/prior-decision question this week (free to ask, changes the back-pay stakes).
+Two convergent routes to 100%: **Route 1** — schedular 100% on the mental-health cluster alone (requires _total occupational **and** social_ impairment). **Route 2** — 90% MH + a 50% sleep-apnea secondary = 100% combined. Pursue **both**; Route 2 is **modestly higher-probability than Route 1 IF the sleep study is positive; it inherits the full 90%-MH burden and is NOT a safe fallback** — treat it as co-equal, not a superior path. Honest odds (REASONED ESTIMATES): 70% ≈ 90%+, 90% ≈ 60–70%, 100% MH-alone ≈ 40–50%, 100% combined ≈ 50–60%. **If you do only four things:** (1) get the sleep study, (2) get the ADL/hygiene dependence + the two delusions into Cherie's chart **and** DBQ before any C&P, (3) have Erica revise her own statement to document isolation _outside_ the marriage, (4) ask the VSO the effective-date/prior-decision question this week (free to ask, changes the back-pay stakes).
 
 ---
 
@@ -55,7 +55,7 @@ Hand her [`NEXUS-LETTER-GUIDE-CHERIE.md`](./NEXUS-LETTER-GUIDE-CHERIE.md); it te
 - [ ] **DASS-21 + WHODAS 2.0** sent to the VSO with honest framing (§2).
 - [ ] **Cherie:** ADL/hygiene + both delusions charted (care-first); **21-0960P-2 DBQ + narrative addendum** completed (§3–4).
 - [ ] **Cherie:** updated letter reflecting the above, per her own clinical judgment.
-- [ ] **Erica:** revises her own statement — concrete isolation _outside_ the marriage (rebuts the adverse married-veteran BVA authority), ADL assistance, isolation pattern, daily-SI frequency, OCD behaviors, Dec-2024 job-loss causation. Her words only; log the update in `DOCUMENT-PROVENANCE.md`.
+- [ ] **Erica:** revises her own statement — concrete isolation _outside_ the marriage (rebuts the adverse married-veteran BVA authority), ADL assistance, isolation pattern, daily-SI frequency, OCD behaviors, and — **only if she genuinely recalls it** — any late-2024 job loss and its cause, in her own words (the record notes only a _possible_ late-2024 layoff, `COMPREHENSIVE-FINDINGS-2026-07.md` §2; her current statement does not describe one). Her words only; log the update in `DOCUMENT-PROVENANCE.md`.
 - [ ] **New VA mental-health provider** established and attended, so current symptoms get contemporaneously charted.
 - [ ] **Written explanations prepared with the VSO/attorney:** why records are silent on withheld symptoms (hold-avoidance, distrust, timing); the SI-fluctuation and trauma-disclosure explanations.
 - [ ] **Effective-date question asked** (§1 item 4): date/outcome of any prior decision on this issue, and whether this is legally a Supplemental Claim reopening it (governs 38 CFR § 3.2500(h) retroactivity). If the effective date ever turns on the precise filing date, note the record distinguishes **claim received 19 May 2026** from the **29 May 2026 development letter** (`COMPREHENSIVE-FINDINGS-2026-07.md` §0.1/§2).
@@ -63,7 +63,7 @@ Hand her [`NEXUS-LETTER-GUIDE-CHERIE.md`](./NEXUS-LETTER-GUIDE-CHERIE.md); it te
 - [ ] **Confirm** the opioid-recollection corrective supplemental statement was filed.
 - [ ] **DC 6847** sleep-apnea NPRM status confirmed before relying on the 50% CPAP tier.
 
-**At the exam itself:** work from `CP-EXAM-PREP-MENTAL-HEALTH.md`; argue **both** prongs (never occupation-only); describe **worst/typical** days, not best days; cover ADL/hygiene dependence, the delusions (already charted, so not cold), SI honestly at the 70%-tier line, and total isolation concretely. Expect an in-person/telehealth exam regardless of how strong the private evidence is; if the examiner seems dismissive of Cherie's findings, that's not decisive — **under 38 CFR § 4.126(a) the rater weighs the whole record, not just the exam snapshot** (and _Nieves-Rodriguez v. Peake_ backs this — flagged for `citation-verifier` before any filing).
+**At the exam itself:** work from `CP-EXAM-PREP-MENTAL-HEALTH.md`; argue **both** prongs (never occupation-only); describe **worst/typical** days, not best days; cover ADL/hygiene dependence, the delusions (already charted, so not cold), SI honestly at the 70%-tier line, and total isolation concretely. Expect an in-person/telehealth exam regardless of how strong the private evidence is; if the examiner seems dismissive of Cherie's findings, that's not decisive — **under 38 CFR § 4.126(a) the rater weighs the whole record, not just the exam snapshot** (and _Nieves-Rodriguez v. Peake_ backs this **[confirmed — citation-verifier 2026-07-09]**).
 
 ---
 
