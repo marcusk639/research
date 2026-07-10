@@ -29,6 +29,15 @@
 
 ---
 
+## Status update — reported by veteran 2026-07-09 (not yet fact-in-record)
+
+The veteran reports the Route 1 documentation is actively coming together. **Logged here as his reported status, not as evidence in the claims file — none of it counts until it is actually charted/signed at genuine severity and consistent with the rest of the record:**
+
+- **Erica is drafting her own statement** (her own words, unprompted) covering: the caretaker/roommate marital dynamic, hygiene/dressing/self-care assistance (ADL), not leaving the house (isolation), the job loss and money problems (occupational), "and much else."
+- **Cherie will document and corroborate** the ADL dependence, the career loss, and — importantly — **the delusions and paranoia** (the second 100%-tier anchor).
+
+**What this changes:** if it all lands at genuine 100%-tier severity and stays internally consistent, both Route 1 anchors (ADL dependence + delusions) and all three prongs (occupational, social, ADL) get corroborated by veteran + spouse + treating clinician — the strongest schedular posture available. **Refined Route 1 odds (REASONED ESTIMATE, 2026-07-09 reassessment):** as-documented-_today_ it is lower (~25–35%); _if it all lands as reported_, ~**45–50%** — a strong coin flip, **not** a lock, and still hostage to the C&P examiner's global-impairment selection and to consistency. This does not raise Route 1's ceiling above the §1 anchor; it makes that number more achievable. The risk has shifted from _evidence-sufficiency_ to _evidence-integrity_ (see I-6/I-20). Route 2 remains the co-equal, arguably primary, path.
+
 ## 2. The two convergent schedular routes
 
 Both routes share ~90% of the same evidence work, so they run in parallel rather than as a bet on one. **The center of gravity of both is identical: maximize the single mental-health rating.** From a 70% MH anchor the realistic combined ceiling is ~90% even with a full secondary stack; from a 90% MH anchor, one 50% sleep-apnea rating cleanly reaches 100%. Raising MH from 70→90 is worth more than any pile of marginal secondaries.
@@ -36,6 +45,8 @@ Both routes share ~90% of the same evidence work, so they run in parallel rather
 ### Route 1 — Schedular 100% on the mental-health cluster (the ideal)
 
 The rater finds **total occupational AND social impairment** under 38 CFR 4.130, built from genuine symptoms across all five diagnoses that feed the single MH score (PTSD/MST + MDD + GAD + OCD + SUD, rated as one under anti-pyramiding, 38 CFR 4.14 **[pending citation-verifier]**). Note that Cherie's signed **2 July 2026 letter already supplies the actual clinical PTSD diagnosis** (plus MDD/GAD/OCD/SUD) — resolving what had long been the corpus's single biggest open item (`COMPREHENSIVE-FINDINGS-2026-07.md` §0.13); the service-connection foundation for a rating therefore exists, and the work now is severity/impairment documentation.
+
+**Strategic reframe (2026-07-09 reassessment):** build the 100% case on the **listed 100%-tier symptoms** (persistent delusions + intermittent inability to perform ADLs), which produce total impairment _holistically_ under _Mauerhan_ regardless of marital status — **not** on an isolation-first "I have no relationships" argument, which a marriage undercuts. A person can be married and still have persistent delusions and be unable to maintain hygiene; that framing makes the marriage a manageable fact rather than a wall. The genuine caregiving/roommate dynamic and isolation-outside-the-marriage then _support_ the social prong; they don't have to carry it alone.
 
 - **Two potential 100%-tier anchors** — both genuine, both **not yet in any treatment record**, which is exactly the documentation work to be done:
   - **ADL / personal-hygiene dependence** (spouse-assisted) — corresponds to the 100%-tier "intermittent inability to perform activities of daily living (including maintenance of minimal personal hygiene)." This would be the first 100%-tier-language symptom anywhere in the corpus. The WHODAS 2.0 self-care domain (62.5%) is a **self-report data point consistent with** meaningful self-care impairment — it is _not_ objective evidence and a moderate score does **not** by itself establish the 100%-tier "inability"; it supports, it does not prove.
@@ -110,7 +121,9 @@ _Carried from `PATH-TO-100-PERCENT-2026-07-07.md` §7 (I-1…I-15), extended (I-
 
 **I-5 — The two delusions are undocumented and diagnostically distinct.** A true fixed delusion isn't a standard PTSD/MDD/GAD/OCD symptom. **Solution:** Veteran + Cherie raise them as a care issue; Cherie charts + characterizes them in her judgment and answers the DBQ differentiation items (Mittleider **[confirmed — `PATH-TO-100` §11]**); Erica corroborates observable behavior only if genuinely witnessed, her words.
 
-**I-6 — Erica's statement predates the now-relevant facts** (and a prior draft has a coaching-risk history). **Solution:** Erica revises/expands her confirmed self-authored statement **entirely in her own words, from her own memory**; **no one drafts/scripts/coaches or names the helpful topics**; open-ended memory-jog questions only; You/analyst logs the update in `DOCUMENT-PROVENANCE.md` and marks the old AI draft superseded.
+**I-6 — Erica's statement predates the now-relevant facts** (and a prior draft has a coaching-risk history). **Status (reported 2026-07-09):** Erica is actively drafting her own statement (caretaker/roommate dynamic, ADL/hygiene assistance, isolation/not leaving the house, job loss, money problems). **Solution:** Erica revises/expands her confirmed self-authored statement **entirely in her own words, from her own memory**; **no one drafts/scripts/coaches or names the helpful topics** (this is now the live risk, since she is writing while the strategy's needs are known — the statement must reflect her genuine recollection, not adopted talking points); open-ended memory-jog questions only; You/analyst logs the update in `DOCUMENT-PROVENANCE.md` and marks the old AI draft superseded.
+
+**I-20 (High, NEW 2026-07-09) — Consistency of the caretaker/roommate characterization across the file.** As Erica's statement and Cherie's documentation adopt the "caretaking, non-reciprocal marriage" picture, it must not collide with warmer/more-reciprocal descriptions elsewhere in the record — the `BLOG-POST-DRAFT-OUR-STORY.md`, Erica's earlier statement, and older treatment notes. Both can be true (a loving relationship can also be a caregiving one), but a file that says "devoted partnership" in one place and "roommate who dresses me" in another hands a rater a credibility contradiction — and credibility is this claim's biggest documented vulnerability. **Solution:** VSO/Veteran review the record for characterizations of the marriage and reconcile them to one truthful, consistent account (do not alter signed documents; note/flag conflicts); the veteran decides how to characterize honestly; run `claim-consistency-checker` once Erica's and Cherie's updates exist; keep the blog draft unpublished while the claim is open. **No witness wording is drafted or suggested in resolving this.**
 
 **I-16 — The claim's procedural posture / effective-date is unconfirmed** (governs back-pay AND whether an attorney can charge now). It is filed as a **Supplemental Claim**, which presupposes a prior decision — the record notes a **2015 MST denial**. **Solution (concrete):** VSO pulls the prior rating decision / VA eFolder (VBMS) to confirm the date and outcome of the prior decision this reopens, and whether the current filing is within the one-year lookback of 38 CFR 3.2500(h)(1) **[confirmed — `CLAIM-COMPLETION-PLAN` §2.5]** (potential reach-back) or capped at 29 May 2026 receipt (h)(2). That single lookup also confirms representation timing (I-18 — a prior decision existing means an attorney may charge now). Veteran calendars the one-year deadline at any decision.
 
@@ -150,7 +163,7 @@ _Carried from `PATH-TO-100-PERCENT-2026-07-07.md` §7 (I-1…I-15), extended (I-
 - **H-4 —** Odds-framing tension (MASTER-STRATEGY "80–90% combined" vs PATH-TO-100 §9 per-route anchor) → point MASTER-STRATEGY's odds line at §9 as governing.
 - **H-5 (Medium → Critical if it reaches a filing) —** Unverified new case law in `CLAIM-COMPLETION-PLAN` §2.3/§3 (**Nieves-Rodriguez v. Peake**, § 4.2 quoted text, BVA 1513531/22009295) → dispatch `citation-verifier` before any enters a filed brief or this guide is relied on for filing; kept marked **[pending citation-verifier]** until then.
 
-**Register summary:** Critical 3 · High 6 · Medium 7 · Low 3 · Doc-hygiene 5 · **Total 24.**
+**Register summary:** Critical 3 · High 7 · Medium 7 · Low 3 · Doc-hygiene 5 · **Total 25.**
 **Three highest-leverage blockers (★★★):** I-12 (sleep study — _if positive_), I-1 (100%-tier symptoms into Cherie's chart/DBQ before any C&P), I-3 (total-social-impairment prong vs. the marriage).
 
 ---
