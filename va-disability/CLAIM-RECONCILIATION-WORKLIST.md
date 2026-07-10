@@ -11,10 +11,10 @@ Each item: **the conflict** (neutral) · **why it matters** · **owner** · **th
 
 ## 1. B1 — "December 2024 job loss" (CRITICAL)
 
-- **Conflict:** Several planning docs describe a _December 2024 job loss that Erica attributes to your depression/SUD_, as if it's established. **Erica's actual signed statement lists job losses in 2018, 2023, and 2026 only — it describes no December 2024 event.** (`COMPREHENSIVE-FINDINGS §2` does note a late-2024 "recently laid off" Starlite readmission, so an event may exist.)
+- **Conflict:** The veteran **confirms a December 2024 layoff that resulted from his service-connected conditions (SUD/PTSD)** — this is real. Corroborated by the late-2024 Starlite "recently laid off" readmission note (`COMPREHENSIVE-FINDINGS §2`). **But the date doesn't line up across the file:** the veteran's account and the Starlite record point to **late/Dec-2024**, while **Erica's signed statement lists job losses in 2018, 2023, and 2026 — no 2024 event.** Is Erica's "2023" the same job loss mis-dated, or a different job?
 - **Why it matters:** presenting anticipated witness content as if the witness already provided it — on a claim with a documented coached-statement history — is the exact pattern that destroys credibility. It also risks a load-bearing "total occupational impairment" anchor resting on an attribution that isn't in the clean record.
 - **Owner:** VSO + Veteran (confirm the event); Erica (her statement).
-- **Action:** VSO/Veteran confirm from the records whether a Dec-2024 job loss actually happened and when. **Erica includes it only if she genuinely recalls it, in her own words.** Until confirmed, no document should present it as her attribution.
+- **Action:** (1) **Veteran** attests to the Dec-2024 layoff and his experience of why, in his own statement (his own employment history — competent lay evidence). (2) **VSO** confirms the exact employment dates from records and that the Starlite "recently laid off" note is in the file. (3) **Cherie** provides the causation opinion (that the job loss stems from the SC conditions — the medical nexus). (4) **Erica** corroborates only if she genuinely recalls it, her own words. (5) **Reconcile the date** across the veteran's statement, Erica's statement (currently 2023), and the records so nothing conflicts. No document presents it as Erica's attribution unless she actually states it.
 
 ## 2. B5 / I-20 — Marriage characterization (HIGH)
 

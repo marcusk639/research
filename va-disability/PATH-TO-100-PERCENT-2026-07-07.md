@@ -195,7 +195,7 @@ Each issue below genuinely works against a 100% rating. For each: what it is, wh
 - **(a) Sequence the timeline explicitly** — gainfully employed through ~2024 → collapse 2025–2026 → left the tech career. The 100% picture is _current_, not contradicted by past work.
 - **(b) Frame the employment history as the documented "work until I burn out, then relapse" cycle** — sustained through effort and cost, then collapse, not evidence of durable capacity.
 - **(c) Lean on the _social_ prong**, which is independent of work history — total social isolation is unaffected by whether you once held a job.
-- **(d) A _possible_ late-2024 layoff (`COMPREHENSIVE-FINDINGS-2026-07.md` §2)** could support "total occupational impairment _caused by_ the service-connected conditions" — the causal, not merely chronological, framing — but do **not** overstate it: Erica's current statement does **not** describe a Dec-2024 job loss, and no source in the record attributes it to depression/SUD. Rely on it only if Erica genuinely recalls such a job loss and states it (and any causal attribution) in her own words.
+- **(d) The December-2024 layoff — confirmed by the veteran as real and a result of his service-connected conditions (SUD/PTSD)** — directly supports "total occupational impairment _caused by_ the service-connected conditions" (the causal, not merely chronological, framing). It is corroborated by the late-2024 Starlite "recently laid off" readmission note (`COMPREHENSIVE-FINDINGS-2026-07.md` §2). **Establish it through the veteran's own statement** (his employment history and lived experience — competent lay evidence) **and Cherie's causation opinion** (the medical nexus that the job loss stems from the SC conditions — the stronger channel for the causal attribution). Erica may corroborate only if she genuinely recalls it, in her own words. **Reconcile the date:** the veteran's account and the Starlite record both point to late/Dec-2024, but Erica's current statement lists 2018/2023/2026 — confirm the actual employment dates so the file is consistent (worklist B1).
 
 ### I-5 — The two delusions are not yet documented and are diagnostically distinct
 
@@ -209,7 +209,7 @@ Each issue below genuinely works against a 100% rating. For each: what it is, wh
 
 ### I-6 — Erica's statement is not finalized (and the prior draft has a coaching-risk history)
 
-**What:** her independent statement — the primary written channel for the ADL/hygiene fact, the isolation, and any genuinely-recalled late-2024 job loss (her current statement describes 2018/2023/2026, not a Dec-2024 event) — is not yet in hand. The corpus's single biggest credibility exposure was a prior _coached_ spouse-statement email thread (`CLAIM-ASSESSMENT.md` §0.2).
+**What:** her independent statement — the primary written channel for the ADL/hygiene fact and the isolation — is not yet in hand. (The Dec-2024 layoff the veteran confirms is best established via _his own_ statement + Cherie's causation opinion; Erica corroborates only if she genuinely recalls it, and her current statement lists 2018/2023/2026, so the date needs reconciling.) The corpus's single biggest credibility exposure was a prior _coached_ spouse-statement email thread (`CLAIM-ASSESSMENT.md` §0.2).
 **Why it matters:** her statement is load-bearing for both the ADL anchor (Route 1) and the social prong (I-3), and it is competent lay evidence (Layno v. Brown; 38 CFR 3.159(a)(2)) for observable symptoms.
 **Resolution options:**
 
@@ -327,7 +327,7 @@ Each phase is self-contained and ordered by leverage. Phases 1–3 are the highe
 
 ### Phase 3 — Erica's independent statement (before the C&P)
 
-- She writes it herself, in her own words, covering (only if genuinely true and witnessed): the ADL/hygiene assistance, the isolation (framed as caregiving-dependency, I-3), the daily-SI statements, the OCD behaviors, a late-2024 job loss only if she genuinely recalls one (her statement currently describes 2018/2023/2026), and any witnessed sleep-apnea signs (snoring/gasping/pauses — helps Phase 1). **No coaching, no scripting** (I-6). Log provenance once done.
+- She writes it herself, in her own words, covering (only if genuinely true and witnessed): the ADL/hygiene assistance, the isolation (framed as caregiving-dependency, I-3), the daily-SI statements, the OCD behaviors, the late-2024 job loss only if she genuinely recalls it (the veteran confirms a Dec-2024 layoff; her statement currently lists 2018/2023/2026 — reconcile the date, and don't add it to hers unless she recalls it), and any witnessed sleep-apnea signs (snoring/gasping/pauses — helps Phase 1). **No coaching, no scripting** (I-6). Log provenance once done.
 
 ### Phase 4 — Shore up corroboration and loose threads (parallel, before the C&P)
 
