@@ -11,7 +11,9 @@ record supporting Marcus's PTSD/MST claim (with MDD, GAD, OCD, and SUD) the way 
 VA itself would: a mock C&P examination followed by a mock rating decision,
 producing the **highest defensible rating** the evidence supports, plus
 strengths/weaknesses, per-document helps/hurts, and a gap list toward the
-next-higher rating.
+next-higher rating. The output is a substantive judgment document in which **every
+finding or issue is paired with a well-informed, reasonable suggested resolution**
+(see the findings-and-remediation rule under Report format).
 
 The harness is built now but **not executed** until the user says go (records are
 still being added to the corpus).
@@ -166,6 +168,21 @@ Assessment extras:
 - Per-document helps/hurts table
 - Gap list keyed to the next-higher rating's criteria
 - Sustained adversarial attacks, ranked by severity
+
+**Findings-and-remediation rule (applies to every issue in the extras):** every
+weakness, gap, sustained attack, and consistency finding is paired with a
+**well-informed, concrete suggested resolution** — grounded in the KB (what the
+M21-1/§ 4.130 framework actually credits) and ordered by rating impact. Suggested
+resolutions are remediation _paths_, e.g.: obtain a named record type; request a
+provider addendum addressing a specific evidentiary gap; resolve a document's
+provenance; have a witness reconcile a specific discrepancy in their own words;
+get contemporaneous treatment documentation of a symptom currently supported only
+by lay statement. Per the no-coaching guardrail, a suggestion never includes
+drafted or suggested wording for witness statements — it names what needs
+resolving and who owns it. No orphan findings: an issue without a remediation
+suggestion (or an explicit "no remediation exists — accept and mitigate by X") is
+an incomplete report.
+
 - **Record-completeness section:** evidence the real adjudicator will have that
   this mock does not (STRs, DD-214 if untranscribed, VA treatment records, and —
   dominantly — the real C&P examiner's DBQ from a live interview). The report's
