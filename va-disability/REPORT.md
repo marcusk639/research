@@ -11,7 +11,7 @@ rating without TDIU**, on realistic, truthfully-documented evidence?
 
 ## Start here
 
-**[`PATH-TO-100-PERCENT-2026-07-07.md`](./PATH-TO-100-PERCENT-2026-07-07.md)** is the
+**[`PATH-TO-100-PERCENT-2026-07-07.md`](./planning-docs/PATH-TO-100-PERCENT-2026-07-07.md)** is the
 newest and most focused document — the dedicated **schedular-only (no TDIU)** plan for
 reaching **100%**, built on two research passes (2026-07-07). It specifies two convergent
 routes (schedular 100% on the mental-health cluster; and 90% MH + a 50% sleep-apnea
@@ -25,7 +25,7 @@ C&P examiner (BVA A25038905 template); (2) the 70→100 gap is the "total _socia
 impairment" prong, where a maintained marriage is the veteran's biggest vulnerability
 (reframed as caregiving dependency) — flagged for `citation-verifier` follow-up.
 
-**[`ACTION-CHECKLIST-100-PERCENT.md`](./ACTION-CHECKLIST-100-PERCENT.md)** is the do-it
+**[`ACTION-CHECKLIST-100-PERCENT.md`](./planning-docs/ACTION-CHECKLIST-100-PERCENT.md)** is the do-it
 companion to that plan — 22 prioritized, checkable action items across five tiers
 (this-week highest-leverage → before-the-C&P documentation → parallel support → at the
 exam → post-decision), each with its owner/dependency and resources, plus a consolidated
@@ -33,13 +33,13 @@ Resources & Citations appendix (VA forms, the Mental Disorders DBQ, status/recor
 links, and the verified case/regulation cites). Use the plan for the reasoning and this for
 the sequence of things to actually do.
 
-**[`PATH-TO-MAXIMUM-RATING-2026-07-06.md`](./PATH-TO-MAXIMUM-RATING-2026-07-06.md)** is
+**[`PATH-TO-MAXIMUM-RATING-2026-07-06.md`](./planning-docs/PATH-TO-MAXIMUM-RATING-2026-07-06.md)** is
 the single consolidated, sequenced roadmap — read this first if you want "what do I do,
 in order, to reach the maximum rating." It doesn't replace the documents below; it points
 into each of them at the right moment and gives one prioritized task list plus the current,
 honestly-labeled odds for 70%/90%/100%.
 
-**[`MASTER-STRATEGY.md`](./MASTER-STRATEGY.md)** is the current working strategy —
+**[`MASTER-STRATEGY.md`](./planning-docs/MASTER-STRATEGY.md)** is the current working strategy —
 it supersedes `strategy.md`, `CLAIM-EXECUTION-PLAN.md`, `knowledge-base.md`, and
 `DO-THIS-WEEK.md` (kept for history, not for use).
 
@@ -49,18 +49,18 @@ cross-document consistency issues, and the two integrity problems (a coached
 spousal-statement email thread; a stale SUD-origin theory contradicted by the
 veteran's own clinical records) that needed fixing before anything else.
 
-**[`100-PERCENT-SCHEDULAR-PATHWAY.md`](./100-PERCENT-SCHEDULAR-PATHWAY.md)** is
+**[`100-PERCENT-SCHEDULAR-PATHWAY.md`](./planning-docs/100-PERCENT-SCHEDULAR-PATHWAY.md)** is
 the underlying legal research: the exact 38 CFR 4.130 100%-criteria text, the
 controlling case law (_Mauerhan_, _Vazquez-Claudio_, _Bankhead_, _Rice_,
 _Mittleider_), and the combined-ratings math showing the realistic paths to 100%.
 
-**[`NEXUS-LETTER-GUIDE-CHERIE.md`](./NEXUS-LETTER-GUIDE-CHERIE.md)** and
-**[`CP-EXAM-PREP-MENTAL-HEALTH.md`](./CP-EXAM-PREP-MENTAL-HEALTH.md)** are updated
+**[`NEXUS-LETTER-GUIDE-CHERIE.md`](./planning-docs/NEXUS-LETTER-GUIDE-CHERIE.md)** and
+**[`CP-EXAM-PREP-MENTAL-HEALTH.md`](./planning-docs/CP-EXAM-PREP-MENTAL-HEALTH.md)** are updated
 practical prep documents — for the treating provider's nexus letter and for the
 C&P exam itself — correcting the missing OCD content and the stale SUD theory in
 the older `ClaudeDisabilityAssets/` PDF guides they supersede.
 
-**[`PRE-POST-SERVICE-SEVERITY-CONTRAST.md`](./PRE-POST-SERVICE-SEVERITY-CONTRAST.md)**
+**[`PRE-POST-SERVICE-SEVERITY-CONTRAST.md`](./supporting-docs/PRE-POST-SERVICE-SEVERITY-CONTRAST.md)**
 is the honest, affirmative framing of pre-service (experimental, undiagnosed)
 vs. post-service (severe, formally diagnosed, repeatedly hospitalized) substance
 use — built from the complete record, for the personal statement and Cherie's
@@ -75,7 +75,7 @@ most importantly that PTSD has never been formally diagnosed by any clinician,
 and that a third in-service witness ("Goff") was never actually obtained. Both
 are now folded into `CLAIM-ASSESSMENT.md` and `MASTER-STRATEGY.md`.
 
-**[`SLEEP-APNEA-SECONDARY-CLAIM.md`](./SLEEP-APNEA-SECONDARY-CLAIM.md)** is the
+**[`SLEEP-APNEA-SECONDARY-CLAIM.md`](./planning-docs/SLEEP-APNEA-SECONDARY-CLAIM.md)** is the
 dedicated legal/medical research pass on the highest-leverage secondary claim
 flagged throughout the documents above (sleep apnea secondary to PTSD, potentially
 50% with CPAP). Verdict: the legal theory is sound and matches real BVA grants on
@@ -309,8 +309,8 @@ REASSESSMENT-2026-07-06.md`'s odds were revised accordingly: 90% MH to ≈60–7
 ## Superseded / historical
 
 [`knowledge-base.md`](./knowledge-base.md), [`veteran-profile.md`](./veteran-profile.md),
-[`strategy.md`](./strategy.md), [`CLAIM-EXECUTION-PLAN.md`](./CLAIM-EXECUTION-PLAN.md),
-[`DO-THIS-WEEK.md`](./DO-THIS-WEEK.md), and
+[`strategy.md`](./planning-docs/strategy.md), [`CLAIM-EXECUTION-PLAN.md`](./planning-docs/CLAIM-EXECUTION-PLAN.md),
+[`DO-THIS-WEEK.md`](./planning-docs/DO-THIS-WEEK.md), and
 [`claim-maximization-research-2026-06.md`](./claim-maximization-research-2026-06.md)
 (109 verified citations from the original June 2026 research pass) remain useful
 background but are superseded by the three documents above.

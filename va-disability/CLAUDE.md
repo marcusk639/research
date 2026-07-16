@@ -8,14 +8,28 @@ here.
 
 **`REPORT.md`**'s "Start here" section is the live navigation index and is more
 current than this file for document status — read it first. In short: the current
-working docs are `MASTER-STRATEGY.md` (strategy), `CLAIM-ASSESSMENT.md` (adversarial
-review), `100-PERCENT-SCHEDULAR-PATHWAY.md` (legal research), and
-`NEXUS-LETTER-GUIDE-CHERIE.md` / `CP-EXAM-PREP-MENTAL-HEALTH.md` (prep docs). The
-most recent `COMPREHENSIVE-FINDINGS-*.md` is the source of truth for facts already
+working docs are `planning-docs/MASTER-STRATEGY.md` (strategy), `CLAIM-ASSESSMENT.md`
+(adversarial review), `planning-docs/100-PERCENT-SCHEDULAR-PATHWAY.md` (legal research),
+and `planning-docs/NEXUS-LETTER-GUIDE-CHERIE.md` /
+`planning-docs/CP-EXAM-PREP-MENTAL-HEALTH.md` (prep docs). The most recent
+`COMPREHENSIVE-FINDINGS-*.md` is the source of truth for facts already
 reconciled — don't re-derive something it already resolved unless a newer document
-contradicts it. Everything else at the top level (`knowledge-base.md`,
-`veteran-profile.md`, `strategy.md`, `CLAIM-EXECUTION-PLAN.md`, `DO-THIS-WEEK.md`,
-`claim-maximization-research-2026-06.md`) is superseded and kept for history only.
+contradicts it. `knowledge-base.md`, `veteran-profile.md`,
+`claim-maximization-research-2026-06.md`, and `planning-docs/strategy.md` /
+`planning-docs/CLAIM-EXECUTION-PLAN.md` / `planning-docs/DO-THIS-WEEK.md` are
+superseded and kept for history only.
+
+## Folder layout (reorganized 2026-07-15)
+
+- **`planning-docs/`** — all internal plans, strategies, checklists, worklists, and
+  prep guides (never submitted to VA; see `planning-docs/CLAIM-MASTER-BRIEF.md` §2.6).
+- **`supporting-docs/`** — claim-facing/support material tracked in this repo: the
+  nexus-letter Markdown transcriptions and suggested-language drafts. **Not to be
+  confused with the gitignored `personal-records/supporting-docs/`**, which holds the
+  actual signed PHI evidence (statements, PDFs, the signed nexus letter).
+- Root — navigation (`REPORT.md`, this file, `DOCUMENT-PROVENANCE.md`), research,
+  audits/assessments, and reference KBs.
+- `document-analysis/` — per-document deep-analysis reports.
 
 ## Subject-specific tools
 

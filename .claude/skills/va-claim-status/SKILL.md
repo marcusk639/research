@@ -17,9 +17,9 @@ what they say, flagging anything that looks stale.
    - `va-disability/COMPREHENSIVE-FINDINGS-2026-07.md` (or the most recent
      `COMPREHENSIVE-FINDINGS-*.md` file if a newer one exists — always prefer the
      latest dated version)
-   - `va-disability/CLAIM-EXECUTION-PLAN.md`
-   - `va-disability/DO-THIS-WEEK.md`
-   - `va-disability/strategy.md`
+   - `va-disability/planning-docs/CLAIM-EXECUTION-PLAN.md`
+   - `va-disability/planning-docs/DO-THIS-WEEK.md`
+   - `va-disability/planning-docs/strategy.md`
 
 2. **Compute today's date** relative to every deadline mentioned in those files
    (intent-to-file windows, development-letter response deadlines, appeal windows,

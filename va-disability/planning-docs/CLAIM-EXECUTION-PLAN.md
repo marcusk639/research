@@ -2,7 +2,7 @@
 
 > **Subject:** Marcus Klein · USAF 2009–2013, F-15 Crew Chief (AFSC 2A3X3), Seymour Johnson AFB · Austin, TX
 > **Created:** 2026-06-14 · **Goal:** maximize the **realistic, truthfully-documented** combined rating.
-> **Built on:** [`claim-maximization-research-2026-06.md`](./claim-maximization-research-2026-06.md) (109 verified citations) + a 2026-06-14 rating-criteria verification pass.
+> **Built on:** [`claim-maximization-research-2026-06.md`](../claim-maximization-research-2026-06.md) (109 verified citations) + a 2026-06-14 rating-criteria verification pass.
 >
 > **NOT LEGAL ADVICE.** This is research to execute _with_ a VSO or VA-accredited attorney. Every case citation marked elsewhere as `misstated`/`unverified` must be confirmed by counsel before it is quoted to VA.
 >

@@ -27,8 +27,8 @@ this runs in the main thread as a skill.
 1. **`va-disability/COMPREHENSIVE-FINDINGS-2026-07.md`** (or the newest
    `COMPREHENSIVE-FINDINGS-*.md`) — the current source of truth. It supersedes parts of the
    older artifacts; trust it over them where they conflict.
-2. The base artifacts for background: `va-disability/veteran-profile.md`, `strategy.md`,
-   `knowledge-base.md`, `resources.md`, `CLAIM-EXECUTION-PLAN.md`, and the prior deep-research
+2. The base artifacts for background: `va-disability/veteran-profile.md`, `knowledge-base.md`,
+   `resources.md`, `planning-docs/strategy.md`, `planning-docs/CLAIM-EXECUTION-PLAN.md`, and the prior deep-research
    `claim-maximization-research-2026-06.md` (note its verification ledger: **40 of 109
    citations were misstated** — treat any citation from it as unverified until re-checked).
 3. Whatever specific documents the veteran's question touches.

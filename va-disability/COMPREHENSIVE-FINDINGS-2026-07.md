@@ -694,6 +694,43 @@ A prompt-injection attempt was also encountered and correctly ignored during thi
 contained an embedded fake "system-reminder" describing tools/behaviors that weren't part of the actual
 task. It didn't affect any finding above — noted here only for the record.
 
+### 9b. Addendum — 2026-07-15 corpus sync (new signed evidence transcribed and cross-checked)
+
+Seven evidence PDFs were transcribed to `supporting-docs/*.md` (sources in `original-records/`) and a
+full `claim-consistency-checker` pass was run. Full detail lives in the transcriptions' header flags and
+`planning-docs/CLAIM-RECONCILIATION-WORKLIST.md` (items B11, B12, E1, and the updated B1). Summary:
+
+1. **NEW — perpetrator-status discrepancy in the signed 21-0781 (worklist B11, CRITICAL):** the signed
+   form's Item 9 says _"sexual assault... by same female **service member**"_; Reyes's signed statement,
+   Poquette's executed statement, the signed personal statement, and the CPT worksheet all describe a
+   **coworker's wife**. Nothing in the corpus asserts she served. Correctable via 21-4138 (combined with
+   the Goff item below). This was flagged nowhere in the corpus before 2026-07-15.
+2. **Goff (updates §0/§9 status):** the signed 21-0781 Remarks affirmatively promise a Goff buddy
+   statement; per the veteran (2026-07-15) it may not be obtainable — now an unfulfilled evidence promise
+   in a signed form of record, resolvable by the same corrective 21-4138 (worklist B11).
+3. **Erica's signed statement arrived — 07/12/2026, signed "Erica Jure"** (supersedes the held-back
+   draft). Provenance: self-authored, resolved same day per the veteran's confirmation — the details
+   initially flagged as coaching echoes originated with Erica herself (`DOCUMENT-PROVENANCE.md`). It
+   supplies the ADL/caretaker, isolation, SI, snoring/hyperventilation, and intimacy-impairment lay
+   evidence the strategy was waiting for (fills the lay side of I-20/B5), corroborates the marriage
+   timeline in signed form for the first time, and gives **no job-loss years** (updates B1's premise).
+   Residual factual items: worklist B12 (claim number "SC4806891" unverified; ~$30k figure uncorroborated;
+   video-games timeline vs. a Jan-2023 Starlite self-report; custom format vs. promised 21-10210).
+4. **The delusion anchor remains undocumented (I-5, unchanged but sharpened):** both expected vehicles
+   (Erica's statement, Cherie's July letter) have now arrived and neither corroborates either delusion —
+   charting with Cherie before any C&P is now the single remaining path.
+5. **Independence caveat:** Cherie's July letter and Erica's statement cross-reference each other's
+   caretaking content nearly point-for-point ("the specifics are corroborated by her lay statement") —
+   corroborating, but no longer fully independent sources.
+6. **Confirmations:** Victory-2018's "14 months sober, ended 7/20/18" back-counts exactly to the May-2017
+   Acadiana stay (§2 timeline corroborated); 0781 treatment-table dates match the established timeline;
+   the January-2022 LEC-5 item-9 endorsement (§3.2) is now **page-image-verified**, with the additional
+   note that items 1, 3, 6 (physical assault), 12, and 13 are also endorsed "happened to me" — none
+   narrated anywhere in the claim corpus (C&P prep: be ready to answer cold).
+7. **New evidence action (worklist E1):** complete prescription/dispense histories (military pharmacy →
+   the currently-unverified in-service Ambien claim now load-bearing in two signed documents; civilian
+   chains + PBM; prazosin if present is quietly probative). Complete histories, not curated.
+
 ---
 
 ## 10. Open Tasks / What Still Needs to Happen
