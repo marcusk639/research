@@ -5,9 +5,7 @@ Built once via deep-research (spec:
 `docs/superpowers/specs/2026-07-15-va-claim-corpus-judgment-design.md`), then
 frozen — deterministic and citable, no per-run research.
 
-**STATUS: KB INCOMPLETE — `/rate-claim` must refuse to run.**
-(Delete this status line only when all five files below exist and each carries a
-`## Verification Ledger` section with zero unresolved MISSTATED entries.)
+**STATUS: KB COMPLETE — citation-verified 2026-07-16.**
 
 | File                       | Contents                                                                       |
 | -------------------------- | ------------------------------------------------------------------------------ |

@@ -1,17 +1,28 @@
 # Mental Disorders DBQ Field Structure
 
 Scope: the field-level structure of VA Form 21-0960P-2 (Mental Disorders DBQ) and
-the Initial PTSD DBQ (21-0960P-1), plus the related PTSD DBQ variant hosted at
-reginfo.gov (21-0960P-3/-4) and the older 21-0960P-4 (Dec 2010) symptom checklist.
-This file tells the harness what an examiner actually fills in, field by field, so
-a simulated exam can be checked for completeness and internal consistency.
+the Initial PTSD DBQ, VA Form 21-0960P-4 (May 22 2018 version), plus the older
+VA Form 21-0960P-4 (Dec 2010 version) hosted at reginfo.gov — the source of both
+the Section VI item 6 impairment scale and the cumulative-impact symptom checklist
+covered below. The current (May 2018) and older (Dec 2010) revisions of the
+Initial PTSD DBQ share the same form number, 21-0960P-4; this file distinguishes
+them by revision date, not by a different P-number. This file tells the harness
+what an examiner actually fills in, field by field, so a simulated exam can be
+checked for completeness and internal consistency.
 
 **Hard rule carried from research verification:** the DBQ symptom checklist is a
 flat check-all-that-apply list, NOT a gated ascending "Level I–VI" structure. A
 claim asserting a six-level gated grouping (Level IV = suicidal
 ideation/rituals/panic/impulse/hygiene, Level VI = gross thought impairment) was
 adversarially tested and refuted 0–3. Do not reintroduce that structure anywhere
-in the harness.
+in the harness. **Clarification:** this flat-checklist rule holds for the CURRENT
+forms (Mental Disorders DBQ v2025-10-14; Initial PTSD DBQ May 2018). It does not
+hold for the older Dec-2010 21-0960P-4 cited below for the cumulative-impact rule
+— that older form's Section V literally uses a gated "A. LEVEL I" through
+"F. LEVEL VI" structure. The gated structure existed on the pre-2018 (Dec-2010)
+form and was removed in the current forms; a rater emulating today's process uses
+the flat checklist. The refuted claim above erred both by treating the obsolete
+gated structure as current and by mis-stating its level contents.
 
 ---
 
@@ -110,11 +121,13 @@ examiner must give a reason, and the resulting practice — confirmed on the old
 21-0960P-4 (Dec 2010) symptom checklist — is to treat the impairment as an
 undifferentiated whole:
 
-> "5. SYMPTOMS ... CONSIDER THE CUMULATIVE IMPACT OF ALL DIAGNOSED MENTAL
-> DISORDERS THAT THE EXAMINER JUDGES RELATED TO MILITARY SERVICE, WITHOUT
-> ATTEMPTING TO DIFFERENTIATE WHICH SYMPTOMS ARE SPECIFICALLY CAUSED BY WHICH
-> MENTAL DISORDER"
+> "5. SYMPTOMS ... FOR EACH LEVEL BELOW, CHECK ALL SYMPTOMS THAT APPLY. CONSIDER
+> THE CUMULATIVE IMPACT OF ALL DIAGNOSED MENTAL DISORDERS THAT THE EXAMINER
+> JUDGES RELATED TO MILITARY SERVICE, WITHOUT ATTEMPTING TO DIFFERENTIATE WHICH
+> SYMPTOMS ARE SPECIFICALLY CAUSED BY WHICH MENTAL DISORDER"
 > — reginfo.gov/.../objectID=22857101 (VA Form 21-0960P-4, Dec 2010) [3-0]
+> (Note: this Dec-2010 form's Section 5 is the gated "Level I–VI" checklist — see
+> Hard Rule clarification above.)
 
 **Practical rule for the harness:** if an examiner cannot differentiate
 symptoms/impairment among comorbid diagnoses (the common case), the rater treats
@@ -135,7 +148,7 @@ purposes, check-all-that-apply (**not** gated or leveled):
 
 ---
 
-## 2. Initial PTSD DBQ (VA Form 21-0960P-1, May 22 2018 version)
+## 2. Initial PTSD DBQ (VA Form 21-0960P-4, May 22 2018 version)
 
 Source: https://cck-law.com/wp-content/uploads/2020/06/PTSD-Initial-DBQ.pdf
 
@@ -207,18 +220,30 @@ scale for how the examiner's etiology opinion is worded.
 
 ## Verification Ledger
 
-- benefits.va.gov/compensation/docs/mental_disorders.pdf (Mental Disorders DBQ —
-  8-section structure, C1 checkbox, B2/C2 differentiation, Section 3 symptom
-  list) — UNVERIFIED
+- benefits.va.gov/compensation/docs/mental_disorders.pdf (Mental Disorders DBQ,
+  current v2025-10-14 — form number 21-0960P-2, 8-section structure, C1 stem,
+  seven-level C1 scale, B2/C2 quote, 31-symptom Section 3A) — CONFIRMED (verified
+  by citation-verifier 2026-07-16)
 - https://cck-law.com/wp-content/uploads/2020/06/PTSD-Initial-DBQ.pdf (Initial
-  PTSD DBQ, May 22 2018 — 4A checkbox, 3B/4B differentiation, Section 5 symptoms,
-  stressor/MST marker item) — UNVERIFIED
-- https://www.reginfo.gov/public/do/DownloadDocument?objectID=22857101 (PTSD DBQ
-  variant 21-0960P-3, Section VI item 6; records-reviewed + per-stressor items;
-  and VA Form 21-0960P-4 Dec 2010 cumulative-impact symptom rule) — UNVERIFIED
+  PTSD DBQ, May 22 2018 — 4A seven-level checkbox, 3B/4B differentiation, Section
+  5 symptoms, stressor/MST marker item) — CONFIRMED (verified by
+  citation-verifier 2026-07-16)
+- https://www.reginfo.gov/public/do/DownloadDocument?objectID=22857101 (VA Form
+  21-0960P-4, Dec 2010, in its entirety — six-level Section VI item 6;
+  records-reviewed + per-stressor items; cumulative-impact symptom rule) —
+  CONFIRMED (verified by citation-verifier 2026-07-16)
 - § 4.130 seven-level occupational/social-impairment scale reconstruction is
   cross-referenced against `criteria-4130-caselaw.md`, which cites
-  https://www.law.cornell.edu/cfr/text/38/4.130 — UNVERIFIED
+  https://www.law.cornell.edu/cfr/text/38/4.130 — UNVERIFIED (non-load-bearing
+  cross-reference; see `criteria-4130-caselaw.md` for the primary verification)
+- **Correction 1A (CORRECTED):** the Initial PTSD DBQ form number was misstated
+  as 21-0960P-1 (the Eating Disorders DBQ) throughout the file; corrected to
+  21-0960P-4 (verified against the form's own footer: "VA FORM DEC 2010
+  21-0960P-4 / INITIAL POST TRAUMATIC STRESS (PTSD)").
+- **Correction 1B (CORRECTED):** the reginfo.gov document (objectID=22857101)
+  was mislabeled "21-0960P-3/-4" and "21-0960P-3"; it is VA Form 21-0960P-4 in
+  its entirety, including the Section VI item 6 six-level scale. 21-0960P-3 is
+  the separate Review PTSD DBQ, a different form, not cited by this file.
 
 ## Conflicts with prior research
 

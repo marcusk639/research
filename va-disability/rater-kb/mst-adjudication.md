@@ -13,12 +13,15 @@ presentation patterns.
 Fetched from Cornell LII, mirroring the current text of 38 CFR § 3.304(f):
 https://www.law.cornell.edu/cfr/text/38/3.304
 
-> "Evidence from sources other than the veteran's service records may
+> "...evidence from sources other than the veteran's service records may
 > corroborate the veteran's account of the stressor incident. Examples of such
 > evidence include, but are not limited to: records from law enforcement
 > authorities, rape crisis centers, mental health counseling centers, hospitals,
 > or physicians; pregnancy tests or tests for sexually transmitted diseases; and
 > statements from family members, roommates, fellow service members, or clergy."
+> (mid-sentence excerpt — the full regulatory sentence opens "If a
+> posttraumatic stress disorder claim is based on in-service personal assault,
+> evidence from sources other than...")
 
 > "Evidence of behavior changes following the claimed assault is one type of
 > relevant evidence that may be found in these sources."
@@ -53,8 +56,9 @@ that office's territory. The publicly available coordinator directory functions
 mainly as a contact list; it does not itself spell out coordinators' procedural
 duties (those live in M21-1, which could not be fetched for this file — see § 4).
 
-Source: https://www.benefits.va.gov/benefits/mstcoordinators.asp — UNVERIFIED,
-thin (directory page only, no duty description)
+Source: https://www.benefits.va.gov/benefits/mstcoordinators.asp — CONFIRMED
+(verified by citation-verifier 2026-07-16); thin (directory page only, no duty
+description)
 
 ### 2.2 Direct and indirect evidence categories, and provider choice
 
@@ -73,7 +77,7 @@ request a male or female provider for a claim exam," an accommodation aimed at
 trauma-informed examination.
 
 Source: https://www.va.gov/resources/military-sexual-trauma-and-disability-compensation/
-— UNVERIFIED
+— CONFIRMED (verified by citation-verifier 2026-07-16)
 
 ## 3. AZ & AY v. Shinseki — absence of a report is not evidence nothing happened
 
@@ -154,19 +158,30 @@ these markers) rather than a loss of the marker list itself.
 ## Verification Ledger
 
 - 38 CFR 3.304(f)(5) marker-evidence categories (verbatim) —
-  https://www.law.cornell.edu/cfr/text/38/3.304 — UNVERIFIED
+  https://www.law.cornell.edu/cfr/text/38/3.304 — CONFIRMED (verified by
+  citation-verifier 2026-07-16). Correction 4A applied: the first block quote
+  in § 1 above began mid-sentence and capitalized "Evidence" as if it were a
+  sentence start; a leading ellipsis and lowercase have been added, plus a note
+  on the full opening clause, so it reads as a mid-sentence excerpt rather than
+  a fabricated sentence start.
 - MST coordinator program — https://www.benefits.va.gov/benefits/mstcoordinators.asp
-  — UNVERIFIED
+  — CONFIRMED (verified 2026-07-16)
 - MST compensation direct/indirect evidence, provider-choice accommodation —
   https://www.va.gov/resources/military-sexual-trauma-and-disability-compensation/
-  — UNVERIFIED
-- AZ & AY v. Shinseki, 731 F.3d 1303 (Fed. Cir. 2013), via M21-1 V.ii.1.A.2.g–h —
+  — CONFIRMED (verified 2026-07-16)
+- AZ & AY v. Shinseki, 731 F.3d 1303 (Fed. Cir. 2013), + holding — CONFIRMED
+  (verified 2026-07-16). The M21-1 V.ii.1.A.2.g–h deep link —
   https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-us/portal/554400000001018/content/554400000014383/M21-1-Part-V-Subpart-ii-Chapter-1-Section-A-Principles-of-Reviewing-and-Weighing-Evidence
-  — UNVERIFIED
+  — UNVERIFIABLE-URL (the legal point it supports is independently confirmed
+  via the primary AZ & AY case itself, so this does not affect reliability).
+- 38 U.S.C. 1720D — CONFIRMED (verified 2026-07-16)
+- va.gov MST page and MST coordinators page — CONFIRMED (verified 2026-07-16)
 - C&P Clinicians' Guide ch. 14.2 (MST is an experience not a diagnosis;
   comorbidity/minimization) —
   https://usstiru.org/news/114990898_VACompensationPension(CP)CliniciansGuide2FinalCorrected20180719%20(1).pdf
-  — UNVERIFIED
+  — substance CONFIRMED (verified 2026-07-16); the composite quotes are
+  substance-confirmed but not byte-verified against the exact 2018 PDF
+  pagination — treat wording as reliable, page/section anchors as approximate.
 
 ## Conflicts with prior research
 

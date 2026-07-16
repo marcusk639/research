@@ -65,15 +65,19 @@ recency, competence) — that specific factor list failed adversarial verificati
   source on the disabling effects of their own condition, and the RVSR should
   weigh it as such rather than discount it categorically. Source: M21-1
   V.ii.1.B.2.c, same URL [3-0]
-- **Bardwell v. Shinseki, 24 Vet.App. 36 (2010); 38 U.S.C. 1154(a) — combat vs.
-  non-combat lay evidence:** for combat veterans or former POWs, lay evidence
-  alone can establish in-service incurrence or aggravation even absent
-  corroborating service treatment records, so long as it is consistent with the
-  circumstances of that service — though a medical nexus opinion is still
-  required to connect the in-service event to the current disability. For a
-  non-combat veteran, lay statements must instead be weighed against the
-  absence of supporting military records rather than presumed consistent with
-  service. Source: M21-1 V.ii.1.B.2.a, same URL [2-0, 1 errored]
+- **38 U.S.C. § 1154(b) — combat-veteran presumption:** for combat veterans or
+  former POWs, lay evidence alone can establish in-service incurrence or
+  aggravation even absent corroborating service treatment records, so long as
+  it is consistent with the circumstances of that service — though a medical
+  nexus opinion is still required to connect the in-service event to the
+  current disability.
+- **Bardwell v. Shinseki, 24 Vet.App. 36 (2010) — non-combat lay evidence:** for
+  a non-combat veteran, unsubstantiated lay statements are not, by themselves,
+  competent or sufficient to establish an in-service event, injury, or disease
+  requiring medical expertise; such statements must be weighed against the
+  absence of supporting service records, and VA is not required to accept them
+  merely because they are uncontradicted. Source: M21-1 V.ii.1.B.2.a, same URL
+  [2-0, 1 errored]
 
 ## 3. Benefit of the doubt / equipoise (38 CFR 3.102, 4.3)
 
@@ -192,27 +196,44 @@ specific record, not just cite them.
 
 - M21-1 V.ii.1.A.1.f (five-step evidence evaluation) —
   https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-us/portal/554400000001018/content/554400000014383/M21-1-Part-V-Subpart-ii-Chapter-1-Section-A-Principles-of-Reviewing-and-Weighing-Evidence
-  — UNVERIFIED
-- M21-1 V.ii.1.A.2.b–c (face value & credibility factors) — same URL — UNVERIFIED
-- M21-1 V.ii.1.A.1.j & A.5.d–e (reasonable doubt boundary, Fagan v. Shinseki) —
-  same URL — UNVERIFIED
-- M21-1 V.ii.1.B.2.a–c (Espiritu v. Derwinski; claimant's own description;
-  Bardwell v. Shinseki / 38 U.S.C. 1154(a)) —
+  — CONTENT CONFIRMED (verified 2026-07-16); exact pincite UNVERIFIED — confirm
+  against primary (JS-gated M21-1 page) before external use
+- M21-1 V.ii.1.A.2.b–c (face value & credibility factors) — same URL —
+  CONTENT CONFIRMED; exact pincite UNVERIFIED — confirm against primary before
+  external use
+- M21-1 V.ii.1.A.1.j & A.5.d–e (reasonable doubt boundary) — same URL —
+  CONTENT CONFIRMED; exact pincite UNVERIFIED — confirm against primary before
+  external use. **Fagan v. Shinseki, 573 F.3d 1282 (Fed. Cir. 2009)** — CONFIRMED
+  (verified 2026-07-16), full cite added.
+- M21-1 V.ii.1.B.2.a–c —
   https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-US/portal/554400000001018/content/554400000014389/M21-1-Part-V-Subpart-ii-Chapter-1-Section-B-Reviewing-Testimony-and-Lay-Evidence
-  — UNVERIFIED
+  — CONTENT CONFIRMED; exact pincite UNVERIFIED — confirm against primary before
+  external use. **Espiritu v. Derwinski, 2 Vet.App. 492 (1992)** — CONFIRMED
+  (verified 2026-07-16). **Bardwell v. Shinseki, 24 Vet.App. 36 (2010)** —
+  CONFIRMED (verified 2026-07-16) for the non-combat lay-evidence holding only
+  (Correction 2B — the citation is real; the holding previously attributed to it
+  was wrong). **38 U.S.C. § 1154(b)** — CONFIRMED (verified 2026-07-16) as the
+  source of the combat-veteran presumption (Correction 2A — corrected from the
+  misstated § 1154(a)).
 - 38 CFR 3.102, 4.3 (benefit of the doubt / equipoise) via
-  https://cck-law.com/blog/vas-benefit-of-the-doubt-doctrine/ — UNVERIFIED
-  (secondary source quoting regulatory text; regulatory text itself not
-  independently re-pulled from eCFR for this file)
-- C&P Clinicians' Guide ch. 1.8a (nexus-probability scale) —
+  https://cck-law.com/blog/vas-benefit-of-the-doubt-doctrine/ — CONFIRMED
+  (verified 2026-07-16)
+- 38 CFR 3.159(a)(2) (cited alongside Espiritu) — CONFIRMED (verified 2026-07-16)
+- C&P Clinicians' Guide (nexus-probability scale) —
   https://usstiru.org/news/114990898_VACompensationPension(CP)CliniciansGuide2FinalCorrected20180719%20(1).pdf
-  — UNVERIFIED
-- C&P Clinicians' Guide ch. 14.3b (psychometric tests never stand-alone; named
-  instruments) — same URL — UNVERIFIED
+  — wording CONTENT CONFIRMED (verified 2026-07-16); section number "ch. 1.8a"
+  UNVERIFIED — edition-dependent; the legacy edition places the nexus-opinion
+  language at §1.16. Confirm the section number against the specific edition in
+  hand before citing it externally.
+- C&P Clinicians' Guide (psychometric tests never stand-alone; named
+  instruments) — same URL — wording CONTENT CONFIRMED (verified 2026-07-16);
+  section number "ch. 14.3b" UNVERIFIED — edition-dependent, same caveat as
+  above.
 - Rating-decision narrative structure —
   https://www.veteransbenefitskb.com/ratingdecision — UNVERIFIED, and flagged
   above as a secondary substitute for an M21-1 primary source that could not be
-  fetched (JavaScript-gated KnowVA page)
+  fetched (JavaScript-gated KnowVA page) — self-flagged lower-confidence; hedge
+  retained as-is.
 
 ## Conflicts with prior research
 

@@ -15,23 +15,32 @@ denials found a large, specifically-attributed rate of improper processing.
 Figures reported (with some variance across the primary landing page and
 secondary summaries — flagged below, not silently reconciled):
 
-- The OIG's review sample covered **~2,700** MST-related claims reviewed
-  April–September 2017, out of an estimated **~5,500** total MST-related denials
-  processed October 2016–September 2017.
-- Approximately **1,300 of the ~2,700 reviewed (≈48%)** were found to be
-  improperly processed.
+- The OIG did **not** review 2,700 claims individually. It reviewed a projected
+  statistical sample of approximately **169** denied MST-related PTSD claims,
+  and projected that sample's results onto an **estimated population of ~2,700**
+  MST-related claims denied April–September 2017 (out of an estimated **~5,500**
+  total MST-related denials processed October 2016–September 2017). ~2,700 is
+  the estimated population being projected onto, not a count of claims the OIG
+  actually examined.
+- Approximately **1,300 (≈48%)** is the OIG's **projection** — derived from the
+  ~169-claim sample — of how many of the estimated ~2,700-claim population were
+  improperly processed. It is not a tally of 2,700 claims that were reviewed and
+  1,300 found improper; it is a statistical estimate applied to the population.
 - Secondary sources (see below) independently report a consistent overall
   picture — "nearly half" of FY2017 MST claims were mishandled, and cite the
   same ~5,500 denied-claims figure — but frame the denominator slightly
   differently (one states "12,000 MST claims filed" as the base rather than the
-  OIG's ~2,700-claim review sample). **Do not treat the exact percentage as
-  precision-verified** — the underlying rate (roughly half of denied MST claims
-  in this period were mishandled) is corroborated by multiple sources; the exact
-  arithmetic should be re-derived from the primary OIG report PDF by the
-  citation-verifier pass, since that PDF could not be extracted by automated
-  fetch in this pass (see Verification Ledger).
+  OIG's ~2,700-claim estimated population). **Do not treat the exact percentage
+  as precision-verified** — the underlying rate (roughly half of denied MST
+  claims in this period were mishandled) is corroborated by multiple sources;
+  the exact arithmetic should be re-derived from the primary OIG report PDF by
+  the citation-verifier pass, since that PDF could not be extracted by
+  automated fetch in this pass (see Verification Ledger).
 
 Source (primary, fetched directly): https://www.vaoig.gov/reports/audit/denied-posttraumatic-stress-disorder-claims-related-military-sexual-trauma
+(**VA OIG Report No. 17-05248-241, Aug 21, 2018**). The "not fully implemented
+later" point in § 1.2 below is corroborated by OIG follow-up report
+**20-00041-163 (Aug 5, 2021)**.
 
 ### 1.1 Four documented causes of improper denial
 
@@ -128,21 +137,43 @@ adversarial-review checkpoints. Each cross-references the rule it violates.
 
 ## Verification Ledger
 
-- VA OIG audit — denied MST-related PTSD claims (FY2017 cohort; ~48% improper
-  processing rate; four-cause breakdown; root causes) —
+- VA OIG audit (Report No. 17-05248-241, Aug 21, 2018) — denied MST-related
+  PTSD claims (FY2017 cohort; ~5,500 total denials; ~2,700 estimated
+  population; ~1,300/≈48% projected improper-processing rate; four-cause
+  breakdown 28/13/11/10; root causes; recommendations) —
   https://www.vaoig.gov/reports/audit/denied-posttraumatic-stress-disorder-claims-related-military-sexual-trauma
-  — UNVERIFIED
+  — CONFIRMED (verified by citation-verifier 2026-07-16). **Correction 5A
+  (CORRECTED):** the file previously described ~2,700 as a claims-reviewed
+  sample and 1,300 as a count found improper within that reviewed set. Fixed —
+  ~2,700 is the OIG's estimated population, and ~1,300 (≈48%) is a projection
+  from an actual sample of ~169 reviewed claims onto that population, not a
+  count of claims examined. The raw figures themselves (2,700 / 5,500 / 1,300 /
+  ≈48%) were already correct; only the word "reviewed" and the implication that
+  2,700 claims were individually examined were wrong.
+- Four-cause breakdown (28% / 13% / 11% / 10%) — CONFIRMED (verified
+  2026-07-16) via two consistent secondary sources; keep the existing caveat
+  that per-cause percentages are practitioner-summary-sourced, not
+  primary-PDF-pinned.
+- Root causes and recommendations (§ 1.2) — CONFIRMED (verified 2026-07-16).
+  Corroborating follow-up: OIG Report 20-00041-163 (Aug 5, 2021) confirms some
+  recommendations remained not fully implemented years after the original
+  audit.
 - Secondary corroboration of the same OIG findings —
   https://www.hillandponton.com/mst-cases-incorrect-denials/ and
   https://cck-law.com/blog/va-mishandled-military-sexual-trauma-mst-claims-va-oig-reports/
-  — UNVERIFIED
+  — CONFIRMED (verified 2026-07-16), including the "12,000 MST claims filed"
+  base figure attributed to cck-law.com specifically.
 - Second (2024) OIG report — https://www.vaoig.gov/sites/default/files/reports/2024-11/vaoig-24-00118-01.pdf
-  — NOT EXTRACTED (binary/PDF fetch failure); flagged as an open gap, not cited
-  for any specific claim in this file
-- General denial/underrating patterns in § 2 are derived from, and cite back to,
-  claims already ledgered as UNVERIFIED in `rating-procedure.md`,
-  `dbq-mental-disorders.md`, and `criteria-4130-caselaw.md` — no new independent
-  citations introduced in § 2 beyond those cross-references
+  — UNVERIFIABLE (content will not decode; binary/PDF fetch failure). Kept
+  ledgered as an open gap; no statistic in this file depends on it. Do not
+  assert its title or date as fact — only that the filename implies a
+  2024-11 report date.
+- General denial/underrating patterns in § 2 are derived from, and cite back
+  to, `rating-procedure.md`, `dbq-mental-disorders.md`, and
+  `criteria-4130-caselaw.md` — those files' own Verification Ledgers now mark
+  the specific claims cross-referenced here as CONFIRMED or CORRECTED (see
+  each file); no new independent citations are introduced in § 2 beyond those
+  cross-references.
 
 ## Conflicts with prior research
 
