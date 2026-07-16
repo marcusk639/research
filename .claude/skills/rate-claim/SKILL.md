@@ -29,6 +29,10 @@ the rated record + the law, never strategy material. Spec:
 - The co-located **originals are authoritative**: consult one when a transcript
   is ambiguous or suspect; **on any discrepancy the original controls**, and the
   discrepancy is reported so the conversion gets fixed.
+- Corpus purity is **gate-enforced, not inherent**: `supporting-docs/` may still
+  contain strategy/framing material (e.g. suggested-language drafts). Stage 1's
+  evidence-of-record classification is what keeps such material out of the rated
+  record — do not "fix" an empty-rated-record stop by loosening intake.
 - `personal-records/` (gitignored PHI) is a fallback source ONLY for evidence
   with no copy in `supporting-docs/` at all. Never copy its contents into
   tracked files.
@@ -58,11 +62,15 @@ the rated record + the law, never strategy material. Spec:
 
 ## Stage 2 — Consistency sweep
 
-Dispatch the **claim-consistency-checker** agent scoped to the rated-record file
-list only. Keep **substantive** findings: contradictions in diagnoses, symptom
-reports, employment/functional status, treatment history, stressor accounts.
-Clerical errors (DOB typos, name spellings, phone slips, grammar) carry no
-weight — collapse them to a single errata footnote.
+Dispatch the **claim-consistency-checker** agent **under the blindness rule
+below** (it applies to Stage 2 as well as 3–5): hand it the explicit rated-record
+file list only, never directory access — otherwise its default charter to read
+every document in `va-disability/` would launder strategy material
+(`COMPREHENSIVE-FINDINGS-*`, `CLAIM-ASSESSMENT.md`, `planning-docs/`) into the
+blind pipeline via its findings. Keep **substantive** findings: contradictions in
+diagnoses, symptom reports, employment/functional status, treatment history,
+stressor accounts. Clerical errors (DOB typos, name spellings, phone slips,
+grammar) carry no weight — collapse them to a single errata footnote.
 
 ## Stage 3 — C&P examiner (subagent)
 

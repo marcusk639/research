@@ -11,3 +11,8 @@
 va-disability/personal-records/
 va-disability/ClaudeDisabilityAssets/
 va-disability/ClaudeChat/
+
+# /rate-claim mock rating reports quote PHI-derived evidence — keep generated
+# reports out of git; the directory's README is intentionally tracked.
+va-disability/ratings/*.md
+!va-disability/ratings/README.md

@@ -11,3 +11,7 @@ research assistance, not legal or medical advice.
 No reports exist yet: the first run requires explicit user authorization
 (spec: Validation section — blind-rediscovery acceptance test gates trust in the
 first score).
+
+**PHI:** generated reports quote and cite the evidence record (names, clinical
+detail, treatment history), so `*.md` reports here are gitignored — only this
+README is tracked. Do not force-add a report to git.
