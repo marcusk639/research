@@ -87,8 +87,12 @@ No role grades its own work.
   knowledge base, including the occupational/social-impairment checkbox that
   drives the rating.
 - Runs the credibility hunt, dispatching the existing **claim-consistency-checker**
-  agent scoped to the rated record (dates, diagnoses, employment status, symptom
-  reports).
+  agent scoped to the rated record — **substance only**: contradictions in
+  diagnoses, symptom reports, employment/functional status, treatment history, and
+  stressor accounts. Clerical errors (DOB typos, name spellings, phone-number
+  slips, grammar) carry **no weight** in the examination or rating; they are
+  collected in a one-line errata note at most, never treated as credibility
+  findings.
 - **Citation anchoring (hard rule):** every DBQ endorsement and every finding must
   cite document + section. No uncited endorsements.
 
@@ -103,6 +107,9 @@ No role grades its own work.
 - A denial-minded rater attacks the assigned rating using `denial-patterns.md`;
   every viable attack path is documented; sustained attacks are appended to the
   report as the priority weakness list. The RVSR's rating stands, annotated.
+- **Substantive attacks only.** Clerical defects are not valid attack paths;
+  attacks must go to evidence weight, criteria fit, nexus sufficiency, or
+  substantive credibility.
 
 ### Blindness rule (hard, applies to roles 2–4)
 
@@ -154,7 +161,8 @@ VA-faithful sections, written as a rater would write them:
 Assessment extras:
 
 - Filled DBQ (examiner output, citation-anchored)
-- Strengths / weaknesses ledger
+- Strengths / weaknesses ledger (substance only; clerical errata relegated to a
+  single no-rating-weight footnote)
 - Per-document helps/hurts table
 - Gap list keyed to the next-higher rating's criteria
 - Sustained adversarial attacks, ranked by severity
@@ -182,13 +190,15 @@ Assessment extras:
 - Structural review of the skill file (frontmatter, role prompts, file paths).
 - Citation-verifier pass over all five KB files.
 - **Blind-rediscovery acceptance test (run only when the user authorizes the first
-  run):** the corpus contains known, documented defects — the nexus letter's DOB
-  error ("1998" vs. actual 1989), Kline/Klein spelling drift, the two-way phone
-  discrepancy, the opioid-origin claim contradicted by clinical records, the Reyes
-  unit/DD-214 mismatch. The examiner runs blind; its credibility findings are then
-  diffed against `COMPREHENSIVE-FINDINGS-*`. If it fails to independently
-  rediscover the known defects, the credibility hunt is not examiner-grade and the
-  examiner prompt gets revised before the score is trusted.
+  run):** the corpus contains known, documented **substantive** issues — the
+  opioid-origin claim contradicted by clinical records, and the Reyes unit/DD-214
+  mismatch that affects that statement's corroborative weight. The examiner runs
+  blind; its credibility findings are then diffed against
+  `COMPREHENSIVE-FINDINGS-*`. If it fails to independently rediscover the known
+  substantive issues, the credibility hunt is not examiner-grade and the examiner
+  prompt gets revised before the score is trusted. (Clerical defects — DOB typo,
+  Kline/Klein, phone discrepancy — are not part of the pass/fail bar, per the
+  substance-only rule.)
 
 ## Ethics guardrails (adopted verbatim in force from `/va-rating-reassess`)
 
