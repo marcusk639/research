@@ -75,7 +75,10 @@ mirror the § 4.130 General Rating Formula verbatim (full text in
 7. Total occupational and social impairment (→ 100%)
 
 This exact seven-level structure is independently confirmed on the Initial PTSD
-DBQ (item 4A) and the reginfo.gov PTSD DBQ variant (Section VI item 6):
+DBQ (item 4A). The reginfo.gov PTSD DBQ variant (Section VI item 6) independently
+confirms the same § 4.130-mirrored ORDERING of impairment levels, but as a
+**six-level** scale (0/10/30/50/70/100) — it omits the "No mental disorder
+diagnosis" floor level present on the Mental Disorders DBQ and Initial PTSD DBQ:
 
 > "4A. WHICH OF THE FOLLOWING BEST SUMMARIZES THE VETERAN'S LEVEL OF OCCUPATIONAL
 > AND SOCIAL IMPAIRMENT ... (Check only one) ... TOTAL OCCUPATIONAL AND SOCIAL

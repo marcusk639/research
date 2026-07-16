@@ -79,9 +79,7 @@ how "most" and "total" are actually assessed against a real symptom picture.
 
 ## 3. Controlling case law
 
-### 3.1 Mauerhan v. Principi, 16 Vet.App. 436 (2002) — the symptom list is
-
-non-exhaustive
+### 3.1 Mauerhan v. Principi, 16 Vet.App. 436 (2002) — the symptom list is non-exhaustive
 
 The CAVC held that the "such as" language preceding each symptom list in
 § 4.130 means the enumerated symptoms are illustrative, not a required
@@ -103,9 +101,7 @@ and https://ratemyvso.net/dc/mental-health-rating-formula, which frames the
 practical effect as: "A symptom not explicitly named in the criteria can still
 support a higher rating if it contributes to overall impairment at that level."
 
-### 3.2 Vazquez-Claudio v. Shinseki, 713 F.3d 112 (Fed. Cir. 2013) — severity,
-
-frequency, and duration, not a symptom count
+### 3.2 Vazquez-Claudio v. Shinseki, 713 F.3d 112 (Fed. Cir. 2013) — severity, frequency, and duration, not a symptom count
 
 The Federal Circuit held that a veteran qualifies for a given rating level not by
 matching the exact listed symptoms, but by demonstrating symptoms of "similar
@@ -135,9 +131,7 @@ actually _produce_ the described level of occupational and social impairment
 (Vazquez-Claudio). Neither case licenses assigning a rating on symptom
 vocabulary alone; both require tying symptoms to functional consequence.
 
-### 3.3 Bankhead v. Shulkin, 29 Vet.App. 10 (2017) — suicidal ideation alone can
-
-support 70%
+### 3.3 Bankhead v. Shulkin, 29 Vet.App. 10 (2017) — suicidal ideation alone can support 70%
 
 The CAVC held that the mere presence of suicidal ideation — including passive
 ideation (e.g., a wish to be dead, without a plan or intent) — can by itself

@@ -75,9 +75,7 @@ binary stream). This is a real gap — the citation-verifier pass or a manual
 review should re-pull this report, since it likely reflects the most current
 OIG assessment of whether the FY2017 failure modes persist.
 
-## 2. General MH/MST denial and underrating patterns (derived from the
-
-adjudication-procedure and DBQ files in this KB)
+## 2. General MH/MST denial and underrating patterns (derived from the adjudication-procedure and DBQ files in this KB)
 
 These are not separately OIG-sourced statistics — they are the failure modes
 implied by the procedural rules documented in `rating-procedure.md`,
