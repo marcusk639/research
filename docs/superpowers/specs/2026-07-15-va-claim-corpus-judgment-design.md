@@ -24,22 +24,24 @@ this harness's entire value.
 
 ## Decisions made during brainstorming and plan review
 
-| Decision           | Choice                                                                                                     |
-| ------------------ | ---------------------------------------------------------------------------------------------------------- |
-| Rating target      | **Highest defensible** — the mock rater assigns 0/10/30/50/70/100 exactly as the evidence supports         |
-| Corpus             | `va-disability/supporting-docs/` (the existing tracked transcription layer) **is** the corpus — no new dir |
-| Originals          | Signed PHI originals stay in gitignored `personal-records/`; intake transcribes only what's missing        |
-| Manifest           | Reuse `DOCUMENT-PROVENANCE.md` as the classification source of truth — no parallel manifest file           |
-| Deliverable shape  | Re-runnable project skill (`/rate-claim`); dated reports enable baseline → final comparison                |
-| Examiner knowledge | One-time deep-research pass → static, citation-verified knowledge base in `va-disability/rater-kb/`        |
-| Architecture       | Intake → examiner → rater pipeline **plus** an adversarial denial-minded reviewer as a fourth stage        |
+| Decision           | Choice                                                                                                                                                                                                                        |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rating target      | **Highest defensible** — the mock rater assigns 0/10/30/50/70/100 exactly as the evidence supports                                                                                                                            |
+| Corpus             | The **markdown files** in `va-disability/supporting-docs/` — the source of the bulk of what was/will be submitted to the VA for the MH claims                                                                                 |
+| Originals          | PDF/docx/pages originals co-located in `supporting-docs/` are **reference material** — consulted when a transcript is ambiguous, suspect, or missing; intake transcribes an original only when it has no markdown counterpart |
+| Manifest           | Reuse `DOCUMENT-PROVENANCE.md` as the classification source of truth — no parallel manifest file                                                                                                                              |
+| Deliverable shape  | Re-runnable project skill (`/rate-claim`); dated reports enable baseline → final comparison                                                                                                                                   |
+| Examiner knowledge | One-time deep-research pass → static, citation-verified knowledge base in `va-disability/rater-kb/`                                                                                                                           |
+| Architecture       | Intake → examiner → rater pipeline **plus** an adversarial denial-minded reviewer as a fourth stage                                                                                                                           |
 
 ## Directory layout (matches the 2026-07-15 reorganization — nothing new except `rater-kb/` and `ratings/`)
 
 ```
 va-disability/
-  supporting-docs/          # THE CORPUS: tracked markdown transcripts of evidence documents
-  personal-records/         # gitignored signed PHI originals — intake reads, never copies wholesale
+  supporting-docs/          # THE CORPUS: markdown transcripts (primary) + pdf/docx/pages
+                            # originals (reference — consulted if possible and necessary)
+  personal-records/         # gitignored signed PHI originals — fallback source only, for
+                            # evidence documents with no copy in supporting-docs at all
   DOCUMENT-PROVENANCE.md    # existing provenance log — intake's classification source of truth
   rater-kb/                 # NEW: static rater-emulation knowledge base (5 files, below)
   ratings/                  # NEW: dated run outputs: YYYY-MM-DD-rating-report.md
@@ -53,11 +55,15 @@ No role grades its own work.
 
 ### 1. Intake clerk
 
-- Scans `supporting-docs/` and `personal-records/supporting-docs/`; transcribes any
-  original lacking a current transcript (AppleScript Pages export for `.pages`,
-  `pdftotext`/docx conversion for documents, OCR fallback for scans). Skips
-  unchanged files by content hash. Unreadable files flagged `NEEDS-ATTENTION` —
-  never silently skipped.
+- Scans `supporting-docs/`: the **markdown files are the rated record's text**. A
+  non-markdown original (pdf/docx/pages) in the same directory is paired with its
+  markdown counterpart and kept as reference — consulted when a transcript is
+  ambiguous, suspected incomplete, or needs verification. An original with **no**
+  markdown counterpart gets transcribed (AppleScript Pages export for `.pages`,
+  `pdftotext`/docx conversion for documents, OCR fallback for scans);
+  `personal-records/` is a fallback source only for evidence with no copy in
+  `supporting-docs/` at all. Skips unchanged files by content hash. Unreadable
+  files flagged `NEEDS-ATTENTION` — never silently skipped.
 - **Evidence-of-record classification (first job):** for every document, determine
   from `DOCUMENT-PROVENANCE.md` whether it is (a) the signed/filed instrument,
   (b) a superseded draft, or (c) unsubmitted material. Only (a) — plus unsigned
