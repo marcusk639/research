@@ -20,6 +20,50 @@ Produce four cited Markdown artifacts inside the active research subject directo
 3. `strategy.md` — per-condition strategy, odds, and optimization levers
 4. `resources.md` — free and paid help, ranked and substantiated
 
+## Current Case State — Read Before Running (updated 2026-07-05)
+
+This skill originally produced the four base artifacts. Much has changed since. **Before
+running any phase, read `va-disability/COMPREHENSIVE-FINDINGS-2026-07.md` in full** — it is
+the current source of truth and it explicitly supersedes parts of `veteran-profile.md` and
+`strategy.md`. Do not treat the older four artifacts as authoritative where the findings doc
+corrects them. Key items any rating strategy now must account for (not exhaustive — read the doc):
+
+- **A confirmed clinical OCD diagnosis (F42.2)** missing from the personal statement and C&P
+  prep. Its VA diagnostic code is **9404** (verified against 38 CFR 4.130 via Cornell LII /
+  eCFR, 2026-07-05; DC **9403** is specific/social phobia, not OCD). OCD is rated under the
+  same § 4.130 General Rating Formula as PTSD/MDD/GAD, so it folds into the single mental-health
+  rating (anti-pyramiding) rather than adding separately — but its documented symptoms
+  strengthen the overall severity picture.
+- **A credibility risk** where a spouse's draft statement was found to have been directively
+  coached. See the guardrails below — this changes how this skill may ever touch witness evidence.
+- **A conflict** between the MST stressor narrative and a 2015 VA record containing an explicit
+  MST denial and all-negative screens, repeated as "trauma denied" across most intakes through 2024. This must be affirmatively addressed with delayed-disclosure literature, not left silent.
+- **A weaker-than-assumed iatrogenic-opioid-onset theory** (age-18 pre-service first use in the
+  record); lead instead with the _Allen v. Principi_ secondary-to-PTSD/MDD/GAD theory.
+- **An unexplained "Amphetamine-type SUD, Severe" diagnosis** with zero supporting documentation.
+- **A materially deteriorated employment picture** that may change the 100%-schedular-vs-TDIU
+  analysis (the prior June 2026 deep-research put 100% schedular at only 10–15%, contingent on
+  genuine, undirected, contemporaneously-documented decline — never anything manufactured).
+
+For an ad-hoc strategic re-analysis that does **not** require rebuilding all four artifacts from
+scratch (e.g., "given these new facts, what's my realistic ceiling now, and what should I do?"),
+use the companion **`/va-rating-reassess`** skill instead of re-running this full workflow.
+
+## Required tooling — verify before you assert
+
+- **`citation-verifier` subagent:** run it on **every** legal/CFR/case-law/USC/Federal-Register
+  citation before you present it as fact in any artifact. 40 of 109 citations in the prior
+  research were misstated; do not repeat them. Never state a citation as confirmed on the strength
+  of training data alone.
+- **`claim-consistency-checker` subagent:** run it before finalizing any claim-facing document
+  (personal statement, 21-0781, buddy/spouse statement, nexus-letter guide) to catch factual
+  drift across the corpus.
+- **Internet currency (non-negotiable):** do **not** reason from training data for anything
+  year-specific — compensation rates, SMC/DEA/poverty thresholds, dollar figures, CFR text,
+  proposed-rule/docket status, appeal-docket timelines. Confirm each against a current primary
+  source (va.gov, ecfr.gov / law.cornell.edu, govinfo.gov, the Federal Register) at run time,
+  and record the effective year + source URL. When in doubt, say "not found / not confirmed."
+
 ## Core Principle — Four Gated Phases
 
 Execute the phases **in order**. Do **not** start a phase until the prior phase's
@@ -178,6 +222,18 @@ paid reps) a verified accreditation status.
 - **Never** advise fabricating, exaggerating, or misrepresenting conditions,
   symptoms, or service history.
 - **Never** present an invented number as a statistic.
+- **Never coach witness evidence.** Do not draft, script, reword, or suggest framing
+  for any buddy, spouse, or lay statement, and never tell a witness what to emphasize,
+  omit, or align with another account. Witness statements (VA Form 21-10210 / 21-4138)
+  are signed under penalty of perjury; a coached statement is the paradigm case of VA
+  benefits fraud (18 U.S.C. § 1001) and would cross-contaminate the credibility of the
+  entire claim. You may **identify** a credibility risk or a consistency gap and hand it
+  to the veteran — resolution belongs to the veteran and the actual witness, in their own
+  unedited words. This mirrors the hard rule in the `claim-consistency-checker` subagent.
+- **Genuine decline only.** Any argument for a higher rating (including any 100%-schedular
+  or TDIU path) must rest on genuine, undirected, contemporaneously-documented functional
+  decline — never anything manufactured, backdated, or coached. If the evidence is not
+  already there, the answer is to build legitimate documentation over time, not to inflate.
 - Note VA fee rules: VSOs are free; attorneys cannot charge for initial claims;
   fees are regulated under **38 CFR 14.636**.
 - Always include the disclaimer: _this is research assistance, not legal or medical

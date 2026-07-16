@@ -13,6 +13,9 @@ repository, not a software project — there is no build, lint, or test step.
 subject slug (e.g. `va-disability/`). All research artifacts for a subject —
 reports, source notes, data, drafts — live inside that subject's directory.
 
+`businesses/`, `docs/`, and `prompts/` are the exceptions: they're repo-level
+tooling/meta directories, not subjects, and don't get a `REPORT.md`.
+
 When starting research on a new subject:
 
 - Create a new top-level directory named with a kebab-case slug for the subject.
@@ -33,6 +36,21 @@ underspecified, ask 2–3 clarifying questions to narrow scope first.
 
 Research output should be written as Markdown into the relevant subject directory.
 Cite sources inline so claims are traceable. The primary synthesis for a subject lives at `<slug>/REPORT.md`.
+
+## Project Agents
+
+Custom repo-specific agents live in `.claude/agents/` and are picked up
+automatically by Claude Code — no invocation needed, but know they exist:
+
+- **citation-verifier** — verifies every legal citation (case law, CFR/USC
+  sections, Federal Register dockets) before it's used in a claim brief or
+  strategy document. It exists because a prior `va-disability/` research pass had
+  109 citations checked and **40 were misstated** (wrong pincites, overreached
+  holdings, stale figures). Run it before finalizing any document that cites law
+  or regulation, in any subject.
+- **claim-consistency-checker** — cross-references dates, diagnoses, and factual
+  claims across every `va-disability/` document to catch drift before a document
+  is finalized or submitted.
 
 ## Session Memory (`.remember/`)
 

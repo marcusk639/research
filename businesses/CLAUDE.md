@@ -24,7 +24,7 @@ describe.
 ## Structure Convention
 
 - Each top-level subdirectory of `businesses/` is **one venture**, named with a
-  kebab-case slug (e.g. `recovery-app/`, `va-claims-saas/`).
+  kebab-case slug (e.g. `addiction-recovery/`, `bh-rcm-copilot/`).
 - All artifacts for a venture stay inside its directory. Captured sources go in
   `<venture>/sources/`. Never scatter a venture's files across `businesses/` or into
   another venture.
