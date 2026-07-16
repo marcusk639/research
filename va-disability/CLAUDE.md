@@ -38,6 +38,12 @@ superseded and kept for history only.
 - **`/va-rating-strategy`** skill — the gated four-phase deep-research workflow
   (knowledge base → veteran profile → strategy+odds → resources) this subject's
   strategy docs were built from.
+- **`/rate-claim`** skill — record-only mock VA adjudication of the
+  `supporting-docs/` markdown evidence (intake → C&P examiner → RVSR →
+  adversarial reviewer), producing a dated rating report in `ratings/` where
+  every finding carries a suggested remediation. Blind to all strategy docs by
+  design. Requires `rater-kb/` (STATUS: KB COMPLETE) and explicit user request —
+  never auto-run. For strategy/odds questions use `/va-rating-reassess`.
 - **`citation-verifier`** agent (repo-level, `../.claude/agents/`) — run before
   finalizing any document here that cites case law or regulation.
 - **`claim-consistency-checker`** agent (repo-level) — run after editing the

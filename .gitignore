@@ -22,3 +22,8 @@ va-disability/supporting-docs/Psych-DASS21*
 va-disability/supporting-docs/VA-Buddy-Form*
 va-disability/supporting-docs/VBA-21-0781*
 va-disability/supporting-docs/Victory-2018*
+
+# /rate-claim mock rating reports quote PHI-derived evidence — keep generated
+# reports out of git; the directory's README is intentionally tracked.
+va-disability/ratings/*.md
+!va-disability/ratings/README.md
