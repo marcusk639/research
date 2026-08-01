@@ -16,6 +16,9 @@ reports, source notes, data, drafts — live inside that subject's directory.
 `businesses/`, `docs/`, and `prompts/` are the exceptions: they're repo-level
 tooling/meta directories, not subjects, and don't get a `REPORT.md`.
 
+Root `prompts/` holds _raw user asks_ (verbatim one-liners, slash-command text). Engineered
+multi-phase prompts stay in the subject dir they drive — e.g. `<subject>/prompts/`.
+
 When starting research on a new subject:
 
 - Create a new top-level directory named with a kebab-case slug for the subject.
@@ -36,6 +39,10 @@ underspecified, ask 2–3 clarifying questions to narrow scope first.
 
 Research output should be written as Markdown into the relevant subject directory.
 Cite sources inline so claims are traceable. The primary synthesis for a subject lives at `<slug>/REPORT.md`.
+
+A prompt that instructs "read every file in `<subject>/`" will ingest itself and the run's own
+outputs — the self-containment rule guarantees they're co-located. Always exclude the prompt
+file, any `prompts/` subdir, and the run's output paths explicitly.
 
 ## Project Agents
 

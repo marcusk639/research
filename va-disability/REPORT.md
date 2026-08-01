@@ -75,6 +75,35 @@ most importantly that PTSD has never been formally diagnosed by any clinician,
 and that a third in-service witness ("Goff") was never actually obtained. Both
 are now folded into `CLAIM-ASSESSMENT.md` and `MASTER-STRATEGY.md`.
 
+**The sleep-apnea document set (added 2026-07-31)** is the **newest work in this
+subject** and the place to start for that track. Written when a sleep study was
+actually scheduled, it splits the old single research file into five docs by question —
+see `planning-docs/README.md` for the table:
+
+- **[`SLEEP-APNEA-50-PERCENT-PHASED-PLAN.md`](./planning-docs/SLEEP-APNEA-50-PERCENT-PHASED-PLAN.md)**
+  — **the working tracker; start here.** Seven phases (Phase 0 start-the-clock → Phase 6
+  post-filing), each with an explicit gate that must close before the next begins,
+  anti-pattern guards per phase, and a hard override: **file at `ITF + 10 months`
+  regardless of which gates are still open.** Baseline as of 2026-07-31: consult only —
+  no study ordered, no ITF filed, no diagnosis, no CPAP.
+- **[`SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md`](./planning-docs/SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md)**
+  — **the reasoning behind that sequence.** Intent-to-File deadline mechanics and the rule
+  that the **365-day ITF window governs, not the PTSD decision**; the correct form
+  (**21-526EZ — a new claim, _not_ a Supplemental Claim**); phase-by-phase steps; the
+  Lake Charles relocation risk under 38 CFR 3.655. Also logs four corrections to an
+  external AI-generated plan that prompted it.
+- **[`SLEEP-APNEA-RATING-MAXIMIZATION.md`](./planning-docs/SLEEP-APNEA-RATING-MAXIMIZATION.md)**
+  — what actually moves the rating between 0/30/50%, the honest ceiling (**50%, not
+  100%**), the combined-rating math, the pyramiding objection and how to pre-empt it,
+  and a nine-item risk register.
+- **[`SLEEP-APNEA-APPOINTMENT-PREP.md`](./planning-docs/SLEEP-APNEA-APPOINTMENT-PREP.md)**
+  — what to report at the sleep study and what to ask for (the sleep-apnea analogue of
+  `CP-EXAM-PREP-MENTAL-HEALTH.md`).
+- **[`SLEEP-APNEA-NEXUS-OPINION-GUIDE.md`](./planning-docs/SLEEP-APNEA-NEXUS-OPINION-GUIDE.md)**
+  — **to hand to the sleep physician.** The four elements of a legally sufficient
+  etiology opinion, the three causal mechanisms ranked by strength, and why Cherie
+  (LCSW) is not the right author for this one.
+
 **[`SLEEP-APNEA-SECONDARY-CLAIM.md`](./planning-docs/SLEEP-APNEA-SECONDARY-CLAIM.md)** is the
 dedicated legal/medical research pass on the highest-leverage secondary claim
 flagged throughout the documents above (sleep apnea secondary to PTSD, potentially
@@ -107,6 +136,15 @@ experience; re-verify any figure through `citation-verifier` before any filing.
   §7 and `SLEEP-APNEA-SECONDARY-CLAIM.md`), but no sleep study has been completed —
   get a primary-care referral or private home sleep apnea test started this week;
   see `SLEEP-APNEA-SECONDARY-CLAIM.md` for why this is now the top blocking action.
+  **UPDATE 2026-07-31 — partially superseded:** a **sleep-apnea consult has occurred but no study is scheduled or ordered yet**
+  (Lake Charles VA clinic), so the blocking gate is in motion. The claim is still
+  unfiled, and the top action has shifted to **filing an Intent to File (VA Form
+  21-0966) to lock the effective date**, then converting the sleep study into a
+  reasoned nexus opinion from the _sleep_ provider (Cherie Mills, LCSW, is not the
+  right author for this one). Note also: this is a **new claim on VA Form 21-526EZ**,
+  **not** a Supplemental Claim. Sequencing, deadline mechanics, and the DC 6847
+  regulatory clock are in
+  [`planning-docs/SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md`](./planning-docs/SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md).
 - **RESOLVED 2026-07-06 — the single most important open task:** no clinician had
   ever formally diagnosed PTSD anywhere in this record as of this update; it rested
   on the personal statement and buddy statements only. Cherie Mills's signed nexus

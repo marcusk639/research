@@ -267,6 +267,8 @@ Each issue below genuinely works against a 100% rating. For each: what it is, wh
 
 ### I-12 — The sleep study doesn't exist (Route 2's only gate)
 
+> **UPDATE 2026-07-31 — this gate is now in motion.** **Corrected 2026-07-31:** a sleep-apnea **consult has occurred**, but **no study has been ordered or scheduled** — option (b) below is started, not completed. The issue has shifted from _getting diagnosed_ to _converting the appointment into a filable claim_: file an **Intent to File (21-0966) now** to lock the effective date, and **file the 21-526EZ inside the 365-day ITF window whether or not the PTSD claim has been decided** — waiting on the PTSD outcome is the one thing that can forfeit backpay outright. Full sequencing, the nexus-author question, and the Lake Charles address risk (38 CFR 3.655): [`SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md`](./SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md).
+
 **What:** no polysomnography-confirmed OSA diagnosis exists; nothing about the sleep-apnea claim can proceed without it.
 **Resolution options:**
 

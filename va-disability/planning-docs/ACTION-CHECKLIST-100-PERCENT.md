@@ -20,6 +20,12 @@
 - [ ] **1. Start the sleep-apnea workup** _(you + a provider · I-12, Phase 1)_
       Book a **private home sleep apnea test** (fastest, ~1–3 weeks) or a **VA primary-care referral** — either way, explicitly report **snoring, witnessed pauses/gasping, and daytime fatigue** (Erica's witnessed observations help the referral get taken seriously).
       _Resources:_ a private home sleep test is legally acceptable as the "current diagnosis" element (38 CFR 3.159); rating tier is **DC 6847, 38 CFR 4.97 → 50% with CPAP**. See `SLEEP-APNEA-SECONDARY-CLAIM.md`.
+      **⚠️ STILL OPEN as of 2026-07-31 — corrected.** A sleep-apnea **consult has occurred**, but **no study has been ordered or scheduled.** Getting the order placed is still a live Tier-1 action. See item 1a and `SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md` Phase 1.
+
+- [ ] **1a. File VA Form 21-0966 (Intent to File) — this week** _(you · NEW 2026-07-31, now the top sleep-apnea action)_
+      Locks the effective date for the sleep-apnea claim at zero cost. **Save the confirmation number and calendar `receipt date + 10 months`** — the 21-526EZ must be filed inside the **365-day** window (38 CFR 3.155(b)) or the backpay between is permanently forfeited. **First confirm no ITF is already active** — one ITF covers all compensation conditions, and VA may reject a duplicate.
+      ⚠️ **Also update your VA mailing address** if the Lake Charles move is happening — a C&P notice sent to a stale address can be treated as failure to report. Under **38 CFR § 3.655(a)–(b)**, without good cause, a **new compensation claim** is _rated on the evidence of record_ but **a claim for increase or previously-disallowed supplemental claim is denied outright** — so the exposure is worse on the pending mental-health claim than on sleep apnea.
+      _Resource:_ `SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md` §3 Phase 0.
 - [ ] **2. Submit the WHODAS 2.0 and DASS-21 to your VSO** _(you → VSO · I-14, §11)_
       Both are now in hand and objective. Send them through the VSO channel that's already working. _(Honest framing: both are "Recover" leave-support self-report instruments — strong supporting evidence of severity/function, not examiner findings.)_
       _Resources:_ VA claim-status tracker to confirm receipt — [va.gov/claim-or-appeal-status](https://www.va.gov/claim-or-appeal-status/).
@@ -61,6 +67,7 @@
       Confirm whether it's a coding error or a real episode; have an honest answer ready either way.
 - [ ] **13. File the sleep-apnea secondary claim once the diagnosis exists** _(you + VSO · I-12, §5.2)_
       Do this promptly (before any DC 6847 rule change). Get the treating psychiatrist or a sleep specialist to write the nexus opinion addressing the **hyperarousal mechanism** (not just "obesity from meds"). _Resource:_ `SLEEP-APNEA-SECONDARY-CLAIM.md` (models two real BVA grants).
+      **EXPANDED 2026-07-31 — four corrections:** (a) file on **VA Form 21-526EZ** — this is a **new claim, NOT a Supplemental Claim**, and do not bolt it onto the pending MH claim; (b) **file inside the ITF window whether or not the PTSD claim has been decided** — waiting for the PTSD rating to finalize can blow the 365-day deadline, since an appeal takes years; (c) **get the CPAP prescription** — a diagnosis without a prescribed device rates 30% at most, and 50% is what completes the Route 2 math; (d) **plead causation _and_ aggravation** (3.310(a) and (b) — _Allen v. Brown_ makes aggravation independently sufficient). The nexus author should be the **sleep-medicine physician/pulmonologist**, not Cherie (LCSW competency on an airway mechanism is challengeable). _Resource:_ `SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md`.
 - [ ] **14. Ankle: get the X-ray / a proper ROM exam if pursuing it** _(you · Tier-2 secondary, §5.1)_
       Realistic 10% (20% if "marked"). The exam must be **Correia/Sharp-compliant** (active+passive, weight-bearing+non, flare-up estimate). _Cites: Correia v. McDonald, 28 Vet. App. 158; Sharp v. Shulkin, 29 Vet. App. 26._
 - [ ] **15. Confirm the corrective supplemental statement for the opioid-recollection issue** _(you + VSO · I-8)_
