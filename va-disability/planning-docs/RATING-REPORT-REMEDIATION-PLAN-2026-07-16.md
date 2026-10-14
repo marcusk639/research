@@ -319,7 +319,9 @@ rather than fragments.
 - [ ] REP prepares/refreshes VA Form 21-4142 + 21-4142a authorizations naming each
       facility: **Starlite Recovery Center** (2022–2025, complete), **Victory
       Addiction Recovery Center** (2018, complete), **Acadiana Addiction Center**
-      (2016–2017, if any survive), **Ocean's Luxury Rehab** (April 2025),
+      (2016–2017 — **2017 received 2026-10-14; 2016 stay not produced, re-request**),
+      **Palmetto** (2016 IOP) and **Dr. Jackson** (6/22/17 follow-up) — both newly
+      identified in the AAC records, **Ocean's Luxury Rehab** (April 2025),
       **Harmony Junction Recovery / Zoe PHP** (April 2026), and **Cherie Mills,
       LCSW** (complete session notes, 2/2023–present).
 - [ ] VET requests, in parallel, the records he can retrieve directly (he has
@@ -504,6 +506,12 @@ reviewer uses to discount the supporting documents wholesale.
 > confirm against the original PDF, but nothing readable shows it). **Do not** file a
 > statement "explaining" the heroin; there is nothing to explain. Report Finding #8
 > (heroin omission) is withdrawn as a credibility risk.
+>
+> **Update 2026-10-14 (AAC 2017 records):** the post-service conclusion holds, but the
+> start date is earlier than "Victory 2018 onward" — AAC records daily heroin "since about
+> 2015" and daily IV use by early 2017. AAC's signed psychosocial also lists undated
+> lifetime substances (incl. opioids/heroin, no kratom) with first use at 18 as
+> "experimentation" — see `document-analysis/AAC-2017-Records-ANALYSIS.md` §1.
 
 > **HARD GUARDRAIL:** this plan does **not** write, draft, or suggest any wording for
 > this statement. It identifies only the facts to reconcile. The veteran writes it in
@@ -550,6 +558,20 @@ reviewer uses to discount the supporting documents wholesale.
       not actually formally diagnosed at 18, he clarifies that **truthfully in his
       own words**; (iii) it folds into the **same competing-etiology point Cherie's
       addendum (Task 6) is already addressing.**
+- [ ] **Update 2026-10-14 — AAC 2017 records change this item's premise.** A 2017
+      psychiatric evaluation (Dr. Kevin Young, Acadiana) records "OP @ ~19 y/o for
+      depression/anxiety; on [antidepressant] for several months," and the signed
+      psychosocial says "Depression — in Lake Charles." The flag is no longer "a lone
+      self-reported intake line" (it was already multiple records: Victory 2018,
+      Starlite 2022/2023), and defense (ii) is substantially weakened — a statement
+      that he was not treated pre-service would conflict with a physician note. The
+      soundness route still holds if the entrance exam is silent (a recorded history
+      is not a "notation," 38 CFR 3.304(b)(1), though it is weighed on inception);
+      the entrance exam **and DD Form 2807-1** answers are now load-bearing. AAC also
+      shows the age-18 DWI ("18 y/o DWI" vs. "DWI/DUIs: 0" in the same admission);
+      the age-20 arrest may fall in service (age 20 = 5/30/2009–5/29/2010; EAD
+      11/23/2009) — confirm its date. Brief the REP on these facts before any 21-4138.
+      See `document-analysis/AAC-2017-Records-ANALYSIS.md` §2.
 - [ ] REP reviews any statement for accuracy and § 1001 exposure, then files via VA
       Form 21-4138.
 - [ ] If a corrective account is filed re the pre-service arrests, obtain the

@@ -412,7 +412,8 @@ diagnosis or something requiring its own evaluation remains Cherie's clinical ca
 - **2015-09-21/22:** VA visit, Jennings CBOC, LA — **explicit MST denial**, negative PC-PTSD/PHQ-2/AUDIT-C screens (see §0.3).
 - **2016-07/08:** First inpatient SUD treatment, Acadiana Addiction Center (Sunset, LA).
 - **2016-12:** B.S. Computer Science, McNeese State University.
-- **2017-05:** Second Acadiana stay.
+- **2017-05-16 to 06-19:** Second Acadiana stay, 34-day detox/residential — dx Opioid Use Disorder, Severe; psych eval records daily heroin "since about 2015" (post-service), **outpatient depression/anxiety treatment at ~age 19 with an antidepressant (pre-service, Lake Charles)**, age-18 DWI, family SUD history; signed psychosocial answers **"No" to sexual abuse/assault (MST non-disclosure, 2017)**; discharged on Zoloft 50 mg (depression) + doxepin (insomnia). _(Added 2026-10-14 from the AAC records — see `document-analysis/AAC-2017-Records-ANALYSIS.md`.)_
+- **2017-06-20 to 08-10:** Acadiana IOP (full completion) → River House Sober Living, Lafayette; employed at CGI (consultant).
 - **2018-08-25 to 09-01:** Victory Addiction Recovery Center, detox (relapsed 72 hrs after discharge).
 - **2018-09-04 to 10-04:** Victory Addiction Recovery Center, 30-day residential — discharge dx Opioid Use Disorder, Severe.
 - **2018-10-04 to 11-20:** Victory IOP — **discharged for non-attendance after 90 sessions**, "poor prognosis," not for relapse (toxicology stayed clean throughout).

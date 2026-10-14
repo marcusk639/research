@@ -344,6 +344,30 @@ REASSESSMENT-2026-07-06.md`'s odds were revised accordingly: 90% MH to ≈60–7
   the C&P exam out of habit or self-censorship — not a target list to reach for, per _Mauerhan_/
   _Vazquez-Claudio_'s existing guidance already in that document.
 
+## 2026-10-14 update — Acadiana Addiction Center 2017 records received
+
+Full review: [`document-analysis/AAC-2017-Records-ANALYSIS.md`](./document-analysis/AAC-2017-Records-ANALYSIS.md)
+(source PDF: `supporting-docs/AAC_med_records.pdf`, gitignored PHI). The 37 pages cover the
+5/16–6/19/2017 residential stay and the 6/20–8/10/2017 IOP only. The 7/2016 stay was not produced.
+
+- **Main new risk: pre-service depression/anxiety treatment.** A 2017 psychiatrist recorded outpatient
+  treatment at ~age 19 with an antidepressant for several months (Lake Charles). This is the earliest and
+  most specific of the pre-service records, and it weakens Remediation Task 8's "low-reliability
+  self-report" defense. The presumption of soundness still governs if the entrance exam is silent, so the
+  STRs' entrance exam and DD Form 2807-1 are now load-bearing.
+- **SUD:** heroin was daily "since about 2015", which is post-service and supports the secondary-SUD
+  theory. But the signed lifetime substance list, with first use at 18 as "experimentation", has no
+  kratom, and it sits against the kratom-only pre-service framing. There is also a multi-generational
+  family SUD history (a competing etiology).
+- **MST:** a 2017 signed "No" to sexual abuse belongs in the non-disclosure timeline.
+  _AZ v. Shinseki_ does not cover post-service treatment-record denials, so this has to be explained
+  clinically.
+- **Favorable:** Zoloft for depression in 2017 fills the 2015→2018 continuity gap. Insomnia was
+  diagnosed and treated (trazodone 2016, doxepin 2017).
+- **New releases needed:** AAC 2016, Palmetto (2016 IOP), Dr. Jackson (2017 follow-up). Citations
+  were verified by `citation-verifier` (2 overstatements corrected). The facts were cross-checked by
+  `claim-consistency-checker`.
+
 ## Superseded / historical
 
 [`knowledge-base.md`](./knowledge-base.md), [`veteran-profile.md`](./veteran-profile.md),
