@@ -571,12 +571,16 @@ reviewer uses to discount the supporting documents wholesale.
       shows the age-18 DWI ("18 y/o DWI" vs. "DWI/DUIs: 0" in the same admission);
       the age-20 arrest's timing was ambiguous on age alone (age 20 = 5/30/2009–
       5/29/2010; EAD 11/23/2009) — **veteran confirmed 2026-10-17 it was
-      pre-service** (back it with the arrest/court record, per the item below). Brief the REP on these facts before any 21-4138.
+      pre-service**; released without charges, so no court record exists. Brief the REP on these facts before any 21-4138.
       See `document-analysis/AAC-2017-Records-ANALYSIS.md` §2.
 - [ ] REP reviews any statement for accuracy and § 1001 exposure, then files via VA
       Form 21-4138.
 - [ ] If a corrective account is filed re the pre-service arrests, obtain the
       underlying arrest/court/expungement records to back it.
+      _Update 2026-10-17 (veteran):_ the age-20 paraphernalia arrest ended in release
+      without charges — **no court record exists**. The only possible paper is an
+      arrest/booking record held by the arresting agency (optional; may not exist).
+      Court/expungement records apply to the age-18 DUI only.
 
 **Done when:** the entrance exam has been obtained and checked for any noted GAD/MDD;
 and either a veteran-authored corrective 21-4138 (own words, REP-vetted) is filed, or
