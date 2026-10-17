@@ -488,7 +488,7 @@ boilerplate (with the source image cited).
 
 **Report findings:** #4 (perpetrator "service member" vs. "coworker's wife"),
 #14 (pre-service "spotless / no opioids before 2011" vs. age-18 DUI / age-20
-paraphernalia arrest), and a **newly-surfaced pre-service item** (age-18 GAD/MDD
+paraphernalia incident — per the veteran 2026-10-17, a stop with no arrest, see below), and a **newly-surfaced pre-service item** (age-18 GAD/MDD
 self-report — see below).
 **Owner:** VET (writes, own words) → REP (vets + files, VA Form 21-4138) ·
 **Depends on:** Task 0 (REP channel); Task 2 (STRs / **entrance exam** — see the
@@ -530,7 +530,7 @@ reviewer uses to discount the supporting documents wholesale.
       (a) the perpetrator's status (civilian spouse of a coworker, matching the
       personal statement and both buddy statements, vs. the 21-0781 Item 9A "female
       service member" entry); and (b) the pre-service DUI/legal history — the age-18
-      DUI (later **expunged**) and the age-20 paraphernalia arrest, both his own
+      DUI (later **expunged**) and the age-20 paraphernalia incident, both his own
       intake self-reports — against the "spotless / minor use" framing.
       _Source locations for the REP:_ `Starlite-2025-records.md:673` (arrested
       twice: 18 DUI, 20 paraphernalia), `:16410` and `:16777` (DUI expunged),
@@ -569,18 +569,20 @@ reviewer uses to discount the supporting documents wholesale.
       is not a "notation," 38 CFR 3.304(b)(1), though it is weighed on inception);
       the entrance exam **and DD Form 2807-1** answers are now load-bearing. AAC also
       shows the age-18 DWI ("18 y/o DWI" vs. "DWI/DUIs: 0" in the same admission);
-      the age-20 arrest's timing was ambiguous on age alone (age 20 = 5/30/2009–
+      the age-20 incident's timing was ambiguous on age alone (age 20 = 5/30/2009–
       5/29/2010; EAD 11/23/2009) — **veteran confirmed 2026-10-17 it was
-      pre-service**; released without charges, so no court record exists. Brief the REP on these facts before any 21-4138.
+      pre-service and not an arrest** (stopped and let go on the spot; no
+      detention or charge), contrary to Starlite's "arrested" paraphrase. Brief the REP on these facts before any 21-4138.
       See `document-analysis/AAC-2017-Records-ANALYSIS.md` §2.
 - [ ] REP reviews any statement for accuracy and § 1001 exposure, then files via VA
       Form 21-4138.
 - [ ] If a corrective account is filed re the pre-service arrests, obtain the
       underlying arrest/court/expungement records to back it.
-      _Update 2026-10-17 (veteran):_ the age-20 paraphernalia arrest ended in release
-      without charges — **no court record exists**. The only possible paper is an
-      arrest/booking record held by the arresting agency (optional; may not exist).
-      Court/expungement records apply to the age-18 DUI only.
+      _Update 2026-10-17 (veteran):_ the age-20 paraphernalia incident was **not an
+      arrest** — he was stopped and let go on the spot, with no detention or charge;
+      Starlite's "arrested twice" overstates it. **No court record exists**; at most a
+      police stop/incident record (optional; may not exist). Court/expungement
+      records apply to the age-18 DUI only.
 
 **Done when:** the entrance exam has been obtained and checked for any noted GAD/MDD;
 and either a veteran-authored corrective 21-4138 (own words, REP-vetted) is filed, or
