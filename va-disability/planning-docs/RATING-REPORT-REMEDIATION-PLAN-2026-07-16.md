@@ -569,8 +569,9 @@ reviewer uses to discount the supporting documents wholesale.
       is not a "notation," 38 CFR 3.304(b)(1), though it is weighed on inception);
       the entrance exam **and DD Form 2807-1** answers are now load-bearing. AAC also
       shows the age-18 DWI ("18 y/o DWI" vs. "DWI/DUIs: 0" in the same admission);
-      the age-20 arrest may fall in service (age 20 = 5/30/2009–5/29/2010; EAD
-      11/23/2009) — confirm its date. Brief the REP on these facts before any 21-4138.
+      the age-20 arrest's timing was ambiguous on age alone (age 20 = 5/30/2009–
+      5/29/2010; EAD 11/23/2009) — **veteran confirmed 2026-10-17 it was
+      pre-service** (back it with the arrest/court record, per the item below). Brief the REP on these facts before any 21-4138.
       See `document-analysis/AAC-2017-Records-ANALYSIS.md` §2.
 - [ ] REP reviews any statement for accuracy and § 1001 exposure, then files via VA
       Form 21-4138.

@@ -73,7 +73,7 @@ Ratings turn on current severity; a 2017 largely normal MSE is nine years stale 
 
 - **Consistent with COMPREHENSIVE-FINDINGS:** 2016 AAC stay (7/2016, 34 days); second AAC stay 5/2017; Victory 2018's "14 months sober, ended 7/20/18" back-counts to ~5/20/17, inside the 5/16–6/19/17 stay. Honorable discharge, E-4, Air Force 2009–2013; B.S. Computer Science (the record does not name the school or date — McNeese 12/2016 comes from the corpus); single in 2017 (met Erica 2018).
 - **New detail, not previously in the corpus (AAC self-report, pp. 5, 11):** after the 2016 stay, sober "6 months" (psychosocial; the psych eval says abstinent "until around 1/17"), then "dabbling," then a "full relapse episode 1 month ago" (~4/2017) → 5/16/2017 admission. Employment at CGI (consultant, 4 months) in 2017.
-- **Legal history:** age-18 DWI (psych eval) matches the age-18 DUI self-reported at Starlite (later expunged). The age-20 paraphernalia arrest in Remediation Task 8 does not appear in AAC. Note: age 20 runs 5/30/2009–5/29/2010 and active duty began 11/23/2009, so that arrest is not necessarily pre-service as the corpus labels it — check the arrest record's date.
+- **Legal history:** age-18 DWI (psych eval) matches the age-18 DUI self-reported at Starlite (later expunged). The age-20 paraphernalia arrest in Remediation Task 8 does not appear in AAC. Its timing was ambiguous on age alone (age 20 = 5/30/2009–5/29/2010; active duty began 11/23/2009); **the veteran confirmed 2026-10-17 that it occurred before service** (i.e., 5/30–11/22/2009). The arrest/court record should still back this if a corrective account is filed (Task 8).
 - **Treatment-episode counts are now low:** the "at least nine" count (`COMPREHENSIVE-FINDINGS`, `REPORT.md`) treats each Acadiana stay as one episode and omits Ocean's 2025; AAC adds a distinct IOP (6/20–8/10/17), a 2016 "Palmetto" IOP, and River House sober living.
 
 ## Internal inconsistencies in the AAC record
@@ -103,7 +103,7 @@ Ratings turn on current severity; a 2017 largely normal MSE is nine years stale 
 
 ## Consistency-check note (2026-10-14, `claim-consistency-checker`)
 
-The cross-corpus check prompted the kratom-list, Task 8 defense (ii), fuller disclosure-chronology, childhood-drift, age-20-arrest, and episode-count points above, and the correction that the AAC record corroborates the degree but not "McNeese 12/2016." Limitation: `personal-records/` (signed personal statement, 0781, buddy/spouse statements) and `supporting-docs/PRE-POST-SERVICE-SEVERITY-CONTRAST.md` are not present in this checkout (the latter is linked from `REPORT.md` but missing from the tree), so signed-document wording was checked only via the verbatim quotes recorded in `COMPREHENSIVE-FINDINGS-2026-07.md`.
+The cross-corpus check prompted the kratom-list, Task 8 defense (ii), fuller disclosure-chronology, childhood-drift, age-20-arrest timing (since resolved by the veteran: pre-service), and episode-count points above, and the correction that the AAC record corroborates the degree but not "McNeese 12/2016." Limitation: `personal-records/` (signed personal statement, 0781, buddy/spouse statements) and `supporting-docs/PRE-POST-SERVICE-SEVERITY-CONTRAST.md` are not present in this checkout (the latter is linked from `REPORT.md` but missing from the tree), so signed-document wording was checked only via the verbatim quotes recorded in `COMPREHENSIVE-FINDINGS-2026-07.md`.
 
 ## Citations used
 
