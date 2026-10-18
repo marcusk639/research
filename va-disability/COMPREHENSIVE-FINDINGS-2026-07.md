@@ -23,6 +23,7 @@
 - **Odds anchor (per `PATH-TO-100-PERCENT-2026-07-07.md` §9 — REASONED ESTIMATES):** 70% ≈ 90%+, 90% ≈ 60–70%, 100% MH-alone ≈ 40–50%, 100% combined ≈ 50–60%.
   **SUPERSEDED 2026-10-18:** there is no 90% MH tier and "100% combined" via 90% MH is void — see `planning-docs/STRATEGY-TO-100-2026-10-18.md` §1/§3.
 - **Current rating (veteran, 2026-10-18):** 20% combined = ankle 10% + tinnitus 10%.
+- **Employment (veteran, 2026-10-18):** unemployed — **not** working for his brother (the June `veteran-profile.md` note about working for his brother at a pay cut is outdated).
 - **PTSD diagnosis:** supplied by Cherie's signed **2 July 2026** letter.
 - **Route 2 framing:** modestly higher-probability than Route 1 **if the sleep study is positive**; inherits the 90%-MH burden; **not a safe fallback**.
 - **Married-veteran BVA balance:** 3 adverse vs 1 favorable — a non-representative sample, **not** weight-of-authority.
