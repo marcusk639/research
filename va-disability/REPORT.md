@@ -18,7 +18,7 @@ illustrative examiner reports) and a 5-page exam-day notes DOCX. They supersede
 opioid use, Cherie's updated letter filed, belief content = fear of being fired/failing, Goff never submitted, no
 sleep study). **Corpus correction surfaced while building it:** 38 CFR 4.130 has no 90% mental-health tier
 (0/10/30/50/70/100) — the "90% MH" figures and the "90% MH + 50% sleep apnea" Route 2 elsewhere in this corpus need
-re-deriving (MH 70 + OSA 50 + tinnitus 10 combines to ~86 → 90%, not 100%).
+re-deriving. Per the veteran (2026-10-18) the **current combined rating is 20%** (not tinnitus 10% alone): MH 70 → 80% combined; MH 70 + OSA 50 + the existing 20% ≈ 88 → 90%, not 100%; only MH 100 reaches 100% schedular.
 
 **[`PATH-TO-100-PERCENT-2026-07-07.md`](./planning-docs/PATH-TO-100-PERCENT-2026-07-07.md)** is the
 newest and most focused document — the dedicated **schedular-only (no TDIU)** plan for
