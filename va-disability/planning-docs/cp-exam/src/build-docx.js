@@ -52,7 +52,7 @@ const children = [];
 
 // ---------- Title ----------
 children.push(new Paragraph({ children: [t('C&P EXAM-DAY NOTES', { size: 34, bold: true, color: NAVY })], spacing: { after: 40 } }));
-children.push(p([t('Tuesday 21 Oct 2026 · VES telehealth (video) · Erica attending · Mental disorders / Initial PTSD (MST) · PTSD · MDD · GAD · OCD · SUD secondary', { size: 20 })], { after: 60 }));
+children.push(p([t('Wednesday 21 Oct 2026 · VES telehealth (video) · Erica attending · Mental disorders / Initial PTSD (MST) · PTSD · MDD · GAD · OCD · SUD secondary', { size: 20 })], { after: 60 }));
 children.push(p([b('VES: 877-637-8387   ·   Crisis: 988 then press 1 (or text 838255)   ·   Naloxone within reach')], { after: 120 }));
 children.push(box(AMBER_BG, [
   p([b('How to use these notes. '), t('Glance for dates, medication names and your numbers. Don\'t read answers aloud. If asked, say: "I wrote down dates so I\'d get them right." Every line here is a reminder of something already in your record or something you confirmed is true. If anything here is not accurate today, say what IS true.')], { after: 0 }),
@@ -76,7 +76,7 @@ children.push(table([2400, 8112], [
   ['Early 2012', 'Harassment by coworker\'s wife begins'],
   ['Summer / mid–late 2012', 'Sexual assault while incapacitated — coworker\'s (civilian) wife. 21-0781 "service member" = ERROR'],
   ['Late 2012', 'Alcohol-related disciplinary action'],
-  ['2012–2013', 'Drinking up, insomnia (Ambien/Restoril), withdrew; told Poquette (in service) and Reyes ("late 2013")'],
+  ['2012–2013', 'Drinking up, insomnia (Ambien/Restoril), withdrew; told Poquette (his statement gives no date) and Reyes ("late 2013")'],
   ['11/22/2013', 'Separated, Honorable (SrA)'],
   ['2013–2015', 'Crash: opioids → benzos, panic, isolation; savings gone ~1 yr; asked Poquette for money'],
   ['09/2015', 'VA Jennings CBOC — denied MST; PTSD screen 0/4'],
@@ -97,7 +97,7 @@ children.push(table([2400, 8112], [
 
 // ---------- Meds ----------
 children.push(h1('3. Diagnoses, treatment, medications'));
-children.push(p([b('Diagnosed: '), t('PTSD, MDD, GAD, OCD, SUD (opioid, sedative) — Cherie Mills, LCSW; MDD/GAD/OCD also coded at Starlite 2023–24, Harmony 2026, Recover 2026. Self-reported autism spectrum. F15.20 (amphetamine) at Harmony — if unknown, say so; don\'t invent.')]));
+children.push(p([b('Diagnosed: '), t('PTSD, MDD, GAD, OCD, SUD (opioid, sedative) — Cherie Mills, LCSW; MDD/GAD also coded at Starlite 2023–24, Harmony 2026, Recover 2026; OCD coded at Starlite Jul–Aug 2023 and Jul–Aug 2024. Recover 5/15 eval mentions PTSD as "childhood trauma and military experiences." Self-reported autism spectrum. F15.20 (amphetamine) at Harmony — if unknown, say so; don\'t invent.')]));
 children.push(p([b('Treatment now: '), t('Cherie (last visit: ' + blank + ')  ·  VA / WellMind: ' + blank + '  ·  SUD treatment steps taken: ' + blank)]));
 children.push(table([3000, 2000, 2400, 3112], [
   ['Medication', 'Dose', 'Prescriber', 'Taking as prescribed?'],
@@ -106,7 +106,7 @@ children.push(table([3000, 2000, 2400, 3112], [
 children.push(p([t('Verify: Eliquis still current? Suboxone stopped June 2026.', { italics: true, size: 18 })]));
 
 // ---------- Frequency worksheet ----------
-children.push(h1('4. My real numbers — fill in with Erica before Tuesday'));
+children.push(h1('4. My real numbers — fill in with Erica before Wednesday'));
 children.push(p([t('Use real, current numbers. Typical week AND worst stretch. If you don\'t know, estimate honestly and say it\'s an estimate. Don\'t write a number you can\'t stand behind.', { italics: true, size: 19 })]));
 children.push(table([4300, 2400, 3812], [
   ['Symptom / function', 'Typical week', 'Worst stretch (when / how long)'],
@@ -135,7 +135,7 @@ const ten = [
   ['ADLs / hygiene', 'Who does what, how often, what happens without Erica. Volunteer it if not asked.'],
   ['Fear of being fired / failing', 'Content, certainty, what evidence does to it, hours per day, what you do because of it (overwork → collapse). Don\'t say "delusion" — let the examiner choose the word.'],
   ['Suicidal ideation', 'Real frequency and nature. "Denies SI" entries = you denied it at intakes to avoid a hold. Answer the attempts/overdose question plainly.'],
-  ['Non-disclosure 2015–2024', 'Your own reasons: shame, didn\'t see it as assault, distrust, fear of holds, not ready until Cherie.'],
+  ['Non-disclosure 2015–2024', 'Your own reasons: shame, didn\'t see it as assault, distrust, fear of holds. Stay consistent with your signed statement (told a Starlite therapist in 2022).'],
   ['Active opioid use', 'Honest. Which symptoms persist when sober (if true). The order: assault → symptoms → self-medication. Seeking treatment.'],
   ['Pre-service history', 'Age-18 anxiety/depression, kratom, DUI, arrest, childhood — answer honestly; then the contrast: Honor Grad, functioning, friends → post-2012 change.'],
   ['21-0781 error + Goff', 'She was a coworker\'s wife (civilian as far as you know); "service member" was a mistake. Goff agreed but never sent it.'],
@@ -147,13 +147,13 @@ children.push(table([400, 2600, 7512], [['#', 'Issue', 'Reminder'], ...ten.map((
 // ---------- Tough questions ----------
 children.push(h1('6. Tough questions — facts to include, in my own words (only if true)'));
 const tq = [
-  ['"Why did you deny MST in 2015 and trauma at rehab intakes?"', ['I didn\'t think of what happened as "assault" — male, female perpetrator, shame.', 'Intakes were short, with strangers, and I was there to detox.', 'Saying "trauma" or SI risked a hold; I wanted to get through.', 'First real disclosure came after I trusted Cherie (since 2023).', '2022 Starlite LEC-5 — what was true about checking that box: ' + blank]],
+  ['"Why did you deny MST in 2015 and trauma at rehab intakes?"', ['I didn\'t think of what happened as "assault" — male, female perpetrator, shame.', 'Intakes were short, with strangers, and I was there to detox.', 'Saying "trauma" or SI risked a hold; I wanted to get through.', 'My signed statement says I told a Starlite therapist in 2022 (it says "Melissa Robbins"; records say "Robbin Lynch") — what is true about that: ' + blank, 'Worked through it in depth with Cherie (since 2023).', '2022 Starlite LEC-5 — what was true about checking that box: ' + blank]],
   ['"Your records say anxiety/depression and kratom at 18."', ['What exactly happened then (who, how long, how bad): ' + blank, 'How I functioned then: graduated, MEPS, enlisted, BMT Honor Grad.', 'What was new or worse after 2012: nightmares, hypervigilance, shame, panic, SI, the disorder-level drug use.']],
   ['"You denied SI on 5/14 and ~6/25 but wrote \'every day\' on 6/17."', ['My actual pattern: ' + blank, 'I deny it to new providers to avoid involuntary holds (Cherie documented this).']],
   ['"You were \'gainfully employed\' in 2024 and got a CTO offer."', ['Employed mid-2024 — then laid off Dec 2024; June 2026 PIP/severance; then left the field.', 'Overwork was driven by the fear of being fired; it always ended in collapse/relapse/treatment.']],
   ['"You\'re married and go to AA — that\'s social."', ['What Erica does for me day to day, and what I can give back: ' + blank, 'AA: how often, whether I speak, who knows me: ' + blank, 'Friends/family outside the marriage — last real contact: ' + blank]],
   ['"Are your symptoms just the opioids?"', ['Symptoms started after 2012, before the opioid disorder.', 'During sober stretches / residential: ' + blank, 'What using does for me (quiets panic, sleep, numbs memories/fear): ' + blank]],
-  ['"Was she a service member?"', ['No — a coworker\'s wife; the 21-0781 entry was an error. Reyes, Poquette, my statement and Cherie\'s notes all say coworker\'s wife.']],
+  ['"Was she a service member?"', ['No — a coworker\'s wife; the 21-0781 entry was an error. Reyes ("wife of a coworker"), Poquette ("one of our friend\'s wife"), my personal statement and CPT worksheet agree.']],
   ['"Who manages your money?"', ['Truthful answer: ' + blank + ' (an honest "Erica does" may lead VA to propose a fiduciary — that\'s okay; never shade it).']],
 ];
 for (const [q, items] of tq) {
@@ -169,6 +169,7 @@ for (const s of [
   'Goff: promised on the 21-0781, never submitted.',
   'Ankle date: my statement says May 2011, a 2015 VA note says 2012 — "I believe 2011; my records conflict."',
   'Harmony Junction: 24 days by discharge dates (my statement said 25).',
+  '2022 Starlite therapist: my statement says "Melissa Robbins"; Starlite records say "Robbin Lynch, MS, LCDC" — give the name as best I remember.',
   'Reyes\'s form says "4th Maintenance Squadron" — the unit was 4th Equipment Maintenance Squadron.',
 ]) children.push(bul(s));
 
