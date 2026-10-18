@@ -1,5 +1,7 @@
 # Claim Master Brief — The One-Page Guide
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > **Status:** active · **Created:** 2026-07-08 · **Type:** brief top-level guide (a living on-ramp, like `REPORT.md`)
 > **Purpose:** the shortest complete answer to "what do I actually do to finish this claim at the strongest legitimate rating." It **summarizes and sequences** — it does not replace the detailed docs. Every section points to the fuller source for depth.
 > **Read this first; go deeper only where you need to.** For the full legal reasoning read [`PATH-TO-100-PERCENT-2026-07-07.md`](./PATH-TO-100-PERCENT-2026-07-07.md); for the end-to-end process mechanics and one consolidated task list read [`CLAIM-COMPLETION-PLAN-2026-07-08.md`](./CLAIM-COMPLETION-PLAN-2026-07-08.md); for the document-by-document "what goes to VA" read [`VA-SUBMISSION-GUIDE-2026-07-08.md`](./VA-SUBMISSION-GUIDE-2026-07-08.md); for Cherie read [`NEXUS-LETTER-GUIDE-CHERIE.md`](./NEXUS-LETTER-GUIDE-CHERIE.md).

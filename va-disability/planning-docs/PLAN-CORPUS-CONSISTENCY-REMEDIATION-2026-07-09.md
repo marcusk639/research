@@ -1,5 +1,7 @@
 # Execution Plan — Corpus Consistency & Contradiction Remediation
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > **Status:** active plan · **Created:** 2026-07-09 · **Type:** phased remediation plan (via `make-plan`)
 > **Goal:** resolve every inconsistency/contradiction across the `va-disability/` corpus, cleanly separating what the corpus _maintainer_ may reconcile from what only the _veteran/VSO/clinician_ may resolve.
 > **Discovery basis:** a full-corpus `claim-consistency-checker` sweep (2026-07-09) + a `citation-verifier` pass on the outstanding H-5 cites (2026-07-09). Both are consolidated in Phase 0.

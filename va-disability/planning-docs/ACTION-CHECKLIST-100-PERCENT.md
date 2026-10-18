@@ -1,5 +1,7 @@
 # Action Checklist — Path to 100%
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > **Companion to** [`PATH-TO-100-PERCENT-2026-07-07.md`](./PATH-TO-100-PERCENT-2026-07-07.md) — this is the do-it version of that plan: prioritized, itemized, checkable. Section references (§, I-#, Phase #) point back into the plan for the full reasoning.
 > **Status snapshot (2026-07-07):** Supplemental Claim **acknowledged by VA 29 May 2026** · **no C&P exam scheduled** · **VSO submitting records as you send them** → the **evidence window is OPEN.** The hard cutoff is the C&P being scheduled — everything in Tiers 1–3 should land _before_ that.
 > **Already in hand:** Cherie's signed nexus letter (2 Jul 2026) · WHODAS 2.0 (11 Jun 2026) · DASS-21 (9 Jun 2026).

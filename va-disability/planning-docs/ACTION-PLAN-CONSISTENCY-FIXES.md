@@ -1,5 +1,7 @@
 # Action Plan — Fix Corpus Inconsistencies (short form)
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > Condensed action list from [`PLAN-CORPUS-CONSISTENCY-REMEDIATION-2026-07-09.md`](./PLAN-CORPUS-CONSISTENCY-REMEDIATION-2026-07-09.md) (full detail + sources there). · 2026-07-09
 > **Two lanes, never mixed:** **Lane A** = corpus/analysis-doc edits the maintainer can do safely. **Lane B** = claim-facing/record items only the veteran + VSO + clinician can resolve — **flag only, never draft witness wording.**
 > _Research assistance, not legal/medical advice — confirm with your VSO/attorney._

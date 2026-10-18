@@ -1,5 +1,7 @@
 # Comprehensive Findings — VA Disability Claim (Full Corpus Read, 2026-07-05)
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](planning-docs/STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > **Purpose of this document:** this is a full synthesis of _every_ file in this repository's
 > `va-disability/` tree — the prior strategy docs (`veteran-profile.md`, `strategy.md`,
 > `knowledge-base.md`, `resources.md`, `CLAIM-EXECUTION-PLAN.md`, `claim-maximization-research-2026-06.md`),
@@ -19,6 +21,8 @@
 - **Claim dates:** received **19 May 2026**; VA development letter **29 May 2026**. The VA-recorded receipt date governs the effective date — confirm at the eFolder pull.
 - **WHODAS 2.0:** in-hand, self-administered vendor functional instrument (~69.72% overall; self-care 62.5%); auto-scored — **NOT** psychologist-signed, not a GAD/MDD subscale test, not a broken/expired export.
 - **Odds anchor (per `PATH-TO-100-PERCENT-2026-07-07.md` §9 — REASONED ESTIMATES):** 70% ≈ 90%+, 90% ≈ 60–70%, 100% MH-alone ≈ 40–50%, 100% combined ≈ 50–60%.
+  **SUPERSEDED 2026-10-18:** there is no 90% MH tier and "100% combined" via 90% MH is void — see `planning-docs/STRATEGY-TO-100-2026-10-18.md` §1/§3.
+- **Current rating (veteran, 2026-10-18):** 20% combined = ankle 10% + tinnitus 10%.
 - **PTSD diagnosis:** supplied by Cherie's signed **2 July 2026** letter.
 - **Route 2 framing:** modestly higher-probability than Route 1 **if the sleep study is positive**; inherits the 90%-MH burden; **not a safe fallback**.
 - **Married-veteran BVA balance:** 3 adverse vs 1 favorable — a non-representative sample, **not** weight-of-authority.

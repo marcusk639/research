@@ -1,10 +1,10 @@
 # VA Disability Ratings
 
-> Status: active · Started: 2026-06-06 · Last updated: 2026-07-06
+> Status: active · Started: 2026-06-06 · Last updated: 2026-10-18
 
 ## Research Question
 
-How should this veteran (USAF 2009–2013, F-15 Crew Chief, current SC tinnitus 10%,
+How should this veteran (USAF 2009–2013, F-15 Crew Chief, current combined rating 20% (ankle 10% + tinnitus 10%),
 confirmed PTSD/MST + GAD + MDD + OCD + SUD, currently unemployed) build and
 sequence a multi-condition VA disability claim to reach a **100% schedular
 rating without TDIU**, on realistic, truthfully-documented evidence?
@@ -18,7 +18,9 @@ illustrative examiner reports) and a 5-page exam-day notes DOCX. They supersede
 opioid use, Cherie's updated letter filed, belief content = fear of being fired/failing, Goff never submitted, no
 sleep study). **Corpus correction surfaced while building it:** 38 CFR 4.130 has no 90% mental-health tier
 (0/10/30/50/70/100) — the "90% MH" figures and the "90% MH + 50% sleep apnea" Route 2 elsewhere in this corpus need
-re-deriving. Per the veteran (2026-10-18) the **current combined rating is 20%** (not tinnitus 10% alone): MH 70 → 80% combined; MH 70 + OSA 50 + the existing 20% ≈ 88 → 90%, not 100%; only MH 100 reaches 100% schedular.
+re-deriving. Per the veteran (2026-10-18) the **current combined rating is 20%** (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + OSA 50 + the existing 20% ≈ 88 → 90%, not 100%; only MH 100 reaches 100% schedular.
+
+**[`STRATEGY-TO-100-2026-10-18.md`](./planning-docs/STRATEGY-TO-100-2026-10-18.md) is now the governing "how do I reach 100%" document.** It applies that correction (Route 2 withdrawn; the strategy is a 100% mental-health rating, with secondaries raising the floor and TDIU recorded as a declined option), and every older document relying on "90% MH" now opens with a correction banner pointing to it. Read it before `PATH-TO-100-PERCENT-2026-07-07.md` below, whose odds and route math it supersedes.
 
 **[`PATH-TO-100-PERCENT-2026-07-07.md`](./planning-docs/PATH-TO-100-PERCENT-2026-07-07.md)** is the
 newest and most focused document — the dedicated **schedular-only (no TDIU)** plan for

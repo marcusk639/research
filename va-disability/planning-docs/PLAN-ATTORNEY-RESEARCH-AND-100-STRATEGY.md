@@ -1,5 +1,7 @@
 # Execution Plan — Attorney/Resource Knowledge Base + Final 100% Schedular Strategy
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > **Status:** active plan (v2, hardened by independent `plan-reviewer` critique) · **Created:** 2026-07-09 · **Type:** phased execution plan (produced via `make-plan`)
 > **What this is:** the roadmap for a larger effort the user commissioned — (1) deep research on the veteran attorneys/firms with the best track records and the free/low-cost legal resources available, ranked and cited; (2) a cross-corpus synthesis across all three repos; (3) a single **master strategy + representation guide** aimed at **100% schedular (not TDIU)** — but honest-first, led by the committed odds, not by the target; (4) a full gap/issue register with solutions; (5) an independent critical review; (6) reusable agent/skill designs for `veteran-claims-app`.
 > **This document is the plan, not the deliverables.** Deliverables come from executing Phases 1–7. Each phase is self-contained (inputs, outputs, verification, guardrails) so it can run in a fresh context.

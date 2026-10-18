@@ -1,5 +1,7 @@
 # Sleep Apnea Secondary Claim — Execution & Sequencing Plan
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > **Status:** active · **Created:** 2026-07-31 · **Type:** internal planning doc (never submitted to VA)
 > **Companion:** [`SLEEP-APNEA-SECONDARY-CLAIM.md`](./SLEEP-APNEA-SECONDARY-CLAIM.md) — the legal/medical **viability research** (17-citation verification log, BVA precedent, DC 6847 tiers). That file answers _"is this theory sound?"_ (yes). **This file answers _"in what order do I actually do it, and when?"_**
 > **Parent plan:** [`PATH-TO-100-PERCENT-2026-07-07.md`](./PATH-TO-100-PERCENT-2026-07-07.md) §5.2 / I-12 — where sleep apnea is the **linchpin** of Route 2 (90% MH + 50% OSA = 100% combined).

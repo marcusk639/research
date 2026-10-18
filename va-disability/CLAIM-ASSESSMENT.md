@@ -1,5 +1,7 @@
 # Claim Assessment — Critical, Adversarial Review
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](planning-docs/STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > **Status:** active · **Created:** 2026-07-05 · **Supersedes:** nothing (this is a new critical layer alongside `MASTER-STRATEGY.md`)
 > **Basis:** exhaustive review of every document in this repository — all prior research files, all `ClaudeDisabilityAssets/` PDFs, all `personal-records/` files (DD-214, VA clinical records, Starlite 2022–2025 in full, Victory 2018, harmony2026Docs, psych assessments, the 21-0781 form and personal statement, buddy/spouse statements, and the Erica email chain) — plus fresh legal research on the 38 CFR 4.130 100%-schedular standard.
 > **Purpose:** tell you, without softening it, where this claim is strong, where it is weak, and what could actually sink it. This is not legal advice — it is research to bring to your VSO or a VA-accredited attorney.

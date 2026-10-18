@@ -1,5 +1,7 @@
 # 100% Schedular Pathway — Legal & Regulatory Research
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > **Status:** complete · **Created:** 2026-07-05
 > **Scope:** what it actually takes to reach a 100% schedular mental-health rating under 38 CFR 4.130, without pursuing TDIU, for a veteran with comorbid PTSD (MST), GAD, MDD, OCD, and SUD, who is currently unemployed.
 > **Method:** every substantive claim below is tied to a primary source (eCFR/Cornell LII regulation text, a named case with reporter citation, or va.gov/M21-1). Anything not verifiable to a primary source is marked **UNVERIFIED**.

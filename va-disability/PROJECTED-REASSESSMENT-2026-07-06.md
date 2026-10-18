@@ -1,5 +1,7 @@
 # Projected Reassessment — If All CLAIM-ASSESSMENT.md Findings Are Resolved
 
+> **⚠ CORRECTION 2026-10-18 — read [`STRATEGY-TO-100-2026-10-18.md`](planning-docs/STRATEGY-TO-100-2026-10-18.md) first.** 38 CFR 4.130 has no 90% mental-health rating (levels are 0/10/30/50/70/100), so every "90% MH" figure and the "90% MH + 50% sleep apnea = 100%" Route 2 in this document are invalid. The current rating is 20% (ankle 10% + tinnitus 10%): MH 70 → 80% combined; MH 70 + sleep apnea 50 → 90%; only MH 100 reliably reaches 100%. Odds and route math here are superseded; evidence work and guardrails still stand.
+
 > **Status:** hypothetical/projective — models a best-case-but-legitimate future state, not the claim as it stands today
 > **Created:** 2026-07-06, via `/va-rating-reassess` methodology (companion to `/va-rating-strategy`)
 > **Ground truth this builds on:** `COMPREHENSIVE-FINDINGS-2026-07.md`, `CLAIM-ASSESSMENT.md`, `100-PERCENT-SCHEDULAR-PATHWAY.md`, `MASTER-STRATEGY.md` — read those for the real, current state. This document does not replace them; it answers a specific "what if" question against them.
