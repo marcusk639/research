@@ -1,0 +1,82 @@
+{
+  "run_id": "va-cue-system-market-viability_20261019",
+  "created": "2026-10-19",
+  "skill": "deep-research",
+  "mode": "deep",
+  "mode_config": {
+    "phases": "1-8",
+    "min_sources_after_dedup": 10,
+    "red_team_rounds_max": 2,
+    "tooling": "built-in WebSearch + WebFetch only (no Exa/Firecrawl/other providers)"
+  },
+  "query_verbatim": "research the va-cue-system product as a legitimately viable product to sell on the market such that it earns a reasonably high income for me over the long term (150k minimum, 200k+ max). Ensure you investigate existing companies and products that would threaten its success and how I could beat them, work around them, or find a specific successful niche",
+  "user_constraints_from_clarification": {
+    "monetization_models_in_scope": [
+      "per-seat SaaS to fee-charging VA-accredited agents/attorneys",
+      "done-for-you per-file CUE/effective-date reviews sold to firms (B2B)",
+      "API / white-label licensing to existing VA tools, VSOs, county/state veterans offices",
+      "hybrids; recommend the most effective model"
+    ],
+    "monetization_models_excluded": [
+      "founder-run accredited practice (founder will not seek accreditation)"
+    ],
+    "capacity": "solo founder, full-time, bootstrapped (no outside capital)",
+    "income_horizon": "$150K+/yr owner earnings within 2-3 years",
+    "income_definition": "pre-tax owner earnings after business costs",
+    "accreditation": "founder NOT planning to become VA-accredited",
+    "adjacent_pivots": "IN SCOPE (user added after plan review): adjacent markets outside VA (e.g., SSDI, ERISA/LTD, military records correction/discharge upgrades, federal disability retirement, workers' comp) and adjacent VA niches"
+  },
+  "decision_informed": "Whether to commit 2-3 years of solo full-time effort to the VA Effective-Date & CUE Engine, and if so with which monetization model and niche beachhead; or which adjacent pivot is stronger.",
+  "audience": "The founder (solo technical founder, USAF veteran, ~10 yrs SWE incl. agentic AI/Graph RAG; develops via Claude Code).",
+  "materiality_assumptions": {
+    "in_scope": [
+      "Competitor landscape as of Oct 2026 (VA-claims AI tools, legal-AI incumbents, VA/disability case-management software, SSDI-practice AI)",
+      "Customer pain, frequency, and willingness to pay for CUE / earliest-effective-date work",
+      "Current fee-eligible population and VA fee pool (re-verify July 2026 figures)",
+      "Monetization models, price benchmarks, and their legality for a non-accredited vendor",
+      "The data moat (commercial availability of historical point-in-time CFR; BVA/CAVC corpora)",
+      "Distribution channels, CAC drivers, and regulatory/policy durability risks",
+      "Adjacent pivots that reuse the same core asset (retroactive-error detection over a chronology + point-in-time law)",
+      "An income model translating revenue to owner earnings (founder-facing modeling on verified inputs; labeled as such)"
+    ],
+    "excluded": [
+      "Re-establishing technical feasibility (settled in July 2026 passes) except where facts may have changed",
+      "Founder-run accredited representation practice",
+      "Selling directly to VA (B2G) as the primary model (locked out by prior strategy; mentioned only if evidence forces it)",
+      "Consumer (veteran-paying) model for claim assistance (regulatory risk; mentioned only as a competitor segment)",
+      "Legal advice: regulatory interpretation is flagged for counsel"
+    ],
+    "working_numbers_to_refine": {
+      "owner_income_target": "$150K-$200K+/yr pre-tax",
+      "implied_revenue_target_initial_guess": "~$200K-$350K/yr, refined in the income model with sourced cost inputs"
+    }
+  },
+  "angles": {
+    "A": "VA-claims AI competitor sweep as of Oct 2026",
+    "B": "Legal-AI incumbents + VA/disability case-management + SSDI-practice AI + medical-record-review AI",
+    "C": "Demand, pain & market size (CUE/effective-date frequency & value, OIG error findings, accredited counts, fee pool, small-firm AI adoption & tech spend)",
+    "D": "Monetization benchmarks + legality for a non-accredited B2B vendor",
+    "E": "Moat/data: commercial historical point-in-time CFR/USC; BVA/CAVC/Fed Cir corpora",
+    "F": "Distribution channels + policy/regulatory durability",
+    "G": "Adjacent pivots outside VA (SSDI, ERISA LTD, federal disability retirement/OWCP, workers' comp)",
+    "H": "Unit-economics cost inputs (OCR/LLM cost, insurance, SOC 2, payments, SMB SaaS churn/CAC benchmarks)",
+    "I": "Military/VA-adjacent niches (discharge upgrades/BCMR/DRB, DES medical retirement & class settlements, CRSC/CRDP, DIC/accrued, SMC, PACT/Nehmer retro, VA overpayment debt)"
+  },
+  "workspace_note": "Repo CLAUDE.md requires subject self-containment, so the run directory lives at va-cue-system/research-runs/market-viability_20261019/ instead of the skill's default ~/Documents path. Final report: va-cue-system/market-viability-2026-10-19.md.",
+  "artifacts": {
+    "sources": "sources.jsonl",
+    "evidence": "evidence.jsonl",
+    "claims": "claims.jsonl",
+    "raw_per_angle": "raw/angle-<X>.{sources,evidence,claims}.jsonl",
+    "outline": "outline.md",
+    "redteam": "redteam/round-<n>-<persona>.md",
+    "report": "../../market-viability-2026-10-19.md"
+  },
+  "prior_work_inputs": [
+    "va-cue-system/REPORT.md",
+    "va-cue-system/va-cue-rag-kb-system.md",
+    "va-cue-system/deep-research-findings-2026-07-16.md",
+    "va-cue-system/deep-research-wedge-moat-2026-07-16.md",
+    "va-cue-system/phase-V-validation-checklist.md"
+  ]
+}
