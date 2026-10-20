@@ -1,0 +1,60 @@
+{"id": "EE2", "source": "ES2", "quote": "contains the Code of Federal Regulations in XML from 2007 to the present", "locator": "1.1. Purpose", "verbatim": true}
+{"id": "EE3", "source": "ES2", "quote": "additional years will be added as they become available", "locator": "1.1. Purpose", "verbatim": true}
+{"id": "EE4", "source": "ES2", "quote": "is available in XML starting with the year 2000", "locator": "1.2. Legal Status & Authenticity of Code of Federal Regulations files via Data.gov", "verbatim": true}
+{"id": "EE5", "source": "ES2", "quote": "The XML-structured files are derived from SGML-tagged data and printing codes, which may produce anomalies in display.", "locator": "1.2. Legal Status & Authenticity", "verbatim": true}
+{"id": "EE7", "source": "ES2", "quote": "Documents are not being cleaned up because they do not match the schema", "locator": "2. Schema Description", "verbatim": true}
+{"id": "EE8", "source": "ES2", "quote": "OFR and GPO do not restrict reuse, since U.S. Government works are not subject to copyright.", "locator": "1.2. Legal Status & Authenticity (fetch-tool summary, not verbatim)", "verbatim": false}
+{"id": "EE9", "source": "ES3", "quote": "The e-CFR is a currently updated version of the Code of Federal Regulations (CFR).", "locator": "1. Introduction", "verbatim": true}
+{"id": "EE10", "source": "ES3", "quote": "It is not an official legal edition of the CFR.", "locator": "1. Introduction", "verbatim": true}
+{"id": "EE11", "source": "ES3", "quote": "The OFR will update the material in the e-CFR on an irregular basis that can be as frequent as every day.", "locator": "1. Introduction", "verbatim": true}
+{"id": "EE12", "source": "ES3", "quote": "The E–CFR is available in XML starting with the year 2015.", "locator": "1.2. Legal Status and Authenticity of CFR Files via the FDsys Bulk Data Repository", "verbatim": true}
+{"id": "EE13", "source": "ES3", "quote": "Only the most recent e-CFR data will be available at endpoints on the FDsys Bulk Data Repository.", "locator": "1.2. Legal Status and Authenticity", "verbatim": true}
+{"id": "EE14", "source": "ES3", "quote": "only the PDF and Text versions of CFRcontent on FDsys have legal status.", "locator": "1.2. Legal Status and Authenticity", "verbatim": true}
+{"id": "EE16", "source": "ES4", "quote": "contains the Federal Register in XML from 2000 to the present.", "locator": "1.1. Purpose", "verbatim": true}
+{"id": "EE17", "source": "ES4", "quote": "convert the remaining electronic data set for the _Federal Register_ (1994-1999)", "locator": "1.2. Legal Status & Authenticity of Federal Register files via Data.gov", "verbatim": true}
+{"id": "EE19", "source": "ES5", "quote": "provide data users with a simple means to programmatically access GovInfo content and metadata", "locator": "api (Overview)", "verbatim": true}
+{"id": "EE20", "source": "ES5", "quote": "This API requires the use of an API.data.gov key", "locator": "Keys", "verbatim": true}
+{"id": "EE21", "source": "ES5", "quote": "36,000 requests per hour (Primary Rate limit)", "locator": "Keys", "verbatim": true}
+{"id": "EE23", "source": "ES6", "quote": "Returns a specific CFR Title and part, including the ability to specify a particular section", "locator": "Code of Federal Regulations (CFR) service", "verbatim": true}
+{"id": "EE24", "source": "ES6", "quote": "four digit year OR mostrecent. If year is not provided the most recent version of the CFR section or part is returned.", "locator": "CFR service parameters (year)", "verbatim": true}
+{"id": "EE25", "source": "ES7", "quote": "as distinguished from beta eCFR, which only can go back to 2017", "locator": "Feature: timeline (wiki body)", "verbatim": true}
+{"id": "EE26", "source": "ES9", "quote": "Both dates must be 2017-01-03 or later.", "locator": "compare_versions docstring", "verbatim": true}
+{"id": "EE27", "source": "ES8", "quote": "Point-in-time works throughout: pass `date` as `YYYY-MM-DD` to read the CFR as it stood.", "locator": "Tools", "verbatim": true}
+{"id": "EE28", "source": "ES8", "quote": "The eCFR is authoritative but unofficial.", "locator": "Legal", "verbatim": true}
+{"id": "EE29", "source": "ES8", "quote": "The eCFR publishes no rate limit and has no key to identify callers politely", "locator": "Design notes", "verbatim": true}
+{"id": "EE30", "source": "ES10", "quote": "Editor applied incorrect amendment date.", "locator": "README: patch tags (amendment-date)", "verbatim": true}
+{"id": "EE33", "source": "ES11", "quote": "003-fix-bad-amendment-date", "locator": "Directory listing of /38 (one of 8 Title 38 patch folders)", "verbatim": true}
+{"id": "EE34", "source": "ES11", "quote": "004-correct-vol1-amddate-july-2022", "locator": "Directory listing of /38", "verbatim": true}
+{"id": "EE35", "source": "ES12", "quote": "description: Editor didn't enter correct date for change or in subsequent correction", "locator": "meta.yml line 2", "verbatim": true}
+{"id": "EE36", "source": "ES12", "quote": "start_date: '2021-02-09'", "locator": "meta.yml patches '001'", "verbatim": true}
+{"id": "EE37", "source": "ES13", "quote": "The VA publishes all BVA decisions as plain text files, indexed via per-year XML sitemaps at https://www.va.gov/vetapp{YY}/sitemap.xml", "locator": "Module docstring", "verbatim": true}
+{"id": "EE38", "source": "ES13", "quote": "(e.g. vetapp25 for 2025, vetapp92 for 1992).", "locator": "Module docstring", "verbatim": true}
+{"id": "EE39", "source": "ES13", "quote": "first_opinion_date = datetime(1992, 1, 1)", "locator": "Class attribute", "verbatim": true}
+{"id": "EE40", "source": "ES13", "quote": "the backscraper iterates over all years (1992-present).", "locator": "Module docstring", "verbatim": true}
+{"id": "EE41", "source": "ES13", "quote": "# because veterans' names are not published", "locator": "Code comment (case-name handling)", "verbatim": true}
+{"id": "EE42", "source": "ES13", "quote": "2026-02-24: Rewritten by grossir to use VA sitemap after old endpoint (index.va.gov) was taken down. See #873", "locator": "Module docstring: History", "verbatim": true}
+{"id": "EE43", "source": "ES13", "quote": "The sitemaps and the .txt files are served with chunked transfer-encoding and no Accept-Ranges header, so HTTP range requests are not supported for either resource.", "locator": "Module docstring", "verbatim": true}
+{"id": "EE44", "source": "ES13", "quote": "Even when the files are small, the servers are slow", "locator": "Code comment (cases_to_scrape)", "verbatim": true}
+{"id": "EE45", "source": "ES13", "quote": "Type: Nonprecedential", "locator": "Module docstring", "verbatim": true}
+{"id": "EE46", "source": "ES14", "quote": "The link we used to scrape is dead.", "locator": "Comment by grossir, Feb 1, 2024", "verbatim": true}
+{"id": "EE47", "source": "ES14", "quote": "each of the nested sitemaps provide links to all opinions from 1992 to 2022", "locator": "Comment by grossir", "verbatim": true}
+{"id": "EE48", "source": "ES14", "quote": "Our most recent document for this source is from October 30th, 2021", "locator": "Comment by grossir, Jan 29, 2026", "verbatim": true}
+{"id": "EE49", "source": "ES14", "quote": "requires a text query, which may be unreliable", "locator": "Comment by grossir (replacement VA search page)", "verbatim": true}
+{"id": "EE50", "source": "ES14", "quote": "turned off the scraper by setting has_opinion_scraper to false for now.", "locator": "Comment by flooie, Feb 1, 2024", "verbatim": true}
+{"id": "EE51", "source": "ES15", "quote": "very big 15-20MB and would fill the CL S3 response bucket", "locator": "Code comment in PR diff (sitemaps)", "verbatim": true}
+{"id": "EE52", "source": "ES16", "quote": "Scraper for the United States Court of Appeals for Veterans Claims", "locator": "Module docstring", "verbatim": true}
+{"id": "EE53", "source": "ES16", "quote": "2012-06-07: Created by Brian Carver", "locator": "Module docstring: History", "verbatim": true}
+{"id": "EE54", "source": "ES16", "quote": "self.last_month = date.today() - datetime.timedelta(weeks=4)", "locator": "__init__", "verbatim": true}
+{"id": "EE55", "source": "ES16", "quote": "self.url = \"http://www.uscourts.cavc.gov/opinions.php\"", "locator": "__init__", "verbatim": true}
+{"id": "EE57", "source": "ES17", "quote": "This repository was archived by the owner on Apr 4, 2023.", "locator": "Repository banner", "verbatim": true}
+{"id": "EE58", "source": "ES18", "quote": "generate additional whole regulation trees and their associated layers for each final rule", "locator": "Parsing Workflow", "verbatim": true}
+{"id": "EE59", "source": "ES18", "quote": "Our sources of data, through human and technical error, often contain problems for our parser", "locator": "Modifying Data", "verbatim": true}
+{"id": "EE60", "source": "ES18", "quote": "determining changes to appendices is quite difficult (often requiring patches)", "locator": "Appendix Parsing", "verbatim": true}
+{"id": "EE61", "source": "ES18", "quote": "If these do not match up, you know that there's an error parsing the AMDPARs", "locator": "Parsing Error Example", "verbatim": true}
+{"id": "EE62", "source": "ES19", "quote": "We initially analyzed 50 fact-finding decisions issued by the BVA from 2013 through 2017.", "locator": "README", "verbatim": true}
+{"id": "EE63", "source": "ES19", "quote": "adjudicated disability claims by veterans for service-related post-traumatic stress disorder (PTSD).", "locator": "README", "verbatim": true}
+{"id": "EE64", "source": "ES20", "quote": "The data is available via the announcement blog post at Stanford's RegLab.", "locator": "README", "verbatim": true}
+{"id": "EE65", "source": "ES21", "quote": "Note the Pile of Law dataset itself can be found here: https://huggingface.co/datasets/pile-of-law/pile-of-law", "locator": "README", "verbatim": true}
+{"id": "EE66", "source": "ES21", "quote": "Learning Responsible Data Filtering from the Law and a 256GB Open-Source Legal Dataset", "locator": "Citations", "verbatim": true}
+{"id": "EE67", "source": "ES22", "quote": "Processes BVA opinions (2001-2018)", "locator": "Header comment", "verbatim": true}
+{"id": "EE68", "source": "ES22", "quote": "downloaded through private link shared by authors of this paper: https://arxiv.org/abs/2106.10776", "locator": "Comment on raw files", "verbatim": true}
