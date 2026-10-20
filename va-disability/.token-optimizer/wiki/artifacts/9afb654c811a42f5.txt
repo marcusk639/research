@@ -1,0 +1,51 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 4,
+    "linesChanged": 25,
+    "originalLines": 1125,
+    "finalLines": 1134,
+    "tokensSaved": 20611,
+    "tokenCount": 1149,
+    "originalTokenCount": 21760,
+    "compressionRatio": 0.05280330882352941,
+    "duration": 22,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "losses in under 10 years**, interleaved with **eleven documented treatment episodes since 2016**.",
+      "> **How to state the number — the earlier draft's advice here was muddled.** The enumerated list",
+      "> in §3.1 row J contains **eleven episodes**; `veteran-profile.md` says \"10+ inpatient rehab",
+      "> admissions\"; your **signed 21-0781** says \"around 10 treatment visits.\" These do not actually",
+      "> conflict — \"around 10\" is an approximation compatible with eleven, and not every episode was an",
+      "> inpatient *admission* (the 2026-05 Zoe episode was PHP; the 2018 Victory episode ran",
+      "> detox → residential → IOP and counts as **one**). **So don't lead with a count at all.** Give",
+      "> Section V the facilities and dates from `COMPREHENSIVE-FINDINGS-2026-07.md` §2 and let the list",
+      "> speak. If pressed for a number, \"about ten or eleven, depending on how you count continuous",
+      "> episodes\" is accurate and consistent with your signed form.",
+      "",
+      "- **The treatment history itself** — **eleven** documented episodes, 2016–2026, at named",
+      "_strongest_ § 21.52 severity evidence — § 21.52(b)(8) names \"alcoholism or other substance abuse\"",
+      "expressly — and it is already documented across **eleven** episodes at named facilities.",
+      "Understating it here would both weaken your case and conflict",
+      "Be complete and matter-of-fact. **Eleven** documented treatment episodes since 2016 at named",
+      "facilities (see §5.1 on how to state the number)."
+    ],
+    "removed": [
+      "losses in under 10 years**, interleaved with **at least eleven documented treatment admissions",
+      "since 2016** (the enumerated list in §3.1 row J contains eleven; `veteran-profile.md` says \"10+\";",
+      "your **signed 21-0781** says \"around 10 treatment visits\" — use a figure consistent with your own",
+      "signed form, and do not understate it).",
+      "- **The treatment history itself** — at least nine documented episodes, 2016–2026, at named",
+      "**Section V — substance abuse history.** Answer completely. Your treatment history is your",
+      "_strongest_ § 21.52 severity evidence, and it is already documented across at least nine",
+      "**The substance use history.**"
+    ],
+    "unchanged": 31,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n@@ -1,1125 +1,1134 @@\n ---\n topic: vre-initial-individual-evaluation-prep\n created: 2026-09-13\n@@ 466 unchanged lines @@\n **38 C.F.R. § 21.51(b)** is the provision written for your exact pattern. It covers a veteran\n _\"who qualifies for a suitable job, but who does not obtain or keep the job for reasons beyond\n his or her control.\"_ That is a precise legal description of a documented history of **3–4 job\n-losses in under 10 years**, interleaved with **at least eleven documented treatment admissions\n-since 2016** (the enumerated list in §3.1 row J contains eleven; `veteran-profile.md` says \"10+\";\n-your **signed 21-0781** says \"around 10 treatment visits\" — use a figure consistent with your own\n-signed form, and do not understate it).\n+losses in under 10 years**, interleaved with **eleven documented treatment episodes since 2016**.\n \n+> **How to state the number — the earlier draft's advice here was muddled.** The enumerated list\n+> in §3.1 row J contains **eleven episodes**; `veteran-profile.md` says \"10+ inpatient rehab\n+> admissions\"; your **signed 21-0781** says \"around 10 treatment visits.\" These do not actually\n+> conflict — \"around 10\" is an approximation compatible with eleven, and not every episode was an\n+> inpatient *admission* (the 2026-05 Zoe episode was PHP; the 2018 Victory episode ran\n+> detox → residential → IOP and counts as **one**). **So don't lead with a count at all.** Give\n+> Section V the facilities and dates from `COMPREHENSIVE-FINDINGS-2026-07.md` §2 and let the list\n+> speak. If pressed for a number, \"about ten or eleven, depending on how you count continuous\n+> episodes\" is accurate and consistent with your signed form.\n+\n This frame matters enormously, because it is the one that is simultaneously accurate and\n consistent with your pending claim. You are not claiming you lack skills. You are not claiming\n you cannot perform the work. You are saying: **the pattern shows I can get these jobs and\n@@ 21 unchanged lines @@\n \n ### 5.3 Strongest evidence available to you\n \n-- **The treatment history itself** — at least nine documented episodes, 2016–2026, at named\n+- **The treatment history itself** — **eleven** documented episodes, 2016–2026, at named\n   facilities with dates. This is the single most load-bearing fact set for a § 21.52 severity\n   finding, and it is documentary, not self-report.\n - **The Metal employment statement (08/04/2026)** — a signed statement from a co-founder,\n@@ 195 unchanged lines @@\n   explain each check with a concrete instance and date. \"Missed time at work — on FMLA leave\n   May–June 2026 for psychiatric treatment\" is worth more than three paragraphs of adjectives.\n \n-**Section V — substance abuse history.** Answer completely. Your treatment history is your\n-_strongest_ § 21.52 severity evidence, and it is already documented across at least nine\n+_strongest_ § 21.52 severity evidence — § 21.52(b)(8) names \"alcoholism or other substance abuse\"\n+expressly — and it is already documented across **eleven** episodes at named facilities.\n+Understating it here would both weaken your case and conflict\n episodes at named facilities. Understating it here would both weaken your case and conflict\n with records VA can pull. List facilities and dates — you have them in\n `COMPREHENSIVE-FINDINGS-2026-07.md` §2.\n@@ 142 unchanged lines @@\n then job loss.\"_ That is accurate, it is what your own treatment records already document, and\n it does not overclaim incapacity in a document a rating board will read.\n \n-**The substance use history.**\n+Be complete and matter-of-fact. **Eleven** documented treatment episodes since 2016 at named\n+facilities (see §5.1 on how to state the number).\n Be complete and matter-of-fact. At least nine treatment episodes since 2016 at named facilities.\n This is your strongest severity evidence — there is no reason to minimize it, and minimizing\n would conflict with records VA can pull. If your current status changed after June 2026, say\n@@ 262 unchanged lines @@\n - **Whether electing the P911SA rate consumes Post-9/11 GI Bill months** — unresolved. Ask.\n - **§ 21.98** — **RESOLVED:** removed effective 2019-02-19 (84 FR 138). No longer exists.\n - **Time from evaluation → entitlement decision → signed plan** — no published VA SLA found. Ask."
+  }
+}

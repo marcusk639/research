@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/.github/workflows/ci.yml",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 2,
+    "originalLines": 261,
+    "finalLines": 259,
+    "tokensSaved": 2149,
+    "tokenCount": 102,
+    "originalTokenCount": 2251,
+    "compressionRatio": 0.04531319413593958,
+    "duration": 45,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [],
+    "removed": [
+      "",
+      "          flow-file: homegroups/mobile/maestro/flows/invite-code-join.yaml"
+    ],
+    "unchanged": 6,
+    "unifiedDiff": "--- /Users/marcusklein/dev/recovery-platform/.github/workflows/ci.yml\n+++ /Users/marcusklein/dev/recovery-platform/.github/workflows/ci.yml\n@@ -1,261 +1,259 @@\n name: CI\n \n on:\n@@ 253 unchanged lines @@\n           fi\n           echo \"comparing against $BASE\"\n           \"$GATE\" \"$BASE\"\n-\n-          flow-file: homegroups/mobile/maestro/flows/invite-code-join.yaml"
+  }
+}

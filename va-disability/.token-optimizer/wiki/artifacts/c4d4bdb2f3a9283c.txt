@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 3,
+    "linesChanged": 8,
+    "originalLines": 866,
+    "finalLines": 866,
+    "tokensSaved": 15071,
+    "tokenCount": 350,
+    "originalTokenCount": 15421,
+    "compressionRatio": 0.022696323195642305,
+    "duration": 19,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "   income above the **~$16,749** one-person poverty threshold (2025; $16,320 for 2024) is presumptively",
+      "**The number: $16,749** — Census poverty threshold, one person under 65, **2025**. 🟢 The 2024 figure",
+      "was $16,320. ⚠️ **VA adjudicators may still be citing the 2024 number** — plan against the lower one.",
+      "1. ⛔ **Booking self-employment income above ~$16,749** before any TDIU award. § 4.16(a) + _Faust_;"
+    ],
+    "removed": [
+      "   income above the **~$16,320** one-person poverty threshold is presumptively substantially gainful",
+      "**The number: $16,320** — Census 2024 poverty threshold, one person under 65. 🟢 (⚠️ The 2025 table is",
+      "not yet published; use the most recent published figure and re-check.)",
+      "1. ⛔ **Booking self-employment income above ~$16,320** before any TDIU award. § 4.16(a) + _Faust_;"
+    ],
+    "unchanged": 0,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n@@ -1,866 +1,866 @@\n@@ 85 unchanged lines @@\n-   income above the **~$16,320** one-person poverty threshold is presumptively substantially gainful\n+   income above the **~$16,749** one-person poverty threshold (2025; $16,320 for 2024) is presumptively\n@@ 389 unchanged lines @@\n-**The number: $16,320** — Census 2024 poverty threshold, one person under 65. 🟢 (⚠️ The 2025 table is\n-not yet published; use the most recent published figure and re-check.)\n+**The number: $16,749** — Census poverty threshold, one person under 65, **2025**. 🟢 The 2024 figure\n+was $16,320. ⚠️ **VA adjudicators may still be citing the 2024 number** — plan against the lower one.\n@@ 54 unchanged lines @@\n-1. ⛔ **Booking self-employment income above ~$16,320** before any TDIU award. § 4.16(a) + _Faust_;\n+1. ⛔ **Booking self-employment income above ~$16,749** before any TDIU award. § 4.16(a) + _Faust_;\n@@ 334 unchanged lines @@"
+  }
+}

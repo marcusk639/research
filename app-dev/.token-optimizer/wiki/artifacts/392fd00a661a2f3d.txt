@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/GUIDE.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 8,
+    "originalLines": 278,
+    "finalLines": 280,
+    "tokensSaved": 3620,
+    "tokenCount": 352,
+    "originalTokenCount": 3972,
+    "compressionRatio": 0.08862034239677745,
+    "duration": 44,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "Use a **strong** model here. The controlled study across 20 full-stack web applications found that",
+      "\"replacing unreliable feedback with a stronger tester restores positive gains for a lower-capability",
+      "backbone\" [S66] — a strong tester can rescue a weaker implementer, so this is the last seat to economize in.",
+      "The same study reports \"Agentic TDD performs best with highly capable models\" [S66], so keep the TDD",
+      "increments bounded unless the tester model is strong."
+    ],
+    "removed": [
+      "Use a **strong** model here. The evidence is specific: upgrading only the tester agent's model moved",
+      "accuracy from −4.4 to +6.8 points [S66], and weaker models can be actively harmed by broad TDD strategies",
+      "[S66]. Do not economize in this seat."
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/GUIDE.md\n+++ /Users/marcusklein/dev/research/app-dev/GUIDE.md\n@@ -1,278 +1,280 @@\n # Operating Guide — running the pipeline\n \n **Date:** 2026-09-29\n@@ 150 unchanged lines @@\n \"Read,Edit,Bash\"` is the documented non-interactive form [S8], and `--output-format json` is documented\n [S7][S8].\n \n-Use a **strong** model here. The evidence is specific: upgrading only the tester agent's model moved\n-accuracy from −4.4 to +6.8 points [S66], and weaker models can be actively harmed by broad TDD strategies\n-[S66]. Do not economize in this seat.\n+Use a **strong** model here. The controlled study across 20 full-stack web applications found that\n+\"replacing unreliable feedback with a stronger tester restores positive gains for a lower-capability\n+backbone\" [S66] — a strong tester can rescue a weaker implementer, so this is the last seat to economize in.\n+The same study reports \"Agentic TDD performs best with highly capable models\" [S66], so keep the TDD\n+increments bounded unless the tester model is strong.\n \n Commit the failing tests and record that they fail. This is the oracle.\n \n@@ 113 unchanged lines @@\n production risks by limiting usage to non-critical environments where possible\" [S13], and its 2026-02-11\n incident report describes \"a misconfigured automated abuse enforcement system that incorrectly terminated\n legitimate user deployments\" [S96]."
+  }
+}

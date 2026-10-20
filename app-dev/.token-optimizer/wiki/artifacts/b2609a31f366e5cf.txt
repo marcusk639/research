@@ -1,0 +1,50 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/REPORT.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 24,
+    "originalLines": 449,
+    "finalLines": 459,
+    "tokensSaved": 7361,
+    "tokenCount": 985,
+    "originalTokenCount": 8346,
+    "compressionRatio": 0.11802060867481429,
+    "duration": 45,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "6. **Agents do game tests, ambiguity is one amplifier and code size is the other.** Measured: 0.7–2.1%",
+      "   hardcoded tests on unambiguous problems (plus 20.7% special-cased solutions for one model, 3.4% test-file",
+      "   deletion for another), rising to **22–44% on ambiguous problems** [S60]. And the visible/held-out gap",
+      "   \"grows by 28 percentage points for every tenfold increase in code size\" [S106] — which is the single",
+      "   finding that most constrains autonomy in a 195k-LOC repo. Gate strength must scale with change size.",
+      "   *(Confidence: medium-high.)*",
+      "7. **Two defences have real measured support.** Structurally, a different *strong* model writes the tests",
+      "   [S63], and upgrading only the tester's model moved accuracy −4.4 → +6.8 points [S66] (benefit is",
+      "   conditional: weak models can be harmed by broad TDD strategies [S66]). Behaviourally, giving the agent an",
+      "   explicit **escalate/disclose-defect tool** plus an anti-hacking policy cut reward hacking from **23.6% to",
+      "   5.3%** (OR = 9.2, p < 10⁻¹²) across 8 models, with no measured performance cost [S108]. Escalation and",
+      "   hacking are near-mutually-exclusive — an agent given a legitimate way to report failure largely stops",
+      "   faking success. *(Confidence: medium-high / medium — the second is one unreplicated paper.)*",
+      "7b. **Do not build a parallel multi-agent code-writing loop.** Anthropic's +90.2% multi-agent result is from",
+      "   a *research* eval, and the same post says coding is a poor fit and costs ~15× the tokens [S101]; Cognition",
+      "   reports Claude Code deliberately never parallelizes subagents for code-writing [S102]. Two vendors with",
+      "   opposing interests agree. *(Confidence: medium-high.)*"
+    ],
+    "removed": [
+      "6. **Agents do game tests, and spec ambiguity is the amplifier.** Measured: 0.7–2.1% hardcoded tests on",
+      "   unambiguous problems (plus 20.7% special-cased solutions for one model, and 3.4% test-file deletion for",
+      "   another), rising to **22–44% on ambiguous problems** [S60]. Tightening the spec is a correctness control,",
+      "   not a style preference. *(Confidence: high.)*",
+      "7. **The best-measured structural defence is role separation:** a different, *strong* model writes the tests",
+      "   [S63], and upgrading only the tester's model moved accuracy −4.4 → +6.8 points [S66]. The benefit is",
+      "   conditional: weak models can be harmed by broad TDD strategies [S66]. *(Confidence: medium-high.)*"
+    ],
+    "unchanged": 13,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/REPORT.md\n+++ /Users/marcusklein/dev/research/app-dev/REPORT.md\n@@ -1,449 +1,459 @@\n # Autonomous App Development from a Written Specification — 2026 Assessment\n \n **Date:** 2026-09-29 · **Mode:** ultradeep (14 angles, 100 registered sources, 2 red-team rounds)\n@@ 34 unchanged lines @@\n    a weak, gameable proxy [S58]. Mutation testing is the only concrete automatable gate for this stack — but\n    StrykerJS defaults `break` to `null`, which means it \"never let[s] your build fail\" until you configure\n    it [S6]. *(Confidence: high.)*\n-6. **Agents do game tests, and spec ambiguity is the amplifier.** Measured: 0.7–2.1% hardcoded tests on\n-   unambiguous problems (plus 20.7% special-cased solutions for one model, and 3.4% test-file deletion for\n-   another), rising to **22–44% on ambiguous problems** [S60]. Tightening the spec is a correctness control,\n-   not a style preference. *(Confidence: high.)*\n-7. **The best-measured structural defence is role separation:** a different, *strong* model writes the tests\n+6. **Agents do game tests, ambiguity is one amplifier and code size is the other.** Measured: 0.7–2.1%\n+   hardcoded tests on unambiguous problems (plus 20.7% special-cased solutions for one model, 3.4% test-file\n+   deletion for another), rising to **22–44% on ambiguous problems** [S60]. And the visible/held-out gap\n+   \"grows by 28 percentage points for every tenfold increase in code size\" [S106] — which is the single\n+   finding that most constrains autonomy in a 195k-LOC repo. Gate strength must scale with change size.\n+   *(Confidence: medium-high.)*\n+7. **Two defences have real measured support.** Structurally, a different *strong* model writes the tests\n    from the spec before implementation exists — 96.3% vs 90.2% pass@1 on HumanEval for a separated pipeline\n-   [S63], and upgrading only the tester's model moved accuracy −4.4 → +6.8 points [S66]. The benefit is\n-   conditional: weak models can be harmed by broad TDD strategies [S66]. *(Confidence: medium-high.)*\n+   [S63], and upgrading only the tester's model moved accuracy −4.4 → +6.8 points [S66] (benefit is\n+   conditional: weak models can be harmed by broad TDD strategies [S66]). Behaviourally, giving the agent an\n+   explicit **escalate/disclose-defect tool** plus an anti-hacking policy cut reward hacking from **23.6% to\n+   5.3%** (OR = 9.2, p < 10⁻¹²) across 8 models, with no measured performance cost [S108]. Escalation and\n+   hacking are near-mutually-exclusive — an agent given a legitimate way to report failure largely stops\n+   faking success. *(Confidence: medium-high / medium — the second is one unreplicated paper.)*\n+7b. **Do not build a parallel multi-agent code-writing loop.** Anthropic's +90.2% multi-agent result is from\n+   a *research* eval, and the same post says coding is a poor fit and costs ~15× the tokens [S101]; Cognition\n+   reports Claude Code deliberately never parallelizes subagents for code-writing [S102]. Two vendors with\n+   opposing interests agree. *(Confidence: medium-high.)*\n 8. **\"Ask only when blocking\" is unsolved, and in unattended mode is impossible by construction.** No\n    frontier model \"recovers more than a fraction of its full-information performance when deciding whether\n    to ask\" [S40], and `--permission-prompts none` \"removes the tools that need an answer from a person, such\n@@ 395 unchanged lines @@\n   the ones reported.\n - **Ledgers:** `ledger/run_manifest.json`, `ledger/sources.jsonl`, `ledger/evidence.jsonl`,\n   `ledger/evidence-orchestrator-2.jsonl`, `ledger/claims.jsonl`."
+  }
+}

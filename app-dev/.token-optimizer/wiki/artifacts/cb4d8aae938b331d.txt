@@ -1,0 +1,51 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/scripts/git-hooks/pre-commit",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 26,
+    "originalLines": 75,
+    "finalLines": 101,
+    "tokensSaved": 535,
+    "tokenCount": 569,
+    "originalTokenCount": 1104,
+    "compressionRatio": 0.5153985507246377,
+    "duration": 40,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "REPO_ROOT_GATE=$(git rev-parse --show-toplevel)",
+      "",
+      "# --- 2.5 Test-tamper gate (BLOCKING) ---------------------------------------",
+      "# Rejects staged changes that disable or hollow out the test suite: deleted test",
+      "# files, added .skip/.only/.todo markers, assert-true assertions, a net loss of",
+      "# test cases, and snapshot churn.",
+      "#",
+      "# This lives here, not in a Claude Code hook, because Stage 1 testing on",
+      "# 2026-09-30 (Claude Code 2.1.274) proved the FIRST tool call of a",
+      "# `claude -p --settings` run executes before --settings hooks activate — so an",
+      "# agent whose opening move is destructive is ungated in-process. A git hook runs",
+      "# outside the agent and cannot be raced. Applies to every author equally: if a",
+      "# test must legitimately change, make the change deliberately and say why in the",
+      "# commit message, or bypass with --no-verify (CI still checks).",
+      "#",
+      "# Degrades gracefully: if the gate script is absent (fresh clone that has not",
+      "# copied .claude/agent-gates/), warn instead of blocking.",
+      "GATE=\"$REPO_ROOT_GATE/.claude/agent-gates/verify-diff.sh\"",
+      "if [ -x \"$GATE\" ]; then",
+      "  if ! \"$GATE\" --staged; then",
+      "    FAIL=1",
+      "  fi",
+      "else",
+      "  echo \"⚠ agent-gates/verify-diff.sh not found or not executable — test-tamper gate skipped\" >&2",
+      "fi",
+      ""
+    ],
+    "removed": [],
+    "unchanged": 18,
+    "unifiedDiff": "--- /Users/marcusklein/dev/recovery-platform/scripts/git-hooks/pre-commit\n+++ /Users/marcusklein/dev/recovery-platform/scripts/git-hooks/pre-commit\n@@ -1,75 +1,101 @@\n #!/bin/bash\n # Pre-commit gate: blocking secret scan + 300-line ratchet on staged files.\n # Installed by scripts/install-git-hooks.sh (copies into .git/hooks/).\n set -uo pipefail\n+REPO_ROOT_GATE=$(git rev-parse --show-toplevel)\n \n+\n STAGED=$(git diff --cached --name-only --diff-filter=ACM)\n [ -z \"$STAGED\" ] && exit 0\n \n@@ 46 unchanged lines @@\n     echo \"⚠ $f is $LINES lines (>$MAX_LINES); consider splitting while you're in it\" >&2\n   fi\n done <<< \"$STAGED\"\n+# --- 2.5 Test-tamper gate (BLOCKING) ---------------------------------------\n+# Rejects staged changes that disable or hollow out the test suite: deleted test\n+# files, added .skip/.only/.todo markers, assert-true assertions, a net loss of\n+# test cases, and snapshot churn.\n+#\n+# This lives here, not in a Claude Code hook, because Stage 1 testing on\n+# 2026-09-30 (Claude Code 2.1.274) proved the FIRST tool call of a\n+# `claude -p --settings` run executes before --settings hooks activate — so an\n+# agent whose opening move is destructive is ungated in-process. A git hook runs\n+# outside the agent and cannot be raced. Applies to every author equally: if a\n+# test must legitimately change, make the change deliberately and say why in the\n+# commit message, or bypass with --no-verify (CI still checks).\n+#\n+# Degrades gracefully: if the gate script is absent (fresh clone that has not\n+# copied .claude/agent-gates/), warn instead of blocking.\n+GATE=\"$REPO_ROOT_GATE/.claude/agent-gates/verify-diff.sh\"\n+if [ -x \"$GATE\" ]; then\n+  if ! \"$GATE\" --staged; then\n+    FAIL=1\n+  fi\n+else\n+  echo \"⚠ agent-gates/verify-diff.sh not found or not executable — test-tamper gate skipped\" >&2\n+fi\n \n+\n if [ \"$FAIL\" -ne 0 ]; then\n   echo \"\" >&2\n   echo \"pre-commit blocked. Fix the issues above, or bypass deliberately with: git commit --no-verify\" >&2\n@@ 11 unchanged lines @@\n fi\n \n exit 0"
+  }
+}

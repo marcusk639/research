@@ -67,7 +67,7 @@ Each item: **the conflict** (neutral) · **why it matters** · **owner** · **th
 
 ## 9. I-7 / I-9 / I-10 — Disclosure & witness items (MEDIUM)
 
-- **I-7 · SI frequency:** record shows "denies" (5/14/26), "every day" (6/17/26), "denies" (~6/25/26). → **Veteran** gives an honest fluctuation account in his own words if raised; **Cherie/new provider** document current SI at a real visit.
+- **I-7 · SI frequency:** record shows "denies" (5/14/26), "every day" (6/17/26), "denies" (~6/25/26) **[RETRACTED 2026-10-08: no 6/25/26 SI denial exists — see CLAIM-ASSESSMENT.md §0.2]**. → **Veteran** gives an honest fluctuation account in his own words if raised; **Cherie/new provider** document current SI at a real visit.
 - **I-9 · MST non-disclosure:** record shows more denial than disclosure of the assault. → **Veteran** gives the honest delayed-disclosure account in his own words; **VSO/attorney** hold _AZ v. Shinseki_ ready if an examiner misreads non-disclosure.
 - **I-10 · Poquette timing:** his executed statement dropped the in-service-timing language. → **VSO** confirms Reyes's own service dates cover the in-service element; **Poquette** clarifies only what he genuinely recalls (incl. "I don't recall"). No wording suggested.
 

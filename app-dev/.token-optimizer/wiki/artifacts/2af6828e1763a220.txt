@@ -1,0 +1,38 @@
+{
+  "success": true,
+  "pattern": "**/deep-research/**/*.md",
+  "metadata": {
+    "totalMatches": 19,
+    "returnedCount": 19,
+    "truncated": false,
+    "tokensSaved": 0,
+    "tokenCount": 742,
+    "originalTokenCount": 742,
+    "compressionRatio": 1,
+    "duration": 290,
+    "cacheHit": false,
+    "savingsClassification": "unmeasured",
+    "savingsReason": "No comparable unoptimized glob response was materialized; caller-requested pagination is not optimizer-created savings."
+  },
+  "files": [
+    "cache/ecc/ecc/2.2.1/.agents/skills/deep-research/SKILL.md",
+    "cache/ecc/ecc/2.2.1/.kiro/skills/deep-research/SKILL.md",
+    "cache/ecc/ecc/2.2.1/docs/ja-JP/skills/deep-research/SKILL.md",
+    "cache/ecc/ecc/2.2.1/docs/zh-CN/skills/deep-research/SKILL.md",
+    "cache/ecc/ecc/2.2.1/skills/deep-research/SKILL.md",
+    "marketplaces/ecc/.agents/skills/deep-research/SKILL.md",
+    "marketplaces/ecc/.kiro/skills/deep-research/SKILL.md",
+    "marketplaces/ecc/docs/ja-JP/skills/deep-research/SKILL.md",
+    "marketplaces/ecc/docs/zh-CN/skills/deep-research/SKILL.md",
+    "marketplaces/ecc/skills/deep-research/SKILL.md",
+    "synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/commands/deep-research-deep.md",
+    "synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/commands/deep-research-quick.md",
+    "synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/commands/deep-research-standard.md",
+    "synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/commands/deep-research-ultradeep.md",
+    "synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/commands/deep-research.md",
+    "synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/README.md",
+    "synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/skills/deep-research/reference/methodology.md",
+    "synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/skills/deep-research/reference/quality-gates.md",
+    "synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/skills/deep-research/SKILL.md"
+  ]
+}

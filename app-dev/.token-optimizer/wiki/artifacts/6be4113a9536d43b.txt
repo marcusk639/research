@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 4,
+    "originalLines": 233,
+    "finalLines": 233,
+    "tokensSaved": 3122,
+    "tokenCount": 768,
+    "originalTokenCount": 3890,
+    "compressionRatio": 0.19742930591259641,
+    "duration": 52,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "| Firebase / Firestore rules | rules unit tests | `@firebase/rules-unit-testing` | `assertFails` \"asserts that the supplied Promise wrapping an emulator operation will be rejected with a Security Rules violation\" [S10]; imports `{ assertFails, assertSucceeds, initializeTestEnvironment }` [S10]. The v9 library \"is always aware of the emulators and never touches your production resources\" [S10] |",
+      "| Next.js web | E2E | Playwright | Adoption-leader figures come from blog round-ups and are SEARCH-ONLY, so they are not relied on here; Playwright MCP exposes browser control to agents via accessibility-tree snapshots [S67, SEARCH-ONLY — confirm before adopting] |"
+    ],
+    "removed": [
+      "| Firebase / Firestore rules | rules unit tests | `@firebase/rules-unit-testing` | `assertFails` \"asserts that the supplied Promise wrapping an emulator operation will be rejected with a Security Rules violation\" [S10]; imports `{ assertFails, assertSucceeds, initializeTestEnvironment }` [S10]. The v9 library \"is always aware of the emulators and never touches your production resources\" [S65-adjacent: S10] |",
+      "| Next.js web | E2E | Playwright | Adoption leader in 2026 per blog round-ups [S67 area, search-only]; Playwright MCP exposes browser control to agents via accessibility-tree snapshots [S67, search-only] |"
+    ],
+    "unchanged": 13,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md\n+++ /Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md\n@@ -1,233 +1,233 @@\n # Verification Strategy — proving the app actually works\n \n **Date:** 2026-09-29\n@@ 121 unchanged lines @@\n \n | Surface | Layer | Tool | Verified mechanism |\n |---|---|---|---|\n-| Firebase / Firestore rules | rules unit tests | `@firebase/rules-unit-testing` | `assertFails` \"asserts that the supplied Promise wrapping an emulator operation will be rejected with a Security Rules violation\" [S10]; imports `{ assertFails, assertSucceeds, initializeTestEnvironment }` [S10]. The v9 library \"is always aware of the emulators and never touches your production resources\" [S65-adjacent: S10] |\n+| Firebase / Firestore rules | rules unit tests | `@firebase/rules-unit-testing` | `assertFails` \"asserts that the supplied Promise wrapping an emulator operation will be rejected with a Security Rules violation\" [S10]; imports `{ assertFails, assertSucceeds, initializeTestEnvironment }` [S10]. The v9 library \"is always aware of the emulators and never touches your production resources\" [S10] |\n | Firebase / Functions | integration | Emulator Suite | `firebase emulators:exec <scriptpath>` — \"Run the script at scriptpath after starting emulators\" [S14]; \"generally more appropriate for continuous integration workflows\" [S14]. Seed with `--import`, capture with `--export-on-exit` [S14] |\n-| Next.js web | E2E | Playwright | Adoption leader in 2026 per blog round-ups [S67 area, search-only]; Playwright MCP exposes browser control to agents via accessibility-tree snapshots [S67, search-only] |\n+| Next.js web | E2E | Playwright | Adoption-leader figures come from blog round-ups and are SEARCH-ONLY, so they are not relied on here; Playwright MCP exposes browser control to agents via accessibility-tree snapshots [S67, SEARCH-ONLY — confirm before adopting] |\n | Next.js web | visual + a11y | `agent-browser` (Vercel Labs) | Apache-2.0, ships embedded axe-core audits and `diff screenshot` / `diff snapshot` for visual regression [S59] |\n | React Native | E2E | Maestro | Vendor-reported flakiness <1% (Maestro) vs <2% (Detox) — **Maestro's own comparison** [S65], and Maestro's own caveat is that the figure \"comes from a younger ecosystem with generally simpler test suites, and teams with 500+ complex tests may see different results\" [S65] |\n | React Native | E2E in CI | EAS Workflows + Maestro | \"The workflow uses a `pull_request` trigger to run automatically when someone opens a pull request\" [S76]; `npx eas-cli build --platform all --non-interactive --no-wait` [S99], where \"`--no-wait` flag exits the step once the build has been triggered\" [S99] |\n@@ 97 unchanged lines @@\n | Affected-dependent tests | all affected packages pass | yes | [S77] (single-source precaution) |\n | Held-out acceptance flows | pass on a real running build | yes | §6 |\n | Human sign-off | rules, migrations, auth, payments, deploys | yes | [S16], [S9] |"
+  }
+}

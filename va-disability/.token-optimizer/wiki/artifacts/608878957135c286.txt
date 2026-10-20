@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "written": 1,
+  "keys": [
+    "agent-mu0d1veu-0-518b046f"
+  ],
+  "unresolvedAnchors": [],
+  "project": "/Users/marcusklein/dev/research"
+}

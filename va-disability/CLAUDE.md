@@ -19,6 +19,20 @@ contradicts it. `knowledge-base.md`, `veteran-profile.md`,
 `planning-docs/CLAIM-EXECUTION-PLAN.md` / `planning-docs/DO-THIS-WEEK.md` are
 superseded and kept for history only.
 
+> **⚠️ Document-precedence trap — read before trusting the list above.**
+> `planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` is **newer than**
+> `MASTER-STRATEGY.md` (2026-07-06) and `CLAIM-ASSESSMENT.md` (2026-07-05) and **reverses
+> positions in both** — most consequentially, its `[CORRECTION 2]`/`[CORRECTION 3]` open
+> § 4.16 **TDIU development** and list VA Form 21-8940 as a filing action, contradicting
+> MASTER-STRATEGY's "not pursuing TDIU." It also supplies a corrected occupational history
+> (Dec 2024 job loss; June 2026 loss for performance/PIP resolved by negotiated severance).
+> Likewise, both files carry internal `[SUPERSEDED]` markers pointing at
+> `planning-docs/PATH-TO-100-PERCENT-2026-07-07.md` §9 for odds.
+> **Reading only the documents named above produced three CRITICAL errors in a 2026-09-13
+> drafting pass** (see `vre/CONSISTENCY-AUDIT-2026-09-13.md`). Always check the remediation
+> plan and §9 before treating any strategy position as settled. Also note the newest-dated
+> passage in `MASTER-STRATEGY.md` is a **2026-07-31** update buried in §3.
+
 ## Folder layout (reorganized 2026-07-15)
 
 - **`planning-docs/`** — all internal plans, strategies, checklists, worklists, and
@@ -29,6 +43,13 @@ superseded and kept for history only.
   actual signed PHI evidence (statements, PDFs, the signed nexus letter).
 - Root — navigation (`REPORT.md`, this file, `DOCUMENT-PROVENANCE.md`), research,
   audits/assessments, and reference KBs.
+- **`vre/`** — **VR&E / Chapter 31** (Veteran Readiness & Employment). A **separate benefit
+  track** from the compensation claim: different statute (38 U.S.C. ch. 31), different
+  regulations (38 C.F.R. part 21 subpart A), different decision-maker (a VRC, not an RVSR),
+  different appeal posture. Self-contained — start at `vre/README.md`. Holds the appointment
+  prep doc, a citation-verified Chapter 31 legal KB, a benefits/tracks/rates/forms KB, and a
+  consistency audit. Shares only the C-file with the compensation claim, which is where the
+  cross-claim risk lives.
 - `document-analysis/` — per-document deep-analysis reports.
 
 ## Subject-specific tools

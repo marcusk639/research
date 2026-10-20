@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/ADOPTION-PLAN.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 8,
+    "originalLines": 147,
+    "finalLines": 149,
+    "tokensSaved": 1946,
+    "tokenCount": 470,
+    "originalTokenCount": 2416,
+    "compressionRatio": 0.1945364238410596,
+    "duration": 35,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "**Why this shape.** Role separation has measured support: 96.3% vs 90.2% pass@1 on HumanEval and 91.8% vs",
+      "78.9% on MBPP for a separated pipeline [S63] (function-level, single backbone — evidence for separating roles,",
+      "not models). Closer to this case, a controlled study across 20 full-stack web applications found TDD improves",
+      "accuracy by \"15.5--23.7 percentage points\" with capable backbones, and that \"replacing unreliable feedback",
+      "with a stronger tester restores positive gains for a lower-capability backbone\" [S66]."
+    ],
+    "removed": [
+      "**Why this shape.** Role separation has the best measured support of any anti-gaming technique: 96.3% vs",
+      "90.2% pass@1 on HumanEval and 91.8% vs 78.9% on MBPP for a separated pipeline [S63], and upgrading only the",
+      "tester's model moved accuracy −4.4 → +6.8 points [S66]."
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/ADOPTION-PLAN.md\n+++ /Users/marcusklein/dev/research/app-dev/ADOPTION-PLAN.md\n@@ -1,147 +1,149 @@\n # Adoption Plan — 30 days, falsifiable\n \n **Date:** 2026-09-29\n@@ 57 unchanged lines @@\n two surfaces, no new collection, one genuinely ambiguous point). Run the full §5 sequence of `GUIDE.md`\n **attended** — test-author agent on a strong model first, tests committed failing, then implementer.\n \n-**Why this shape.** Role separation has the best measured support of any anti-gaming technique: 96.3% vs\n-90.2% pass@1 on HumanEval and 91.8% vs 78.9% on MBPP for a separated pipeline [S63], and upgrading only the\n-tester's model moved accuracy −4.4 → +6.8 points [S66].\n+**Why this shape.** Role separation has measured support: 96.3% vs 90.2% pass@1 on HumanEval and 91.8% vs\n+78.9% on MBPP for a separated pipeline [S63] (function-level, single backbone — evidence for separating roles,\n+not models). Closer to this case, a controlled study across 20 full-stack web applications found TDD improves\n+accuracy by \"15.5--23.7 percentage points\" with capable backbones, and that \"replacing unreliable feedback\n+with a stronger tester restores positive gains for a lower-capability backbone\" [S66].\n \n - **Success metrics:** (a) all acceptance criteria pass; (b) the mutation ratchet does not regress;\n   (c) the implementer made **zero** edits to test files; (d) `.agent/assumptions.yaml` contains at least one\n@@ 75 unchanged lines @@\n   ceremony-heavy version ~10x slower with no measured quality gain [S43].\n - **No scaling past your review capacity.** AI-authored PRs are reported to carry ~1.7x the issues of human\n   ones [S25]; throughput without review capacity converts into escapes."
+  }
+}

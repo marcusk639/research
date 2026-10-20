@@ -1,0 +1,58 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 32,
+    "originalLines": 262,
+    "finalLines": 274,
+    "tokensSaved": 3467,
+    "tokenCount": 937,
+    "originalTokenCount": 4404,
+    "compressionRatio": 0.21276112624886467,
+    "duration": 49,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "on MBPP, at lower token cost (56.9K vs 138.2K) [S63]. Two limits on that evidence: it is function-level",
+      "HumanEval/MBPP, and all three roles run on the **same** GPT-4 backbone — so it supports separating *roles*,",
+      "not using a different model.",
+      "The closer and stronger study is TDDev, \"the first controlled study of TDD for full-stack web application",
+      "generation across 20 diverse web applications, multiple backbone models, two coding agents, and three TDD",
+      "implementations\" [S66]. Its results: \"With sufficiently capable backbones, TDD improves accuracy by",
+      "15.5--23.7 percentage points and remains effective across both minimal and full-featured coding agents;",
+      "replacing unreliable feedback with a stronger tester restores positive gains for a lower-capability",
+      "backbone\" [S66]. It also reports that \"Incremental TDD provides bounded control, Whole-Project TDD enables",
+      "coordinated repair and achieves the highest cost efficiency in most configurations, and Agentic TDD performs",
+      "best with highly capable models\" [S66].",
+      "",
+      "That last sentence is the practical guidance: **match the TDD shape to model capability** — incremental when",
+      "you want bounded control, whole-project for cost efficiency, agentic only with a strong model. And the",
+      "stronger-tester clause is the actionable one: a strong tester can rescue a weaker implementer, which is the",
+      "opposite of economizing in the tester seat.",
+      "",
+      "measurement — cited here as reasoning consistent with [S63] and [S66], not as evidence.",
+      "> **Correction.** An earlier draft of this section cited a figure (\"−4.4 to +6.8 points\") and a verbatim",
+      "> quote attributed to [S66] that **do not appear in that paper**. They came from a retrieval agent working",
+      "> from a PDF it could not decode. The abstract was later fetched directly and the text above reflects what it",
+      "> actually says. See `REPORT.md` Limitations."
+    ],
+    "removed": [
+      "on MBPP, at lower token cost (56.9K vs 138.2K) [S63]. A separate multi-agent TDD study reports that",
+      "upgrading only the *tester* agent's backbone model — leaving the implementer alone — moved final accuracy",
+      "from −4.4 to +6.8 points relative to baseline [S66, search-only]. Tester quality changes outcomes",
+      "independently of implementer quality.",
+      "measurement — cited here as reasoning consistent with [S63], not as evidence.",
+      "**The benefit is conditional, and the same literature says so.** [S66] also reports that \"weaker models",
+      "benefit only from tightly bounded incremental strategies, while whole-project and agentic TDD can reduce",
+      "their accuracy.\" So: use a *strong* model for the test-designer role, and keep each TDD increment small.",
+      "Do not put a cheap model in the tester seat to save money — that is precisely the configuration the",
+      "evidence says can make things worse."
+    ],
+    "unchanged": 16,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md\n+++ /Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md\n@@ -1,262 +1,274 @@\n # Verification Strategy — proving the app actually works\n \n **Date:** 2026-09-29\n@@ 97 unchanged lines @@\n \n AgentCoder, which splits work across a programmer, a test-designer and a test-executor agent, reports\n 96.3% pass@1 on HumanEval versus 90.2% for the prior single-pass state of the art, and 91.8% versus 78.9%\n-on MBPP, at lower token cost (56.9K vs 138.2K) [S63]. A separate multi-agent TDD study reports that\n-upgrading only the *tester* agent's backbone model — leaving the implementer alone — moved final accuracy\n-from −4.4 to +6.8 points relative to baseline [S66, search-only]. Tester quality changes outcomes\n-independently of implementer quality.\n+on MBPP, at lower token cost (56.9K vs 138.2K) [S63]. Two limits on that evidence: it is function-level\n+HumanEval/MBPP, and all three roles run on the **same** GPT-4 backbone — so it supports separating *roles*,\n+not using a different model.\n \n+The closer and stronger study is TDDev, \"the first controlled study of TDD for full-stack web application\n+generation across 20 diverse web applications, multiple backbone models, two coding agents, and three TDD\n+implementations\" [S66]. Its results: \"With sufficiently capable backbones, TDD improves accuracy by\n+15.5--23.7 percentage points and remains effective across both minimal and full-featured coding agents;\n+replacing unreliable feedback with a stronger tester restores positive gains for a lower-capability\n+backbone\" [S66]. It also reports that \"Incremental TDD provides bounded control, Whole-Project TDD enables\n+coordinated repair and achieves the highest cost efficiency in most configurations, and Agentic TDD performs\n+best with highly capable models\" [S66].\n+\n+That last sentence is the practical guidance: **match the TDD shape to model capability** — incremental when\n+you want bounded control, whole-project for cost efficiency, agentic only with a strong model. And the\n+stronger-tester clause is the actionable one: a strong tester can rescue a weaker implementer, which is the\n+opposite of economizing in the tester seat.\n+\n The rationale usually given is the correlated-error problem: \"verification by the same mind that produced\n the work inherits that mind's blind spots\" [S62]. That is an argued position from a vendor blog, not a\n-measurement — cited here as reasoning consistent with [S63], not as evidence.\n+measurement — cited here as reasoning consistent with [S63] and [S66], not as evidence.\n \n-**The benefit is conditional, and the same literature says so.** [S66] also reports that \"weaker models\n-benefit only from tightly bounded incremental strategies, while whole-project and agentic TDD can reduce\n-their accuracy.\" So: use a *strong* model for the test-designer role, and keep each TDD increment small.\n-Do not put a cheap model in the tester seat to save money — that is precisely the configuration the\n-evidence says can make things worse.\n+> **Correction.** An earlier draft of this section cited a figure (\"−4.4 to +6.8 points\") and a verbatim\n+> quote attributed to [S66] that **do not appear in that paper**. They came from a retrieval agent working\n+> from a PDF it could not decode. The abstract was later fetched directly and the text above reflects what it\n+> actually says. See `REPORT.md` Limitations.\n \n \n ### Give the agent a way to say \"I couldn't do this\"\n@@ 139 unchanged lines @@\n | Affected-dependent tests | all affected packages pass | yes | [S77] (single-source precaution) |\n | Held-out acceptance flows | pass on a real running build | yes | §6 |\n | Human sign-off | rules, migrations, auth, payments, deploys | yes | [S16], [S9] |"
+  }
+}

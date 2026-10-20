@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/ledger/claims.jsonl",
+  "operation": "created",
+  "metadata": {
+    "bytesWritten": 17039,
+    "originalSize": 0,
+    "wasFormatted": false,
+    "linesChanged": 0,
+    "tokensSaved": 0,
+    "tokenCount": 3945,
+    "originalTokenCount": 3945,
+    "compressionRatio": 1,
+    "atomic": true,
+    "verified": true,
+    "duration": 31
+  }
+}

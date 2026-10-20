@@ -1,0 +1,56 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 30,
+    "originalLines": 993,
+    "finalLines": 1001,
+    "tokensSaved": 17801,
+    "tokenCount": 1027,
+    "originalTokenCount": 18828,
+    "compressionRatio": 0.05454642022519651,
+    "duration": 22,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "3. **Therefore the realistic best outcome may be a deferral, not a grant.** Your mental health",
+      "   supplemental claim (filed 5/19/2026) is **still pending with no C&P exam scheduled** —",
+      "   confirmed 09/13. That claim is the fact that changes everything: if granted, you either reach",
+      "   20%+ (opening the much easier employment-handicap door) or you gain service-connected",
+      "   conditions that genuinely drive the SEH analysis. **Ask Jamie Clark directly whether she can",
+      "   hold the entitlement determination pending that claim, or whether you are better served by a",
+      "   decision now and a fresh 28-1900 later.** That is the highest-value question you can ask on",
+      "   Thursday (§8.5 #2). A denial now is recoverable — reapplying after a rating increase is",
+      "   routine — but a denial is still a document in your C-file.",
+      "   **One genuine piece of good news:** being **currently unemployed** (confirmed 09/13) helps",
+      "   here. § 21.52(b)(5) makes \"number, length, and frequency of periods of unemployment or",
+      "   underemployment\" an express severity factor, and six of the nine § 21.52 factors line up in",
+      "   your favor — including factor (8), which names substance abuse explicitly. **The severity",
+      "   half of the SEH test is strong for you. It is only causation that is weak.**",
+      "",
+      "5. **Do today:** get the per-employer detail straight (§3.3 #1) and chase the signed **Metal",
+      "   employment statement** (§3.3 #2) — it was written for VA and you don't have a copy. Then",
+      "   start the 28-1902w. Submit it to **eva@va.gov** (Jamie Clark's own stated channel) no later",
+      "   than **Tuesday 9/15** so it is in front of her before Thursday."
+    ],
+    "removed": [
+      "3. **Therefore the realistic best outcome may be a deferral, not a grant.** Your mental",
+      "   health supplemental claim (filed 5/19/2026) is the fact that changes everything: if it",
+      "   is granted, you either reach 20%+ (opening the much easier employment-handicap door) or",
+      "   you gain service-connected conditions that genuinely drive the SEH analysis. **Ask Jamie",
+      "   Clark directly whether she can hold the entitlement determination pending that claim, or",
+      "   whether you are better served by a decision now and a fresh 28-1900 later.** A denial",
+      "   now is recoverable — reapplying after a rating increase is routine — but a denial is",
+      "   still a document in your C-file.",
+      "5. **Do today:** confirm the four employment facts in §3 and get the 28-1902w started.",
+      "   Submit it to **eva@va.gov** (Jamie Clark's own stated channel) no later than **Tuesday",
+      "   9/15** so it is in front of her before Thursday."
+    ],
+    "unchanged": 20,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md\n+++ /Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md\n@@ -1,993 +1,1001 @@\n ---\n topic: vre-initial-individual-evaluation-prep\n created: 2026-09-13\n@@ 44 unchanged lines @@\n    in-service insomnia treatment corroborates it — but it is thin, and you should expect\n    the VRC to probe exactly there.\n \n-3. **Therefore the realistic best outcome may be a deferral, not a grant.** Your mental\n-   health supplemental claim (filed 5/19/2026) is the fact that changes everything: if it\n-   is granted, you either reach 20%+ (opening the much easier employment-handicap door) or\n-   you gain service-connected conditions that genuinely drive the SEH analysis. **Ask Jamie\n-   Clark directly whether she can hold the entitlement determination pending that claim, or\n-   whether you are better served by a decision now and a fresh 28-1900 later.** A denial\n-   now is recoverable — reapplying after a rating increase is routine — but a denial is\n-   still a document in your C-file.\n+3. **Therefore the realistic best outcome may be a deferral, not a grant.** Your mental health\n+   supplemental claim (filed 5/19/2026) is **still pending with no C&P exam scheduled** —\n+   confirmed 09/13. That claim is the fact that changes everything: if granted, you either reach\n+   20%+ (opening the much easier employment-handicap door) or you gain service-connected\n+   conditions that genuinely drive the SEH analysis. **Ask Jamie Clark directly whether she can\n+   hold the entitlement determination pending that claim, or whether you are better served by a\n+   decision now and a fresh 28-1900 later.** That is the highest-value question you can ask on\n+   Thursday (§8.5 #2). A denial now is recoverable — reapplying after a rating increase is\n+   routine — but a denial is still a document in your C-file.\n \n+   **One genuine piece of good news:** being **currently unemployed** (confirmed 09/13) helps\n+   here. § 21.52(b)(5) makes \"number, length, and frequency of periods of unemployment or\n+   underemployment\" an express severity factor, and six of the nine § 21.52 factors line up in\n+   your favor — including factor (8), which names substance abuse explicitly. **The severity\n+   half of the SEH test is strong for you. It is only causation that is weak.**\n+\n 4. **The single biggest risk is not VR&E — it is what you say to VR&E landing in your\n    C-file.** Form 28-1902w asks you point-blank (Section VII, Item 20) whether you have\n    filed for TDIU, and the whole form is built to capture \"my disabilities cost me jobs.\"\n    Meanwhile your pending claim argues severe occupational impairment. These can both be\n    true and consistent, but only if you say the accurate thing rather than the persuasive\n    thing. See §9 — this is where a careless sentence does real damage.\n \n-5. **Do today:** confirm the four employment facts in §3 and get the 28-1902w started.\n-   Submit it to **eva@va.gov** (Jamie Clark's own stated channel) no later than **Tuesday\n-   9/15** so it is in front of her before Thursday.\n+5. **Do today:** get the per-employer detail straight (§3.3 #1) and chase the signed **Metal\n+   employment statement** (§3.3 #2) — it was written for VA and you don't have a copy. Then\n+   start the 28-1902w. Submit it to **eva@va.gov** (Jamie Clark's own stated channel) no later\n+   than **Tuesday 9/15** so it is in front of her before Thursday.\n \n ---\n \n@@ 918 unchanged lines @@\n - **Whether electing the P911SA rate consumes Post-9/11 GI Bill months** — unresolved. Ask.\n - **§ 21.98** — **RESOLVED:** removed effective 2019-02-19 (84 FR 138). No longer exists.\n - **Time from evaluation → entitlement decision → signed plan** — no published VA SLA found. Ask."
+  }
+}

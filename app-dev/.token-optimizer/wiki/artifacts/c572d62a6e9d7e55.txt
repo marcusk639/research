@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/REPORT.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 2,
+    "originalLines": 489,
+    "finalLines": 487,
+    "tokensSaved": 9056,
+    "tokenCount": 271,
+    "originalTokenCount": 9327,
+    "compressionRatio": 0.02905543047067653,
+    "duration": 39,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [],
+    "removed": [
+      "  2014 coverage result transfers to LLM-generated suites (a 2026 replication reportedly disagrees, not",
+      "  fetched)."
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/REPORT.md\n+++ /Users/marcusklein/dev/research/app-dev/REPORT.md\n@@ -1,489 +1,487 @@\n # Autonomous App Development from a Written Specification — 2026 Assessment\n \n **Date:** 2026-09-29 · **Mode:** ultradeep (14 angles, 131 registered sources, 1 self-audit + 1 independent\n@@ 449 unchanged lines @@\n   (a 2026 replication reportedly disagrees; not fetched). The previously-listed conflict about separated-tester\n   benefits in weak models was **spurious** — it rested on a quote that does not exist in [S66], whose abstract\n   in fact says a stronger tester *restores* gains for a lower-capability backbone.\n-  2014 coverage result transfers to LLM-generated suites (a 2026 replication reportedly disagrees, not\n-  fetched).\n - **Open questions** are listed in full in `GAPS.md`.\n \n ---\n@@ 26 unchanged lines @@\n   the ones reported.\n - **Ledgers:** `ledger/run_manifest.json`, `ledger/sources.jsonl`, `ledger/evidence.jsonl`,\n   `ledger/evidence-orchestrator-2.jsonl`, `ledger/claims.jsonl`."
+  }
+}

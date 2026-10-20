@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/.claude/agent-gates/escalate.sh",
+  "operation": "created",
+  "metadata": {
+    "bytesWritten": 1981,
+    "originalSize": 0,
+    "wasFormatted": false,
+    "linesChanged": 0,
+    "tokensSaved": 0,
+    "tokenCount": 613,
+    "originalTokenCount": 613,
+    "compressionRatio": 1,
+    "atomic": true,
+    "verified": true,
+    "duration": 40
+  }
+}

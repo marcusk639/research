@@ -1,0 +1,234 @@
+<title>VetLaw Pitch Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column of field-manual sections; templates sit in copyable panels, the call plan runs on a minute rail. */
+  :root {
+    --bg: #f7f9f9;
+    --surface: #ffffff;
+    --ink: #17252a;
+    --muted: #4f6168;
+    --rule: #d5dfe1;
+    --accent: #0f5c63;
+    --accent-soft: #e3eff0;
+    --warn: #8a4b0f;
+    --warn-soft: #fbf0e3;
+    --display: "IBM Plex Serif", Georgia, serif;
+    --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1719; --surface: #162124; --ink: #e2ecee; --muted: #9db0b5; --rule: #2a3a3e;
+      --accent: #6cc3ca; --accent-soft: #19353a; --warn: #f0b277; --warn-soft: #33261a; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1719; --surface: #162124; --ink: #e2ecee; --muted: #9db0b5; --rule: #2a3a3e;
+    --accent: #6cc3ca; --accent-soft: #19353a; --warn: #f0b277; --warn-soft: #33261a; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); }
+  .wrap { max-width: 780px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; }
+  header { display: grid; gap: 10px; padding-bottom: 24px; border-bottom: 2px solid var(--ink); }
+  .eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  h1 { font: 600 clamp(28px, 5vw, 38px)/1.15 var(--display); margin: 0; text-wrap: balance; }
+  .lede { color: var(--muted); margin: 0; max-width: 62ch; }
+  h2 { font: 600 22px/1.25 var(--display); margin: 44px 0 12px; text-wrap: balance; }
+  h3 { font: 600 16px/1.3 var(--body); margin: 20px 0 6px; }
+  p { margin: 0 0 12px; max-width: 68ch; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; max-width: 68ch; }
+  li { margin-bottom: 6px; }
+  code, .mono { font-family: var(--mono); font-size: 14px; }
+  a { color: var(--accent); }
+  .glance { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 24px; }
+  .glance div { background: var(--surface); border: 1px solid var(--rule); padding: 14px 16px; min-width: 0; }
+  .glance dt { font: 500 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .glance dd { margin: 0; font-size: 15px; line-height: 1.45; }
+  .note { background: var(--warn-soft); color: var(--ink); border: 1px solid var(--rule); padding: 12px 16px; margin: 16px 0; max-width: 68ch; }
+  .note strong { color: var(--warn); }
+  .facts { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .facts th, .facts td { text-align: left; vertical-align: top; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--rule); }
+  .facts th { font: 500 11px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .scroll { overflow-x: auto; }
+  .tpl { background: var(--surface); border: 1px solid var(--rule); margin: 12px 0 20px; }
+  .tpl-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+  .tpl-head span { font: 500 12px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .tpl pre { margin: 0; padding: 14px; white-space: pre-wrap; word-wrap: break-word; font: 15px/1.6 var(--body); color: var(--ink); }
+  button.copy { font: 500 13px/1 var(--body); color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent); padding: 7px 12px; cursor: pointer; }
+  button.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .rail { list-style: none; padding: 0; margin: 12px 0; max-width: none; display: grid; gap: 0; }
+  .rail li { display: grid; grid-template-columns: 76px 1fr; gap: 16px; padding: 12px 0; border-top: 1px solid var(--rule); margin: 0; }
+  .rail li:last-child { border-bottom: 1px solid var(--rule); }
+  .rail .t { font: 500 14px/1.5 var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
+  .rail .b { min-width: 0; }
+  .rail .b strong { display: block; margin-bottom: 2px; }
+  .say { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; margin: 10px 0 14px; font-family: var(--display); font-size: 17px; line-height: 1.55; max-width: 64ch; }
+  .obj { display: grid; gap: 0; margin: 12px 0; }
+  .obj div { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 16px; padding: 12px 0; border-top: 1px solid var(--rule); }
+  .obj div:last-child { border-bottom: 1px solid var(--rule); }
+  .obj .q { font-weight: 600; }
+  .dont li::marker { color: var(--warn); }
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+  @media (max-width: 560px) {
+    .rail li { grid-template-columns: 1fr; gap: 4px; }
+    .obj div { grid-template-columns: 1fr; gap: 4px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Outreach kit · VA-accredited attorneys · first target: VetLaw</div>
+    <h1>VetLaw pitch kit</h1>
+    <p class="lede">How to open a conversation with a veterans' appeals firm about the effective-date and CUE tool, run the first call, and turn it into a design partnership. Built for the stage you're at: a working sample report, not a finished product.</p>
+    <dl class="glance">
+      <div><dt>The ask</dt><dd>20 minutes to learn how they work. A design partnership only if the call earns it.</dd></div>
+      <div><dt>What you show</dt><dd>The fictional Dana Reyes report, and only after they've answered your questions.</dd></div>
+      <div><dt>What you don't claim</dt><dd>Time saved, accuracy rates, or that it finds CUE. None of it is measured yet.</dd></div>
+    </dl>
+  </header>
+
+  <h2>Why this framing, not a sales pitch</h2>
+  <p>Your validation plan says outreach stays "non-pitchy" and the demo comes after the discovery questions. A firm that hears a pitch first tells you what it thinks of the pitch. A firm that walks you through its last effective-date case tells you whether the problem is real, how often it comes up, and what it costs them today. That second answer is what decides whether you build this.</p>
+  <p>So the "pitch" here is a 30-second description you give after they've talked, followed by one concrete ask.</p>
+  <div class="note"><strong>Sequence.</strong> Send the practitioner review first (the reviewer guide is ready). Don't ask VetLaw to be that reviewer if you also want them as an interview: someone who has critiqued the report can't tell you how they work without it.</div>
+
+  <h2>What VetLaw says about itself</h2>
+  <p>From vet.law, read 2026-10-16. Re-check before you send; firms change their sites.</p>
+  <div class="scroll">
+    <table class="facts">
+      <tr><th>Fact</th><th>Why it matters to you</th></tr>
+      <tr><td>Founded 2014 by a former Marine; markets itself as a "veteran-led legal team."</td><td>Open veteran to veteran. Your Air Force service is a real point of connection; use it once, plainly.</td></tr>
+      <tr><td>Nationwide practice, "No win, no fee," taking cases after a VA denial.</td><td>Every client arrives with at least one prior decision, which is exactly where earlier effective dates and CUE hide. On contingency, an earlier date is a larger fee.</td></tr>
+      <tr><td>Its claim-denials page lists "Assigning the wrong effective date" among common VA errors.</td><td>Your opening line. They already believe the problem exists.</td></tr>
+      <tr><td>Has a practice page on motions for revision based on clear and unmistakable error.</td><td>They do CUE work, so the question is how, how often, and how long it takes.</td></tr>
+      <tr><td>Attorney pages for Adam Werner, Michael Hoffman, Matthew Greig and Brendan Garcia (the last three listed as shareholders).</td><td>A small firm by attorney count: your primary segment, not the large-firm tier the research puts in phase 2.</td></tr>
+      <tr><td>Runs paid search ads for appeals.</td><td>Steady intake volume. Ask how they screen new files for older decisions.</td></tr>
+    </table>
+  </div>
+  <h3>Who to write to</h3>
+  <p>Read the four attorney bios first. Write to the one whose bio mentions Board hearings, CUE, or effective dates. If none does, write to the founder. Send to one person at a time; a firm that gets the same email four times reads it as a campaign.</p>
+
+  <h2>The first message</h2>
+  <p>Keep it short, name the one thing from their own site, and ask for time to learn, not to present.</p>
+
+  <div class="tpl">
+    <div class="tpl-head"><span>Email · subject: Effective dates at VetLaw: 20 minutes?</span><button class="copy" data-target="t-email" type="button">Copy</button></div>
+<pre id="t-email">Hi [first name],
+
+I'm an Air Force veteran and software engineer building a tool for accredited representatives who handle earlier-effective-date and CUE work. Your claim-denials page lists "assigning the wrong effective date" among VA's common errors, so I expect your team sees it often.
+
+I'm not selling anything yet. I'm trying to learn how firms like yours handle this today: what you open first, how long it takes, and where it goes wrong. Would you have 20 minutes in the next two weeks? I'll work around your calendar.
+
+If it's useful, I can show a short sample report on a fictional case at the end.
+
+[Your name]
+[phone] · [email]</pre>
+  </div>
+
+  <div class="tpl">
+    <div class="tpl-head"><span>LinkedIn connection note · under 300 characters</span><button class="copy" data-target="t-li" type="button">Copy</button></div>
+<pre id="t-li">Hi [first name], I'm an Air Force veteran building a tool for VA-accredited attorneys who handle earlier effective dates and CUE. I'd value 20 minutes to learn how VetLaw does that work today. Just questions, no pitch.</pre>
+  </div>
+
+  <div class="tpl">
+    <div class="tpl-head"><span>Follow-up · five business days later, once</span><button class="copy" data-target="t-fu" type="button">Copy</button></div>
+<pre id="t-fu">Hi [first name], following up once on my note about effective-date and CUE work. If 20 minutes isn't possible, could you point me to whoever at VetLaw handles those cases? Thanks either way.
+
+[Your name]</pre>
+  </div>
+
+  <h2>The first call: 25 minutes</h2>
+  <p>Questions come from your interview guide. Take notes in their words; you'll need the exact phrases later.</p>
+  <ol class="rail">
+    <li><span class="t">0–2</span><div class="b"><strong>Thank them and set the frame</strong>"I'm here to learn how you do this work. If there's time at the end and you're curious, I'll show a sample."</div></li>
+    <li><span class="t">2–15</span><div class="b"><strong>Their last case, in order</strong>
+      <ul>
+        <li>"Walk me through the last time you worked an earlier-effective-date or CUE issue."</li>
+        <li>"What did you open, in what order?"</li>
+        <li>"Roughly how many hours did it take, and who did it?"</li>
+        <li>"What was the most tedious or error-prone step?"</li>
+        <li>"When you need a regulation as it read in, say, 2008, how do you get it?"</li>
+        <li>"Ever find out later that you missed an earlier date? What happened?"</li>
+        <li>"How often do these come up, and what's a typical fee on one?"</li>
+      </ul></div></li>
+    <li><span class="t">15–16</span><div class="b"><strong>Ask before showing</strong>"Would it be useful to see a sample of what I'm building?" If they say no, skip to the referral question. That answer is data too.</div></li>
+    <li><span class="t">16–21</span><div class="b"><strong>Three moments from the Dana Reyes report</strong>
+      <ul>
+        <li>Click a quote under Evidence. The scanned page opens with the words highlighted.</li>
+        <li>Open 38 CFR 3.155 as it read in 2008, then compare it with today's text.</li>
+        <li>Read the CUE card's weak point and rebuttals aloud. This is what earns trust: it argues against itself.</li>
+      </ul></div></li>
+    <li><span class="t">21–23</span><div class="b"><strong>The 30-second pitch</strong>Only now. Use their words from the first section.</div></li>
+    <li><span class="t">23–25</span><div class="b"><strong>The ask and the referral</strong>The design-partner offer below, then: "Who else does a lot of this work that I should talk to?"</div></li>
+  </ol>
+
+  <h3>The 30-second version</h3>
+  <p class="say">"You said [their hardest step] takes [their hours]. What I'm building reads the claims file, finds each decision where an earlier effective date might apply, and shows it with the page it relies on and the regulation as it read on the decision date. It lists the weak points and what VA will argue back, and it never concludes there's CUE; your attorneys decide that. The goal is that every denied-claim file gets this check, not just the ones someone has time for."</p>
+
+  <h3>If they ask what it's worth</h3>
+  <p>Use the sample's own numbers and say they're estimates. Dana's earlier date is about 10 months. At today's 70% rate that is at most about $18,000 in back pay and a fee under about $3,600; the rates in 2008–09 were lower. The large cases are old denials, where the gap can run to decades. Say that such cases are rare and that this is where specialist firms make their name. Let them supply their own typical figure.</p>
+
+  <h2>The ask: a design partnership</h2>
+  <h3>What VetLaw gets</h3>
+  <ul>
+    <li>Free use through the pilot, and founding pricing locked for a year after it.</li>
+    <li>Their cases shape what gets built first.</li>
+    <li>A second check on files they've already worked, at no cost.</li>
+  </ul>
+  <h3>What you ask for</h3>
+  <ul>
+    <li>A 30-minute feedback call each month for three months.</li>
+    <li>Two or three closed files to run once the file reader is ready, handled under the conditions below.</li>
+    <li>One introduction to a peer.</li>
+  </ul>
+  <div class="note"><strong>Before any real client file.</strong> Today the sample runs on the reviewer's own computer and nothing is uploaded. Real eFolder data is different: work out with the firm how its VA system access terms (38 C.F.R. §§ 1.600–1.603) and client consent apply before you touch a client file. Whether representatives may send eFolder data to a third-party processor is still an open question in your research. Say so if they ask.</div>
+
+  <h2>Questions they'll ask</h2>
+  <div class="obj">
+    <div><span class="q">"Our paralegals already check effective dates."</span><span>Ask how long it takes and whether every file gets it. Position the tool as the check that runs on every file, with the paralegal reviewing the result.</span></div>
+    <div><span class="q">"AI makes things up."</span><span>Every quote opens the scanned page it came from, and every regulation link opens the version in force on the decision date, so they can check it in seconds. Show the weak point and the "Needs review" list: it flags what it can't decide.</span></div>
+    <div><span class="q">"How is this different from VA Claim Helper?"</span><span>Ask what they use it for first. Then: VCH organizes the file and answers questions about it; this works out the earliest date the law supports and tests the decision for CUE using the regulation as it read then. VCH has been adding effective-date features, so don't claim they can't do it.</span></div>
+    <div><span class="q">"Can we upload client files?"</span><span>Not yet, and you'll work out the access and consent questions with them before any client file is used.</span></div>
+    <div><span class="q">"What will it cost?"</span><span>Only if asked: a flat software fee, likely $150–400 per seat a month, with per-case credits for a full workup. Never a share of their fees. Then ask how that compares with what they pay for tools now.</span></div>
+    <div><span class="q">"Are you a lawyer or accredited?"</span><span>No. It's a tool for accredited representatives, and every decision stays with them.</span></div>
+  </div>
+
+  <h2>Don't say</h2>
+  <ul class="dont">
+    <li>"It finds CUE," "it wins cases," or anything that sounds like a legal conclusion.</li>
+    <li>Hours saved or accuracy percentages. You haven't measured them.</li>
+    <li>That it's ready for client files.</li>
+    <li>Anything about another firm's clients or another interview.</li>
+    <li>A price before they ask.</li>
+  </ul>
+
+  <h2>After the call</h2>
+  <ul>
+    <li>Log it in the interview tracker the same day, with their exact phrases.</li>
+    <li>Score it against Gate A: is this a top-three pain, do they already pay for adjacent tools, did they name "the law as it read then" unprompted, did the price band survive?</li>
+    <li>Send a two-line thank-you. If they agreed to a pilot, confirm the three asks in writing.</li>
+  </ul>
+
+  <footer>Sources: vet.law home and claim-denials pages (read 2026-10-16); the interview guide and product research in this folder. Money figures are estimates from the fictional sample.</footer>
+</div>
+
+<script>
+  document.querySelectorAll("button.copy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var el = document.getElementById(btn.dataset.target);
+      var text = el.textContent;
+      var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1600); };
+      var select = function () {
+        var r = document.createRange(); r.selectNodeContents(el);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        btn.textContent = "Selected: copy it now";
+      };
+      try {
+        navigator.clipboard.writeText(text).then(done, select);
+      } catch (e) { select(); }
+    });
+  });
+</script>

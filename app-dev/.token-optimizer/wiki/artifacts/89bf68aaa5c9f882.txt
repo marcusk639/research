@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/.github/workflows/ci.yml",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 1,
+    "originalLines": 259,
+    "finalLines": 260,
+    "tokensSaved": 2067,
+    "tokenCount": 165,
+    "originalTokenCount": 2232,
+    "compressionRatio": 0.0739247311827957,
+    "duration": 37,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "          flow-file: homegroups/mobile/maestro/flows/invite-code-join.yaml"
+    ],
+    "removed": [],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/recovery-platform/.github/workflows/ci.yml\n+++ /Users/marcusklein/dev/recovery-platform/.github/workflows/ci.yml\n@@ -1,259 +1,260 @@\n name: CI\n \n on:\n@@ 223 unchanged lines @@\n         with:\n           api-key: ${{ secrets.MAESTRO_CLOUD_API_KEY }}\n           app-file: homegroups/mobile/android/app/build/outputs/apk/debug/app-debug.apk\n+          flow-file: homegroups/mobile/maestro/flows/invite-code-join.yaml\n \n   agent-gates:\n     name: agent-gates — test-tamper check\n@@ 24 unchanged lines @@\n           fi\n           echo \"comparing against $BASE\"\n           \"$GATE\" \"$BASE\""
+  }
+}

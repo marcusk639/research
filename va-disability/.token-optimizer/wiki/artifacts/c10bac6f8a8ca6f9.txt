@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/VRE-BENEFITS-KB.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 5,
+    "originalLines": 272,
+    "finalLines": 277,
+    "tokensSaved": 4336,
+    "tokenCount": 313,
+    "originalTokenCount": 4649,
+    "compressionRatio": 0.06732630673263067,
+    "duration": 6,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "",
+      "> **SOURCE OF TRUTH for tracks, subsistence rates, forms, and submission channels.** If",
+      "> `VRE-EVALUATION-PREP-2026-09-17.md` §6 or §7 disagrees with this file, **this file wins**.",
+      "> Note the rate table expires **2026-10-01** — when it is updated here, §6.1 of the prep doc",
+      "> must be updated or replaced with a pointer."
+    ],
+    "removed": [],
+    "unchanged": 13,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/VRE-BENEFITS-KB.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/VRE-BENEFITS-KB.md\n@@ -1,272 +1,277 @@\n ---\n topic: vre-benefits-tracks-rates-forms\n created: 2026-09-13\n status: reference KB\n sources_verified: partial — see per-item markers\n ---\n \n+\n+> **SOURCE OF TRUTH for tracks, subsistence rates, forms, and submission channels.** If\n+> `VRE-EVALUATION-PREP-2026-09-17.md` §6 or §7 disagrees with this file, **this file wins**.\n+> Note the rate table expires **2026-10-01** — when it is updated here, §6.1 of the prep doc\n+> must be updated or replaced with a pointer.\n # VR&E Benefits Reference — Tracks, Rates, Forms, Submission\n \n > **Sourcing key:** 🟢 PRIMARY (va.gov, eCFR API, the actual form PDF, govinfo) ·\n@@ 259 unchanged lines @@\n 6. Turnaround: evaluation → entitlement decision → signed 28-8872\n 7. How § 21.74's Chapter 31 entitlement computation interacts with GI Bill months already used\n 8. Which internal form documents her determination, and how to obtain it"
+  }
+}

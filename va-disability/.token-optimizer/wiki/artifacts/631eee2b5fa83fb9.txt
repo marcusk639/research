@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 2,
+    "originalLines": 1134,
+    "finalLines": 1136,
+    "tokensSaved": 21542,
+    "tokenCount": 428,
+    "originalTokenCount": 21970,
+    "compressionRatio": 0.01948111060537096,
+    "duration": 20,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "**Section V — substance abuse history.** Answer completely. Your treatment history is your",
+      "**The substance use history.**"
+    ],
+    "removed": [],
+    "unchanged": 18,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n@@ -1,1134 +1,1136 @@\n ---\n topic: vre-initial-individual-evaluation-prep\n created: 2026-09-13\n@@ 707 unchanged lines @@\n   explain each check with a concrete instance and date. \"Missed time at work — on FMLA leave\n   May–June 2026 for psychiatric treatment\" is worth more than three paragraphs of adjectives.\n \n+**Section V — substance abuse history.** Answer completely. Your treatment history is your\n _strongest_ § 21.52 severity evidence — § 21.52(b)(8) names \"alcoholism or other substance abuse\"\n expressly — and it is already documented across **eleven** episodes at named facilities.\n Understating it here would both weaken your case and conflict\n@@ 145 unchanged lines @@\n then job loss.\"_ That is accurate, it is what your own treatment records already document, and\n it does not overclaim incapacity in a document a rating board will read.\n \n+**The substance use history.**\n Be complete and matter-of-fact. **Eleven** documented treatment episodes since 2016 at named\n facilities (see §5.1 on how to state the number).\n Be complete and matter-of-fact. At least nine treatment episodes since 2016 at named facilities.\n@@ 264 unchanged lines @@\n - **Whether electing the P911SA rate consumes Post-9/11 GI Bill months** — unresolved. Ask.\n - **§ 21.98** — **RESOLVED:** removed effective 2019-02-19 (84 FR 138). No longer exists.\n - **Time from evaluation → entitlement decision → signed plan** — no published VA SLA found. Ask."
+  }
+}

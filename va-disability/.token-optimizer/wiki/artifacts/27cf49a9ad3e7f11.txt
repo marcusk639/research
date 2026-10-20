@@ -1,0 +1,36 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/README.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 10,
+    "originalLines": 122,
+    "finalLines": 124,
+    "tokensSaved": 1399,
+    "tokenCount": 496,
+    "originalTokenCount": 1895,
+    "compressionRatio": 0.2617414248021108,
+    "duration": 5,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "- **Severity is strong; causation is weak.** On this corpus's own reading, **six of the nine**",
+      "  § 21.52(b) factors favor him — an advocate's count, not a VA finding; factor 4 (adequacy of",
+      "  education) cuts against, and a VRC will say so. Set against roughly **a decade of residential",
+      "  and PHP treatment, 2016–2026** (ten documented episodes plus one self-reported — see prep §5.1;",
+      "  do not lead with a count). But the significant impairment must trace **in substantial part to",
+      "  tinnitus** — and the genuinely disabling conditions are not service-connected yet."
+    ],
+    "removed": [
+      "- **Severity is strong; causation is weak.** Six of the nine § 21.52(b) factors favor him",
+      "  (including factor 8, which names substance abuse expressly), against eleven documented",
+      "  treatment episodes since 2016. But the significant impairment must trace **in substantial",
+      "  part to tinnitus** — and the genuinely disabling conditions are not service-connected yet."
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/README.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/README.md\n@@ -1,122 +1,124 @@\n ---\n topic: vre-chapter-31\n created: 2026-09-13\n@@ 34 unchanged lines @@\n   eligibility does not apply**, per 38 U.S.C. § 3103(g).\n - **Only service connection is tinnitus at 10%** — which permits entitlement _only_ through the\n   **serious employment handicap** door, § 3102(a)(2). There is no second path today.\n-- **Severity is strong; causation is weak.** Six of the nine § 21.52(b) factors favor him\n-  (including factor 8, which names substance abuse expressly), against eleven documented\n-  treatment episodes since 2016. But the significant impairment must trace **in substantial\n-  part to tinnitus** — and the genuinely disabling conditions are not service-connected yet.\n+- **Severity is strong; causation is weak.** On this corpus's own reading, **six of the nine**\n+  § 21.52(b) factors favor him — an advocate's count, not a VA finding; factor 4 (adequacy of\n+  education) cuts against, and a VRC will say so. Set against roughly **a decade of residential\n+  and PHP treatment, 2016–2026** (ten documented episodes plus one self-reported — see prep §5.1;\n+  do not lead with a count). But the significant impairment must trace **in substantial part to\n+  tinnitus** — and the genuinely disabling conditions are not service-connected yet.\n - **The pending MH supplemental claim (filed 2026-05-19) is the decisive lever.** A grant either\n   reaches 20%+ (opening the easier employment-handicap door) or supplies conditions that actually\n   carry SEH causation.\n@@ 72 unchanged lines @@\n carry comparable PHI, so tracking these would not change the repo's existing posture — but\n **`source-materials/VR&E Initial Email.pdf` holds a live Teams meeting passcode and should stay\n untracked regardless.** Check with the user before `git add` on anything in here."
+  }
+}

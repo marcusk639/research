@@ -1,0 +1,32 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 7,
+    "originalLines": 1154,
+    "finalLines": 1161,
+    "tokensSaved": 22182,
+    "tokenCount": 364,
+    "originalTokenCount": 22546,
+    "compressionRatio": 0.01614477069103167,
+    "duration": 22,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "",
+      "> [!IMPORTANT]",
+      "> **DERIVED SECTION — not the source of truth.** Verification verdicts live in",
+      "> `CHAPTER-31-LEGAL-KB.md` §8 (law) and `VRE-BENEFITS-KB.md`'s sourcing markers (rates, forms,",
+      "> benefits). **If this table and a KB disagree, the KB wins.** This snapshot was taken",
+      "> 2026-09-13; it has already drifted once (an \"eCFR was unreachable\" claim that the KB had",
+      "> already retracted). Do not record a new verification verdict here — record it in the KB."
+    ],
+    "removed": [],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n@@ -1,1154 +1,1161 @@\n ---\n topic: vre-initial-individual-evaluation-prep\n created: 2026-09-13\n@@ 1076 unchanged lines @@\n \n ---\n \n+\n+> [!IMPORTANT]\n+> **DERIVED SECTION — not the source of truth.** Verification verdicts live in\n+> `CHAPTER-31-LEGAL-KB.md` §8 (law) and `VRE-BENEFITS-KB.md`'s sourcing markers (rates, forms,\n+> benefits). **If this table and a KB disagree, the KB wins.** This snapshot was taken\n+> 2026-09-13; it has already drifted once (an \"eCFR was unreachable\" claim that the KB had\n+> already retracted). Do not record a new verification verdict here — record it in the KB.\n ## 10. Citations\n \n **Verification status is per-item.** `VERIFIED` = checked against a primary source.\n@@ 66 unchanged lines @@\n - **Whether electing the P911SA rate consumes Post-9/11 GI Bill months** — unresolved. Ask.\n - **§ 21.98** — **RESOLVED:** removed effective 2019-02-19 (84 FR 138). No longer exists.\n - **Time from evaluation → entitlement decision → signed plan** — no published VA SLA found. Ask."
+  }
+}

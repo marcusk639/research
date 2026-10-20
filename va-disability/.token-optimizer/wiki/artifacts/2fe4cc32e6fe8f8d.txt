@@ -1,0 +1,48 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/VRE-INITIAL-EVALUATION-PREP.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 23,
+    "originalLines": 243,
+    "finalLines": 266,
+    "tokensSaved": 2669,
+    "tokenCount": 689,
+    "originalTokenCount": 3358,
+    "compressionRatio": 0.20518165574746874,
+    "duration": 7,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "",
+      "> [!WARNING]",
+      "> **Archived for provenance. Do not re-run as written.** This prompt produced",
+      "> `vre/VRE-EVALUATION-PREP-2026-09-17.md` on 2026-09-13. Three things in it are now known wrong:",
+      ">",
+      "> 1. **The `<known_risk>` block's Isakson citation is incorrect.** It names \"the Isakson Act",
+      ">    (Pub. L. 115-48)\" as the source of the post-2013 discharge carve-out. Pub. L. 115-48 is the",
+      ">    **Colmery Act / Forever GI Bill**. The carve-out is **Pub. L. 116-315 § 1025(a)(2)**",
+      ">    (Isakson **and Roe** Act, 2021). See `CHAPTER-31-LEGAL-KB.md` §3.1.",
+      "> 2. **The Phase 4 day-of-week labels are wrong.** 2026-09-13 was a **Sunday** and the",
+      ">    appointment fell on a **Thursday**, not Wednesday.",
+      "> 3. **The `<corpus>` reading list is incomplete** and caused three CRITICAL errors. It omits",
+      ">    `planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md`, which is newer than",
+      ">    `MASTER-STRATEGY.md` and reverses its TDIU position and occupational history. See",
+      ">    `CONSISTENCY-AUDIT-2026-09-13.md`.",
+      ">",
+      "> The **output path** in the front matter and in `<output>` is also stale — the deliverable now",
+      "> lives in `vre/`, not `planning-docs/`.",
+      ">",
+      "> What the prompt got *right* and is worth reusing: the Phase 1 human gate, the mandatory",
+      "> `citation-verifier` pass, and the Phase 6 `claim-consistency-checker` pass. The verifier caught",
+      "> the prompt's own bad citation; the consistency checker caught three errors in the draft it",
+      "> produced. Both earned their place."
+    ],
+    "removed": [],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/VRE-INITIAL-EVALUATION-PREP.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/VRE-INITIAL-EVALUATION-PREP.md\n@@ -1,243 +1,266 @@\n ---\n prompt: vre-initial-evaluation-prep\n target_appointment: 2026-09-17 09:30 CDT\n@@ 2 unchanged lines @@\n output: planning-docs/VRE-EVALUATION-PREP-2026-09-17.md\n ---\n \n+\n+> [!WARNING]\n+> **Archived for provenance. Do not re-run as written.** This prompt produced\n+> `vre/VRE-EVALUATION-PREP-2026-09-17.md` on 2026-09-13. Three things in it are now known wrong:\n+>\n+> 1. **The `<known_risk>` block's Isakson citation is incorrect.** It names \"the Isakson Act\n+>    (Pub. L. 115-48)\" as the source of the post-2013 discharge carve-out. Pub. L. 115-48 is the\n+>    **Colmery Act / Forever GI Bill**. The carve-out is **Pub. L. 116-315 § 1025(a)(2)**\n+>    (Isakson **and Roe** Act, 2021). See `CHAPTER-31-LEGAL-KB.md` §3.1.\n+> 2. **The Phase 4 day-of-week labels are wrong.** 2026-09-13 was a **Sunday** and the\n+>    appointment fell on a **Thursday**, not Wednesday.\n+> 3. **The `<corpus>` reading list is incomplete** and caused three CRITICAL errors. It omits\n+>    `planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md`, which is newer than\n+>    `MASTER-STRATEGY.md` and reverses its TDIU position and occupational history. See\n+>    `CONSISTENCY-AUDIT-2026-09-13.md`.\n+>\n+> The **output path** in the front matter and in `<output>` is also stale — the deliverable now\n+> lives in `vre/`, not `planning-docs/`.\n+>\n+> What the prompt got *right* and is worth reusing: the Phase 1 human gate, the mandatory\n+> `citation-verifier` pass, and the Phase 6 `claim-consistency-checker` pass. The verifier caught\n+> the prompt's own bad citation; the consistency checker caught three errors in the draft it\n+> produced. Both earned their place.\n # Prompt — VR&E Initial Individual Evaluation Prep (2026-09-17)\n \n > Paste everything below the line into a fresh Claude Code session opened in\n@@ 229 unchanged lines @@\n In the session, print only: the path written, the BOTTOM LINE section, and the ASK THE\n VETERAN list. Do not paste the full document into the transcript.\n </report_back>"
+  }
+}

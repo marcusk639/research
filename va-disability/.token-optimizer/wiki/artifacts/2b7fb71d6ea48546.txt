@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 37,
+    "originalLines": 851,
+    "finalLines": 866,
+    "tokensSaved": 14010,
+    "tokenCount": 1042,
+    "originalTokenCount": 15052,
+    "compressionRatio": 0.06922668083975551,
+    "duration": 17,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "5. **The best-value Chapter 31 benefit is not money — but it is smaller than it first appears.**",
+      "   **38 C.F.R. § 17.37(e)** gives a VR&E participant the full § 17.38 medical benefits package",
+      "   **without enrollment**, bypassing the priority-group system, from the initial evaluation onward.",
+      "   ⚠️ **Corrected:** at 10% SC you are **Priority Group 3 with $0 outpatient and inpatient copays",
+      "   anyway**, so this is a **redundant second door, not a unique one** — file VA Form 10-10EZ and get",
+      "   care on the merits. What Chapter 31 *does* add uniquely is § 21.240 coverage beyond part 17 and",
+      "   **brief mental-health services to immediate family** (§ 21.155). 🟢",
+      "**File VA Form 10-10EZ and get care on the merits.** At 10% SC you land in **Priority Group 3**, which",
+      "carries **$0 copay for outpatient and inpatient care** (2026 rates) — so enrollment alone delivers",
+      "nearly the whole benefit. Non-SC medications still carry Tier 1/2/3 copays of $5/$8/$11 per 30-day",
+      "supply against a **$700 calendar-year cap**.",
+      "**38 C.F.R. § 17.37(e)** — VR&E participation delivering the § 17.38 package **without enrollment** —",
+      "is a genuine but **redundant second door** here, not a unique one, precisely because PG3 already gets",
+      "you $0 copays. ⚠️ An earlier draft of this report called it \"the single highest-value item in the",
+      "program\"; that was overstated. See `FINANCIAL-BRIDGE-2026-09.md` §4.2 for the correction.",
+      "**What Chapter 31 medical care *does* add beyond PG3** (§ 21.240): items outside part 17 —",
+      "prosthetics, eyeglasses, corrective and assistive devices — and **brief mental-health services to",
+      "immediate family** (§ 21.155), which has **no PG3 equivalent** and is worth asking about given your",
+      "wife's caretaking role. Care can also begin during the **evaluation phase** (§ 21.240(c)(1)).",
+      "",
+      "✅ **Ask about both on 09/17.** But file the 10-10EZ regardless of the VR&E outcome.",
+      "",
+      "**Also free, and needing no enrollment at all:** **Vet Centers** (readjustment counseling) and the",
+      "**COMPACT Act** — free emergent suicide-crisis care at any VA or non-VA facility, up to 30 days",
+      "inpatient / 90 days outpatient, **988 → press 1**.",
+      ""
+    ],
+    "removed": [
+      "5. **The most valuable Chapter 31 benefit is not money — it is 38 C.F.R. § 17.37(e).** VR&E",
+      "   participation delivers the full § 17.38 medical benefits package **without enrollment**, bypassing",
+      "   the priority-group system. For someone whose disabling conditions are not yet service-connected,",
+      "   this is the single highest-value item in the program, it is track-independent, and it is available",
+      "   from the initial evaluation onward. 🟢",
+      "**38 C.F.R. § 17.37(e)** delivers the full § 17.38 medical benefits package **without enrollment**,",
+      "bypassing the priority-group system, to a VR&E participant — including during the **initial",
+      "evaluation** (§ 21.240(c)(1)). With MH and SUD conditions not yet service-connected, this is the",
+      "highest-value, lowest-risk thing on the table. It requires no track decision and no entitlement",
+      "finding beyond participation. ✅ **Ask about it on 09/17.** Also: separately file **VA Form 10-10EZ**",
+      "to enroll on the merits."
+    ],
+    "unchanged": 8,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n@@ -1,851 +1,866 @@\n ---\n@@ 64 unchanged lines @@\n    owners, which Chapter 31's startup-only rule does not. 🟢\n-5. **The most valuable Chapter 31 benefit is not money — it is 38 C.F.R. § 17.37(e).** VR&E\n-   participation delivers the full § 17.38 medical benefits package **without enrollment**, bypassing\n-   the priority-group system. For someone whose disabling conditions are not yet service-connected,\n-   this is the single highest-value item in the program, it is track-independent, and it is available\n-   from the initial evaluation onward. 🟢\n+5. **The best-value Chapter 31 benefit is not money — but it is smaller than it first appears.**\n+   **38 C.F.R. § 17.37(e)** gives a VR&E participant the full § 17.38 medical benefits package\n+   **without enrollment**, bypassing the priority-group system, from the initial evaluation onward.\n+   ⚠️ **Corrected:** at 10% SC you are **Priority Group 3 with $0 outpatient and inpatient copays\n+   anyway**, so this is a **redundant second door, not a unique one** — file VA Form 10-10EZ and get\n+   care on the merits. What Chapter 31 *does* add uniquely is § 21.240 coverage beyond part 17 and\n+   **brief mental-health services to immediate family** (§ 21.155). 🟢\n 6. **Retraining fails on its own premise.** The growing sub-2-year-credential careers that pay\n@@ 504 unchanged lines @@\n ### Move 1 — Take the health-care benefit, whatever else happens\n+**File VA Form 10-10EZ and get care on the merits.** At 10% SC you land in **Priority Group 3**, which\n+carries **$0 copay for outpatient and inpatient care** (2026 rates) — so enrollment alone delivers\n+nearly the whole benefit. Non-SC medications still carry Tier 1/2/3 copays of $5/$8/$11 per 30-day\n+supply against a **$700 calendar-year cap**.\n \n-**38 C.F.R. § 17.37(e)** delivers the full § 17.38 medical benefits package **without enrollment**,\n-bypassing the priority-group system, to a VR&E participant — including during the **initial\n-evaluation** (§ 21.240(c)(1)). With MH and SUD conditions not yet service-connected, this is the\n-highest-value, lowest-risk thing on the table. It requires no track decision and no entitlement\n-finding beyond participation. ✅ **Ask about it on 09/17.** Also: separately file **VA Form 10-10EZ**\n-to enroll on the merits.\n+**38 C.F.R. § 17.37(e)** — VR&E participation delivering the § 17.38 package **without enrollment** —\n+is a genuine but **redundant second door** here, not a unique one, precisely because PG3 already gets\n+you $0 copays. ⚠️ An earlier draft of this report called it \"the single highest-value item in the\n+program\"; that was overstated. See `FINANCIAL-BRIDGE-2026-09.md` §4.2 for the correction.\n \n+**What Chapter 31 medical care *does* add beyond PG3** (§ 21.240): items outside part 17 —\n+prosthetics, eyeglasses, corrective and assistive devices — and **brief mental-health services to\n+immediate family** (§ 21.155), which has **no PG3 equivalent** and is worth asking about given your\n+wife's caretaking role. Care can also begin during the **evaluation phase** (§ 21.240(c)(1)).\n+\n+✅ **Ask about both on 09/17.** But file the 10-10EZ regardless of the VR&E outcome.\n+\n+**Also free, and needing no enrollment at all:** **Vet Centers** (readjustment counseling) and the\n+**COMPACT Act** — free emergent suicide-crisis care at any VA or non-VA facility, up to 30 days\n+inpatient / 90 days outpatient, **988 → press 1**.\n+\n ### Move 2 — Do not commit to a track on 09/17\n@@ 264 unchanged lines @@\n disability claim."
+  }
+}

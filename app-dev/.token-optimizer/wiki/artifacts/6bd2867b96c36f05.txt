@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/TOOLING-MATRIX.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 29,
+    "originalLines": 104,
+    "finalLines": 131,
+    "tokensSaved": 2248,
+    "tokenCount": 1457,
+    "originalTokenCount": 3705,
+    "compressionRatio": 0.3932523616734143,
+    "duration": 54,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "## Architecture enforcement",
+      "",
+      "| Tool | What it does | Status | Pricing | Bar A | Bar B | Unattended-safe? | Evidence quality | Verdict | Cites |",
+      "|---|---|---|---|---|---|---|---|---|---|",
+      "| Nx `@nx/enforce-module-boundaries` | tag-based import boundaries, CI-gateable | active | OSS rule free; language-agnostic Conformance path \"Requires Nx Enterprise plan\" | 4 | 4 | yes | vendor-primary | **adopt** the ESLint rule; skip Enterprise Conformance | S103 |",
+      "| Turborepo `boundaries` | tag-based boundaries in `turbo.json` | **experimental** per its own docs | included | 3 | 3 | yes | vendor-primary | **trial** — explicitly experimental, RFC open | S104 |",
+      "| dependency-cruiser | dependency-graph rules in CI | active | free | 3 | 3 | yes | practitioner blog only, not its own docs | **trial** | S112 |",
+      "| LLM ADR-violation checking | agent checks code against written ADRs | research | — | 3 | 3 | yes | primary: >90% accuracy, Fleiss κ=0.724 on **explicit** decisions; falls short on implicit/deployment ones | **trial**, for written rules only | S111 |",
+      "",
+      "## App-factory products",
+      "",
+      "Scored strictly against Bar A and Bar B. The category-level finding is an **absence**: no surveyed product has",
+      "evidence of landing a reviewable PR with tests into an existing three-surface repo at this scale.",
+      "",
+      "| Product | What it is | Owned source? | Existing repo? | Mobile/RN? | Pricing (as published) | Independent evidence | Verdict | Cites |",
+      "|---|---|---|---|---|---|---|---|---|",
+      "| Replit Agent | in-browser agent, effort/checkpoint billed | yes, exports to GitHub | attaches to repos; three-surface parity unverified | web-first, mobile not core | Core $25/mo, Pro $100/mo (2025 vintage, `STALE?`) | **negative** — deleted a production DB during a code freeze and \"hid and lied about it\" | **reject** as an app factory | S116, S129 |",
+      "| Lovable | prompt-to-app builder | GitHub sync exists | **export-oriented, not general import** | no RN pipeline found | not found | **negative** — BOLA exposed source, DB credentials and chat histories across \"thousands of projects\" | **reject** | S117, S122 |",
+      "| Bolt (bolt.new) | WebContainer in-browser builder | not confirmed | not confirmed | **architecturally impossible** — no Xcode/Android Studio/EAS in a browser VM | not found | none found | **reject** | S127 |",
+      "| Emergent | credit-based prompt-to-app | not confirmed | not confirmed | claims \"Build web & mobile apps\" — **vendor-only** | Free $0/10 credits; Standard $20/100; Pro $200/750 | none found | **reject** for this bar | S121 |",
+      "| Blitzy | reverse-engineers legacy code, then generates | n/a (enterprise) | **yes, by design** — the only one | none found | $0.10/line onboarded; $0.20/line generated; Enterprise from $500k/yr | one named enterprise deployment (secondary) | **reject** for a solo operator; closest architectural fit, at enterprise cost | S128, S130 |",
+      "| Cosine (Lumen) | enterprise agent for legacy codebases | not confirmed | positioned for it | none found | no figures found | none found | **gap** — insufficient evidence to score | S120 |",
+      "| Codegen | PR-generating agent against existing repos | via PRs | **yes, by design** | not confirmed | not found | none found | **gap** — closest fit to \"reviewable PR with tests\", unverified | S123 |",
+      "| Factory (Droids) | agentic dev platform | not confirmed | positioned for enterprise repos | not confirmed | $20 / $100 / $200 / $60+$40 per seat | none found | **gap** on mobile and independent evidence | S119 |",
+      "| Devin | autonomous \"AI software engineer\" | via PRs | by design | not found | not found (billing 404) | **negative** — 3/20 tasks; one study reported by three outlets, `STALE?` | **reject** for this workload | S46, S125, S126 |",
+      "",
+      "| Parallel multi-agent code-writing | Anthropic and Cognition independently agree coding is a poor fit; Claude Code itself avoids it for code-writing; ~15× token cost [S101][S102] |",
+      "| LLM-judge-as-final-gate | Position and calibration bias persist in 2026-era judges [S109][S110]; executable tests against a running build must be the last word |"
+    ],
+    "removed": [
+      "| App-factory products (Replit Agent, Lovable, Bolt, Emergent, Blitzy, Cosine, Codegen) | None shown to meet Bar A or Bar B. The dedicated retrieval pass did not return, so this is a **default-reject on absence of evidence**, not a finding of unsuitability — see `GAPS.md`. Emergent's historical SWE-bench entries (46.6–57.2%) are the only hard number found [S2]. |"
+    ],
+    "unchanged": 13,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/TOOLING-MATRIX.md\n+++ /Users/marcusklein/dev/research/app-dev/TOOLING-MATRIX.md\n@@ -1,104 +1,131 @@\n # Tooling Matrix\n \n **Date:** 2026-09-29\n@@ 90 unchanged lines @@\n | v0 / Lovable / Bolt / Figma Make | AI UI/app generators | active | not found | 1 | 1 | mostly no | comparison source 403'd | **reject** for this stack — web-greenfield oriented, no RN path evidenced | S79 |\n | shadcn/ui registries | constrained component vocabulary for agents | active | free | 3 | 3 | via RN Reusables | registry governance claims unverified | **adopt** (web) | — |\n \n+## Architecture enforcement\n+\n+| Tool | What it does | Status | Pricing | Bar A | Bar B | Unattended-safe? | Evidence quality | Verdict | Cites |\n+|---|---|---|---|---|---|---|---|---|---|\n+| Nx `@nx/enforce-module-boundaries` | tag-based import boundaries, CI-gateable | active | OSS rule free; language-agnostic Conformance path \"Requires Nx Enterprise plan\" | 4 | 4 | yes | vendor-primary | **adopt** the ESLint rule; skip Enterprise Conformance | S103 |\n+| Turborepo `boundaries` | tag-based boundaries in `turbo.json` | **experimental** per its own docs | included | 3 | 3 | yes | vendor-primary | **trial** — explicitly experimental, RFC open | S104 |\n+| dependency-cruiser | dependency-graph rules in CI | active | free | 3 | 3 | yes | practitioner blog only, not its own docs | **trial** | S112 |\n+| LLM ADR-violation checking | agent checks code against written ADRs | research | — | 3 | 3 | yes | primary: >90% accuracy, Fleiss κ=0.724 on **explicit** decisions; falls short on implicit/deployment ones | **trial**, for written rules only | S111 |\n+\n+## App-factory products\n+\n+Scored strictly against Bar A and Bar B. The category-level finding is an **absence**: no surveyed product has\n+evidence of landing a reviewable PR with tests into an existing three-surface repo at this scale.\n+\n+| Product | What it is | Owned source? | Existing repo? | Mobile/RN? | Pricing (as published) | Independent evidence | Verdict | Cites |\n+|---|---|---|---|---|---|---|---|---|\n+| Replit Agent | in-browser agent, effort/checkpoint billed | yes, exports to GitHub | attaches to repos; three-surface parity unverified | web-first, mobile not core | Core $25/mo, Pro $100/mo (2025 vintage, `STALE?`) | **negative** — deleted a production DB during a code freeze and \"hid and lied about it\" | **reject** as an app factory | S116, S129 |\n+| Lovable | prompt-to-app builder | GitHub sync exists | **export-oriented, not general import** | no RN pipeline found | not found | **negative** — BOLA exposed source, DB credentials and chat histories across \"thousands of projects\" | **reject** | S117, S122 |\n+| Bolt (bolt.new) | WebContainer in-browser builder | not confirmed | not confirmed | **architecturally impossible** — no Xcode/Android Studio/EAS in a browser VM | not found | none found | **reject** | S127 |\n+| Emergent | credit-based prompt-to-app | not confirmed | not confirmed | claims \"Build web & mobile apps\" — **vendor-only** | Free $0/10 credits; Standard $20/100; Pro $200/750 | none found | **reject** for this bar | S121 |\n+| Blitzy | reverse-engineers legacy code, then generates | n/a (enterprise) | **yes, by design** — the only one | none found | $0.10/line onboarded; $0.20/line generated; Enterprise from $500k/yr | one named enterprise deployment (secondary) | **reject** for a solo operator; closest architectural fit, at enterprise cost | S128, S130 |\n+| Cosine (Lumen) | enterprise agent for legacy codebases | not confirmed | positioned for it | none found | no figures found | none found | **gap** — insufficient evidence to score | S120 |\n+| Codegen | PR-generating agent against existing repos | via PRs | **yes, by design** | not confirmed | not found | none found | **gap** — closest fit to \"reviewable PR with tests\", unverified | S123 |\n+| Factory (Droids) | agentic dev platform | not confirmed | positioned for enterprise repos | not confirmed | $20 / $100 / $200 / $60+$40 per seat | none found | **gap** on mobile and independent evidence | S119 |\n+| Devin | autonomous \"AI software engineer\" | via PRs | by design | not found | not found (billing 404) | **negative** — 3/20 tasks; one study reported by three outlets, `STALE?` | **reject** for this workload | S46, S125, S126 |\n+\n ## Rejected categories, with the reason\n \n | Category | Why rejected |\n |---|---|\n-| App-factory products (Replit Agent, Lovable, Bolt, Emergent, Blitzy, Cosine, Codegen) | None shown to meet Bar A or Bar B. The dedicated retrieval pass did not return, so this is a **default-reject on absence of evidence**, not a finding of unsuitability — see `GAPS.md`. Emergent's historical SWE-bench entries (46.6–57.2%) are the only hard number found [S2]. |\n+| Parallel multi-agent code-writing | Anthropic and Cognition independently agree coding is a poor fit; Claude Code itself avoids it for code-writing; ~15× token cost [S101][S102] |\n+| LLM-judge-as-final-gate | Position and calibration bias persist in 2026-era judges [S109][S110]; executable tests against a running build must be the last word |\n | Coverage-threshold gating | Peer-reviewed as a weak proxy; trivially inflatable by assertion-free tests [S58] |\n | `--bare` for gated runs | Skips hooks, skills, MCP and CLAUDE.md [S7] — it disables the entire gate architecture |\n | Devin for this workload | Independent negative evidence, unpredictable failures [S46] |"
+  }
+}

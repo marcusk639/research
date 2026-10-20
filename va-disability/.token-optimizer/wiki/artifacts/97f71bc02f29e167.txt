@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "pattern": "**/*{1902w,Aptitude,Interest Profiler,VRE Entitlement,Career Check}*",
+  "metadata": {
+    "totalMatches": 0,
+    "returnedCount": 0,
+    "truncated": false,
+    "tokensSaved": 0,
+    "tokenCount": 1,
+    "originalTokenCount": 1,
+    "compressionRatio": 1,
+    "duration": 10001,
+    "cacheHit": false,
+    "savingsClassification": "unmeasured",
+    "savingsReason": "No comparable unoptimized glob response was materialized; caller-requested pagination is not optimizer-created savings.",
+    "ignoreNote": "The search stopped at a bound before it finished, so how many matches the ignore patterns withheld is unknown. It is not being reported as zero."
+  },
+  "files": []
+}

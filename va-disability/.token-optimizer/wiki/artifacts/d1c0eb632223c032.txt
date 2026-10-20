@@ -1,0 +1,59 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/CHAPTER-31-LEGAL-KB.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 33,
+    "originalLines": 320,
+    "finalLines": 337,
+    "tokensSaved": 3959,
+    "tokenCount": 1094,
+    "originalTokenCount": 5053,
+    "compressionRatio": 0.21650504650702554,
+    "duration": 9,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "**The operative distinction — two differences, not one.**",
+      "1. **\"Significant.\"** SEH requires a *significant* impairment where EH requires only an",
+      "   impairment. This is the heightened severity finding.",
+      "2. **A different rating predicate, and SEH's is _broader_.** § 3101(2) ties EH to \"a disability",
+      "   **described in section 3102(1)(A)**\" — the **20%-or-more** clause. § 3101(8) ties SEH to \"a",
+      "   service-connected disability **rated at 10 percent or more**.\" These are different predicates,",
+      "   not the same predicate with an adjective bolted on.",
+      "",
+      "> An earlier draft of this file said EH and SEH \"share an identical underlying test\" and that",
+      "> *significant* is \"one word that does all the work.\" **That understated the second difference and",
+      "> is corrected here.** The shared core is the \"prepare for, obtain, or retain employment",
+      "> consistent with abilities, aptitudes, and interests\" language — not the whole test.",
+      "",
+      "STEP 2 — Basic entitlement  (statute § 3102 / regulation § 21.40 — note they word it",
+      "         differently; see §1's warning)",
+      "  ├─ Rating ≥ 20%  [§ 21.40(a)]        → statutory hook § 3102(a)(1): EMPLOYMENT HANDICAP (§ 21.51)",
+      "  ├─ Rating < 20% BUT COMPENSABLE      → statutory hook § 3102(a)(2): SERIOUS EMPLOYMENT HANDICAP",
+      "  │    [§ 21.40(b)(1) says \"less than 20 percent\"; § 21.42(a) requires a QUALIFYING",
+      "  │     COMPENSABLE SC disability, which is what keeps 0% out]",
+      "  │    (§ 21.52 — § 21.51's elements PLUS \"significant\" PLUS the nine factors at (b)(1)-(9))",
+      "  ├─ Rating 0% / non-compensable       → NOT entitled (no qualifying compensable SC disability)",
+      "  └─ Pre-discharge, in care            → § 3102(a)(1)(A)(ii) / § 21.40(c)",
+      "  ⚠ The statute says \"rated at 10 percent\"; the regulation says \"less than 20 percent.\"",
+      "    Do not attribute either phrase to the other source. Neither says \"combined.\"",
+      ""
+    ],
+    "removed": [
+      "**The operative distinction.** EH and SEH share an identical underlying test. SEH adds **one",
+      "word that does all the work: _significant_** — plus the requirement that a **service-connected**",
+      "disability at 10%+ be a substantial contributor. SEH is a _heightened severity finding_, not",
+      "merely a different rating bracket label.",
+      "STEP 2 — Basic entitlement  (§ 3102 / § 21.40)",
+      "  ├─ Combined SC rating ≥ 20% → § 3102(a)(1): need EMPLOYMENT HANDICAP (§ 21.51)",
+      "  └─ Combined SC rating < 20% → § 3102(a)(2): need SERIOUS EMPLOYMENT HANDICAP",
+      "       (§ 21.52 — same elements PLUS \"significant\" PLUS the nine-factor analysis)"
+    ],
+    "unchanged": 20,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/CHAPTER-31-LEGAL-KB.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/CHAPTER-31-LEGAL-KB.md\n@@ -1,320 +1,337 @@\n ---\n topic: chapter-31-entitlement-law\n created: 2026-09-13\n@@ 73 unchanged lines @@\n > disability rated at 10 percent or more**, of a veteran's ability to prepare for, obtain, or\n > retain employment consistent with such veteran's abilities, aptitudes, and interests.\"\n \n-**The operative distinction.** EH and SEH share an identical underlying test. SEH adds **one\n-word that does all the work: _significant_** — plus the requirement that a **service-connected**\n-disability at 10%+ be a substantial contributor. SEH is a _heightened severity finding_, not\n-merely a different rating bracket label.\n+**The operative distinction — two differences, not one.**\n \n+1. **\"Significant.\"** SEH requires a *significant* impairment where EH requires only an\n+   impairment. This is the heightened severity finding.\n+2. **A different rating predicate, and SEH's is _broader_.** § 3101(2) ties EH to \"a disability\n+   **described in section 3102(1)(A)**\" — the **20%-or-more** clause. § 3101(8) ties SEH to \"a\n+   service-connected disability **rated at 10 percent or more**.\" These are different predicates,\n+   not the same predicate with an adjective bolted on.\n+\n+> An earlier draft of this file said EH and SEH \"share an identical underlying test\" and that\n+> *significant* is \"one word that does all the work.\" **That understated the second difference and\n+> is corrected here.** The shared core is the \"prepare for, obtain, or retain employment\n+> consistent with abilities, aptitudes, and interests\" language — not the whole test.\n+\n **Paragraph numbering note:** Pub. L. 117-333 (Jan. 5, 2023) added an \"emergency situation\"\n definition at (1) and redesignated former (1)–(9) as (2)–(10). Current order: (1) emergency\n situation, (2) employment handicap, (3) independence in daily living, (4) program of education,\n@@ 176 unchanged lines @@\n   └─ Discharged ON/AFTER 1/1/2013 → § 3103(g) ELIMINATES the bar entirely.\n        No time-bar issue regardless of years elapsed.\n \n-STEP 2 — Basic entitlement  (§ 3102 / § 21.40)\n-  ├─ Combined SC rating ≥ 20% → § 3102(a)(1): need EMPLOYMENT HANDICAP (§ 21.51)\n-  └─ Combined SC rating < 20% → § 3102(a)(2): need SERIOUS EMPLOYMENT HANDICAP\n-       (§ 21.52 — same elements PLUS \"significant\" PLUS the nine-factor analysis)\n+STEP 2 — Basic entitlement  (statute § 3102 / regulation § 21.40 — note they word it\n+         differently; see §1's warning)\n+  ├─ Rating ≥ 20%  [§ 21.40(a)]        → statutory hook § 3102(a)(1): EMPLOYMENT HANDICAP (§ 21.51)\n+  ├─ Rating < 20% BUT COMPENSABLE      → statutory hook § 3102(a)(2): SERIOUS EMPLOYMENT HANDICAP\n+  │    [§ 21.40(b)(1) says \"less than 20 percent\"; § 21.42(a) requires a QUALIFYING\n+  │     COMPENSABLE SC disability, which is what keeps 0% out]\n+  │    (§ 21.52 — § 21.51's elements PLUS \"significant\" PLUS the nine factors at (b)(1)-(9))\n+  ├─ Rating 0% / non-compensable       → NOT entitled (no qualifying compensable SC disability)\n+  └─ Pre-discharge, in care            → § 3102(a)(1)(A)(ii) / § 21.40(c)\n \n+  ⚠ The statute says \"rated at 10 percent\"; the regulation says \"less than 20 percent.\"\n+    Do not attribute either phrase to the other source. Neither says \"combined.\"\n+\n STEP 3 — Feasibility  (§ 21.53)\n   ├─ Reasonable doubt resolved IN FAVOR of feasibility (§ 21.53(c))\n   └─ Infeasible without extended evaluation only on compelling evidence\n@@ 43 unchanged lines @@\n   pass. Verify before relying.\n - How a **pending** claim is weighed under § 21.52 (§5 above).\n - Which remedy VA treats as authoritative after a denial followed by a rating increase."
+  }
+}

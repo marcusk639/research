@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json",
+  "operation": "created",
+  "metadata": {
+    "bytesWritten": 938,
+    "originalSize": 0,
+    "wasFormatted": true,
+    "linesChanged": 0,
+    "tokensSaved": 0,
+    "tokenCount": 290,
+    "originalTokenCount": 290,
+    "compressionRatio": 1,
+    "atomic": true,
+    "verified": true,
+    "duration": 98
+  }
+}

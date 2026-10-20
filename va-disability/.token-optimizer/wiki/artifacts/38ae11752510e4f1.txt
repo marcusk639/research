@@ -1,0 +1,51 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/CH31-RESOURCE-INVENTORY.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 3,
+    "linesChanged": 25,
+    "originalLines": 591,
+    "finalLines": 600,
+    "tokensSaved": 13476,
+    "tokenCount": 737,
+    "originalTokenCount": 14213,
+    "compressionRatio": 0.05185393653697319,
+    "duration": 19,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "## 1. Health care without enrollment — real, but smaller than it looks at 10%",
+      "> ⚠️ **Do not overrate this — correction, 2026-09-14.** At **10% SC you are Priority Group 3**, which",
+      "> already carries **$0 copay for outpatient and inpatient care** (2026 rates). So § 17.37(e) is a",
+      "> **redundant second door, not a unique one** — **file VA Form 10-10EZ and get care on the merits.**",
+      "> An earlier draft of the companion options report called this \"the single highest-value item in the",
+      "> program\"; that was overstated and has been corrected.",
+      "> **What Chapter 31 medical care genuinely adds beyond PG3:** § 21.240 reaches items outside part 17",
+      "> (prosthetics, eyeglasses, corrective and assistive devices), and **§ 21.155 brief mental-health",
+      "> services to immediate family** — which has **no PG3 equivalent** and matters where a spouse is",
+      "> performing caretaking. Care can also begin during the **evaluation phase** (§ 21.240(c)(1)), before",
+      "> any entitlement finding. **Those are the reasons to ask about it — not the copays.**",
+      ">",
+      "> **Also needing no enrollment at all:** **Vet Centers** (readjustment counseling) and the **COMPACT",
+      "> Act** — free emergent suicide-crisis care at any VA or non-VA facility, 30 days inpatient / 90 days",
+      "> outpatient, **988 → press 1**.",
+      ">",
+      "| 1   | **§ 21.240 / § 21.155 medical care** | Adds what Priority Group 3 does **not** cover: items outside part 17, and **brief mental-health services to immediate family** — relevant given a spouse in a caretaking role. ⚠️ § 17.37(e)'s no-enrollment route is a **redundant** door at 10% (PG3 = $0 copays) | Participation only |"
+    ],
+    "removed": [
+      "## 1. Health care without enrollment — the most valuable and least-known item here",
+      "> **Why this matters specifically here.** The conditions driving the impairment — PTSD/MST,",
+      "> depression, substance use — are **not yet service-connected**, which is exactly the situation in",
+      "> which access and copay questions bite. Chapter 31 participation sidesteps the priority-group",
+      "> analysis while the claim is pending. **This benefit accrues from the moment of participation and",
+      "> is independent of which track is chosen — and it is available during the initial evaluation",
+      "> itself** (§ 21.240(c)(1)).",
+      "| 1   | **VA health care via § 17.37(e)**           | Full § 17.38 benefits package **without enrollment**, bypassing priority groups; available from the initial evaluation onward; covers the MH/SUD care actually needed | Participation only  |"
+    ],
+    "unchanged": 1,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/CH31-RESOURCE-INVENTORY.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/CH31-RESOURCE-INVENTORY.md\n@@ -1,591 +1,600 @@\n@@ 37 unchanged lines @@\n-## 1. Health care without enrollment — the most valuable and least-known item here\n+## 1. Health care without enrollment — real, but smaller than it looks at 10%\n@@ 28 unchanged lines @@\n-> **Why this matters specifically here.** The conditions driving the impairment — PTSD/MST,\n-> depression, substance use — are **not yet service-connected**, which is exactly the situation in\n-> which access and copay questions bite. Chapter 31 participation sidesteps the priority-group\n-> analysis while the claim is pending. **This benefit accrues from the moment of participation and\n-> is independent of which track is chosen — and it is available during the initial evaluation\n-> itself** (§ 21.240(c)(1)).\n+> ⚠️ **Do not overrate this — correction, 2026-09-14.** At **10% SC you are Priority Group 3**, which\n+> already carries **$0 copay for outpatient and inpatient care** (2026 rates). So § 17.37(e) is a\n+> **redundant second door, not a unique one** — **file VA Form 10-10EZ and get care on the merits.**\n+> An earlier draft of the companion options report called this \"the single highest-value item in the\n+> program\"; that was overstated and has been corrected.\n >\n+> **What Chapter 31 medical care genuinely adds beyond PG3:** § 21.240 reaches items outside part 17\n+> (prosthetics, eyeglasses, corrective and assistive devices), and **§ 21.155 brief mental-health\n+> services to immediate family** — which has **no PG3 equivalent** and matters where a spouse is\n+> performing caretaking. Care can also begin during the **evaluation phase** (§ 21.240(c)(1)), before\n+> any entitlement finding. **Those are the reasons to ask about it — not the copays.**\n+>\n+> **Also needing no enrollment at all:** **Vet Centers** (readjustment counseling) and the **COMPACT\n+> Act** — free emergent suicide-crisis care at any VA or non-VA facility, 30 days inpatient / 90 days\n+> outpatient, **988 → press 1**.\n+>\n@@ 427 unchanged lines @@\n-| 1   | **VA health care via § 17.37(e)**           | Full § 17.38 benefits package **without enrollment**, bypassing priority groups; available from the initial evaluation onward; covers the MH/SUD care actually needed | Participation only  |\n+| 1   | **§ 21.240 / § 21.155 medical care** | Adds what Priority Group 3 does **not** cover: items outside part 17, and **brief mental-health services to immediate family** — relevant given a spouse in a caretaking role. ⚠️ § 17.37(e)'s no-enrollment route is a **redundant** door at 10% (PG3 = $0 copays) | Participation only |\n@@ 90 unchanged lines @@"
+  }
+}

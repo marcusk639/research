@@ -25,7 +25,7 @@ This is meaningfully different from the ordinary risk your own earlier research 
 | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Personal statement version                                  | The "Revised" draft contradicts itself on unit name (header says "4th Aircraft Maintenance Unit," §5.1 says "4th EMS")                                                                                                                                                               | Submit the **Signed-Finalized** version only — it's internally consistent                                                                                                                                                |
 | Reyes buddy statement (signed)                              | Says "4th Maintenance Squadron" — DD-214 proves the correct unit is **4th Equipment Maintenance Squadron**                                                                                                                                                                           | Have Reyes sign a corrected version before submission                                                                                                                                                                    |
-| Suicidal ideation                                           | Three data points don't line up: the FMLA psych eval (5/14/26) says "denies current SI... reports history of passive SI in the past"; the personal statement (6/17/26) says SI "hits every day"; a chart note (6/25/26, ~8 days later, not three weeks) says "denies SI"             | Reconcile honestly as a real fluctuation pattern (documented history → a daily-SI period → a quieter stretch), not a contradiction — but explain the pattern rather than leaving it for an examiner to notice unprepared |
+| Suicidal ideation                                           | Three data points don't line up: the FMLA psych eval (5/14/26) says "denies current SI... reports history of passive SI in the past"; the personal statement (6/17/26) says SI "hits every day"; a chart note (6/25/26) says "denies SI" **[RETRACTED 2026-10-08: no such note exists. This entry never cited a source; the veteran checked his records — his only 6/25/26 appointment was with his therapist, and that record shows no SI denial. Only the 5/14/26 denial is real (no SI at that time, per the veteran).]**             | Reconcile honestly as a real fluctuation pattern (documented history → a daily-SI period → a quieter stretch), not a contradiction — but explain the pattern rather than leaving it for an examiner to notice unprepared |
 | Job-loss date                                               | Erica's near-final draft has an impossible year, **"2034"** — a plain typo, not "2023." The Spouse Statement Guide itself flags this and says the correct year should be **2024 or 2025**, not 2025–2026                                                                             | Confirm the actual year with Erica directly and fix before she finalizes her statement                                                                                                                                   |
 | WHODAS 2.0                                                  | **CORRECTED (2026-07-07):** not broken. The file is **in hand** (`Marcus-WHODAS_2_0-11Jun2026.pdf`, 11 Jun 2026) — a self-administered, vendor-auto-scored functional instrument (~69.72% overall; self-care 62.5%), **not** psychologist-signed and **not** a broken/expired export | Submit with honest self-report framing; no re-export needed                                                                                                                                                              |
 | Starlite Reason-for-Discharge (Dec 2024–Jan 2025 admission) | AMA'd 1/3/25 but the formal discharge-reason checkbox was left blank and the form was signed retroactively 1/24–1/27/25                                                                                                                                                              | Not something you can fix in the record, but be prepared to explain it if asked — don't let it be a surprise                                                                                                             |
@@ -146,7 +146,7 @@ Given everything above, here's the honest range, not the hoped-for one:
 3. Get Goff's buddy statement — a third in-service witness who is referenced in the claim materials but was never actually obtained.
 4. Fix Reyes's unit name; confirm his service dates overlap with the late-2013 disclosure window.
 5. Submit the Signed-Finalized personal statement, not the Revised draft.
-6. Reconcile the SI discrepancy (a documented history of passive SI, then daily SI, then a "denies SI" note ~8 days later) before it reaches a C&P examiner cold.
+6. Reconcile the SI discrepancy (a documented history of passive SI, then daily SI, then a "denies SI" note ~8 days later — **[RETRACTED 2026-10-08: the 6/25/26 note does not exist; see the §0.2 table]**) before it reaches a C&P examiner cold.
 7. Confirm the actual job-loss year with Erica directly (the draft has a "2034" typo; the real year is 2024 or 2025) before she finalizes her statement.
 8. Update the C&P exam prep sheet and Cherie's letter checklist to explicitly cover OCD symptoms (obsessions, compulsions, rituals, impaired impulse control).
 9. Re-derive the SUD nexus theory around self-medication for psychiatric conditions rather than the iatrogenic in-service-opioid theory — and flag the same pre-service-onset issue to Cherie for the GAD/MDD theory (aggravation/secondary, not pure direct connection).
@@ -155,3 +155,33 @@ Given everything above, here's the honest range, not the hoped-for one:
 12. Resolve the unexplained Amphetamine-type SUD diagnosis (F15.20) directly with Harmony Junction Recovery before that record is relied on.
 13. Talk to your VSO about scheduling a sleep study now — obstructive sleep apnea, secondary to PTSD, is the single highest-leverage secondary condition if the MH rating lands at 90%.
 14. Prepare — in writing, before the exam — a calm, factual explanation for the trauma-disclosure pattern (2015/2018/2023–25 denials vs. the 2022 partial disclosure and the in-service disclosures to Reyes/Poquette), grounded in the clinical literature on delayed/non-linear MST disclosure, so it isn't something you're explaining for the first time under pressure.
+
+
+ This statement clarifies my VA Form 21-4138 dated October 7, 2026, and my personal statement
+  dated June 17, 2026, about substance use before I entered military service.
+ 
+  In those statements I said that, to the best of my recollection, I did not use opioids or
+  illicit drugs before service other than marijuana. That was incomplete. Beginning at
+  approximately age 18, I used kratom. At the time, kratom was legal and sold in stores, and I did
+  not know it was an opioid or anything besides a wellness supplement as it was advertised at the time. Because of that, I did not think of it as opioid or drug use when I
+  wrote my earlier statements.
+ 
+  [How often and how much, approximately, and in what form, e.g. "I used it approximately ___
+  times a week, in ___ form."]
+ 
+  [Whether it caused problems before service (school, work, health, legal) and whether you were
+  treated for it. If none, say so.]
+ 
+  [During service: "I did not use kratom during my military service." OR "During service I used
+  kratom approximately ___." Use whichever is true.]
+ 
+  This is the use reflected in my January 2023 Starlite intake record.
+ 
+  My 2018 Victory Addiction Recovery Center records list opioid pill use at age 18 and cocaine use
+  at age 19. I do not recall using cocaine before service. [Pick one: "I believe the opioid entry
+  reflects my kratom use." OR "I do not know why the opioid entry was recorded that way."] As I
+  explained in my October 7 statement, that history was taken on the day of a detox admission
+  while I was actively using.
+ 
+  My substance use increased significantly after 2012, as described in my personal statement and
+  my statement about the August 2026 overdoses.

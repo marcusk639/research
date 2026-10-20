@@ -1,0 +1,19 @@
+{
+  "success": false,
+  "path": "/Users/marcusklein/dev/recovery-platform/.github/workflows/ci.yml",
+  "operation": "failed",
+  "metadata": {
+    "editsApplied": 0,
+    "linesChanged": 0,
+    "originalLines": 0,
+    "finalLines": 0,
+    "tokensSaved": 0,
+    "tokenCount": 0,
+    "originalTokenCount": 0,
+    "compressionRatio": 0,
+    "duration": 51,
+    "verified": true,
+    "wasBackedUp": false
+  },
+  "error": "replace operation requires content or pattern"
+}

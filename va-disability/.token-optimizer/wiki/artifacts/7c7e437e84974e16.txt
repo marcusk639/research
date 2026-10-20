@@ -1,0 +1,39 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/ACTION-CARD.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 13,
+    "originalLines": 136,
+    "finalLines": 137,
+    "tokensSaved": 1195,
+    "tokenCount": 500,
+    "originalTokenCount": 1695,
+    "compressionRatio": 0.2949852507374631,
+    "duration": 4,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "## ⛔ ONE THING BLOCKS EVERYTHING ELSE",
+      "**✅ TDIU — RESOLVED 2026-09-14. Nothing has been filed.**",
+      "Form 28-1902w Item 20 asks: _have you filed for or are you receiving IU/TDIU?_ → **Answer \"No.\"**",
+      "That is true today and is a complete, accurate answer. Two cautions: **date the form**, so it is",
+      "anchored to the day it was true; and if a 21-8940 is filed later, that is a change of",
+      "circumstances, not a contradiction. Do **not** volunteer that TDIU is contemplated — the question",
+      "asks what you have filed, not what your rep may file."
+    ],
+    "removed": [
+      "## ⛔ TWO THINGS BLOCK EVERYTHING ELSE",
+      "**1. TDIU — ask your rep TODAY.**",
+      "Form 28-1902w Item 20 asks: _have you filed for or are you receiving IU/TDIU?_",
+      "`RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` lists **VA Form 21-8940 as a filing action**.",
+      "The older \"not pursuing TDIU\" position is **superseded**. Find out what was actually filed and",
+      "answer what is true. **A wrong \"no\" is a signed misstatement to a federal official.**"
+    ],
+    "unchanged": 13,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/ACTION-CARD.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/ACTION-CARD.md\n@@ -1,136 +1,137 @@\n ---\n topic: vre-action-card\n created: 2026-09-13\n@@ 11 unchanged lines @@\n \n ---\n \n-## ⛔ TWO THINGS BLOCK EVERYTHING ELSE\n+## ⛔ ONE THING BLOCKS EVERYTHING ELSE\n \n-**1. TDIU — ask your rep TODAY.**\n-Form 28-1902w Item 20 asks: _have you filed for or are you receiving IU/TDIU?_\n-`RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` lists **VA Form 21-8940 as a filing action**.\n-The older \"not pursuing TDIU\" position is **superseded**. Find out what was actually filed and\n-answer what is true. **A wrong \"no\" is a signed misstatement to a federal official.**\n+**✅ TDIU — RESOLVED 2026-09-14. Nothing has been filed.**\n+Form 28-1902w Item 20 asks: _have you filed for or are you receiving IU/TDIU?_ → **Answer \"No.\"**\n+That is true today and is a complete, accurate answer. Two cautions: **date the form**, so it is\n+anchored to the day it was true; and if a 21-8940 is filed later, that is a change of\n+circumstances, not a contradiction. Do **not** volunteer that TDIU is contemplated — the question\n+asks what you have filed, not what your rep may file.\n \n **2. \"Can you work?\" — decide what is actually true, and use one answer everywhere.**\n Your signed nexus letter (Cherie, 07/02/2026) says **\"total impairment in occupational and\n@@ 106 unchanged lines @@\n Completed 28-1902w · both assessment results · job-by-job list with dates and salaries ·\n DD-214 · Metal employment statement · FMLA/PIP/severance paperwork · treatment facility list\n with dates · GI Bill months screenshot · MH claim status · **this card**"
+  }
+}

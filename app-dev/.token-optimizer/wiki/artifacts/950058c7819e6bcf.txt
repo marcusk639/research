@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/REPORT.md",
+  "operation": "created",
+  "metadata": {
+    "bytesWritten": 28607,
+    "originalSize": 0,
+    "wasFormatted": false,
+    "linesChanged": 0,
+    "tokensSaved": 0,
+    "tokenCount": 7150,
+    "originalTokenCount": 7150,
+    "compressionRatio": 1,
+    "atomic": true,
+    "verified": true,
+    "duration": 37
+  }
+}

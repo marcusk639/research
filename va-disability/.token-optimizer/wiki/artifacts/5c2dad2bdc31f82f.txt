@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 3,
+    "originalLines": 1031,
+    "finalLines": 1032,
+    "tokensSaved": 18835,
+    "tokenCount": 403,
+    "originalTokenCount": 19238,
+    "compressionRatio": 0.020948123505561907,
+    "duration": 16,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "| ~~**Contact Texas TWC-VRS**~~ → ⚠️ **Louisiana Rehabilitation Services (LRS)** | ⛔ **TWC-VRS is void — Texas residents only.** The Louisiana state VR agency is **LRS**, under the Louisiana Workforce Commission. State VR eligibility turns on a disability that is a barrier to employment, **not** on service connection — so the logic that made this attractive should carry over. ⚠️ **Whether LRS runs a dedicated self-employment program comparable to TWC-VRS's — with business-plan consultants and support for existing owners — is PENDING RESEARCH. Do not assume parity.** | **No** |",
+      "| ✅ **Ask LED about the Digital Interactive Media and Software credit** | **25% effective, refundable, no cap** on Louisiana-resident payroll (§5.7). ⛔ **Two gating questions must be answered in writing first:** does a single-member LLC owner's own W-2 compensation qualify as resident payroll, and does client-commissioned software trip the \"primarily designed for internal use\" exclusion. **Favorable answers make Louisiana better than Texas for self-employment; an unfavorable answer on either makes the credit worth zero.** Highest-value call on the consulting path | **No** |"
+    ],
+    "removed": [
+      "| **Contact Texas TWC-VRS**                               | **Funds self-employment plans, no service connection required, and serves existing business owners** — defeating Chapter 31's startup-only bar                    | **No**           |"
+    ],
+    "unchanged": 0,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n@@ -1,1031 +1,1032 @@\n@@ 784 unchanged lines @@\n-| **Contact Texas TWC-VRS**                               | **Funds self-employment plans, no service connection required, and serves existing business owners** — defeating Chapter 31's startup-only bar                    | **No**           |\n+| ~~**Contact Texas TWC-VRS**~~ → ⚠️ **Louisiana Rehabilitation Services (LRS)** | ⛔ **TWC-VRS is void — Texas residents only.** The Louisiana state VR agency is **LRS**, under the Louisiana Workforce Commission. State VR eligibility turns on a disability that is a barrier to employment, **not** on service connection — so the logic that made this attractive should carry over. ⚠️ **Whether LRS runs a dedicated self-employment program comparable to TWC-VRS's — with business-plan consultants and support for existing owners — is PENDING RESEARCH. Do not assume parity.** | **No** |\n+| ✅ **Ask LED about the Digital Interactive Media and Software credit** | **25% effective, refundable, no cap** on Louisiana-resident payroll (§5.7). ⛔ **Two gating questions must be answered in writing first:** does a single-member LLC owner's own W-2 compensation qualify as resident payroll, and does client-commissioned software trip the \"primarily designed for internal use\" exclusion. **Favorable answers make Louisiana better than Texas for self-employment; an unfavorable answer on either makes the credit worth zero.** Highest-value call on the consulting path | **No** |\n@@ 246 unchanged lines @@"
+  }
+}

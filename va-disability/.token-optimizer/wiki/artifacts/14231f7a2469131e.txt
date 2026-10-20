@@ -1,0 +1,49 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 24,
+    "originalLines": 728,
+    "finalLines": 752,
+    "tokensSaved": 13578,
+    "tokenCount": 691,
+    "originalTokenCount": 14269,
+    "compressionRatio": 0.04842665919125377,
+    "duration": 11,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "",
+      "### 4.4 ✅ Your new VA facilities — Lake Charles is in the Alexandria system (VISN 16)",
+      "",
+      "Not New Orleans, and not Houston/DeBakey. 🟢",
+      "",
+      "| Facility | Details | Distance |",
+      "| --- | --- | --- |",
+      "| **Douglas Fournet VA Clinic** (Lake Charles CBOC) | 3601 Gerstner Memorial Drive (Hwy 14), Lake Charles, LA 70607 — **337-475-9500**. Mon–Thu 8:00–4:30. Primary care, **mental health**, dental, audiology, radiology (x-ray only), optometry, PM&R, prosthetics, lab | **In town** |",
+      "| **Alexandria VA Medical Center** (parent facility) | 2495 Shreveport Highway, Pineville, LA 71360 — **318-473-0010** | ≈ 110 mi |",
+      "| **Nearest residential / inpatient SUD** | Alexandria VA — its residential facility \"*helps Veterans deal with **substance abuse**, homelessness, mental health, and unemployment through its 24-hour therapeutic and educational programs*\" 🟢. Southeast Louisiana VA (New Orleans) also lists RRTPs 🟢. ⚠️ Bed counts, program names, and admission criteria **NOT FOUND** — call | ≈ 110 mi / ≈ 230 mi |",
+      "",
+      "> ⚠️ **This matters for the claim, not just for care.** Your treatment history (eleven episodes,",
+      "> 2016–2026) is the evidentiary spine of the pending MH claim. **Establishing care at the Lake Charles",
+      "> clinic promptly keeps that record continuous** across the move — a gap in treatment during a pending",
+      "> claim is the kind of thing a rating adjudicator notices.",
+      "",
+      "**Vet Center access — there is no Vet Center in Lake Charles**, but there is a community access point:",
+      "",
+      "- ✅ **Alexandria Vet Center access point at American Legion Post 1**, 1530 9th Street, Lake Charles —",
+      "  group meets **1st & 3rd Wednesday, 10:00–12:00**. 🟢",
+      "- **Alexandria, LA Vet Center** — 5803 Coliseum Blvd., Suite D, Alexandria, LA 71303 — **318-466-4327**. 🟢",
+      "- **Beaumont, TX Vet Center** — 1390 West Cardinal Drive, Beaumont, TX 77705 — **409-347-0124**;",
+      "  ≈ 70 mi, the **nearest full Vet Center**. 🟢",
+      "- 24/7 Vet Center call center: **877-927-8387**. No enrollment or service connection required. 🟢"
+    ],
+    "removed": [],
+    "unchanged": 0,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n@@ -1,728 +1,752 @@\n@@ 445 unchanged lines @@\n+\n+### 4.4 ✅ Your new VA facilities — Lake Charles is in the Alexandria system (VISN 16)\n+\n+Not New Orleans, and not Houston/DeBakey. 🟢\n+\n+| Facility | Details | Distance |\n+| --- | --- | --- |\n+| **Douglas Fournet VA Clinic** (Lake Charles CBOC) | 3601 Gerstner Memorial Drive (Hwy 14), Lake Charles, LA 70607 — **337-475-9500**. Mon–Thu 8:00–4:30. Primary care, **mental health**, dental, audiology, radiology (x-ray only), optometry, PM&R, prosthetics, lab | **In town** |\n+| **Alexandria VA Medical Center** (parent facility) | 2495 Shreveport Highway, Pineville, LA 71360 — **318-473-0010** | ≈ 110 mi |\n+| **Nearest residential / inpatient SUD** | Alexandria VA — its residential facility \"*helps Veterans deal with **substance abuse**, homelessness, mental health, and unemployment through its 24-hour therapeutic and educational programs*\" 🟢. Southeast Louisiana VA (New Orleans) also lists RRTPs 🟢. ⚠️ Bed counts, program names, and admission criteria **NOT FOUND** — call | ≈ 110 mi / ≈ 230 mi |\n+\n+> ⚠️ **This matters for the claim, not just for care.** Your treatment history (eleven episodes,\n+> 2016–2026) is the evidentiary spine of the pending MH claim. **Establishing care at the Lake Charles\n+> clinic promptly keeps that record continuous** across the move — a gap in treatment during a pending\n+> claim is the kind of thing a rating adjudicator notices.\n+\n+**Vet Center access — there is no Vet Center in Lake Charles**, but there is a community access point:\n+\n+- ✅ **Alexandria Vet Center access point at American Legion Post 1**, 1530 9th Street, Lake Charles —\n+  group meets **1st & 3rd Wednesday, 10:00–12:00**. 🟢\n+- **Alexandria, LA Vet Center** — 5803 Coliseum Blvd., Suite D, Alexandria, LA 71303 — **318-466-4327**. 🟢\n+- **Beaumont, TX Vet Center** — 1390 West Cardinal Drive, Beaumont, TX 77705 — **409-347-0124**;\n+  ≈ 70 mi, the **nearest full Vet Center**. 🟢\n+- 24/7 Vet Center call center: **877-927-8387**. No enrollment or service connection required. 🟢\n@@ 283 unchanged lines @@"
+  }
+}

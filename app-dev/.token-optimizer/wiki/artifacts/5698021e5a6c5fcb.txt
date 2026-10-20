@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "written": 1,
+  "keys": [
+    "agent-muophs4z-0-7de2e5cf"
+  ],
+  "unresolvedAnchors": [],
+  "project": "/Users/marcusklein/dev/recovery-platform"
+}

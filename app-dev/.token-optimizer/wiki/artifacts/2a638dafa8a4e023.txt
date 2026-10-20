@@ -1,0 +1,28 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 2,
+    "originalLines": 45,
+    "finalLines": 45,
+    "tokensSaved": 121,
+    "tokenCount": 178,
+    "originalTokenCount": 299,
+    "compressionRatio": 0.5953177257525084,
+    "duration": 59,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "  \"thresholds\": { \"high\": 80, \"low\": 60, \"break\": 28 },"
+    ],
+    "removed": [
+      "    \"src/**/*.ts\","
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json\n+++ /Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json\n@@ -1,45 +1,45 @@\n {\n   \"$schema\": \"./node_modules/@stryker-mutator/core/schema/stryker-schema.json\",\n   \"packageManager\": \"npm\",\n@@ 17 unchanged lines @@\n     \"fileName\": \"reports/mutation/mutation.json\"\n   },\n   \"mutate\": [\n-    \"src/**/*.ts\",\n+  \"thresholds\": { \"high\": 80, \"low\": 60, \"break\": 28 },\n     \"!src/**/*.test.ts\",\n     \"!src/tests/**\",\n     \"!src/**/__tests__/**\",\n@@ 15 unchanged lines @@\n     \"allowColor\": false\n   }\n }"
+  }
+}

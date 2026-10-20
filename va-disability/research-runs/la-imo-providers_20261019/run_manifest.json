@@ -1,0 +1,27 @@
+{
+  "query": "Louisiana psychologists and psychiatrists likely to write an independent medical opinion (nexus letter) for an MST-based PTSD VA service-connection claim",
+  "mode": "standard",
+  "timestamp": "2026-10-19",
+  "decision_informed": "Which doctoral-level provider to commission for an IMO/nexus letter, and how to verify they are licensed and credible to VA",
+  "assumptions": [
+    "Veteran splits time between Texas and Louisiana (veteran-profile.md:69); scope = providers seen in person in Louisiana or by telehealth while the veteran is physically in Louisiana",
+    "Telehealth licensure follows the patient's physical location; Texas-located sessions need TX licensure or PSYPACT authority",
+    "Doctoral psychologists (PhD/PsyD) and psychiatrists (MD/DO) only; LPC/LCSW/NP excluded as authors because they add weight problems this claim already has",
+    "Case complications the provider must handle: delayed MST disclosure, five prior trauma denials, pre-service history/soundness, substance use (incl. kratom/7-OH) as secondary",
+    "VA-weighting criteria taken from IMO-PROVIDER-RESEARCH-2026-10-12.md section 1 (citations verified 2026-10-19); not re-researched"
+  ],
+  "excluded": [
+    "Treatment providers not offering evaluations",
+    "Records-only opinions with no interview",
+    "Re-deriving VA legal weighting standards"
+  ],
+  "angles": [
+    "A1 Louisiana licensure and telehealth rules (LSBEP, PSYPACT status, LSBME telemedicine) for a TX/LA veteran",
+    "A2 Louisiana doctoral psychologists offering VA PTSD/MST IMOs, nexus letters or DBQs",
+    "A3 Louisiana psychiatrists / forensic psychiatrists offering VA IMOs",
+    "A4 Louisiana free or low-cost routes (law-school veterans clinics, LDVA, nonprofits)",
+    "A5 License-verification paths and disciplinary checks for candidates"
+  ],
+  "tooling": "WebSearch + WebFetch/curl via subagents; Firecrawl unavailable (out of credits)",
+  "output": "va-disability/IMO-PROVIDER-RESEARCH-LOUISIANA-2026-10-19.md"
+}

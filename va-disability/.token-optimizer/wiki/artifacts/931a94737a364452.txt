@@ -1,0 +1,44 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/ACTION-CARD.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 3,
+    "linesChanged": 18,
+    "originalLines": 137,
+    "finalLines": 137,
+    "tokensSaved": 979,
+    "tokenCount": 741,
+    "originalTokenCount": 1720,
+    "compressionRatio": 0.4308139534883721,
+    "duration": 6,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "**⚠️ REMAINING BLOCKER — \"Can you work?\" Decide what is actually true, and use one answer",
+      "everywhere.**",
+      "> **If you cannot reach anyone by Wednesday:** describe your actual day concretely — what you did",
+      "> yesterday, who helped you with what — and let the VRC characterize it. Do not reach for either",
+      "> summary phrase. **A concrete description you can stand behind is safer than a characterization",
+      "> you cannot.**",
+      "**Sunday 9/13 — done**",
+      "- [x] ~~Ask rep re: TDIU filing status~~ → **nothing filed; Item 20 = \"No\"**",
+      "- **Do not say \"I can't work\"** unless it is true — and see the remaining blocker above"
+    ],
+    "removed": [
+      "**2. \"Can you work?\" — decide what is actually true, and use one answer everywhere.**",
+      "> **If you cannot reach a rep by Wednesday:** answer Item 20 only from documents you can see with",
+      "> your own eyes (check VA.gov claim status for a 21-8940), and if you still cannot tell, write",
+      "> _\"unsure — please confirm from my file\"_ rather than guessing. On question 2, describe your",
+      "> actual day honestly and let the VRC characterize it. **Uncertainty stated plainly is safe. A",
+      "> confident wrong answer is not.**",
+      "**Sunday 9/13**",
+      "- [ ] Ask rep re: TDIU filing status",
+      "- **Do not say \"I can't work\"** unless it is true — and see blocker #2 above"
+    ],
+    "unchanged": 29,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/ACTION-CARD.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/ACTION-CARD.md\n@@ -1,137 +1,137 @@\n ---\n topic: vre-action-card\n created: 2026-09-13\n@@ 20 unchanged lines @@\n circumstances, not a contradiction. Do **not** volunteer that TDIU is contemplated — the question\n asks what you have filed, not what your rep may file.\n \n-**2. \"Can you work?\" — decide what is actually true, and use one answer everywhere.**\n+**⚠️ REMAINING BLOCKER — \"Can you work?\" Decide what is actually true, and use one answer\n+everywhere.**\n Your signed nexus letter (Cherie, 07/02/2026) says **\"total impairment in occupational and\n social realms.\"** A signed statement describes your wife performing your hygiene and feeding you.\n The prep doc's suggested framing — _\"I can work full time, I just can't sustain it\"_ — **may be\n wrong for you.** Pick the true one. Talk to your rep and to Cherie. Do not improvise Thursday.\n \n-> **If you cannot reach a rep by Wednesday:** answer Item 20 only from documents you can see with\n-> your own eyes (check VA.gov claim status for a 21-8940), and if you still cannot tell, write\n-> _\"unsure — please confirm from my file\"_ rather than guessing. On question 2, describe your\n-> actual day honestly and let the VRC characterize it. **Uncertainty stated plainly is safe. A\n-> confident wrong answer is not.**\n+> **If you cannot reach anyone by Wednesday:** describe your actual day concretely — what you did\n+> yesterday, who helped you with what — and let the VRC characterize it. Do not reach for either\n+> summary phrase. **A concrete description you can stand behind is safer than a characterization\n+> you cannot.**\n \n ---\n \n ## Checklist\n \n-**Sunday 9/13**\n+**Sunday 9/13 — done**\n \n-- [ ] Ask rep re: TDIU filing status\n+- [x] ~~Ask rep re: TDIU filing status~~ → **nothing filed; Item 20 = \"No\"**\n - [ ] Download the 7 attachments from the 09/09 eVA email; read\n       `Aptitude Interest Assessments instructions (002).pdf` **first** — if it contradicts\n       anything here, it wins\n@@ 55 unchanged lines @@\n \n ## Do not\n \n-- **Do not say \"I can't work\"** unless it is true — and see blocker #2 above\n+- **Do not say \"I can't work\"** unless it is true — and see the remaining blocker above\n - **Do not overstate tinnitus.** It is your only service-connected condition and the honest answer\n   is that your mental health and substance use drive most of the impairment\n - **Do not name accounting / the family CPA firm as your vocational goal.** The corpus flags a\n@@ 24 unchanged lines @@\n Completed 28-1902w · both assessment results · job-by-job list with dates and salaries ·\n DD-214 · Metal employment statement · FMLA/PIP/severance paperwork · treatment facility list\n with dates · GI Bill months screenshot · MH claim status · **this card**"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/SOURCES.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 4,
+    "originalLines": 212,
+    "finalLines": 212,
+    "tokensSaved": 6443,
+    "tokenCount": 1084,
+    "originalTokenCount": 7527,
+    "compressionRatio": 0.1440148797661751,
+    "duration": 78,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "| S66 | From Runnable to Shippable: Multi-Agent Test-Driven Development for Generating Full-Stack Web Applications from Requirements (TDDev) | arXiv / ASE'26 (Wan, Liang, Xu, Xiao, Huo, Lyu; DOI 10.1145/3832783.3834388) | https://arxiv.org/abs/2605.17242 | 2026-05-17, v2 online 2026-09-16 | primary | **FETCHED (abstract) by orchestrator** — the PDF failed for a retrieval agent, which then reported a figure and a quote that are **not in the paper**; see `REPORT.md` Limitations |",
+      "| Whether separate-tester benefits extend to weaker models | previously recorded as a conflict on the strength of a misquotation of S66 | **Resolved, and the conflict was spurious.** S66's abstract states \"replacing unreliable feedback with a stronger tester restores positive gains for a lower-capability backbone\" — i.e. a stronger tester *helps* a weaker backbone. The supposed contradicting quote did not exist. |"
+    ],
+    "removed": [
+      "| S66 | From Runnable to Shippable: Multi-Agent TDD for Full-Stack Web Applications | arXiv | https://arxiv.org/pdf/2605.17242 | 2026-05 | primary | SEARCH-ONLY (PDF undecodable) |",
+      "| Whether separate test-writer agents always help | S63, S66 (gains) vs S66's own caveat (weaker models harmed by whole-project TDD) | Stated as conditional, not general. |"
+    ],
+    "unchanged": 18,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/SOURCES.md\n+++ /Users/marcusklein/dev/research/app-dev/SOURCES.md\n@@ -1,212 +1,212 @@\n # Sources\n \n **Date:** 2026-09-29\n@@ 100 unchanged lines @@\n | S63 | AgentCoder: Multi-Agent-based Code Generation with Iterative Testing and Optimisation | arXiv | https://arxiv.org/abs/2312.13010 | 2023-12 `STALE?` | primary | FETCHED |\n | S64 | Beyond Docker Compose: Deploying Postgres for Testing (branching) | Neon | https://neon.com/blog/docker-compose-neon-branches-testing | 2026 | vendor | FETCHED |\n | S65 | Detox vs. Maestro: Reducing Flakiness in React Native | mobile.dev (Maestro) | https://maestro.dev/insights/detox-vs-maestro-reducing-flakiness-react-native | 2026 | vendor | FETCHED |\n-| S66 | From Runnable to Shippable: Multi-Agent TDD for Full-Stack Web Applications | arXiv | https://arxiv.org/pdf/2605.17242 | 2026-05 | primary | SEARCH-ONLY (PDF undecodable) |\n+| S66 | From Runnable to Shippable: Multi-Agent Test-Driven Development for Generating Full-Stack Web Applications from Requirements (TDDev) | arXiv / ASE'26 (Wan, Liang, Xu, Xiao, Huo, Lyu; DOI 10.1145/3832783.3834388) | https://arxiv.org/abs/2605.17242 | 2026-05-17, v2 online 2026-09-16 | primary | **FETCHED (abstract) by orchestrator** — the PDF failed for a retrieval agent, which then reported a figure and a quote that are **not in the paper**; see `REPORT.md` Limitations |\n | S67 | Playwright MCP server | Microsoft | https://github.com/microsoft/playwright-mcp | 2026, v0.0.78 (Jul 2026) | vendor | SEARCH-ONLY |\n | S68 | fast-check | fast-check | https://fast-check.dev/ | 2026 | vendor | SEARCH-ONLY |\n | S69 | Getting started with Testcontainers for Node.js | Testcontainers | https://testcontainers.com/guides/getting-started-with-testcontainers-for-nodejs/ | 2026 | vendor | SEARCH-ONLY |\n@@ 49 unchanged lines @@\n | Conflict | Sources | Resolution |\n |---|---|---|\n | SWE-bench Verified top score: 76.80% vs 83.5% vs 95–97% | S2 (standardized harness) · S3 (Epoch independent) · S26 and other aggregators (vendor self-reports) | Not resolved in favour of one number. The divergence is itself the finding, mechanism given by S4 and S19 (scaffold dependence). `REPORT.md` cites S2 and S3 only and names the aggregator figures as unverified. See `REPORT.md` Limitations. |\n-| Whether separate test-writer agents always help | S63, S66 (gains) vs S66's own caveat (weaker models harmed by whole-project TDD) | Stated as conditional, not general. |\n+| Whether separate-tester benefits extend to weaker models | previously recorded as a conflict on the strength of a misquotation of S66 | **Resolved, and the conflict was spurious.** S66's abstract states \"replacing unreliable feedback with a stronger tester restores positive gains for a lower-capability backbone\" — i.e. a stronger tester *helps* a weaker backbone. The supposed contradicting quote did not exist. |\n | Coverage-type equivalence for LLM-generated suites | S58 (Inozemtseva, peer-reviewed) vs a 2026 replicability study reported by `r-test` as contradicting it for LLM-generated tests (not fetched) | The 2014 result is cited only for the general claim; the LLM-specific transfer is listed in `GAPS.md`. |\n | Whether multi-agent decomposition helps coding | S101 (+90.2% on a *research* eval) vs S101's own caveat and S102 | Resolved against multi-agent code-writing: both sources agree coding is a poor fit. The 90.2% figure is never applied to coding in this report. |\n | Self-refinement gain magnitude | S113 (~20% absolute, 2023) vs S114 (peak +7.1 pts, 2026) | Reported as shrinking/contested; the older headline is not used. |\n@@ 43 unchanged lines @@\n study (Answer.AI's evaluation by Husain, Flath and Whitaker). That is corroborated reporting of a single\n trial, **not** three independent trials, and all three are pre-2025-09 `STALE?`. The primary study was never\n located at an answer.ai URL. Treated accordingly throughout."
+  }
+}

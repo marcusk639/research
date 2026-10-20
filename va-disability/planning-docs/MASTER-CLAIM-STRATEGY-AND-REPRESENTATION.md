@@ -135,7 +135,7 @@ _Carried from `PATH-TO-100-PERCENT-2026-07-07.md` §7 (I-1…I-15), extended (I-
 
 **I-4 — "Total impairment while sometimes functioning" tension** (reduction-risk; reduction framework is 38 CFR 3.343(a)/3.344/3.105(e), _not_ Faust — a corrected corpus miscite **[pending citation-verifier]**). **Solution:** sequence the timeline (employed through ~2024 → collapse 2025–2026) so 100% is shown as _current_; lean on the social prong; if Erica describes the Dec-2024 job loss, she does so in her own words from her own knowledge.
 
-**I-7 — Three-way SI-frequency conflict** (5/14/26 denies / 6/17/26 "every day" / ~6/25/26 denies). **Solution:** if raised, the Veteran gives an honest fluctuation account in his own words; Cherie/new provider document current SI at a real appointment; Erica corroborates the pattern only from her own observation, her words.
+**I-7 — Three-way SI-frequency conflict** (5/14/26 denies / 6/17/26 "every day" / ~6/25/26 denies) **[RETRACTED 2026-10-08: no 6/25/26 SI denial exists — see CLAIM-ASSESSMENT.md §0.2]**. **Solution:** if raised, the Veteran gives an honest fluctuation account in his own words; Cherie/new provider document current SI at a real appointment; Erica corroborates the pattern only from her own observation, her words.
 
 **I-8 — Signed personal statement's opioid-recollection contradiction** (marked resolved; can resurface). **Solution:** Veteran/VSO confirm what the resolution actually was; keep Cherie's self-medication/secondary theory (which doesn't depend on the contradicted fact) as the operative nexus.
 

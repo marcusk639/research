@@ -1,0 +1,19 @@
+{
+  "success": false,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/README.md",
+  "operation": "failed",
+  "metadata": {
+    "editsApplied": 0,
+    "linesChanged": 0,
+    "originalLines": 0,
+    "finalLines": 0,
+    "tokensSaved": 0,
+    "tokenCount": 0,
+    "originalTokenCount": 0,
+    "compressionRatio": 0,
+    "duration": 2,
+    "verified": true,
+    "wasBackedUp": false
+  },
+  "error": "Pattern matched nothing, so no edit was made: \"eleven documented\\\\n  treatment admissions since 2016\". The requested line range is searched as a whole, so a pattern may span lines; check for escaping, or use a line-based edit with `content` instead."
+}

@@ -1,0 +1,37 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 11,
+    "originalLines": 470,
+    "finalLines": 477,
+    "tokensSaved": 8982,
+    "tokenCount": 290,
+    "originalTokenCount": 9272,
+    "compressionRatio": 0.03127696289905091,
+    "duration": 10,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "🟢 **Texas** (the liable state, so its standard governs): \"*You must be available for **full-time**",
+      "work*\" and \"***physically and mentally able to perform the work you are seeking**.*\" TWC warns",
+      "explicitly: \"*If you are applying for SSDI and are not able to work full time, you may not be eligible",
+      "to receive unemployment benefits.*\"",
+      "",
+      "🟢 **Louisiana** (whose work-search rules you must follow as a resident): \"*You must be physically able",
+      "and available to work. You must also be actively seeking work.*\" — **3 work-search activities per",
+      "week**, or **5** for claims first filed on/after 2026-01-04 🟡, each with a **different employer**.",
+      ""
+    ],
+    "removed": [
+      "TWC warns explicitly: \"_If you are applying for SSDI and are not able to work full time, you may not",
+      "be eligible to receive unemployment benefits._\""
+    ],
+    "unchanged": 1,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n@@ -1,470 +1,477 @@\n@@ 177 unchanged lines @@\n-TWC warns explicitly: \"_If you are applying for SSDI and are not able to work full time, you may not\n-be eligible to receive unemployment benefits._\"\n \n+🟢 **Texas** (the liable state, so its standard governs): \"*You must be available for **full-time**\n+work*\" and \"***physically and mentally able to perform the work you are seeking**.*\" TWC warns\n+explicitly: \"*If you are applying for SSDI and are not able to work full time, you may not be eligible\n+to receive unemployment benefits.*\"\n+\n+🟢 **Louisiana** (whose work-search rules you must follow as a resident): \"*You must be physically able\n+and available to work. You must also be actively seeking work.*\" — **3 work-search activities per\n+week**, or **5** for claims first filed on/after 2026-01-04 🟡, each with a **different employer**.\n+\n@@ 290 unchanged lines @@"
+  }
+}

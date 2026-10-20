@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json",
+  "operation": "updated",
+  "metadata": {
+    "bytesWritten": 977,
+    "originalSize": 1016,
+    "wasFormatted": true,
+    "linesChanged": 4,
+    "tokensSaved": 159,
+    "tokenCount": 141,
+    "originalTokenCount": 317,
+    "compressionRatio": 0.444794952681388,
+    "atomic": true,
+    "verified": true,
+    "duration": 57
+  },
+  "diff": {
+    "added": [
+      "    \"src/**/*.ts\",",
+      "    \"break\": 28"
+    ],
+    "removed": [
+      "  \"thresholds\": { \"high\": 80, \"low\": 60, \"break\": 28 },",
+      "    \"break\": null"
+    ],
+    "unchanged": 6,
+    "unifiedDiff": "--- /Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json\n+++ /Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json\n@@ -1,45 +1,45 @@\n {\n@@ 21 unchanged lines @@\n   \"mutate\": [\n-  \"thresholds\": { \"high\": 80, \"low\": 60, \"break\": 28 },\n+    \"src/**/*.ts\",\n     \"!src/**/*.test.ts\",\n@@ 7 unchanged lines @@\n     \"low\": 60,\n-    \"break\": null\n+    \"break\": 28\n   },\n@@ 9 unchanged lines @@\n }"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "written": 1,
+  "keys": [
+    "agent-muon267l-0-f3a0ca48"
+  ],
+  "unresolvedAnchors": [
+    "/Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md"
+  ],
+  "project": "/Users/marcusklein/dev/recovery-platform"
+}

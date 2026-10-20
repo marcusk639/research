@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/ledger/evidence.jsonl",
+  "operation": "created",
+  "metadata": {
+    "bytesWritten": 8801,
+    "originalSize": 0,
+    "wasFormatted": false,
+    "linesChanged": 0,
+    "tokensSaved": 0,
+    "tokenCount": 2169,
+    "originalTokenCount": 2169,
+    "compressionRatio": 1,
+    "atomic": true,
+    "verified": true,
+    "duration": 40
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 4,
+    "linesChanged": 37,
+    "originalLines": 1102,
+    "finalLines": 1125,
+    "tokensSaved": 19659,
+    "tokenCount": 1531,
+    "originalTokenCount": 21190,
+    "compressionRatio": 0.07225106182161396,
+    "duration": 26,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "- [ ] **Update your address with VA — treat this as urgent, not administrative.**",
+      "      `MASTER-STRATEGY.md` §3 (update 2026-07-31) flags the Lake Charles relocation as \"a live",
+      "      operational risk to _both_ tracks\": a C&P exam notice sent to a stale Austin address can be",
+      "      treated as **failure to report**, and under **38 C.F.R. § 3.655(a)–(b)** a claim for",
+      "      increase or a supplemental claim is then **denied outright**. Your MH supplemental claim has",
+      "      no C&P scheduled yet, so that notice is still coming. Also avoid giving VR&E a Lake Charles",
+      "      address while VBA compensation holds an Austin one — a two-address mismatch inside VA's own",
+      "      systems is its own problem.",
+      "- **Account 3 is correct on the spine, but INCOMPLETE** — it omits a job loss. The corrected",
+      "  occupational history, per `RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` Task 5 and",
+      "  [CORRECTION 2], is: employed → **job loss Dec 2024** (corroborated by the late-2024 Starlite",
+      "  note recording an opioid relapse after being \"recently laid off\", and by `CLAIM-MASTER-BRIEF.md`",
+      "  §5) → new role → **June 2026 loss for performance / threatened PIP, resolved by negotiated",
+      "  severance** → left the software-engineering career. **Use this four-step chain on the",
+      "  28-1902w**, not the two-loss version. Note Erica's signed statement lists 2018/2023/2026 and",
+      "  `CLAIM-MASTER-BRIEF.md` §5 flags that the Dec-2024 date needs reconciling against it.",
+      "3. ~~**Did the PIP/severance negotiation conclude?**~~ **ANSWERED BY THE CORPUS** —",
+      "   `RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` Task 5 records it: same event as the June 2026",
+      "   loss, **\"for performance / threatened PIP, resolved by a negotiated severance.\"** Still get",
+      "   the severance agreement itself — Task 5 says HR emails, the PIP record, the severance",
+      "   agreement, and FMLA/disability records all exist and should be in the file.",
+      "One factual sentence per job — and use **the corrected reason of record**, not a softened one.",
+      "Per `RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` Task 5, the June 2026 separation was **\"for",
+      "performance / threatened PIP, resolved by a negotiated severance.\"** An earlier draft of this",
+      "document offered a medical-leave framing (\"I went out on FMLA leave and the position ended\").",
+      "**That softens it**, and §9.3 warns against exactly that — a performance/PIP separation resolved",
+      "by severance is a materially different answer, and it is the one your own rep-facing plan",
+      "records. You can state both facts truthfully (you were on FMLA leave *and* the separation was",
+      "performance-framed and settled by severance) without recasting one as the other. Do not narrate",
+      "motive for a former employer, and do not guess at a reason you were not told."
+    ],
+    "removed": [
+      "- **Account 3 is correct on the spine** — employed as a senior software engineer until the **June",
+      "  2026 job loss**, unemployed since. This is the operative history.",
+      "3. **Did the PIP/severance negotiation conclude — and is it the same event as the June 2026 job",
+      "   loss?** Severance vs. termination vs. resignation is literally the \"reason for leaving\" field.",
+      "One factual sentence per job. Where medical, say so without dramatizing: \"I went out on FMLA",
+      "leave in May 2026 for psychiatric and substance-use treatment, and the position ended in June.\"",
+      "Do not narrate motive for a former employer. Do not guess at a reason you were not told."
+    ],
+    "unchanged": 30,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md\n+++ /Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md\n@@ -1,1102 +1,1125 @@\n ---\n topic: vre-initial-individual-evaluation-prep\n created: 2026-09-13\n@@ 105 unchanged lines @@\n \n **Monday 09/14**\n \n+- [ ] **Update your address with VA — treat this as urgent, not administrative.**\n+      `MASTER-STRATEGY.md` §3 (update 2026-07-31) flags the Lake Charles relocation as \"a live\n+      operational risk to _both_ tracks\": a C&P exam notice sent to a stale Austin address can be\n+      treated as **failure to report**, and under **38 C.F.R. § 3.655(a)–(b)** a claim for\n+      increase or a supplemental claim is then **denied outright**. Your MH supplemental claim has\n+      no C&P scheduled yet, so that notice is still coming. Also avoid giving VR&E a Lake Charles\n+      address while VBA compensation holds an Austin one — a two-address mismatch inside VA's own\n+      systems is its own problem.\n - [ ] Draft 28-1902w Sections II (civilian employment) and VII (disabilities). These are\n       the two sections that decide the handicap finding. Everything else is administrative.\n - [ ] Take the **Texas Career Check Interest Profiler** (texascareercheck.com) — 60 items,\n@@ 97 unchanged lines @@\n **Reconciled at the gate (2026-09-13).** The veteran confirms he is **not currently employed** and\n that the family-CPA-firm move is **still planned, not executed**. That resolves the conflict:\n \n-- **Account 3 is correct on the spine** — employed as a senior software engineer until the **June\n-  2026 job loss**, unemployed since. This is the operative history.\n+- **Account 3 is correct on the spine, but INCOMPLETE** — it omits a job loss. The corrected\n+  occupational history, per `RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` Task 5 and\n+  [CORRECTION 2], is: employed → **job loss Dec 2024** (corroborated by the late-2024 Starlite\n+  note recording an opioid relapse after being \"recently laid off\", and by `CLAIM-MASTER-BRIEF.md`\n+  §5) → new role → **June 2026 loss for performance / threatened PIP, resolved by negotiated\n+  severance** → left the software-engineering career. **Use this four-step chain on the\n+  28-1902w**, not the two-loss version. Note Erica's signed statement lists 2018/2023/2026 and\n+  `CLAIM-MASTER-BRIEF.md` §5 flags that the Dec-2024 date needs reconciling against it.\n - **Account 2 was accurate when written** (06/12/2026) and its \"planned transition\" framing is\n   **still accurate today** — the CPA-firm move remains a plan, not a fact.\n - **Account 1 was premature.** It described the CPA-firm move as already done. It was not, and is\n@@ 31 unchanged lines @@\n 2. **What does the Metal employment statement (08/04/2026) actually say?** Get the signed copy\n    from James O'Dwyer. It was written expressly for VA and speaks directly to the handicap\n    question — it may be your single best piece of employment evidence, and it is not in this repo.\n-3. **Did the PIP/severance negotiation conclude — and is it the same event as the June 2026 job\n-   loss?** Severance vs. termination vs. resignation is literally the \"reason for leaving\" field.\n+3. ~~**Did the PIP/severance negotiation conclude?**~~ **ANSWERED BY THE CORPUS** —\n+   `RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` Task 5 records it: same event as the June 2026\n+   loss, **\"for performance / threatened PIP, resolved by a negotiated severance.\"** Still get\n+   the severance agreement itself — Task 5 says HR emails, the PIP record, the severance\n+   agreement, and FMLA/disability records all exist and should be in the file.\n 4. **Post-9/11 GI Bill months remaining**, and any prior VA education benefit use. Pull from\n    VA.gov before Thursday — this gates the entire subsistence-rate conversation (§6.1).\n 5. **Current sobriety and treatment status** — last record is an early-June 2026 relapse\n@@ 561 unchanged lines @@\n costs you nothing while concealing it costs you everything.\n \n **\"Why did you leave that job?\"**\n-One factual sentence per job. Where medical, say so without dramatizing: \"I went out on FMLA\n-leave in May 2026 for psychiatric and substance-use treatment, and the position ended in June.\"\n-Do not narrate motive for a former employer. Do not guess at a reason you were not told.\n+One factual sentence per job — and use **the corrected reason of record**, not a softened one.\n+Per `RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` Task 5, the June 2026 separation was **\"for\n+performance / threatened PIP, resolved by a negotiated severance.\"** An earlier draft of this\n+document offered a medical-leave framing (\"I went out on FMLA leave and the position ended\").\n+**That softens it**, and §9.3 warns against exactly that — a performance/PIP separation resolved\n+by severance is a materially different answer, and it is the one your own rep-facing plan\n+records. You can state both facts truthfully (you were on FMLA leave *and* the separation was\n+performance-framed and settled by severance) without recasting one as the other. Do not narrate\n+motive for a former employer, and do not guess at a reason you were not told.\n \n **\"Are you working now?\"** / **\"Can you work full time?\"**\n These two are easy to answer badly. The truthful and consistent answer is about **sustaining**,\n@@ 271 unchanged lines @@\n - **Whether electing the P911SA rate consumes Post-9/11 GI Bill months** — unresolved. Ask.\n - **§ 21.98** — **RESOLVED:** removed effective 2019-02-19 (84 FR 138). No longer exists.\n - **Time from evaluation → entitlement decision → signed plan** — no published VA SLA found. Ask."
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/STAGE0-RESULTS.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 5,
+    "originalLines": 163,
+    "finalLines": 162,
+    "tokensSaved": 1809,
+    "tokenCount": 392,
+    "originalTokenCount": 2201,
+    "compressionRatio": 0.17810086324398,
+    "duration": 70,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "This follows the convention already used in this repo's `jest.config.js` (\"Ratchet floor — measured",
+      "79/60/70/80 on 2026-07-15. Raise as coverage grows; never lower.\"): a floor that must never be lowered."
+    ],
+    "removed": [
+      "`stryker.config.json` now carries `\"break\": 28`, just below the measured 28.73% total. Following the",
+      "convention already used in this repo's `jest.config.js` (\"Ratchet floor — measured 79/60/70/80 on 2026-07-15.",
+      "Raise as coverage grows; never lower.\"), this is a floor that must never be lowered."
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/STAGE0-RESULTS.md\n+++ /Users/marcusklein/dev/research/app-dev/STAGE0-RESULTS.md\n@@ -1,163 +1,162 @@\n # Stage 0 Results — mutation-gate baseline, `homegroups/functions`\n \n **Date:** 2026-09-30 · **Executed by:** this session, no agent involved in the code under test\n@@ 120 unchanged lines @@\n 5m27s for a cold full run. The kill criterion asked whether a changed-files run could get under ~5 minutes;\n the answer is emphatically yes, with about two orders of magnitude of headroom.\n \n-`stryker.config.json` now carries `\"break\": 28`, just below the measured 28.73% total. Following the\n-convention already used in this repo's `jest.config.js` (\"Ratchet floor — measured 79/60/70/80 on 2026-07-15.\n-Raise as coverage grows; never lower.\"), this is a floor that must never be lowered.\n+This follows the convention already used in this repo's `jest.config.js` (\"Ratchet floor — measured\n+79/60/70/80 on 2026-07-15. Raise as coverage grows; never lower.\"): a floor that must never be lowered.\n \n **Caveat on PR gating.** Stryker's `break` applies to the whole run's score, so it is correct for the scheduled\n full-package run and wrong for a changed-files PR run: a PR touching only `subscriptionGuard.ts` would score\n@@ 28 unchanged lines @@\n git checkout homegroups/functions/package.json homegroups/functions/package-lock.json\n rm -rf homegroups/functions/.stryker-tmp homegroups/functions/reports homegroups/functions/stryker.config.json\n ```"
+  }
+}

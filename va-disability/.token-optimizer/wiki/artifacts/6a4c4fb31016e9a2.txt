@@ -1,0 +1,19 @@
+{
+  "success": false,
+  "path": "/Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md",
+  "operation": "failed",
+  "metadata": {
+    "editsApplied": 0,
+    "linesChanged": 0,
+    "originalLines": 0,
+    "finalLines": 0,
+    "tokensSaved": 0,
+    "tokenCount": 0,
+    "originalTokenCount": 0,
+    "compressionRatio": 0,
+    "duration": 16,
+    "verified": true,
+    "wasBackedUp": false
+  },
+  "error": "Pattern matched nothing, so no edit was made: \"- \\\\*\\\\*38 C\\\\.F\\\\.R\\\\. § 21\\\\.50\\\\*\\\\* — the initial evaluation\\\\. The VRC determines \\\\(1\\\\) whether an employment\\\\n  handicap exists, \\\\(2\\\\) whether it is \\\\*serious\\\\*, and \\\\(3\\\\) whether a vocational goal is\\\\n  reasonably feasible under § 21\\\\.53\\\\.\", \"- \\\\*\\\\*38 C\\\\.F\\\\.R\\\\. § 21\\\\.52\\\\*\\\\* — SEH layers on the \\\"significant\\\" requirement plus a multi-factor\\\\n  severity analysis \\\\(number and severity of disabling conditions, neuropsychiatric\\\\n  involvement, education adequacy, unemployment history, dependence on public assistance,\\\\n  complexity of services needed, discrimination barriers, and other employment factors\\\\)\\\\.\", \"- § 21\\\\.53\\\\(c\\\\): \\\\*\\\"any reasonable doubt shall be resolved in favor of a finding of feasibility\\\\.\\\"\\\\*\\\\n- § 21\\\\.53\\\\(e\\\\): a finding of \\\\*\\\\*infeasibility\\\\*\\\\* requires \\\\*\\\"compelling evidence which establishes\\\\n  infeasibility beyond any reasonable doubt\\\\.\\\"\\\\*\". The requested line range is searched as a whole, so a pattern may span lines; check for escaping, or use a line-based edit with `content` instead."
+}

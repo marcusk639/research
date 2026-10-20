@@ -1,0 +1,28 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 2,
+    "originalLines": 624,
+    "finalLines": 624,
+    "tokensSaved": 11535,
+    "tokenCount": 313,
+    "originalTokenCount": 11848,
+    "compressionRatio": 0.026417960837272114,
+    "duration": 11,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "| ~~**TVC Fund for Veterans' Assistance**~~ | ❌ **VOID — Texas residents only** | ⛔ **This was the prior draft's #1 route and the move kills it.** TVC's FVA is a **Texas** program funding Texas nonprofits, parishes/counties, and VSOs to serve **Texas** veterans; a Lake Charles resident is outside it. The Louisiana replacement (LDVA and the Calcasieu Parish Veterans Service Officer) is pending research — see §5.1 |"
+    ],
+    "removed": [
+      "| **TVC Fund for Veterans' Assistance**    | ✅ **Best route for rent/utilities** | ⚠️ **FVA grants go to nonprofits, counties, and VSOs — never directly to a veteran.** Access via your **county Veterans Service Officer** or **2-1-1**. Grantee caps (2025-26 General Assistance): **rent up to $6,000 per household per 6-month grant period**; utilities incl. electric, water, gas, garbage, internet, primary cell, and connection fees 🟢 |"
+    ],
+    "unchanged": 0,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n@@ -1,624 +1,624 @@\n@@ 354 unchanged lines @@\n-| **TVC Fund for Veterans' Assistance**    | ✅ **Best route for rent/utilities** | ⚠️ **FVA grants go to nonprofits, counties, and VSOs — never directly to a veteran.** Access via your **county Veterans Service Officer** or **2-1-1**. Grantee caps (2025-26 General Assistance): **rent up to $6,000 per household per 6-month grant period**; utilities incl. electric, water, gas, garbage, internet, primary cell, and connection fees 🟢 |\n+| ~~**TVC Fund for Veterans' Assistance**~~ | ❌ **VOID — Texas residents only** | ⛔ **This was the prior draft's #1 route and the move kills it.** TVC's FVA is a **Texas** program funding Texas nonprofits, parishes/counties, and VSOs to serve **Texas** veterans; a Lake Charles resident is outside it. The Louisiana replacement (LDVA and the Calcasieu Parish Veterans Service Officer) is pending research — see §5.1 |\n@@ 269 unchanged lines @@"
+  }
+}

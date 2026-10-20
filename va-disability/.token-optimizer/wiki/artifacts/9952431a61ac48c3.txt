@@ -1,0 +1,46 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/CLAUDE.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 21,
+    "originalLines": 66,
+    "finalLines": 87,
+    "tokensSaved": 195,
+    "tokenCount": 821,
+    "originalTokenCount": 1016,
+    "compressionRatio": 0.8080708661417323,
+    "duration": 5,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "",
+      "> **⚠️ Document-precedence trap — read before trusting the list above.**",
+      "> `planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` is **newer than**",
+      "> `MASTER-STRATEGY.md` (2026-07-06) and `CLAIM-ASSESSMENT.md` (2026-07-05) and **reverses",
+      "> positions in both** — most consequentially, its `[CORRECTION 2]`/`[CORRECTION 3]` open",
+      "> § 4.16 **TDIU development** and list VA Form 21-8940 as a filing action, contradicting",
+      "> MASTER-STRATEGY's \"not pursuing TDIU.\" It also supplies a corrected occupational history",
+      "> (Dec 2024 job loss; June 2026 loss for performance/PIP resolved by negotiated severance).",
+      "> Likewise, both files carry internal `[SUPERSEDED]` markers pointing at",
+      "> `planning-docs/PATH-TO-100-PERCENT-2026-07-07.md` §9 for odds.",
+      "> **Reading only the documents named above produced three CRITICAL errors in a 2026-09-13",
+      "> drafting pass** (see `vre/CONSISTENCY-AUDIT-2026-09-13.md`). Always check the remediation",
+      "> plan and §9 before treating any strategy position as settled. Also note the newest-dated",
+      "> passage in `MASTER-STRATEGY.md` is a **2026-07-31** update buried in §3.",
+      "- **`vre/`** — **VR&E / Chapter 31** (Veteran Readiness & Employment). A **separate benefit",
+      "  track** from the compensation claim: different statute (38 U.S.C. ch. 31), different",
+      "  regulations (38 C.F.R. part 21 subpart A), different decision-maker (a VRC, not an RVSR),",
+      "  different appeal posture. Self-contained — start at `vre/README.md`. Holds the appointment",
+      "  prep doc, a citation-verified Chapter 31 legal KB, a benefits/tracks/rates/forms KB, and a",
+      "  consistency audit. Shares only the C-file with the compensation claim, which is where the",
+      "  cross-claim risk lives."
+    ],
+    "removed": [],
+    "unchanged": 18,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/CLAUDE.md\n+++ /Users/marcusklein/dev/research/va-disability/CLAUDE.md\n@@ -1,66 +1,87 @@\n # CLAUDE.md\n \n Subject-level guidance for `va-disability/`, extending `../CLAUDE.md`. This subject\n@@ 13 unchanged lines @@\n contradicts it. `knowledge-base.md`, `veteran-profile.md`,\n `claim-maximization-research-2026-06.md`, and `planning-docs/strategy.md` /\n `planning-docs/CLAIM-EXECUTION-PLAN.md` / `planning-docs/DO-THIS-WEEK.md` are\n+\n+> **⚠️ Document-precedence trap — read before trusting the list above.**\n+> `planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` is **newer than**\n+> `MASTER-STRATEGY.md` (2026-07-06) and `CLAIM-ASSESSMENT.md` (2026-07-05) and **reverses\n+> positions in both** — most consequentially, its `[CORRECTION 2]`/`[CORRECTION 3]` open\n+> § 4.16 **TDIU development** and list VA Form 21-8940 as a filing action, contradicting\n+> MASTER-STRATEGY's \"not pursuing TDIU.\" It also supplies a corrected occupational history\n+> (Dec 2024 job loss; June 2026 loss for performance/PIP resolved by negotiated severance).\n+> Likewise, both files carry internal `[SUPERSEDED]` markers pointing at\n+> `planning-docs/PATH-TO-100-PERCENT-2026-07-07.md` §9 for odds.\n+> **Reading only the documents named above produced three CRITICAL errors in a 2026-09-13\n+> drafting pass** (see `vre/CONSISTENCY-AUDIT-2026-09-13.md`). Always check the remediation\n+> plan and §9 before treating any strategy position as settled. Also note the newest-dated\n+> passage in `MASTER-STRATEGY.md` is a **2026-07-31** update buried in §3.\n superseded and kept for history only.\n \n ## Folder layout (reorganized 2026-07-15)\n@@ 6 unchanged lines @@\n   actual signed PHI evidence (statements, PDFs, the signed nexus letter).\n - Root — navigation (`REPORT.md`, this file, `DOCUMENT-PROVENANCE.md`), research,\n   audits/assessments, and reference KBs.\n+- **`vre/`** — **VR&E / Chapter 31** (Veteran Readiness & Employment). A **separate benefit\n+  track** from the compensation claim: different statute (38 U.S.C. ch. 31), different\n+  regulations (38 C.F.R. part 21 subpart A), different decision-maker (a VRC, not an RVSR),\n+  different appeal posture. Self-contained — start at `vre/README.md`. Holds the appointment\n+  prep doc, a citation-verified Chapter 31 legal KB, a benefits/tracks/rates/forms KB, and a\n+  consistency audit. Shares only the C-file with the compensation claim, which is where the\n+  cross-claim risk lives.\n - `document-analysis/` — per-document deep-analysis reports.\n \n ## Subject-specific tools\n@@ 29 unchanged lines @@\n   `claim-consistency-checker`'s hard rule). A prior coached-statement email thread\n   is treated in `CLAIM-ASSESSMENT.md` Part 0 as the single biggest credibility risk\n   to this claim."
+  }
+}

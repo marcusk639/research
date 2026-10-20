@@ -1,0 +1,53 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 27,
+    "originalLines": 479,
+    "finalLines": 470,
+    "tokensSaved": 8799,
+    "tokenCount": 598,
+    "originalTokenCount": 9397,
+    "compressionRatio": 0.06363733106310525,
+    "duration": 12,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "## ⛔ Read § 1.8 before filing for unemployment",
+      "There is a conflict between what an unemployment claim requires you to certify **every week** and what",
+      "your signed nexus letter says. It is resolvable, but **not by accident, and not after the fact.** It",
+      "is the same class of problem as the ACTION-CARD's capacity-framing blocker, and it now has roughly",
+      "**$15,730 — plus up to ~$7,865 in backdated weeks (§1.3)** — attached to it.",
+      "**Also read §1 first for the good news:** the move to Louisiana does **not** cost you this benefit.",
+      "You still file against **Texas** at Texas rates, not Louisiana's much lower ones.",
+      "",
+      "### 1.8 ⛔ \"Able and available\" — the cross-claim conflict, now weekly and in Louisiana"
+    ],
+    "removed": [
+      "## ⛔ Read § 1.4 before filing for unemployment",
+      "There is a conflict between what an unemployment claim requires you to certify and what your signed",
+      "nexus letter says. It is resolvable, but **not by accident, and not after the fact.** It is the same",
+      "class of problem as the ACTION-CARD's capacity-framing blocker, and it has roughly $15,700 attached",
+      "to it.",
+      "### 1.4 ⛔ The two eligibility requirements that create real risk",
+      "",
+      "**(a) Performance vs. misconduct.** 🟢 \"_You may be eligible for benefits if you were fired for",
+      "reasons **other than misconduct**_\" — but TWC's own misconduct examples include \"_failure to perform",
+      "your work adequately **if you are capable of doing so**_.\"",
+      "",
+      "> A PIP-documented performance separation sits exactly on this line. **Eligible if the failure was",
+      "> inability; disqualifying if TWC finds you could perform and did not.** Note what that means: the",
+      "> _same_ framing that supports your disability claim — impairment-driven inability — is the framing",
+      "> that **wins** the unemployment claim. These two are aligned, not in conflict.",
+      "",
+      "**(b) ⛔ \"Able and available\" — this is the conflict.** 🟢 TWC: \"_You must be available for",
+      "**full-time** work_\" and \"_**physically and mentally able to perform the work you are seeking**._\""
+    ],
+    "unchanged": 2,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n@@ -1,479 +1,470 @@\n@@ 21 unchanged lines @@\n-## ⛔ Read § 1.4 before filing for unemployment\n+## ⛔ Read § 1.8 before filing for unemployment\n \n-There is a conflict between what an unemployment claim requires you to certify and what your signed\n-nexus letter says. It is resolvable, but **not by accident, and not after the fact.** It is the same\n-class of problem as the ACTION-CARD's capacity-framing blocker, and it has roughly $15,700 attached\n-to it.\n+There is a conflict between what an unemployment claim requires you to certify **every week** and what\n+your signed nexus letter says. It is resolvable, but **not by accident, and not after the fact.** It\n+is the same class of problem as the ACTION-CARD's capacity-framing blocker, and it now has roughly\n+**$15,730 — plus up to ~$7,865 in backdated weeks (§1.3)** — attached to it.\n \n+**Also read §1 first for the good news:** the move to Louisiana does **not** cost you this benefit.\n+You still file against **Texas** at Texas rates, not Louisiana's much lower ones.\n+\n@@ 145 unchanged lines @@\n-### 1.4 ⛔ The two eligibility requirements that create real risk\n-\n-**(a) Performance vs. misconduct.** 🟢 \"_You may be eligible for benefits if you were fired for\n-reasons **other than misconduct**_\" — but TWC's own misconduct examples include \"_failure to perform\n-your work adequately **if you are capable of doing so**_.\"\n-\n-> A PIP-documented performance separation sits exactly on this line. **Eligible if the failure was\n-> inability; disqualifying if TWC finds you could perform and did not.** Note what that means: the\n-> _same_ framing that supports your disability claim — impairment-driven inability — is the framing\n-> that **wins** the unemployment claim. These two are aligned, not in conflict.\n-\n-**(b) ⛔ \"Able and available\" — this is the conflict.** 🟢 TWC: \"_You must be available for\n-**full-time** work_\" and \"_**physically and mentally able to perform the work you are seeking**._\"\n+### 1.8 ⛔ \"Able and available\" — the cross-claim conflict, now weekly and in Louisiana\n@@ 293 unchanged lines @@"
+  }
+}

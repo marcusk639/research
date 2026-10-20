@@ -1,0 +1,163 @@
+{
+  "query": "Best achievable 2026 toolchain and operating procedure for autonomously building non-trivial multi-surface apps (and brownfield features) from a written specification, with architecture, UX, code and substantive unit/integration/E2E tests, asking the human only on genuinely blocking ambiguity.",
+  "mode": "ultradeep",
+  "mode_floors": {
+    "min_sources_after_dedup": 15,
+    "red_team_rounds_max": 2
+  },
+  "started": "2026-09-28",
+  "report_date": "2026-09-29",
+  "subject_dir": "~/dev/research/app-dev",
+  "operator": {
+    "profile": "solo developer/consultant, macOS, Claude Code primary harness (Opus-tier main session, tiered subagents, Serena MCP, token-optimizer, ~90 skills, ~33 agents)",
+    "stacks": [
+      "React Native + Expo",
+      "Firebase (Cloud Functions, Firestore rules+indexes, Auth, Storage)",
+      "Next.js",
+      "TypeScript",
+      "pnpm/Turborepo",
+      "Neon Postgres + Drizzle",
+      "Inngest",
+      "Clerk"
+    ],
+    "constraints": [
+      "budget-sensitive",
+      "CLI-first",
+      "git-worktree comfortable",
+      "no designer"
+    ]
+  },
+  "capability_bar_measured_2026_09_28": {
+    "method": "find/grep/wc over working tree, excluding node_modules, lib, dist, .next, build, _legacy; LOC = raw line counts of .ts/.tsx/.js/.jsx",
+    "regroup": {
+      "path": "~/dev/recovery-platform/regroup",
+      "surfaces": {
+        "mobile": {
+          "code_files": 791,
+          "loc": 157747
+        },
+        "functions": {
+          "code_files": 141,
+          "loc": 27689
+        },
+        "web": {
+          "code_files": 263,
+          "loc": 9200
+        },
+        "scripts": {
+          "code_files": 2,
+          "loc": 451
+        }
+      },
+      "total_loc": 195087,
+      "total_code_files": 1197,
+      "ts_source_files_excl_generated": 740,
+      "tsx_files": 445,
+      "mobile_screens_tsx": 221,
+      "firestore_rules_lines": 439,
+      "storage_rules_lines": 139,
+      "firestore_indexes_json_lines": 193,
+      "composite_indexes": 21,
+      "functions_index_exports": 14,
+      "trigger_counts_source_only": {
+        "onCall": 36,
+        "onSchedule": 10,
+        "onDocumentCreated": 10,
+        "onRequest": 5,
+        "onDocumentWritten": 5,
+        "onDocumentUpdated": 5,
+        "onDocumentDeleted": 2,
+        "https.onRequest": 1,
+        "https.onCall": 1
+      },
+      "test_files_unit_spec": 490,
+      "maestro_flows_yaml": 20,
+      "distinct_firestore_collections_referenced": "~50",
+      "deps_declared": {
+        "mobile": "81 + 30 dev",
+        "web": "25 + 31 dev",
+        "functions": "20 + 12 dev"
+      }
+    },
+    "homegroups": {
+      "path": "~/dev/recovery-platform/homegroups",
+      "surfaces": {
+        "mobile": {
+          "code_files": 321,
+          "loc": 109279
+        },
+        "functions": {
+          "code_files": 256,
+          "loc": 61324
+        },
+        "web": {
+          "code_files": 38,
+          "loc": 9548
+        },
+        "scripts": {
+          "code_files": 37,
+          "loc": 13822
+        }
+      },
+      "total_loc": 193973,
+      "total_code_files": 652,
+      "ts_source_files_excl_generated": 402,
+      "tsx_files": 172,
+      "mobile_screens_tsx": 105,
+      "firestore_rules_lines": 951,
+      "storage_rules_lines": 74,
+      "firestore_indexes_json_lines": 1034,
+      "composite_indexes": 59,
+      "functions_index_exports": 127,
+      "trigger_counts_source_only": {
+        "onCall": 106,
+        "onDocumentWritten": 4,
+        "https.onCall": 4,
+        "onRequest": 3,
+        "https.onRequest": 2,
+        "onSchedule": 1
+      },
+      "test_files_unit_spec": 115,
+      "maestro_flows_yaml": 11,
+      "distinct_firestore_collections_referenced": "~55",
+      "deps_declared": {
+        "mobile": "65 + 21 dev",
+        "web": "12 + 2 dev",
+        "functions": "19 + 15 dev"
+      }
+    },
+    "note": "Both repos live inside the ~/dev/recovery-platform flat monorepo, so git history is shared (HEAD 1cf5147 at measurement time). Per-surface LOC and file counts are per-product and independent."
+  },
+  "assumptions": [
+    "No clarifying questions asked of the operator: budget ceiling, unattended-overnight tolerance, and local-vs-cloud execution were all inferable from the stated profile (budget-sensitive but pays for leverage; CLI-first local macOS; git-worktree comfortable). Stated here instead of asked, per the prompt's question budget.",
+    "Deliverables are written to ~/dev/research/app-dev/ per the operator's instruction, not to the skill's default ~/Documents/Claude/Research path.",
+    "'Non-trivial' is defined by the measured bar above: ~195k LOC, three surfaces, 400-950 line security-rule DSL files, 20-60 composite indexes, 100-220 mobile screens."
+  ],
+  "tooling_deviation": {
+    "planned": "Cowork built-in web search and web fetch only, per skill's tooling contract.",
+    "actual": "WebSearch/WebFetch were not exposed to the orchestrating session (tool discovery returned no match). The orchestrator used the Firecrawl MCP search+scrape tools for verification fetches; retrieval subagents were instructed to prefer built-in WebSearch/WebFetch and fall back to Firecrawl. The fetch-before-quote rule was retained unchanged.",
+    "impact": "Method-equivalent (real page retrieval, verbatim quotes, no snippet-only citations). Disclosed in the Methodology Appendix."
+  },
+  "angles": [
+    "A1 spec as source of truth",
+    "A2 autonomous coding harnesses",
+    "A3 orchestration and verification loops",
+    "A4 tests that actually verify",
+    "A5 UX and design autonomy",
+    "A6 architecture quality",
+    "A7 model routing, cost, reliability",
+    "A8 infrastructure and environment autonomy",
+    "A9 unattended-run safety and control",
+    "A10 minimizing clarifying questions",
+    "A11 observability and feedback",
+    "A12 end-to-end app factory products",
+    "A13 ground truth on autonomy limits",
+    "A14 fit to this operator's stack"
+  ],
+  "out_of_scope": [
+    "model pretraining/fine-tuning",
+    "no-code builders that cannot emit owned source into a git repo",
+    "enterprise procurement/compliance questionnaires",
+    "prompt-engineering tips with no toolchain implication"
+  ]
+}

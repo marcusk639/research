@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/REPORT.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 7,
+    "originalLines": 394,
+    "finalLines": 395,
+    "tokensSaved": 6739,
+    "tokenCount": 411,
+    "originalTokenCount": 7150,
+    "compressionRatio": 0.05748251748251748,
+    "duration": 45,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "- **Mode:** ultradeep. Source floor ≥15 after dedup: **met** — 100 registered sources, of which 81 are",
+      "  marked FETCHED; two of those (S61 metadata-only, S94 no verbatim quote obtained) yielded no usable quote,",
+      "  so roughly 79 support citable evidence. The remaining 19 are UNREACHABLE, SEARCH-ONLY or not-fetched, are",
+      "  marked as such in `SOURCES.md`, and support no claim stated as fact."
+    ],
+    "removed": [
+      "- **Mode:** ultradeep. Source floor ≥15 after dedup: **met** — 100 registered sources, of which roughly 70",
+      "  were successfully fetched; unreachable and search-only sources are marked in `SOURCES.md` and support no",
+      "  claim stated as fact."
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/REPORT.md\n+++ /Users/marcusklein/dev/research/app-dev/REPORT.md\n@@ -1,394 +1,395 @@\n # Autonomous App Development from a Written Specification — 2026 Assessment\n \n **Date:** 2026-09-29 · **Mode:** ultradeep (14 angles, 100 registered sources, 2 red-team rounds)\n@@ 369 unchanged lines @@\n \n ## 9. Methodology appendix\n \n-- **Mode:** ultradeep. Source floor ≥15 after dedup: **met** — 100 registered sources, of which roughly 70\n-  were successfully fetched; unreachable and search-only sources are marked in `SOURCES.md` and support no\n-  claim stated as fact.\n+- **Mode:** ultradeep. Source floor ≥15 after dedup: **met** — 100 registered sources, of which 81 are\n+  marked FETCHED; two of those (S61 metadata-only, S94 no verbatim quote obtained) yielded no usable quote,\n+  so roughly 79 support citable evidence. The remaining 19 are UNREACHABLE, SEARCH-ONLY or not-fetched, are\n+  marked as such in `SOURCES.md`, and support no claim stated as fact.\n - **Phases run:** 1 scope (local repo measurement first), 2 plan, 3 retrieve (9 parallel agents + 16\n   orchestrator fetches), 4 triangulate (`ledger/claims.jsonl`, 18 claims with verdicts), 4.5 outline, 5\n   synthesize, 6 red-team, 7 refine, 8 package.\n@@ 10 unchanged lines @@\n   the ones reported.\n - **Ledgers:** `ledger/run_manifest.json`, `ledger/sources.jsonl`, `ledger/evidence.jsonl`,\n   `ledger/evidence-orchestrator-2.jsonl`, `ledger/claims.jsonl`."
+  }
+}

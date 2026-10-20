@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/ADOPTION-PLAN.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 6,
+    "originalLines": 141,
+    "finalLines": 147,
+    "tokensSaved": 1858,
+    "tokenCount": 419,
+    "originalTokenCount": 2277,
+    "compressionRatio": 0.18401405357927098,
+    "duration": 44,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "**Also build the escape hatch, in the same stage.** Expose an `escalate(reason, evidence, blast_radius)`",
+      "capability plus an explicit anti-hacking policy line in the prompt (`VERIFICATION-STRATEGY.md` §3). This is",
+      "not optional polish: it is the single best-measured behavioural intervention found, cutting reward hacking",
+      "from 23.6% to 5.3% (OR = 9.2, p < 10⁻¹²) with no measured performance cost [S108]. Count an escalation as a",
+      "**success** in your metrics from day one — if escalating is penalized, you have rebuilt the incentive to fake.",
+      ""
+    ],
+    "removed": [],
+    "unchanged": 13,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/ADOPTION-PLAN.md\n+++ /Users/marcusklein/dev/research/app-dev/ADOPTION-PLAN.md\n@@ -1,141 +1,147 @@\n # Adoption Plan — 30 days, falsifiable\n \n **Date:** 2026-09-29\n@@ 39 unchanged lines @@\n **Why.** \"Exit 2 means a blocking error\" and \"PreToolUse blocks the tool call\" [S9] — but the policies are\n my design, unverified. Use `FileChanged`, which fires \"when a specific file changes on disk, whatever wrote\n it\" [S9], because a hook matching only edit tools can be bypassed.\n+**Also build the escape hatch, in the same stage.** Expose an `escalate(reason, evidence, blast_radius)`\n+capability plus an explicit anti-hacking policy line in the prompt (`VERIFICATION-STRATEGY.md` §3). This is\n+not optional polish: it is the single best-measured behavioural intervention found, cutting reward hacking\n+from 23.6% to 5.3% (OR = 9.2, p < 10⁻¹²) with no measured performance cost [S108]. Count an escalation as a\n+**success** in your metrics from day one — if escalating is penalized, you have rebuilt the incentive to fake.\n \n+\n - **Success metric:** 5/5 adversarial attempts blocked, evidenced in the run log.\n - **Cost ceiling:** <$10.\n - **Kill criterion:** if any guard can be bypassed and you cannot fix it in a day, do not proceed to\n@@ 89 unchanged lines @@\n   ceremony-heavy version ~10x slower with no measured quality gain [S43].\n - **No scaling past your review capacity.** AI-authored PRs are reported to carry ~1.7x the issues of human\n   ones [S25]; throughput without review capacity converts into escapes."
+  }
+}

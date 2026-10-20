@@ -1,0 +1,56 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 30,
+    "originalLines": 969,
+    "finalLines": 993,
+    "tokensSaved": 17122,
+    "tokenCount": 1325,
+    "originalTokenCount": 18447,
+    "compressionRatio": 0.07182739740879275,
+    "duration": 29,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "### 3.2 The employment conflict — four accounts, now reconciled",
+      "This was the central unresolved fact. The Phase 0 gate resolved its spine; the per-employer",
+      "detail remains open.",
+      "**Reconciled at the gate (2026-09-13).** The veteran confirms he is **not currently employed** and",
+      "that the family-CPA-firm move is **still planned, not executed**. That resolves the conflict:",
+      "- **Account 3 is correct on the spine** — employed as a senior software engineer until the **June",
+      "  2026 job loss**, unemployed since. This is the operative history.",
+      "- **Account 2 was accurate when written** (06/12/2026) and its \"planned transition\" framing is",
+      "  **still accurate today** — the CPA-firm move remains a plan, not a fact.",
+      "- **Account 1 was premature.** It described the CPA-firm move as already done. It was not, and is",
+      "  still not. Treat `veteran-profile.md`'s \"left the tech industry to work for his brother\" as",
+      "  **superseded and inaccurate** — do not repeat it to VA in any document.",
+      "- **Account 4 is wrong on the key point.** The recruiter's \"you've been at MNTN about a year\" is",
+      "  stale LinkedIn data; you are unemployed. MNTN may nonetheless be the employer you *lost* in",
+      "  June 2026 — that sequence is still open (§3.3 #1).",
+      "",
+      "**Still open:** the per-employer detail (§3.3 #1), and **what the Metal employment statement of",
+      "08/04/2026 actually says** (§3.3 #2). The corpus never explains why Metal's co-founder wrote you",
+      "a VA employment statement in August 2026. Get that signed document — it is likely your single",
+      "best piece of employment evidence and it is not in this repo.",
+      "",
+      "**Two consequences worth seeing now.** First, being **currently unemployed is genuinely helpful**",
+      "to the VR&E analysis — § 21.52(b)(5) lists \"number, length, and frequency of periods of",
+      "unemployment or underemployment\" as an express severity factor, and § 21.51(b) is written for",
+      "someone who qualifies for suitable work but does not keep it. Second, the **still-planned**",
+      "CPA-firm move is a live risk that needs careful, honest handling — see §9.3.",
+      ""
+    ],
+    "removed": [
+      "### 3.2 The employment conflict — four accounts, none reconciled",
+      "This is the central unresolved fact and it drives §5 entirely.",
+      "These cannot all describe your current status. Account 3 is newest within the corpus and says you lost a job in June 2026 and left tech. Account 4 is _later in time_ but comes from recruiters, who are unreliable narrators. Account 4 also raises a question the corpus never addresses: **why did Metal's co-founder write you a VA employment statement in August 2026** — and what does it say? That document is likely the best single piece of employment evidence you have for this appointment, and it is not in this repo."
+    ],
+    "unchanged": 20,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md\n+++ /Users/marcusklein/dev/research/va-disability/planning-docs/VRE-EVALUATION-PREP-2026-09-17.md\n@@ -1,969 +1,993 @@\n ---\n topic: vre-initial-individual-evaluation-prep\n created: 2026-09-13\n@@ 173 unchanged lines @@\n | K   | Residence                              | Lake Charles, LA area (apartment correspondence, Aug–Sep 2026) — **not** Austin TX                                                                                                                                                                               | INFERRED (primary-ish)                    | Property-management email thread; consistent with corpus \"relocate to Lake Charles\"                               |\n | L   | TDIU posture                           | **Not being pursued.** Goal is schedular 100%. _Rice v. Shinseki_ means VA must still consider TDIU once unemployability is raised                                                                                                                               | CONFIRMED                                 | `MASTER-STRATEGY.md` §4; `CLAIM-ASSESSMENT.md` Part 2                                                             |\n \n-### 3.2 The employment conflict — four accounts, none reconciled\n+### 3.2 The employment conflict — four accounts, now reconciled\n \n-This is the central unresolved fact and it drives §5 entirely.\n+This was the central unresolved fact. The Phase 0 gate resolved its spine; the per-employer\n+detail remains open.\n \n | Account | Says                                                                                                                                                                                                                                                                                     | Dated        | Source quality                                                    |\n | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------- |\n@@ 2 unchanged lines @@\n | 3       | Job loss 2023 (~6 mo unemployed); **\"June 2026: lost job again\"**; decision to \"leave the tech career entirely and relocate\" to Lake Charles; a Jan-2025 note references a **remote CTO offer in Lake Charles**. No mention of brother or CPA firm                                       | 2026-07-05   | Corpus (`COMPREHENSIVE-FINDINGS-2026-07.md`, newest)              |\n | 4       | Recruiter: _\"you've been at **MNTN** about a year now after a run through **Metal** and **DISQO**.\"_ Separately: Metal's co-founder (james@metal.ai) drafted a **signed VA employment statement** for you on 2026-08-04; active recruiter outreach at **$195K–$229K** through 09/12/2026 | Aug–Sep 2026 | **Third-party, unverified** — recruiters work from stale LinkedIn |\n \n-These cannot all describe your current status. Account 3 is newest within the corpus and says you lost a job in June 2026 and left tech. Account 4 is _later in time_ but comes from recruiters, who are unreliable narrators. Account 4 also raises a question the corpus never addresses: **why did Metal's co-founder write you a VA employment statement in August 2026** — and what does it say? That document is likely the best single piece of employment evidence you have for this appointment, and it is not in this repo.\n+**Reconciled at the gate (2026-09-13).** The veteran confirms he is **not currently employed** and\n+that the family-CPA-firm move is **still planned, not executed**. That resolves the conflict:\n \n+- **Account 3 is correct on the spine** — employed as a senior software engineer until the **June\n+  2026 job loss**, unemployed since. This is the operative history.\n+- **Account 2 was accurate when written** (06/12/2026) and its \"planned transition\" framing is\n+  **still accurate today** — the CPA-firm move remains a plan, not a fact.\n+- **Account 1 was premature.** It described the CPA-firm move as already done. It was not, and is\n+  still not. Treat `veteran-profile.md`'s \"left the tech industry to work for his brother\" as\n+  **superseded and inaccurate** — do not repeat it to VA in any document.\n+- **Account 4 is wrong on the key point.** The recruiter's \"you've been at MNTN about a year\" is\n+  stale LinkedIn data; you are unemployed. MNTN may nonetheless be the employer you *lost* in\n+  June 2026 — that sequence is still open (§3.3 #1).\n+\n+**Still open:** the per-employer detail (§3.3 #1), and **what the Metal employment statement of\n+08/04/2026 actually says** (§3.3 #2). The corpus never explains why Metal's co-founder wrote you\n+a VA employment statement in August 2026. Get that signed document — it is likely your single\n+best piece of employment evidence and it is not in this repo.\n+\n+**Two consequences worth seeing now.** First, being **currently unemployed is genuinely helpful**\n+to the VR&E analysis — § 21.52(b)(5) lists \"number, length, and frequency of periods of\n+unemployment or underemployment\" as an express severity factor, and § 21.51(b) is written for\n+someone who qualifies for suitable work but does not keep it. Second, the **still-planned**\n+CPA-firm move is a live risk that needs careful, honest handling — see §9.3.\n+\n ### 3.3 ASK THE VETERAN — remaining open items\n \n > **Answered at the gate on 2026-09-13** (see the note at the top): currently **not employed**;\n@@ 771 unchanged lines @@\n - **Whether electing the P911SA rate consumes Post-9/11 GI Bill months** — unresolved. Ask.\n - **§ 21.98** — **RESOLVED:** removed effective 2019-02-19 (84 FR 138). No longer exists.\n - **Time from evaluation → entitlement decision → signed plan** — no published VA SLA found. Ask."
+  }
+}

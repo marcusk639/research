@@ -1,0 +1,52 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 26,
+    "originalLines": 1161,
+    "finalLines": 1177,
+    "tokensSaved": 21514,
+    "tokenCount": 1086,
+    "originalTokenCount": 22600,
+    "compressionRatio": 0.048053097345132745,
+    "duration": 33,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "- ✅ **RESOLVED 2026-09-14 — electing the Post-9/11 _rate_ does NOT burn Post-9/11 _months_.**",
+      "  **38 C.F.R. § 21.79(f)(2)**, verbatim: _\"the entitlement usage is deducted from the veteran's",
+      "  chapter 31 entitlement. **No entitlement charges are made against chapter 33.**\"_ (Authority:",
+      "  38 U.S.C. § 3108(b).) The election changes the **dollar rate only**. Earlier drafts called this",
+      "  unsettled because they searched §§ 21.260/21.264 — the answer lives in the _charging_ section,",
+      "  § 21.79. **No longer a question for Jamie Clark**; §8.5 question #3 has been replaced.",
+      "- **The cap that does bite, and its direction.** Chapter 31 usage is never charged to Chapter 33,",
+      "  but Chapter 33 months already used **do** consume the shared **48-month aggregate**",
+      "  (38 U.S.C. § 3695(b); 38 C.F.R. §§ 21.78(a), 21.4020(b)). The live question is arithmetic, not",
+      "  law: **how many Chapter 31 months remain after your GI Bill usage.** Ask her for that number.",
+      "- ⚠️ **Still open, and financially decisive for a self-employment plan:** neither subsistence table",
+      "  has a \"self-employment\" row. Your rate depends on how VA classifies the plan's training",
+      "  component — institutional vs **training-in-the-home / independent instructor**, the latter paid",
+      "  at only **½ the BAH National Average** under § 21.260(c). Ask which row applies.",
+      "- ⚠️ **§ 21.260(d) — the hard stop nobody mentions.** No subsistence allowance is payable when VA",
+      "  is providing **only** (1) initial evaluation, (2) placement/post-placement services under",
+      "  38 U.S.C. § 3105(b), or (3) counseling. Subsistence covers the **training** phase — it does not",
+      "  fund the business-launch phase.",
+      "| **38 C.F.R. § 21.79** | **Determining entitlement usage under Chapter 31** — day-for-day charging (a); **no charge** during IEAP employment services / employment adjustment allowance (b); **§ 21.79(f)(2): \"No entitlement charges are made against chapter 33\"** for a P911SA rate election | VERIFIED verbatim 2026-09-14 (eCFR renderer API) |",
+      "| **38 C.F.R. §§ 21.78, 21.80, 21.84** | >48 months; rehabilitation plan requirements | VERIFIED (titles only); full text UNVERIFIED |",
+      "| ~~**38 C.F.R. § 21.74**~~ | ⚠️ **MISCITATION — corrected 2026-09-14.** § 21.74 is **\"Extended evaluation,\"** NOT entitlement computation. Earlier drafts cited it for entitlement math; the correct section is **§ 21.79**. Do not cite § 21.74 for charging. | Corrected; verified against eCFR |"
+    ],
+    "removed": [
+      "- **Whether electing the Post-9/11 _rate_ burns Post-9/11 _months_ is genuinely unsettled** in",
+      "  the sources. Secondary sources say it does not; primary text is silent. **Ask Jamie Clark",
+      "  directly and get the answer in writing** — guessing wrong could silently spend GI Bill",
+      "  entitlement. This is question #3 in §8.5.",
+      "| **38 C.F.R. §§ 21.74, 21.78, 21.80, 21.84** | Entitlement computation; >48 months; rehabilitation plan requirements                                                                                                                                | VERIFIED (titles only); full text UNVERIFIED                                                                                                                                |"
+    ],
+    "unchanged": 6,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n@@ -1,1161 +1,1177 @@\n ---\n@@ 636 unchanged lines @@\n   of a term/quarter/semester, with narrow exceptions. Choose deliberately at the start of a term.\n-- **Whether electing the Post-9/11 _rate_ burns Post-9/11 _months_ is genuinely unsettled** in\n-  the sources. Secondary sources say it does not; primary text is silent. **Ask Jamie Clark\n-  directly and get the answer in writing** — guessing wrong could silently spend GI Bill\n-  entitlement. This is question #3 in §8.5.\n+- ✅ **RESOLVED 2026-09-14 — electing the Post-9/11 _rate_ does NOT burn Post-9/11 _months_.**\n+  **38 C.F.R. § 21.79(f)(2)**, verbatim: _\"the entitlement usage is deducted from the veteran's\n+  chapter 31 entitlement. **No entitlement charges are made against chapter 33.**\"_ (Authority:\n+  38 U.S.C. § 3108(b).) The election changes the **dollar rate only**. Earlier drafts called this\n+  unsettled because they searched §§ 21.260/21.264 — the answer lives in the _charging_ section,\n+  § 21.79. **No longer a question for Jamie Clark**; §8.5 question #3 has been replaced.\n+- **The cap that does bite, and its direction.** Chapter 31 usage is never charged to Chapter 33,\n+  but Chapter 33 months already used **do** consume the shared **48-month aggregate**\n+  (38 U.S.C. § 3695(b); 38 C.F.R. §§ 21.78(a), 21.4020(b)). The live question is arithmetic, not\n+  law: **how many Chapter 31 months remain after your GI Bill usage.** Ask her for that number.\n+- ⚠️ **Still open, and financially decisive for a self-employment plan:** neither subsistence table\n+  has a \"self-employment\" row. Your rate depends on how VA classifies the plan's training\n+  component — institutional vs **training-in-the-home / independent instructor**, the latter paid\n+  at only **½ the BAH National Average** under § 21.260(c). Ask which row applies.\n+- ⚠️ **§ 21.260(d) — the hard stop nobody mentions.** No subsistence allowance is payable when VA\n+  is providing **only** (1) initial evaluation, (2) placement/post-placement services under\n+  38 U.S.C. § 3105(b), or (3) counseling. Subsistence covers the **training** phase — it does not\n+  fund the business-launch phase.\n \n@@ 487 unchanged lines @@\n | **38 C.F.R. § 21.98** | Internal VR&E Officer review (plan-content disputes) | **REMOVED effective 2019-02-19** by 84 FR 138 (RIN 2900-AQ26), confirmed via the eCFR versioner API. Function replaced by § 21.416. **Do not cite — stale law** |\n-| **38 C.F.R. §§ 21.74, 21.78, 21.80, 21.84** | Entitlement computation; >48 months; rehabilitation plan requirements                                                                                                                                | VERIFIED (titles only); full text UNVERIFIED                                                                                                                                |\n+| **38 C.F.R. § 21.79** | **Determining entitlement usage under Chapter 31** — day-for-day charging (a); **no charge** during IEAP employment services / employment adjustment allowance (b); **§ 21.79(f)(2): \"No entitlement charges are made against chapter 33\"** for a P911SA rate election | VERIFIED verbatim 2026-09-14 (eCFR renderer API) |\n+| **38 C.F.R. §§ 21.78, 21.80, 21.84** | >48 months; rehabilitation plan requirements | VERIFIED (titles only); full text UNVERIFIED |\n+| ~~**38 C.F.R. § 21.74**~~ | ⚠️ **MISCITATION — corrected 2026-09-14.** § 21.74 is **\"Extended evaluation,\"** NOT entitlement computation. Earlier drafts cited it for entitlement math; the correct section is **§ 21.79**. Do not cite § 21.74 for charging. | Corrected; verified against eCFR |\n \n@@ 27 unchanged lines @@\n - **Time from evaluation → entitlement decision → signed plan** — no published VA SLA found. Ask."
+  }
+}

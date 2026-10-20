@@ -1,0 +1,18 @@
+{
+  "content": "# Quality gates — verification loop and release checklist\n\nRead this before Phase 6 (CRITIQUE) and Phase 8 (PACKAGE). These gates are the part that separates this from a generic \"search and summarize.\"\n\n## Phase 6 — adversarial verification protocol\n\nFor each contested or load-bearing claim, evaluate it independently from **three personas**. Each persona answers one question: _\"On the evidence cited, is this claim refuted?\"_\n\n1. **Adversarial Reviewer** — Is the methodology sound? Are scope/assumptions hiding a weakness? Is the claim broader than the evidence supports?\n2. **Domain Skeptic** — Is this claim surprising, convenient, or novel? Does it rest on a single source? What would a knowledgeable critic say?\n3. **Source-Quality Auditor** — Does each `[Sn]` actually contain a quote supporting the sentence? Any circular sourcing (blog citing the blog)? Any `blog`/`unreliable` tier doing `primary` work?\n\n### Verdict rule (the 2-of-3 kill)\n\n- A claim is **killed (`verdict: refuted`)** if a **majority (≥2 of 3) personas refute it.**\n- A claim **survives (`verdict: confirmed`)** only if not refuted by a majority _and_ it meets the independent-source floor.\n- Anything else is **`unverified`** → goes to Limitations, never stated as fact in the body.\n- Bias toward refutation when uncertain: an unverified claim omitted is cheaper than a wrong claim shipped.\n\nRecord each persona's call in the claim's notes so the decision is auditable.\n\n## Iteration budget\n\n- After a kill, **delta-retrieve** (Phase 7) to try to rescue the claim with better sourcing, then re-judge.\n- **Maximum 2 rounds.** After round 2, ship with surviving claims only and disclose what couldn't be verified.\n\n## Phase 8 — release checklist (hard gates)\n\nDo not deliver until every box is true:\n\n- [ ] **Source floor met** after dedup: `quick`≥5, `standard`≥8, `deep`≥10, `ultradeep`≥15.\n- [ ] **Citation coverage:** every factual sentence in the body carries an inline `[Sn]`.\n- [ ] **Citation integrity:** every `[Sn]` resolves to a real `evidence.jsonl` quote from a _fetched_ page (not a snippet, not memory).\n- [ ] **No survivors that should be dead:** zero claims with `verdict: refuted` stated as fact in the body.\n- [ ] **Conflicts disclosed:** every flagged conflict and every `unverified` claim appears in **Limitations & Open Questions**.\n- [ ] **Confidence labeled** on headline conclusions (high/medium/low).\n- [ ] **Bibliography complete:** every `Sn` listed with URL + quality tier.\n- [ ] **No placeholders / no fabricated numbers.**\n\n## Honest-failure rule\n\nIf the topic can't clear the gates (sources unreachable, evidence too thin), say so plainly and deliver a partial brief that states what is known, what isn't, and why — rather than padding to look complete. A small verified answer beats a large unverifiable one.\n",
+  "metadata": {
+    "path": "/Users/marcusklein/.claude-acct2/plugins/synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/skills/deep-research/reference/quality-gates.md",
+    "size": 2847,
+    "encoding": "utf-8",
+    "fileType": "markdown",
+    "hash": "8a29467ef09ee71b31e0629f5f17a91118b068147ef0b8f670dd421495aac717",
+    "fromCache": false,
+    "isDiff": false,
+    "chunked": false,
+    "truncated": false,
+    "tokensSaved": 0,
+    "tokenCount": 698,
+    "originalTokenCount": 698,
+    "compressionRatio": 1
+  }
+}

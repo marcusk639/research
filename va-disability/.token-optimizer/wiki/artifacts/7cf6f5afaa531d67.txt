@@ -1,0 +1,60 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 3,
+    "linesChanged": 34,
+    "originalLines": 1086,
+    "finalLines": 1106,
+    "tokensSaved": 19597,
+    "tokenCount": 1009,
+    "originalTokenCount": 20606,
+    "compressionRatio": 0.04896632048917791,
+    "duration": 16,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "status: active — primary decision document for the three-option question. REVISED 2026-09-14 for relocation to Lake Charles, Louisiana (see the 📍 block before §1)",
+      "location: Lake Charles, Calcasieu Parish, Louisiana (relocated from Texas ~2026-09)",
+      "inputs: 6 parallel research lanes 2026-09-14 (~180 sources) + 5 Louisiana-specific lanes 2026-09-14; corpus facts from vre/ and planning-docs/",
+      "> 📍 **Lake Charles adjustments to this table.** (a) **Option A is worse than shown** — three of four",
+      "> targets have no local program and unpublishable local employment; the locally trainable one pays",
+      "> **$60,020** (§4.6). (b) **The VA cash-during-ramp row drops** — P911SA is ≈**$1,300–1,400/mo**, not",
+      "> $1,700–2,400, so the advantage over the standard rate is ≈**+$300–400/mo** (§4.5). (c) **Option B gains",
+      "> a real line item** — the Louisiana software credit, **25% refundable on resident payroll**, worth",
+      "> ≈$54,500 net at $250K of payroll, **contingent on two unanswered questions** (§5.7). (d) **Every income",
+      "> figure needs ≈8–11% less to buy the same life** here, all of it in shelter — goods and services are at",
+      "> parity with Austin, and Louisiana homeowners insurance (**+57% 2023→2025**) claws back much of the rest.",
+      "",
+      "   (M28C startup-only bar) and makes **Louisiana Rehabilitation Services** the only plausible funded",
+      "   self-employment route — ⚠️ **if** LRS runs a self-employment program at all (pending).",
+      "6. ✅ **LED's answers on the Digital Interactive Media and Software credit** (§5.7). If a single-member",
+      "   LLC owner's W-2 payroll qualifies **and** client-commissioned software clears the \"internal use\"",
+      "   exclusion, Louisiana becomes measurably better than Texas for self-employment — a >20% boost to net",
+      "   income at scale. If either answer is unfavorable, the credit is worth **zero**. **This is the single",
+      "   most decision-relevant open question on the consulting path.**",
+      "7. ⚠️ **Whether LRS matches TWC-VRS.** Texas's state VR agency funded self-employment plans and served",
+      "   existing owners. If Louisiana's does too, Move 3 survives intact. If not, the no-service-connection",
+      "   funded route for self-employment disappears entirely.",
+      "8. **The verified Lake Charles BAH figure** (ZIP 70609, E-5, with dependents). The revised",
+      "   **+$300–400/month** P911SA estimate is now the weakest number in this document — and it is already",
+      "   low enough that it should not drive a decision either way.",
+      "9. ⚠️ **SOWELA's respiratory-therapy CoARC accreditation.** If it lands, the one locally trainable",
+      "   mid-wage healthcare path reopens (§4.6). Re-check before dismissing Option A entirely."
+    ],
+    "removed": [
+      "status: active — primary decision document for the three-option question",
+      "inputs: 6 parallel research lanes, 2026-09-14; ~180 sources; corpus facts from vre/ and planning-docs/",
+      "   (M28C startup-only bar) and makes TWC-VRS the only funded self-employment route.",
+      "6. **Verified Texas BAH figures.** The **+$900–1,600/month** P911SA estimate is the weakest number in",
+      "   this document. If the real figure is at the low end, Option A's funded-ramp advantage shrinks.",
+      "7. **A VRC willing to defer the entitlement determination in writing.** Dissolves the §10 dilemma.",
+      ""
+    ],
+    "unchanged": 1,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n@@ -1,1086 +1,1106 @@\n@@ 3 unchanged lines @@\n-status: active — primary decision document for the three-option question\n+status: active — primary decision document for the three-option question. REVISED 2026-09-14 for relocation to Lake Charles, Louisiana (see the 📍 block before §1)\n+location: Lake Charles, Calcasieu Parish, Louisiana (relocated from Texas ~2026-09)\n companions: CH31-RESOURCE-INVENTORY.md (what is obtainable) · FINANCIAL-BRIDGE-2026-09.md (immediate money)\n-inputs: 6 parallel research lanes, 2026-09-14; ~180 sources; corpus facts from vre/ and planning-docs/\n+inputs: 6 parallel research lanes 2026-09-14 (~180 sources) + 5 Louisiana-specific lanes 2026-09-14; corpus facts from vre/ and planning-docs/\n@@ 768 unchanged lines @@\n+> 📍 **Lake Charles adjustments to this table.** (a) **Option A is worse than shown** — three of four\n+> targets have no local program and unpublishable local employment; the locally trainable one pays\n+> **$60,020** (§4.6). (b) **The VA cash-during-ramp row drops** — P911SA is ≈**$1,300–1,400/mo**, not\n+> $1,700–2,400, so the advantage over the standard rate is ≈**+$300–400/mo** (§4.5). (c) **Option B gains\n+> a real line item** — the Louisiana software credit, **25% refundable on resident payroll**, worth\n+> ≈$54,500 net at $250K of payroll, **contingent on two unanswered questions** (§5.7). (d) **Every income\n+> figure needs ≈8–11% less to buy the same life** here, all of it in shelter — goods and services are at\n+> parity with Austin, and Louisiana homeowners insurance (**+57% 2023→2025**) claws back much of the rest.\n+\n@@ 236 unchanged lines @@\n-   (M28C startup-only bar) and makes TWC-VRS the only funded self-employment route.\n-6. **Verified Texas BAH figures.** The **+$900–1,600/month** P911SA estimate is the weakest number in\n-   this document. If the real figure is at the low end, Option A's funded-ramp advantage shrinks.\n-7. **A VRC willing to defer the entitlement determination in writing.** Dissolves the §10 dilemma.\n-\n+   (M28C startup-only bar) and makes **Louisiana Rehabilitation Services** the only plausible funded\n+   self-employment route — ⚠️ **if** LRS runs a self-employment program at all (pending).\n+6. ✅ **LED's answers on the Digital Interactive Media and Software credit** (§5.7). If a single-member\n+   LLC owner's W-2 payroll qualifies **and** client-commissioned software clears the \"internal use\"\n+   exclusion, Louisiana becomes measurably better than Texas for self-employment — a >20% boost to net\n+   income at scale. If either answer is unfavorable, the credit is worth **zero**. **This is the single\n+   most decision-relevant open question on the consulting path.**\n+7. ⚠️ **Whether LRS matches TWC-VRS.** Texas's state VR agency funded self-employment plans and served\n+   existing owners. If Louisiana's does too, Move 3 survives intact. If not, the no-service-connection\n+   funded route for self-employment disappears entirely.\n+8. **The verified Lake Charles BAH figure** (ZIP 70609, E-5, with dependents). The revised\n+   **+$300–400/month** P911SA estimate is now the weakest number in this document — and it is already\n+   low enough that it should not drive a decision either way.\n+9. ⚠️ **SOWELA's respiratory-therapy CoARC accreditation.** If it lands, the one locally trainable\n+   mid-wage healthcare path reopens (§4.6). Re-check before dismissing Option A entirely.\n@@ 71 unchanged lines @@"
+  }
+}

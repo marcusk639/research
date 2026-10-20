@@ -1,0 +1,32 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/GUIDE.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 6,
+    "originalLines": 278,
+    "finalLines": 278,
+    "tokensSaved": 3589,
+    "tokenCount": 392,
+    "originalTokenCount": 3981,
+    "compressionRatio": 0.09846772167797035,
+    "duration": 76,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "- Firebase: for CI auth, a retrieval agent relayed that the docs say to \"run `firebase login:ci` on your",
+      "  local environment; this should not be performed from a CI system\" — attributed to the emulator docs [S14].",
+      "  `[UNVERIFIED by orchestrator — relayed quote, not independently fetched; confirm before relying on it]`"
+    ],
+    "removed": [
+      "- Firebase: for CI auth the docs say to \"run `firebase login:ci` on your local environment; this should",
+      "  not be performed from a CI system\" [S-r-infra: INFRA-E10, see `SOURCES.md` S14 area] `[UNVERIFIED by",
+      "  orchestrator — quote relayed by a retrieval agent from the emulator docs; confirm before relying on it]`"
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/GUIDE.md\n+++ /Users/marcusklein/dev/research/app-dev/GUIDE.md\n@@ -1,278 +1,278 @@\n # Operating Guide — running the pipeline\n \n **Date:** 2026-09-29\n@@ 25 unchanged lines @@\n - `ANTHROPIC_API_KEY` — **required for `--bare`**: \"Set ANTHROPIC_API_KEY before running it, because bare\n   mode doesn't use your subscription login\" [S8]. This is the single most common surprise when moving from\n   interactive to scripted runs.\n-- Firebase: for CI auth the docs say to \"run `firebase login:ci` on your local environment; this should\n-  not be performed from a CI system\" [S-r-infra: INFRA-E10, see `SOURCES.md` S14 area] `[UNVERIFIED by\n-  orchestrator — quote relayed by a retrieval agent from the emulator docs; confirm before relying on it]`\n+- Firebase: for CI auth, a retrieval agent relayed that the docs say to \"run `firebase login:ci` on your\n+  local environment; this should not be performed from a CI system\" — attributed to the emulator docs [S14].\n+  `[UNVERIFIED by orchestrator — relayed quote, not independently fetched; confirm before relying on it]`\n - Expo/EAS: a token for non-interactive builds `[UNVERIFIED — token setup not fetched]`\n - GitHub: only if you use Actions as the verification substrate.\n \n@@ 238 unchanged lines @@\n production risks by limiting usage to non-critical environments where possible\" [S13], and its 2026-02-11\n incident report describes \"a misconfigured automated abuse enforcement system that incorrectly terminated\n legitimate user deployments\" [S96]."
+  }
+}

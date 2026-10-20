@@ -27,3 +27,11 @@ va-disability/supporting-docs/Victory-2018*
 # reports out of git; the directory's README is intentionally tracked.
 va-disability/ratings/*.md
 !va-disability/ratings/README.md
+va-disability/supporting-docs/*.html
+
+# Personal documents dropped at the top of va-disability/ (nexus letters, VES attachments,
+# separation agreements) and saved medical web pages — PHI, never track
+va-disability/*.pdf
+va-disability/*.pages
+va-disability/supporting-docs/*.mhtml
+va-disability/vre/source-materials/

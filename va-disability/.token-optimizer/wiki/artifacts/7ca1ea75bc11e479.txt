@@ -1,0 +1,57 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 31,
+    "originalLines": 1032,
+    "finalLines": 1049,
+    "tokensSaved": 18633,
+    "tokenCount": 827,
+    "originalTokenCount": 19460,
+    "compressionRatio": 0.04249743062692703,
+    "duration": 17,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "### Days 1–30 — revised for Louisiana",
+      "- [ ] ⛔ **UPDATE YOUR ADDRESS WITH VA — today.** § 3.655(b) makes denial **mandatory** for a missed exam",
+      "      on a supplemental claim, and no C&P is scheduled yet. VA.gov profile **+** 800-827-1000 **+**",
+      "      877-222-8387, **plus** a separate notice to the VRC and `eva@va.gov`. See",
+      "      `FINANCIAL-BRIDGE-2026-09.md` §3.1.",
+      "- [ ] ✅ **Apply for Louisiana Medicaid — both spouses.** `sspweb.lameds.ldh.la.gov/selfservice/` or",
+      "      1-888-342-6207. ≤$2,489/mo for 2, **no asset test**, VA compensation not counted.",
+      "- [ ] **File the Texas unemployment claim** — against **Texas**, with the separation agreement, and",
+      "      **request backdating in writing under 40 TAC § 815.22(a)**. Then **register with the Louisiana Job",
+      "      Center / HiRE within 3 business days.**",
+      "- [ ] ✅ **Establish care at the Douglas Fournet VA Clinic, Lake Charles (337-475-9500)** — keeps the",
+      "      treatment record continuous across the move, which the pending MH claim depends on.",
+      "      service-disabled status first. (Federal — unaffected by the move.)",
+      "- [ ] ⚠️ **Call Louisiana Rehabilitation Services (LRS)** — the state VR agency, replacing TWC-VRS. Ask",
+      "      specifically whether they fund **self-employment plans** and whether they serve **existing**",
+      "      business owners. **Do not assume parity with Texas.**",
+      "- [ ] ✅ **Call LED's Office of Entertainment Industry Development** and get written answers to the two",
+      "      gating questions on the **Digital Interactive Media and Software credit** (§5.7). Highest-value",
+      "      call on the consulting path.",
+      "- [ ] **Register with a DVOP** at a **Louisiana** American Job Center (not Texas).",
+      "- [ ] ✅ **Verify fiber at your specific address** — AT&T Fiber reaches ≈68.5% of the area; a third of",
+      "      locations have none, and Option C is now remote-only.",
+      "- [ ] ⚠️ **Confirm whether Hazlewood is restorable** if you ever return to Texas — `hazlewood@tvc.texas.gov`.",
+      "- [ ] See `FINANCIAL-BRIDGE-2026-09.md` §10 for the full re-ranked immediate-income list."
+    ],
+    "removed": [
+      "### Days 1–30",
+      "      service-disabled status first.",
+      "- [ ] **Call Texas TWC-VRS** and open an application — ask specifically about **Self-Employment",
+      "      Services** and the Business Technical Assistance Consultant.",
+      "- [ ] **Register with a DVOP** at a Texas American Job Center.",
+      "- [ ] See `FINANCIAL-BRIDGE-2026-09.md` for the immediate-income actions.",
+      ""
+    ],
+    "unchanged": 4,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/OPTIONS-REPORT-2026-09-14.md\n@@ -1,1032 +1,1049 @@\n@@ 905 unchanged lines @@\n-### Days 1–30\n+### Days 1–30 — revised for Louisiana\n \n+- [ ] ⛔ **UPDATE YOUR ADDRESS WITH VA — today.** § 3.655(b) makes denial **mandatory** for a missed exam\n+      on a supplemental claim, and no C&P is scheduled yet. VA.gov profile **+** 800-827-1000 **+**\n+      877-222-8387, **plus** a separate notice to the VRC and `eva@va.gov`. See\n+      `FINANCIAL-BRIDGE-2026-09.md` §3.1.\n+- [ ] ✅ **Apply for Louisiana Medicaid — both spouses.** `sspweb.lameds.ldh.la.gov/selfservice/` or\n+      1-888-342-6207. ≤$2,489/mo for 2, **no asset test**, VA compensation not counted.\n+- [ ] **File the Texas unemployment claim** — against **Texas**, with the separation agreement, and\n+      **request backdating in writing under 40 TAC § 815.22(a)**. Then **register with the Louisiana Job\n+      Center / HiRE within 3 business days.**\n - [ ] **File VA Form 10-10EZ** for VA health care enrollment on the merits, independent of VR&E.\n+- [ ] ✅ **Establish care at the Douglas Fournet VA Clinic, Lake Charles (337-475-9500)** — keeps the\n+      treatment record continuous across the move, which the pending MH claim depends on.\n - [ ] **Apply for SDVOSB certification** at `veterans.certify.sba.gov`. Confirm BIRLS reflects\n-      service-disabled status first.\n-- [ ] **Call Texas TWC-VRS** and open an application — ask specifically about **Self-Employment\n-      Services** and the Business Technical Assistance Consultant.\n+      service-disabled status first. (Federal — unaffected by the move.)\n+- [ ] ⚠️ **Call Louisiana Rehabilitation Services (LRS)** — the state VR agency, replacing TWC-VRS. Ask\n+      specifically whether they fund **self-employment plans** and whether they serve **existing**\n+      business owners. **Do not assume parity with Texas.**\n+- [ ] ✅ **Call LED's Office of Entertainment Industry Development** and get written answers to the two\n+      gating questions on the **Digital Interactive Media and Software credit** (§5.7). Highest-value\n+      call on the consulting path.\n - [ ] **File PCPG, VA Form 27-8832.**\n-- [ ] **Register with a DVOP** at a Texas American Job Center.\n+- [ ] **Register with a DVOP** at a **Louisiana** American Job Center (not Texas).\n@@ 2 unchanged lines @@\n-- [ ] See `FINANCIAL-BRIDGE-2026-09.md` for the immediate-income actions.\n-\n+- [ ] ✅ **Verify fiber at your specific address** — AT&T Fiber reaches ≈68.5% of the area; a third of\n+      locations have none, and Option C is now remote-only.\n+- [ ] ⚠️ **Confirm whether Hazlewood is restorable** if you ever return to Texas — `hazlewood@tvc.texas.gov`.\n+- [ ] See `FINANCIAL-BRIDGE-2026-09.md` §10 for the full re-ranked immediate-income list.\n@@ 114 unchanged lines @@"
+  }
+}

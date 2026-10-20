@@ -219,7 +219,7 @@ Each issue below genuinely works against a 100% rating. For each: what it is, wh
 
 ### I-7 — The three-way SI-frequency conflict in the record
 
-**What:** FMLA eval (5/14/26) "denies current SI"; personal statement (6/17/26) SI "every day"; chart note (~6/25/26) "denies SI."
+**What:** FMLA eval (5/14/26) "denies current SI"; personal statement (6/17/26) SI "every day"; chart note (~6/25/26) **[RETRACTED 2026-10-08: no 6/25/26 SI denial exists — see CLAIM-ASSESSMENT.md §0.2]** "denies SI."
 **Why it matters:** an examiner/rater who notices it cold can use it against credibility on a symptom central to severity.
 **Resolution options:**
 

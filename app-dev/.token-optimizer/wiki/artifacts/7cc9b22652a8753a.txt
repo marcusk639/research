@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/scripts/git-hooks/pre-commit",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 8,
+    "originalLines": 101,
+    "finalLines": 107,
+    "tokensSaved": 1180,
+    "tokenCount": 258,
+    "originalTokenCount": 1438,
+    "compressionRatio": 0.17941585535465926,
+    "duration": 43,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "# Deletions are excluded from STAGED (filter ACM) because sections 1 and 2 inspect",
+      "# file CONTENT, which a deletion has none of. But the test-tamper gate in section",
+      "# 2.5 must see deletions — a commit whose only change is `rm` on a test file would",
+      "# otherwise exit here before being checked. So gate the early exit on any staged",
+      "# change, not just content-bearing ones.",
+      "STAGED_ANY=$(git diff --cached --name-only)",
+      "[ -z \"$STAGED_ANY\" ] && exit 0"
+    ],
+    "removed": [
+      "[ -z \"$STAGED\" ] && exit 0"
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/recovery-platform/scripts/git-hooks/pre-commit\n+++ /Users/marcusklein/dev/recovery-platform/scripts/git-hooks/pre-commit\n@@ -1,101 +1,107 @@\n #!/bin/bash\n # Pre-commit gate: blocking secret scan + 300-line ratchet on staged files.\n # Installed by scripts/install-git-hooks.sh (copies into .git/hooks/).\n@@ 2 unchanged lines @@\n \n \n STAGED=$(git diff --cached --name-only --diff-filter=ACM)\n-[ -z \"$STAGED\" ] && exit 0\n+# Deletions are excluded from STAGED (filter ACM) because sections 1 and 2 inspect\n+# file CONTENT, which a deletion has none of. But the test-tamper gate in section\n+# 2.5 must see deletions — a commit whose only change is `rm` on a test file would\n+# otherwise exit here before being checked. So gate the early exit on any staged\n+# change, not just content-bearing ones.\n+STAGED_ANY=$(git diff --cached --name-only)\n+[ -z \"$STAGED_ANY\" ] && exit 0\n \n FAIL=0\n \n@@ 86 unchanged lines @@\n fi\n \n exit 0"
+  }
+}

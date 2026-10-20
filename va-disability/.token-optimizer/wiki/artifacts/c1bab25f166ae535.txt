@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 3,
+    "originalLines": 1136,
+    "finalLines": 1135,
+    "tokensSaved": 21661,
+    "tokenCount": 334,
+    "originalTokenCount": 21995,
+    "compressionRatio": 0.01518526937940441,
+    "duration": 20,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "facilities — see §5.1 on how to state the number (lead with facilities and dates, not a count)."
+    ],
+    "removed": [
+      "facilities (see §5.1 on how to state the number).",
+      "Be complete and matter-of-fact. At least nine treatment episodes since 2016 at named facilities."
+    ],
+    "unchanged": 12,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/VRE-EVALUATION-PREP-2026-09-17.md\n@@ -1,1136 +1,1135 @@\n ---\n topic: vre-initial-individual-evaluation-prep\n created: 2026-09-13\n@@ 861 unchanged lines @@\n \n **The substance use history.**\n Be complete and matter-of-fact. **Eleven** documented treatment episodes since 2016 at named\n-facilities (see §5.1 on how to state the number).\n-Be complete and matter-of-fact. At least nine treatment episodes since 2016 at named facilities.\n+facilities — see §5.1 on how to state the number (lead with facilities and dates, not a count).\n This is your strongest severity evidence — there is no reason to minimize it, and minimizing\n would conflict with records VA can pull. If your current status changed after June 2026, say\n what is actually true now.\n@@ 261 unchanged lines @@\n - **Whether electing the P911SA rate consumes Post-9/11 GI Bill months** — unresolved. Ask.\n - **§ 21.98** — **RESOLVED:** removed effective 2019-02-19 (84 FR 138). No longer exists.\n - **Time from evaluation → entitlement decision → signed plan** — no published VA SLA found. Ask."
+  }
+}

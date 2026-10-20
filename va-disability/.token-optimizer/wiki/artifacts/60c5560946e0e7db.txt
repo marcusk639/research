@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 3,
+    "originalLines": 527,
+    "finalLines": 526,
+    "tokensSaved": 10153,
+    "tokenCount": 132,
+    "originalTokenCount": 10285,
+    "compressionRatio": 0.012834224598930482,
+    "duration": 13,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "### 3.2 Priority processing for financial hardship — free, ~1 hour"
+    ],
+    "removed": [
+      "### 3.2 Priority processing for financial hardship",
+      "## 3. Accelerate the pending VA claim — free, ~1 hour"
+    ],
+    "unchanged": 0,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n@@ -1,527 +1,526 @@\n@@ 287 unchanged lines @@\n-### 3.2 Priority processing for financial hardship\n-## 3. Accelerate the pending VA claim — free, ~1 hour\n+### 3.2 Priority processing for financial hardship — free, ~1 hour\n@@ 238 unchanged lines @@"
+  }
+}

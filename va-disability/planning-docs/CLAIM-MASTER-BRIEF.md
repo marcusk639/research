@@ -38,7 +38,7 @@ Hand her [`NEXUS-LETTER-GUIDE-CHERIE.md`](./NEXUS-LETTER-GUIDE-CHERIE.md); it te
 - **Describe both domains** — total _occupational **and** social_ impairment (VA can't grant 100% on inability-to-work alone).
 - **Frequency / severity / duration, not just presence** (Vazquez-Claudio) — how often panic/rituals/SI occur; passive vs. active SI (Bankhead).
 - **Nexus theory nuance:** SUD as self-medication of the psychiatric conditions (§3.310), not iatrogenic; GAD/MDD may fit aggravation (§3.306) or secondary-to-PTSD better than pure direct service connection, given pre-service (age-18) self-reports. Her call.
-- **Things to flag for her awareness (not surprise):** the non-linear trauma-disclosure pattern in the record, and the three non-matching SI data points (5/14/26 "denies current SI," 6/17/26 "every day," ~6/25/26 "denies SI"). She decides whether/how to address them.
+- **Things to flag for her awareness (not surprise):** the non-linear trauma-disclosure pattern in the record, and the three non-matching SI data points (5/14/26 "denies current SI," 6/17/26 "every day," ~6/25/26 "denies SI") **[RETRACTED 2026-10-08: no 6/25/26 SI denial exists — see CLAIM-ASSESSMENT.md §0.2]**. She decides whether/how to address them.
 
 ## 4. What to do with the DBQ for this supplemental claim
 

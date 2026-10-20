@@ -1,0 +1,35 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/README.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 9,
+    "originalLines": 124,
+    "finalLines": 123,
+    "tokensSaved": 1530,
+    "tokenCount": 428,
+    "originalTokenCount": 1958,
+    "compressionRatio": 0.21859039836567926,
+    "duration": 5,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "**One CRITICAL item remains** before the 28-1902w is submitted:",
+      "1. ~~**TDIU filing status**~~ — **RESOLVED 2026-09-14: nothing filed.** 28-1902w Item 20 = **\"No.\"**",
+      "   Date the form. Note the rep's plan still contemplates § 4.16 TDIU development — a plan is not a",
+      "   filing, and Item 20 does not ask about plans."
+    ],
+    "removed": [
+      "Two are CRITICAL and must be resolved **before** the 28-1902w is submitted:",
+      "",
+      "1. **What has the rep actually filed regarding TDIU since 2026-07-16?**",
+      "   28-1902w Section VII Item 20 asks directly. `RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md`",
+      "   line 158 lists VA Form 21-8940 as a filing action — which contradicts `MASTER-STRATEGY.md`."
+    ],
+    "unchanged": 13,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/README.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/README.md\n@@ -1,124 +1,123 @@\n ---\n topic: vre-chapter-31\n created: 2026-09-13\n@@ 49 unchanged lines @@\n ---\n \n ## Open items — nothing here is settled\n+**One CRITICAL item remains** before the 28-1902w is submitted:\n \n-Two are CRITICAL and must be resolved **before** the 28-1902w is submitted:\n-\n-1. **What has the rep actually filed regarding TDIU since 2026-07-16?**\n-   28-1902w Section VII Item 20 asks directly. `RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md`\n-   line 158 lists VA Form 21-8940 as a filing action — which contradicts `MASTER-STRATEGY.md`.\n+1. ~~**TDIU filing status**~~ — **RESOLVED 2026-09-14: nothing filed.** 28-1902w Item 20 = **\"No.\"**\n+   Date the form. Note the rep's plan still contemplates § 4.16 TDIU development — a plan is not a\n+   filing, and Item 20 does not ask about plans.\n 2. **Which description of employment capacity is factually true?**\n    The prep doc's recommended framing (\"I can work full time, I just can't sustain it\") sits\n    against Cherie's signed nexus letter (\"total impairment in occupational and social realms\")\n@@ 57 unchanged lines @@\n carry comparable PHI, so tracking these would not change the repo's existing posture — but\n **`source-materials/VR&E Initial Email.pdf` holds a live Teams meeting passcode and should stay\n untracked regardless.** Check with the user before `git add` on anything in here."
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 2,
+    "linesChanged": 29,
+    "originalLines": 274,
+    "finalLines": 301,
+    "tokensSaved": 3778,
+    "tokenCount": 844,
+    "originalTokenCount": 4622,
+    "compressionRatio": 0.18260493292946775,
+    "duration": 74,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "### Measured on this repo — no longer hypothetical",
+      "",
+      "Stage 0 has been executed against `homegroups/functions` (full results in `STAGE0-RESULTS.md`):",
+      "",
+      "| Measurement | Value |",
+      "|---|---|",
+      "| Baseline suite | 70 suites, 787 tests, green, 2.25s |",
+      "| Mutants | 15,724 across 152 files |",
+      "| Mutation score | **28.73% total / 53.72% covered** |",
+      "| Full run | **5m27s** @ concurrency 14 (18 cores) |",
+      "| Incremental re-run | **6s** |",
+      "| Zero-coverage files | 54 of 152 (47% of all mutants) |",
+      "",
+      "**The local result that justifies this whole document: 787 tests pass, the project's coverage thresholds are",
+      "met, and 46% of mutations in covered code still survive.** Coverage-as-a-gate is not a theoretical weakness",
+      "here; it is measured.",
+      "",
+      "**Curate the mutate glob before trusting any score.** The first run returned 5.32%, which looked catastrophic",
+      "and was an artefact: one 2,235-line content file (`src/utils/reflectionsLibrary.ts` — a single array export of",
+      "365 prose reflections) produced 2,922 of 4,585 mutants at a 0.21% score. Stryker was mutating prose. Detect",
+      "such files with `LOC >= 300 AND exported symbols <= 3 AND string literals of 10+ chars >= 100` and exclude",
+      "them explicitly; that heuristic found exactly one candidate across 167 source files. Omitting this step sets",
+      "the ratchet floor from content rather than logic and makes every later comparison noise.",
+      "",
+      "",
+      "**Cost turned out not to be the constraint here** — the practitioner warnings below (search-only, see",
+      "`GAPS.md`) did not reproduce on this repo. Keeping them because they may hold on larger or slower suites, but",
+      "the measured figures above supersede them for `homegroups/functions`. Original text: practitioner reports describe"
+    ],
+    "removed": [
+      "**Cost is the real constraint.** Practitioner reports (search-only, not fetched — see `GAPS.md`) describe"
+    ],
+    "unchanged": 18,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md\n+++ /Users/marcusklein/dev/research/app-dev/VERIFICATION-STRATEGY.md\n@@ -1,274 +1,301 @@\n # Verification Strategy — proving the app actually works\n \n **Date:** 2026-09-29\n@@ 69 unchanged lines @@\n a build failure\" [S6]. **The hard gate is opt-in.** A pipeline that installs Stryker and does not set\n `break` has bought a dashboard, not a gate.\n \n+### Measured on this repo — no longer hypothetical\n+\n+Stage 0 has been executed against `homegroups/functions` (full results in `STAGE0-RESULTS.md`):\n+\n+| Measurement | Value |\n+|---|---|\n+| Baseline suite | 70 suites, 787 tests, green, 2.25s |\n+| Mutants | 15,724 across 152 files |\n+| Mutation score | **28.73% total / 53.72% covered** |\n+| Full run | **5m27s** @ concurrency 14 (18 cores) |\n+| Incremental re-run | **6s** |\n+| Zero-coverage files | 54 of 152 (47% of all mutants) |\n+\n+**The local result that justifies this whole document: 787 tests pass, the project's coverage thresholds are\n+met, and 46% of mutations in covered code still survive.** Coverage-as-a-gate is not a theoretical weakness\n+here; it is measured.\n+\n+**Curate the mutate glob before trusting any score.** The first run returned 5.32%, which looked catastrophic\n+and was an artefact: one 2,235-line content file (`src/utils/reflectionsLibrary.ts` — a single array export of\n+365 prose reflections) produced 2,922 of 4,585 mutants at a 0.21% score. Stryker was mutating prose. Detect\n+such files with `LOC >= 300 AND exported symbols <= 3 AND string literals of 10+ chars >= 100` and exclude\n+them explicitly; that heuristic found exactly one candidate across 167 source files. Omitting this step sets\n+the ratchet floor from content rather than logic and makes every later comparison noise.\n+\n+\n ### Proposed thresholds\n \n `[UNVERIFIED — author's design, needs calibration on this repo]` — Stryker publishes defaults, not\n@@ 6 unchanged lines @@\n | Files changed in the PR | mutation score | target `high: 80` as an aspiration, not a gate | Matches Stryker's own \"awesome\" band [S6] |\n | Whole package | mutation score | reported, never gated | Full-suite mutation runs are too slow to sit in a PR loop |\n \n-**Cost is the real constraint.** Practitioner reports (search-only, not fetched — see `GAPS.md`) describe\n+**Cost turned out not to be the constraint here** — the practitioner warnings below (search-only, see\n+`GAPS.md`) did not reproduce on this repo. Keeping them because they may hold on larger or slower suites, but\n+the measured figures above supersede them for `homegroups/functions`. Original text: practitioner reports describe\n mutation testing scaling worse than plain test execution, mitigated by incremental mode (mutate only\n changed files, cached) and `coverageAnalysis: \"perTest\"`, targeting a few minutes per PR, with full runs\n on a schedule. One report found mutation verdicts \"not reproducible enough to gate on\" across commits.\n@@ 180 unchanged lines @@\n | Affected-dependent tests | all affected packages pass | yes | [S77] (single-source precaution) |\n | Held-out acceptance flows | pass on a real running build | yes | §6 |\n | Human sign-off | rules, migrations, auth, payments, deploys | yes | [S16], [S9] |"
+  }
+}

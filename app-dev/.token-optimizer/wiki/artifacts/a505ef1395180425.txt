@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/.claude/agent-gates/diag2.settings.json",
+  "operation": "created",
+  "metadata": {
+    "bytesWritten": 1321,
+    "originalSize": 0,
+    "wasFormatted": false,
+    "linesChanged": 0,
+    "tokensSaved": 0,
+    "tokenCount": 367,
+    "originalTokenCount": 367,
+    "compressionRatio": 1,
+    "atomic": true,
+    "verified": true,
+    "duration": 29
+  }
+}

@@ -162,7 +162,7 @@ CONTRAST.md` now addresses the duty-to-assist/release mechanics explicitly.
 
 **Finding:** The three conflicting suicidal-ideation data points (5/14/26 FMLA eval "denies
 current SI... history of passive SI"; 6/17/26 personal statement "hits every day"; ~6/25/26
-chart note "denies SI") are only partially rehearsed elsewhere in the corpus and omitted
+chart note "denies SI") **[RETRACTED 2026-10-08: no 6/25/26 SI denial exists — see CLAIM-ASSESSMENT.md §0.2]** are only partially rehearsed elsewhere in the corpus and omitted
 entirely from this document's "flag for her awareness" section, despite that section's
 purpose being exactly to prevent this kind of surprise.
 

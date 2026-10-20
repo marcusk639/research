@@ -1,0 +1,28 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/CLAUDE.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 2,
+    "originalLines": 87,
+    "finalLines": 87,
+    "tokensSaved": 1130,
+    "tokenCount": 379,
+    "originalTokenCount": 1509,
+    "compressionRatio": 0.25115970841616964,
+    "duration": 3,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "superseded and kept for history only."
+    ],
+    "removed": [
+      "superseded and kept for history only."
+    ],
+    "unchanged": 18,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/CLAUDE.md\n+++ /Users/marcusklein/dev/research/va-disability/CLAUDE.md\n@@ -1,87 +1,87 @@\n # CLAUDE.md\n \n Subject-level guidance for `va-disability/`, extending `../CLAUDE.md`. This subject\n@@ 13 unchanged lines @@\n contradicts it. `knowledge-base.md`, `veteran-profile.md`,\n `claim-maximization-research-2026-06.md`, and `planning-docs/strategy.md` /\n `planning-docs/CLAIM-EXECUTION-PLAN.md` / `planning-docs/DO-THIS-WEEK.md` are\n+superseded and kept for history only.\n \n > **⚠️ Document-precedence trap — read before trusting the list above.**\n > `planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md` is **newer than**\n@@ 8 unchanged lines @@\n > drafting pass** (see `vre/CONSISTENCY-AUDIT-2026-09-13.md`). Always check the remediation\n > plan and §9 before treating any strategy position as settled. Also note the newest-dated\n > passage in `MASTER-STRATEGY.md` is a **2026-07-31** update buried in §3.\n-superseded and kept for history only.\n \n ## Folder layout (reorganized 2026-07-15)\n \n@@ 47 unchanged lines @@\n   `claim-consistency-checker`'s hard rule). A prior coached-statement email thread\n   is treated in `CLAIM-ASSESSMENT.md` Part 0 as the single biggest credibility risk\n   to this claim."
+  }
+}

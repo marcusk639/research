@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "pattern": "(planning-docs/VRE-EVALUATION-PREP|prompts/VRE-INITIAL)",
+  "metadata": {
+    "totalMatches": 2,
+    "filesSearched": 78,
+    "filesWithMatches": 1,
+    "returnedMatches": 2,
+    "truncated": false,
+    "tokensSaved": 0,
+    "tokenCount": 129,
+    "originalTokenCount": 129,
+    "compressionRatio": 1,
+    "duration": 28,
+    "cacheHit": false,
+    "savingsClassification": "unmeasured",
+    "savingsReason": "No comparable unoptimized grep response was materialized; repository bytes scanned are not model-context tokens."
+  },
+  "matches": [
+    {
+      "file": "vre/VRE-INITIAL-EVALUATION-PREP.md",
+      "lineNumber": 6,
+      "line": "output: planning-docs/VRE-EVALUATION-PREP-2026-09-17.md",
+      "match": "planning-docs/VRE-EVALUATION-PREP"
+    },
+    {
+      "file": "vre/VRE-INITIAL-EVALUATION-PREP.md",
+      "lineNumber": 212,
+      "line": "Write one file: `planning-docs/VRE-EVALUATION-PREP-2026-09-17.md`",
+      "match": "planning-docs/VRE-EVALUATION-PREP"
+    }
+  ]
+}

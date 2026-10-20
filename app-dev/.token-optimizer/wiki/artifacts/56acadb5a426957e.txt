@@ -1,0 +1,48 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/RISKS.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 22,
+    "originalLines": 199,
+    "finalLines": 209,
+    "tokensSaved": 2007,
+    "tokenCount": 638,
+    "originalTokenCount": 2645,
+    "compressionRatio": 0.24120982986767486,
+    "duration": 37,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "Now evidenced at scale. GitClear's analysis of 623M changes (2023–2026) reports block duplication climbing",
+      "\"from 40.3 in 2023 to 73.0 year-to-date in 2026 — an 81% increase over 2023 and the highest level on record\",",
+      "moved code (a refactoring proxy) collapsing from 13% of changed lines in 2023 to \"3.8% year-to-date in 2026\",",
+      "and \"cross-file function calls (indicative of reuse) are down 35%\" [S105]. Vendor report, transparent",
+      "methodology, consistent with its own prior editions — the trend is credible, but AI-specific causation is",
+      "**not** established (velocity and deadline pressure are uncontrolled confounds).",
+      "And agents cannot be trusted to self-police design: LLM detection of architectural-decision violations",
+      "reached >90% accuracy on explicit, code-inferable decisions but \"Accuracy falls short for implicit or",
+      "deployment-oriented decisions\" [S111].",
+      "**Mitigation:** write the constraint down, then enforce it mechanically in CI — Nx's tag-based",
+      "`@nx/enforce-module-boundaries` [S103] (its language-agnostic Conformance path \"Requires Nx Enterprise plan\"),",
+      "Turborepo's `boundaries` (its own docs call it \"experimental\") [S104], or dependency-cruiser [S112,",
+      "practitioner blog only]. Use symbol-aware editing so the agent finds existing patterns instead of inventing",
+      "parallel ones — though no independent measurement of that effect was found (`GAPS.md`). Expect duplication to",
+      "rise and refactoring to fall unless something enforces otherwise.",
+      ""
+    ],
+    "removed": [
+      "Not well evidenced in this pass — the A6 angle was not completed (`GAPS.md`), so this is the weakest-founded",
+      "risk here and is included because it is the one the operator will feel over months, not days. The",
+      "mechanisms usually named are over-abstraction, duplication and ignoring existing repo patterns.",
+      "**Mitigation:** mechanical boundary enforcement in CI rather than review vigilance (dependency-cruiser or",
+      "ESLint import boundaries) `[UNVERIFIED — tools not confirmed in this pass]`; symbol-aware editing (Serena)",
+      "so the agent finds existing patterns instead of inventing parallel ones."
+    ],
+    "unchanged": 14,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/app-dev/RISKS.md\n+++ /Users/marcusklein/dev/research/app-dev/RISKS.md\n@@ -1,199 +1,209 @@\n # Risk Register\n \n **Date:** 2026-09-29\n@@ 105 unchanged lines @@\n ### R8 — Architectural rot in brownfield repos\n **Likelihood: medium · Impact: medium-high**\n \n-Not well evidenced in this pass — the A6 angle was not completed (`GAPS.md`), so this is the weakest-founded\n-risk here and is included because it is the one the operator will feel over months, not days. The\n-mechanisms usually named are over-abstraction, duplication and ignoring existing repo patterns.\n+Now evidenced at scale. GitClear's analysis of 623M changes (2023–2026) reports block duplication climbing\n+\"from 40.3 in 2023 to 73.0 year-to-date in 2026 — an 81% increase over 2023 and the highest level on record\",\n+moved code (a refactoring proxy) collapsing from 13% of changed lines in 2023 to \"3.8% year-to-date in 2026\",\n+and \"cross-file function calls (indicative of reuse) are down 35%\" [S105]. Vendor report, transparent\n+methodology, consistent with its own prior editions — the trend is credible, but AI-specific causation is\n+**not** established (velocity and deadline pressure are uncontrolled confounds).\n \n-**Mitigation:** mechanical boundary enforcement in CI rather than review vigilance (dependency-cruiser or\n-ESLint import boundaries) `[UNVERIFIED — tools not confirmed in this pass]`; symbol-aware editing (Serena)\n-so the agent finds existing patterns instead of inventing parallel ones.\n+And agents cannot be trusted to self-police design: LLM detection of architectural-decision violations\n+reached >90% accuracy on explicit, code-inferable decisions but \"Accuracy falls short for implicit or\n+deployment-oriented decisions\" [S111].\n \n+**Mitigation:** write the constraint down, then enforce it mechanically in CI — Nx's tag-based\n+`@nx/enforce-module-boundaries` [S103] (its language-agnostic Conformance path \"Requires Nx Enterprise plan\"),\n+Turborepo's `boundaries` (its own docs call it \"experimental\") [S104], or dependency-cruiser [S112,\n+practitioner blog only]. Use symbol-aware editing so the agent finds existing patterns instead of inventing\n+parallel ones — though no independent measurement of that effect was found (`GAPS.md`). Expect duplication to\n+rise and refactoring to fall unless something enforces otherwise.\n+\n ---\n \n ## Cost\n@@ 74 unchanged lines @@\n \n **Mitigation:** size autonomy from your own measured pass rate on your own repo (the 30-day plan), never\n from a leaderboard. Cite only [S2] and [S3] internally."
+  }
+}

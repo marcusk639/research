@@ -1,0 +1,17 @@
+{"id":"C1","text":"Louisiana enacted PSYPACT via Act 302 (HB 486) of 2026, effective January 1, 2028","support":["E1","E2","E3"],"independent_sources":2,"verdict":"confirmed","confidence":"high"}
+{"id":"C2","text":"An LSBEP-licensed psychologist providing telepsychology must verify the client is located in Louisiana","support":["E4"],"independent_sources":1,"verdict":"confirmed","confidence":"high","notes":"single secondary copy of an official rule; text is regulatory, low dispute risk"}
+{"id":"C3","text":"Texas law treats services to a patient physically in Texas as practice in Texas for both psychologists and physicians","support":["E6","E7"],"independent_sources":2,"verdict":"confirmed","confidence":"high"}
+{"id":"C4","text":"Louisiana treats telemedicine as practiced at the patient's location","support":["E5"],"independent_sources":1,"verdict":"confirmed","confidence":"medium","notes":"authorizing statute may have been repealed 2024; current rule form unverified"}
+{"id":"C5","text":"Kristin Samuelson holds an active Louisiana psychologist license #1718 with no disciplinary action","support":["E8","E14"],"independent_sources":2,"verdict":"confirmed","confidence":"high"}
+{"id":"C6","text":"Samuelson's practice includes sexual-assault and symptom-validity forensic work","support":["E12","E13"],"independent_sources":1,"verdict":"confirmed","confidence":"medium"}
+{"id":"C7","text":"Samuelson accepts veteran-retained VA IMOs","support":[],"independent_sources":0,"verdict":"unverified","confidence":"low"}
+{"id":"C8","text":"Michael Chafetz holds an active Louisiana license #762 with no disciplinary action and lists a Texas license","support":["E9","E16"],"independent_sources":2,"verdict":"confirmed","confidence":"high","notes":"Texas license not checked on BHEC"}
+{"id":"C9","text":"Andrew Thrasher III is an active Louisiana psychologist who performs VA C&P exams by referral","support":["E10","E17","E18"],"independent_sources":2,"verdict":"confirmed","confidence":"high"}
+{"id":"C10","text":"Larry Benoit's Louisiana license is expired","support":["E11"],"independent_sources":1,"verdict":"confirmed","confidence":"high"}
+{"id":"C11","text":"No Louisiana-based doctoral provider was found that openly advertises VA PTSD IMOs","support":[],"independent_sources":0,"verdict":"confirmed","confidence":"medium","notes":"negative finding from search; absence of evidence"}
+{"id":"C12","text":"Amica, Willoughby and Essential Veteran Services can see the veteran only while he is in Texas","support":["E22","E23","E24","E2"],"independent_sources":3,"verdict":"confirmed","confidence":"medium"}
+{"id":"C13","text":"Patriot NEXUS Letters' assigned psychologist is Louisiana-licensed","support":["E20"],"independent_sources":0,"verdict":"unverified","confidence":"low"}
+{"id":"C14","text":"LSU Law's veterans clinic handles service-connected compensation appeals","support":["E25"],"independent_sources":1,"verdict":"confirmed","confidence":"medium"}
+{"id":"C15","text":"Louisiana's PLUS Act was enjoined in Feb 2026","support":["E27","E30"],"independent_sources":2,"verdict":"confirmed","confidence":"high"}
+{"id":"C16","text":"Tulane has a veterans law clinic","support":[],"independent_sources":0,"verdict":"refuted","confidence":"low","notes":"official clinics page lists none; only an aggregator claims one"}
+{"id":"C17","text":"Louisiana offers a free program supplying doctoral IMOs for veterans","support":[],"independent_sources":0,"verdict":"refuted","confidence":"medium","notes":"none found"}

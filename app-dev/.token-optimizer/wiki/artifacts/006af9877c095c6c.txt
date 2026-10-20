@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json",
+  "operation": "updated",
+  "metadata": {
+    "bytesWritten": 979,
+    "originalSize": 938,
+    "wasFormatted": true,
+    "linesChanged": 5,
+    "tokensSaved": 149,
+    "tokenCount": 150,
+    "originalTokenCount": 290,
+    "compressionRatio": 0.5172413793103449,
+    "atomic": true,
+    "verified": true,
+    "duration": 69
+  },
+  "diff": {
+    "added": [
+      "    \"!src/index.ts\",",
+      "    \"!src/utils/reflectionsLibrary.ts\"",
+      "  \"concurrency\": 14,"
+    ],
+    "removed": [
+      "    \"!src/index.ts\"",
+      "  \"concurrency\": 6,"
+    ],
+    "unchanged": 6,
+    "unifiedDiff": "--- /Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json\n+++ /Users/marcusklein/dev/recovery-platform/homegroups/functions/stryker.config.json\n@@ -1,44 +1,45 @@\n {\n@@ 25 unchanged lines @@\n     \"!src/**/__tests__/**\",\n-    \"!src/index.ts\"\n+    \"!src/index.ts\",\n+    \"!src/utils/reflectionsLibrary.ts\"\n   ],\n@@ 6 unchanged lines @@\n   \"incrementalFile\": \".stryker-tmp/incremental.json\",\n-  \"concurrency\": 6,\n+  \"concurrency\": 14,\n   \"timeoutMS\": 60000,\n@@ 5 unchanged lines @@\n }"
+  }
+}

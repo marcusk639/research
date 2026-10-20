@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/app-dev/ledger/run_manifest.json",
+  "operation": "created",
+  "metadata": {
+    "bytesWritten": 6207,
+    "originalSize": 0,
+    "wasFormatted": true,
+    "linesChanged": 0,
+    "tokensSaved": 0,
+    "tokenCount": 1626,
+    "originalTokenCount": 1626,
+    "compressionRatio": 1,
+    "atomic": true,
+    "verified": true,
+    "duration": 58
+  }
+}

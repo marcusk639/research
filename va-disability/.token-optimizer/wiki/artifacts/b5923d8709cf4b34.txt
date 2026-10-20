@@ -1,0 +1,384 @@
+{
+  "success": true,
+  "pattern": "(DD-?214|discharge date|separated? (on|in) |date of separation|2013)",
+  "metadata": {
+    "totalMatches": 63,
+    "filesSearched": 39,
+    "searchTruncated": true,
+    "searchTruncatedBy": "cap",
+    "searchNote": "Search stopped once 60 match(es) were collected, so files were left unsearched. Raise `limit` to search further.",
+    "filesWithMatches": 22,
+    "returnedMatches": 60,
+    "truncated": true,
+    "tokensSaved": 0,
+    "tokenCount": 5765,
+    "originalTokenCount": 5765,
+    "compressionRatio": 1,
+    "duration": 39,
+    "cacheHit": false,
+    "savingsClassification": "unmeasured",
+    "savingsReason": "No comparable unoptimized grep response was materialized; repository bytes scanned are not model-context tokens."
+  },
+  "matches": [
+    {
+      "file": "veteran-profile.md",
+      "lineNumber": 17,
+      "line": "- **Service dates:** 2009–2013 (~4 years)",
+      "match": "2013"
+    },
+    {
+      "file": "knowledge-base.md",
+      "lineNumber": 98,
+      "line": "**Evidence:** VA and private medical records, lay/\"buddy\" supporting statements, DD214",
+      "match": "DD214"
+    },
+    {
+      "file": "claim-maximization-research-2026-06.md",
+      "lineNumber": 3,
+      "line": "> **Subject:** Marcus Klein · USAF 2009–2013, F-15 Crew Chief · Austin TX  ",
+      "match": "2013"
+    },
+    {
+      "file": "claim-maximization-research-2026-06.md",
+      "lineNumber": 37,
+      "line": "- **[MISSTATED]** *AZ v. Shinseki, 731 F.3d 1303 (Fed. Cir. 2013)* — The case exists at 731 F.3d 1303, decided September 30, 2013, by the Federal Circuit (consolidated as AZ and AY v. Shinseki). The second proposition — that absence of service records documenting an unreported assault is not evidence the assault did not occur — is accurately stated and confirmed. The first proposition — that a qualifying post-service medical opinion can, standing alone, corroborate _(track: MST Corroboration & 38 CFR 3.304(f)(5))_",
+      "match": "2013"
+    },
+    {
+      "file": "claim-maximization-research-2026-06.md",
+      "lineNumber": 37,
+      "line": "- **[MISSTATED]** *AZ v. Shinseki, 731 F.3d 1303 (Fed. Cir. 2013)* — The case exists at 731 F.3d 1303, decided September 30, 2013, by the Federal Circuit (consolidated as AZ and AY v. Shinseki). The second proposition — that absence of service records documenting an unreported assault is not evidence the assault did not occur — is accurately stated and confirmed. The first proposition — that a qualifying post-service medical opinion can, standing alone, corroborate _(track: MST Corroboration & 38 CFR 3.304(f)(5))_",
+      "match": "2013"
+    },
+    {
+      "file": "claim-maximization-research-2026-06.md",
+      "lineNumber": 48,
+      "line": "- **[MISSTATED]** *Vasquez-Claudio v. Shinseki, 713 F.3d 112 (Fed. Cir. 2013)* — The case exists, the reporter citation (713 F.3d 112) is confirmed, and it is a precedential Federal Circuit decision from April 8, 2013 (case no. 12-7114). The proposition is partially accurate — the court did hold that symptoms must cause the stated level of occupational and social impairment and that the Board must make findings connecting symptoms to functional impairment. However, the proposi _(track: Mental Health Combined Rating — 70-100%)_",
+      "match": "2013"
+    },
+    {
+      "file": "claim-maximization-research-2026-06.md",
+      "lineNumber": 48,
+      "line": "- **[MISSTATED]** *Vasquez-Claudio v. Shinseki, 713 F.3d 112 (Fed. Cir. 2013)* — The case exists, the reporter citation (713 F.3d 112) is confirmed, and it is a precedential Federal Circuit decision from April 8, 2013 (case no. 12-7114). The proposition is partially accurate — the court did hold that symptoms must cause the stated level of occupational and social impairment and that the Board must make findings connecting symptoms to functional impairment. However, the proposi _(track: Mental Health Combined Rating — 70-100%)_",
+      "match": "2013"
+    },
+    {
+      "file": "claim-maximization-research-2026-06.md",
+      "lineNumber": 78,
+      "line": "**Veteran Profile:** Male, age 32, USAF 2009–2013 (Honorable), F-15 Crew Chief (AFSC 2A3X3), Seymour Johnson AFB, NC. Never deployed. Current SC: Tinnitus 10%. Current employment: Senior software engineer, ~$200K+. Planned transition: family CPA firm, ~$40–60K.",
+      "match": "2013"
+    },
+    {
+      "file": "RESEARCH-MALE-MST-PTSD-SYMPTOMS-2026-07-08.md",
+      "lineNumber": 91,
+      "line": "After assault, suspicious thinking is the norm: **95% reported some suspicious thinking; 80% felt more fearful of others than warranted; 68% endorsed at least one persecutory-ideation item** [Freeman et al. 2013, PMC3821375]. Trauma exposure is linked to **~2.5× greater risk of paranoid thoughts** (and ~4.8× for hallucination-type experiences), and — critically — the **trauma→paranoia link is statistically mediated by anxiety** [Freeman & Fowler 2009, PMC2748122].",
+      "match": "2013"
+    },
+    {
+      "file": "RESEARCH-MALE-MST-PTSD-SYMPTOMS-2026-07-08.md",
+      "lineNumber": 101,
+      "line": "Only **~12% of assault survivors (13 of 106)** reached a level of conviction \"sufficient to be considered delusional,\" and of those, **11 of 13 also met PTSD criteria** [Freeman et al. 2013, PMC3821375]. So a genuine fixed persecutory delusion in a trauma survivor is **uncommon but real**, and when present is **strongly bound up with PTSD** rather than free-standing.",
+      "match": "2013"
+    },
+    {
+      "file": "RESEARCH-MALE-MST-PTSD-SYMPTOMS-2026-07-08.md",
+      "lineNumber": 160,
+      "line": "- Freeman et al. 2013, paranoia & PTSD after assault (the common-vs-rare study): https://pmc.ncbi.nlm.nih.gov/articles/PMC3821375/",
+      "match": "2013"
+    },
+    {
+      "file": "REPORT.md",
+      "lineNumber": 7,
+      "line": "How should this veteran (USAF 2009–2013, F-15 Crew Chief, current SC tinnitus 10%,",
+      "match": "2013"
+    },
+    {
+      "file": "DOCUMENT-PROVENANCE.md",
+      "lineNumber": 30,
+      "line": "HEALTH.md`, `CREDIBILITY-INCONSISTENCY-RESEARCH.md`, DD-214) are intentionally out of",
+      "match": "DD-214"
+    },
+    {
+      "file": "DOCUMENT-PROVENANCE.md",
+      "lineNumber": 40,
+      "line": "| `personal-records/supporting-docs/VA-Buddy-Form_reyes_complete 2.pdf`                                                                                                                                                                                      | self-authored (witness's own account)                           | Wilfredo Reyes                                                                                                           | None apparent — reads as an independent, hedged, unpolished account                                                                                                                                                                                                                                                                                                                                                                                                                               | Signed, 06/16/2026                                                                                                                                                | Unit name doesn't match DD-214; own service-date overlap through late 2013 unverified                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |",
+      "match": "DD-214"
+    },
+    {
+      "file": "DOCUMENT-PROVENANCE.md",
+      "lineNumber": 40,
+      "line": "| `personal-records/supporting-docs/VA-Buddy-Form_reyes_complete 2.pdf`                                                                                                                                                                                      | self-authored (witness's own account)                           | Wilfredo Reyes                                                                                                           | None apparent — reads as an independent, hedged, unpolished account                                                                                                                                                                                                                                                                                                                                                                                                                               | Signed, 06/16/2026                                                                                                                                                | Unit name doesn't match DD-214; own service-date overlap through late 2013 unverified                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |",
+      "match": "2013"
+    },
+    {
+      "file": "COMPREHENSIVE-FINDINGS-2026-07.md",
+      "lineNumber": 7,
+      "line": "> **every personal record** — DD-214, buddy/spouse statements, VBA-21-0781 drafts, DASS-21/psych-eval/FMLA",
+      "match": "DD-214"
+    },
+    {
+      "file": "COMPREHENSIVE-FINDINGS-2026-07.md",
+      "lineNumber": 243,
+      "line": "between the two buddy statements** (Reyes: late 2013; Poquette: 2012, with internal ambiguity), **Reyes's",
+      "match": "2013"
+    },
+    {
+      "file": "COMPREHENSIVE-FINDINGS-2026-07.md",
+      "lineNumber": 280,
+      "line": "(\"In late 2013, while we were both still serving...\"), so the claim is true of Reyes but not of Poquette.",
+      "match": "2013"
+    },
+    {
+      "file": "COMPREHENSIVE-FINDINGS-2026-07.md",
+      "lineNumber": 387,
+      "line": "| Discharge characterization                           | \"Critical gap\"                   | **Resolved: Honorable**, per DD-214. Separation code MBK, reentry code 1J, narrative reason \"completion of required active service.\"                                                                                                                                                                                                                                                                                                                                                                                                                                |",
+      "match": "DD-214"
+    },
+    {
+      "file": "COMPREHENSIVE-FINDINGS-2026-07.md",
+      "lineNumber": 389,
+      "line": "| Unit                                                 | Not detailed                     | **4th Equipment Maintenance Squadron (ACC)**, Seymour Johnson AFB, NC (DD-214 is ground truth — reconcile any document that says \"4th Aircraft Maintenance Unit\" or \"4th Maintenance Squadron\")                                                                                                                                                                                                                                                                                                                                                                     |",
+      "match": "DD-214"
+    },
+    {
+      "file": "COMPREHENSIVE-FINDINGS-2026-07.md",
+      "lineNumber": 394,
+      "line": "| MST disclosure                                       | \"Lay evidence only, unfiled\"     | Disclosed in-service to Wilfredo Reyes and Zachary Poquette (late 2013, while still serving per Reyes's account — **verify this predates his 11/22/2013 separation, since it's currently phrased ambiguously**); a third witness \"Goff\" is referenced but his statement is **not yet obtained**                                                                                                                                                                                                                                                                     |",
+      "match": "2013"
+    },
+    {
+      "file": "CLAUDE.md",
+      "lineNumber": 54,
+      "line": "- `personal-records/` (DD-214, clinical records, the Erica email chain,",
+      "match": "DD-214"
+    },
+    {
+      "file": "CLAIM-CORPUS-AUDIT-2026-07-06.md",
+      "lineNumber": 7,
+      "line": "`DD214`, `Poquette-Buddy-Statement`, `CREDIBILITY-INCONSISTENCY-RESEARCH`,",
+      "match": "DD214"
+    },
+    {
+      "file": "CLAIM-CORPUS-AUDIT-2026-07-06.md",
+      "lineNumber": 131,
+      "line": "  \"late 2013\"), a fact directly load-bearing under 38 CFR 3.304(f)(5)'s",
+      "match": "2013"
+    },
+    {
+      "file": "CLAIM-CORPUS-AUDIT-2026-07-06.md",
+      "lineNumber": 171,
+      "line": "- `Vazquez-Claudio v. Shinseki`, 713 F.3d 112 (Fed. Cir. 2013) — cited in",
+      "match": "2013"
+    },
+    {
+      "file": "CLAIM-CORPUS-AUDIT-2026-07-06.md",
+      "lineNumber": 193,
+      "line": "- `AZ v. Shinseki`, 731 F.3d 1303 (Fed. Cir. 2013) — `MASTER-STRATEGY.md`,",
+      "match": "2013"
+    },
+    {
+      "file": "CLAIM-CORPUS-AUDIT-2026-07-06.md",
+      "lineNumber": 300,
+      "line": "- Babson et al., J Clin Sleep Med. 2013;9(12):1253-1258, PMID 24340286",
+      "match": "2013"
+    },
+    {
+      "file": "CLAIM-CORPUS-AUDIT-2026-07-06.md",
+      "lineNumber": 329,
+      "line": "| DD214                                 | 10/10                   | Authentic third-party government record; internally consistent across all copies; the one useful finding is external (anchors the Reyes unit-name error, not a defect of its own).                                                                               |",
+      "match": "DD214"
+    },
+    {
+      "file": "CLAIM-ASSESSMENT.md",
+      "lineNumber": 4,
+      "line": "> **Basis:** exhaustive review of every document in this repository — all prior research files, all `ClaudeDisabilityAssets/` PDFs, all `personal-records/` files (DD-214, VA clinical records, Starlite 2022–2025 in full, Victory 2018, harmony2026Docs, psych assessments, the 21-0781 form and personal statement, buddy/spouse statements, and the Erica email chain) — plus fresh legal research on the 38 CFR 4.130 100%-schedular standard.",
+      "match": "DD-214"
+    },
+    {
+      "file": "CLAIM-ASSESSMENT.md",
+      "lineNumber": 27,
+      "line": "| Reyes buddy statement (signed)                              | Says \"4th Maintenance Squadron\" — DD-214 proves the correct unit is **4th Equipment Maintenance Squadron**                                                                                                                                                                           | Have Reyes sign a corrected version before submission                                                                                                                                                                    |",
+      "match": "DD-214"
+    },
+    {
+      "file": "CLAIM-ASSESSMENT.md",
+      "lineNumber": 65,
+      "line": "- In-service disclosure to two fellow service members (Reyes, Poquette) during the claimed window, both now signed buddy statements (Reyes still needs the unit-name fix). **Corrected 2026-07-06:** this line previously implied both statements affirmatively confirm in-service disclosure. Reyes's does (\"In late 2013, while we were both still serving in the Air Force, Marcus disclosed to me...\"). Poquette's _executed_ statement (`personal-records/supporting-docs/PocketBuddyLetterexportedtextfilled.pdf`, signed 06/29/2026) does not — it drops any date anchor and the \"while we were both still in service\" language that appeared in an earlier draft. See `COMPREHENSIVE-FINDINGS-2026-07.md` §9a item 2 and §0.11 for the fuller implication: the signed personal statement's own §4 says both witnesses would confirm in-service disclosure, which is not borne out by what Poquette actually signed.",
+      "match": "2013"
+    },
+    {
+      "file": "CLAIM-ASSESSMENT.md",
+      "lineNumber": 67,
+      "line": "- No official report was filed — but 38 CFR 3.304(f)(5) and _AZ v. Shinseki_, 731 F.3d 1303 (Fed. Cir. 2013), exist specifically because non-disclosure is common in MST cases and cannot be held against a claimant as negative evidence.",
+      "match": "2013"
+    },
+    {
+      "file": "CLAIM-ASSESSMENT.md",
+      "lineNumber": 80,
+      "line": "- Unit-name inconsistency (now resolved to \"4th Equipment Maintenance Squadron\" per the DD-214 and its companion AF IMT 100) needs to be corrected in Reyes's statement before submission.",
+      "match": "DD-214"
+    },
+    {
+      "file": "CLAIM-ASSESSMENT.md",
+      "lineNumber": 121,
+      "line": "Direct service connection is well-supported (documented in-service fracture, DD-214/AF IMT 100 confirm unit and dates), but two things need attention, not just one:",
+      "match": "DD-214"
+    },
+    {
+      "file": "supporting-docs/PocketBuddyLetter.md",
+      "lineNumber": 31,
+      "line": "> - **Timeline in Poquette's own words:** met \"back in 2011\" (matches Reyes/DD-214",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/SLEEP-APNEA-SECONDARY-CLAIM.md",
+      "lineNumber": 16,
+      "line": "Three causal pathways, uneven strength. **Strongest/most direct:** PTSD hyperarousal lowers the arousal threshold and disrupts sleep architecture, increasing sensitivity to obstructive events (McCall & Watson, _J Clin Med_ 2022 — peer-reviewed). **Well-established but indirect:** psychiatric medications (SSRIs, SNRIs, mirtazapine, trazodone) cause weight gain, which drives OSA risk — VA General Counsel recognizes obesity as a valid \"intermediate step\" (VAOPGCPREC 1-2017), extended to aggravation by **Walsh v. Wilkie, 32 Vet.App. 300, 306-07 (2020)**. **Weakest:** a large VHA study shows OSA statistically associated with PTSD/MDD independent of BMI (Babson et al. 2013), but the authors explicitly disclaim causation — use only as corroboration.",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/SLEEP-APNEA-SECONDARY-CLAIM.md",
+      "lineNumber": 34,
+      "line": "| 1   | 38 CFR § 4.97, DC 6847                                                                                                                                         | Sleep apnea rating tiers (0/30/50/100%); 50% triggered by CPAP requirement                                                                                             | Fetched verbatim from Cornell LII (law.cornell.edu/cfr/text/38/4.97), cross-checked against govinfo.gov CFR annual editions (2013 & 2025, identical text)                                                                                                     | **CONFIRMED** — high                                                                                                                         |",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/SLEEP-APNEA-SECONDARY-CLAIM.md",
+      "lineNumber": 49,
+      "line": "| 15  | Babson et al., \"The Comorbidity of Sleep Apnea and Mood, Anxiety, and Substance Use Disorders... VHA,\" _J Clin Sleep Med._ 2013;9(12):1253-1258, PMID 24340286 | OSA statistically associated with PTSD/MDD independent of BMI severity (large VHA cross-sectional dataset)                                                             | Abstract fetched and quoted verbatim at pmc.ncbi.nlm.nih.gov/articles/PMC3836335                                                                                                                                                                              | **CONFIRMED** — high, but source explicitly disclaims causal interpretation (cross-sectional design) — don't overstate as a causal mechanism |",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/SLEEP-APNEA-NEXUS-OPINION-GUIDE.md",
+      "lineNumber": 89,
+      "line": "Babson et al., _J Clin Sleep Med._ 2013;9(12):1253-1258, PMID 24340286: OSA is statistically associated with PTSD/MDD independent of BMI in a large VHA dataset.",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/SLEEP-APNEA-CLAIM-EXECUTION-PLAN-2026-07-31.md",
+      "lineNumber": 163,
+      "line": "3. **Weakest — statistical association.** Babson et al. 2013 shows OSA associated with PTSD/MDD independent of BMI, but **the authors explicitly disclaim causation.** Corroboration only. Do not present it as a causal mechanism.",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md",
+      "lineNumber": 101,
+      "line": "  T2 Federal: STRs + personnel + DD-214                              │",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md",
+      "lineNumber": 114,
+      "line": "  T9 Reyes reconciliation + Reyes DD-214",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md",
+      "lineNumber": 155,
+      "line": "| DD-214 (T2)                                                                                                                   | Upload if not already associated                                                                     | VET / REP       | [ ] in file                          |",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md",
+      "lineNumber": 163,
+      "line": "| Reyes DD-214 + unit/timeline reconciliation (T9, own words)                                                                   | **21-10210 / 21-4138**                                                                               | Reyes/VET → REP | [ ] filed or closed                  |",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md",
+      "lineNumber": 257,
+      "line": "### Task 2: Obtain federal service records — STRs, personnel file, DD-214",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/RATING-REPORT-REMEDIATION-PLAN-2026-07-16.md",
+      "lineNumber": 259,
+      "line": "**Report findings:** #7 (nexus foundation), #11 (Reyes overlap needs DD-214),",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/PLAN-CORPUS-CONSISTENCY-REMEDIATION-2026-07-09.md",
+      "lineNumber": 26,
+      "line": "| **B3a** | Reyes buddy form: **\"4th Maintenance Squadron\"** vs DD-214 **\"4th Equipment Maintenance Squadron\"**                                                                                                                                                                                                    | Medium                        | COMPREHENSIVE §9a-3; dropped from master register |",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/PLAN-CORPUS-CONSISTENCY-REMEDIATION-2026-07-09.md",
+      "lineNumber": 28,
+      "line": "| **B3c** | Harmony stay **\"25 day\"** (statement) vs discharge dates computing to **24 days**                                                                                                                                                                                                                      | Low                           | §9a-4; dropped                                    |",
+      "match": "discharge date"
+    },
+    {
+      "file": "planning-docs/PATH-TO-100-PERCENT-2026-07-07.md",
+      "lineNumber": 255,
+      "line": "- **(a) Rely on Reyes's affirmative in-service account** (\"late 2013, while we were both still serving\") — verify Reyes's own service dates overlap that window.",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/NEXUS-LETTER-GUIDE-CHERIE.md",
+      "lineNumber": 30,
+      "line": "For PTSD specifically, if her clinical judgment supports it: the stressor is the described in-service sexual assault/harassment (2012, Seymour Johnson AFB) under the relaxed evidentiary standard for personal-trauma claims (38 CFR 3.304(f)(5)) — VA doesn't require an official report, and delayed or non-linear disclosure (which the clinical record shows — see `CLAIM-ASSESSMENT.md` §1.1) is a recognized, common pattern in personal/sexual trauma cases, not evidence against the claim (_AZ v. Shinseki_, 731 F.3d 1303 (Fed. Cir. 2013)).",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/NEXUS-LETTER-GUIDE-CHERIE.md",
+      "lineNumber": 44,
+      "line": "Under _Vazquez-Claudio v. Shinseki_, 713 F.3d 112 (Fed. Cir. 2013), VA rating levels turn on how often and how severely symptoms occur, not just whether they're present at all. If relevant to her clinical observations, specifics help: how many times a week panic attacks occur, how long depressive episodes last, how often obsessional rituals interfere with daily functioning, whether suicidal ideation is passive or active and how frequently it occurs (_Bankhead v. Shulkin_, 29 Vet. App. 10 (2017) confirms passive ideation alone is a real symptom worth documenting if present).",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/NEXUS-LETTER-GUIDE-CHERIE.md",
+      "lineNumber": 52,
+      "line": "DD-214, service treatment records (if obtained), the VA Form 21-0781 personal statement, buddy statements from fellow service members (Reyes, Poquette, and Goff once his is obtained — see `CLAIM-ASSESSMENT.md` §1.1), spouse statement, prior treatment records (Starlite, Victory Addiction Recovery, Acadiana Addiction Center, Ocean's Luxury Rehab, Harmony Junction Recovery), and the WHODAS 2.0 functional assessment (in hand; a self-administered vendor functional instrument).",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/MASTER-STRATEGY.md",
+      "lineNumber": 38,
+      "line": "4. Fix Reyes's unit name (should read \"4th Equipment Maintenance Squadron\"); confirm his service dates cover the late-2013 disclosure.",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/MASTER-STRATEGY.md",
+      "lineNumber": 48,
+      "line": "14. **[Track B — blocked on Reyes + Poquette]** Have Reyes and Poquette independently reconcile the disclosure-timing gap in their own words. This is no longer just \"2012 vs. late 2013\": Poquette's _executed_ VA Form 21-10210 (corrected 2026-07-06 — see `COMPREHENSIVE-FINDINGS-2026-07.md` §9a item 2) drops the \"2012\" date and the \"while we were both still in service\" sentence that appeared in an earlier draft, so his signed statement doesn't itself assert a year or explicit in-service timing at all — a bigger gap for 3.304(f)(5) purposes than a simple year mismatch.",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/MASTER-CLAIM-STRATEGY-AND-REPRESENTATION.md",
+      "lineNumber": 160,
+      "line": "**I-22 (Medium) — Reyes buddy form \"personal-records\" unit name \"4th Maintenance Squadron\" vs DD-214 \"4th Equipment Maintenance Squadron\".** Solution: VSO/Reyes correct to the DD-214 (claim-facing — worklist B3a).",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/MASTER-CLAIM-STRATEGY-AND-REPRESENTATION.md",
+      "lineNumber": 160,
+      "line": "**I-22 (Medium) — Reyes buddy form \"personal-records\" unit name \"4th Maintenance Squadron\" vs DD-214 \"4th Equipment Maintenance Squadron\".** Solution: VSO/Reyes correct to the DD-214 (claim-facing — worklist B3a).",
+      "match": "DD-214"
+    },
+    {
+      "file": "planning-docs/MASTER-CLAIM-STRATEGY-AND-REPRESENTATION.md",
+      "lineNumber": 164,
+      "line": "**I-24 (Low) — Harmony stay \"25 day\" vs discharge dates computing to 24.** Solution: correct if convenient (claim-facing — worklist B3c).",
+      "match": "discharge date"
+    },
+    {
+      "file": "planning-docs/DO-THIS-WEEK.md",
+      "lineNumber": 17,
+      "line": "- [ ] **SF-180 to NPRC** — full OMPF + service treatment records, 2009–2013.",
+      "match": "2013"
+    },
+    {
+      "file": "planning-docs/CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md",
+      "lineNumber": 127,
+      "line": "`SLEEP-APNEA-SECONDARY-CLAIM.md`, `PRE-POST-SERVICE-SEVERITY-CONTRAST.md`, `DD214`). Most",
+      "match": "DD214"
+    },
+    {
+      "file": "planning-docs/CORPUS-AUDIT-REMEDIATION-PLAN-2026-07-06.md",
+      "lineNumber": 255,
+      "line": "**What unblocks it:** each witness reviewing the conflict (2012 vs. \"late 2013\") and",
+      "match": "2013"
+    }
+  ]
+}

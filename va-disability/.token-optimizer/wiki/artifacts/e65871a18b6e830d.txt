@@ -1,0 +1,46 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 20,
+    "originalLines": 477,
+    "finalLines": 491,
+    "tokensSaved": 8854,
+    "tokenCount": 546,
+    "originalTokenCount": 9400,
+    "compressionRatio": 0.05808510638297872,
+    "duration": 10,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "**Situation.** **Now residing in Lake Charles, Louisiana** (Calcasieu Parish) — relocated from Texas",
+      "~2026-09. Unemployed since ~June 2026 (performance/PIP separation resolved by negotiated severance,",
+      "**Texas employer**). 10% SC (tinnitus). MH supplemental claim pending, **no C&P scheduled**. VR&E",
+      "evaluation was set for 2026-09-17 with a VRC at the **Waco RO**. Spouse, no children.",
+      "**6–12 months runway.**",
+      "> 📍 **Revised 2026-09-14 for the Louisiana move.** The state-dependent sections are §1 (unemployment),",
+      "> §8 (safety net), and §9 (health insurance). **Two changes matter most:** unemployment is still a",
+      "> **Texas** claim at Texas rates (§1) — and **Louisiana expanded Medicaid**, which closes the coverage",
+      "> gap Texas left open (§9). Sections §2–§7 are federal and unchanged except where noted.",
+      ">",
+      "> ⛔ **New top-priority action created by the move:** **update your address with VA immediately.**",
+      "> 38 C.F.R. § 3.655(b) 🟢 provides that when an exam is scheduled in conjunction with \"*a supplemental",
+      "> claim for a benefit which was previously disallowed*… **the claim shall be denied**.\" Your MH claim",
+      "> **is** a supplemental claim, and no C&P has been scheduled yet — so the notice is still to come, and",
+      "> it goes to whatever address VA has on file. Listed good-cause examples are illness, hospitalization,",
+      "> and death in the family; **a stale address is not among them.** See §3.1.",
+      ""
+    ],
+    "removed": [
+      "**Situation.** Texas. Unemployed since ~June 2026 (performance/PIP separation resolved by negotiated",
+      "severance). 10% SC (tinnitus). MH supplemental claim pending, no C&P scheduled. VR&E evaluation",
+      "2026-09-17. Spouse, no children. **6–12 months runway.**"
+    ],
+    "unchanged": 1,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/FINANCIAL-BRIDGE-2026-09.md\n@@ -1,477 +1,491 @@\n@@ 10 unchanged lines @@\n-**Situation.** Texas. Unemployed since ~June 2026 (performance/PIP separation resolved by negotiated\n-severance). 10% SC (tinnitus). MH supplemental claim pending, no C&P scheduled. VR&E evaluation\n-2026-09-17. Spouse, no children. **6–12 months runway.**\n+**Situation.** **Now residing in Lake Charles, Louisiana** (Calcasieu Parish) — relocated from Texas\n+~2026-09. Unemployed since ~June 2026 (performance/PIP separation resolved by negotiated severance,\n+**Texas employer**). 10% SC (tinnitus). MH supplemental claim pending, **no C&P scheduled**. VR&E\n+evaluation was set for 2026-09-17 with a VRC at the **Waco RO**. Spouse, no children.\n+**6–12 months runway.**\n \n+> 📍 **Revised 2026-09-14 for the Louisiana move.** The state-dependent sections are §1 (unemployment),\n+> §8 (safety net), and §9 (health insurance). **Two changes matter most:** unemployment is still a\n+> **Texas** claim at Texas rates (§1) — and **Louisiana expanded Medicaid**, which closes the coverage\n+> gap Texas left open (§9). Sections §2–§7 are federal and unchanged except where noted.\n+>\n+> ⛔ **New top-priority action created by the move:** **update your address with VA immediately.**\n+> 38 C.F.R. § 3.655(b) 🟢 provides that when an exam is scheduled in conjunction with \"*a supplemental\n+> claim for a benefit which was previously disallowed*… **the claim shall be denied**.\" Your MH claim\n+> **is** a supplemental claim, and no C&P has been scheduled yet — so the notice is still to come, and\n+> it goes to whatever address VA has on file. Listed good-cause examples are illness, hospitalization,\n+> and death in the family; **a stale address is not among them.** See §3.1.\n+\n@@ 463 unchanged lines @@"
+  }
+}

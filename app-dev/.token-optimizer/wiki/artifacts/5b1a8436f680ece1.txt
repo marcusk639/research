@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/recovery-platform/.claude/agent-gates/guard.sh",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 8,
+    "originalLines": 86,
+    "finalLines": 94,
+    "tokensSaved": 948,
+    "tokenCount": 370,
+    "originalTokenCount": 1318,
+    "compressionRatio": 0.28072837632776937,
+    "duration": 35,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "  # Shell write vectors into protected paths. Closes the heredoc bypass found in",
+      "  # Stage 1 testing: an agent told not to use Edit/Write overwrote a test file with",
+      "  # `cat > file <<EOF` and succeeded, because this section only covered rm/git.",
+      "  if printf '%s' \"$CMD\" | grep -qE \"$TEST_FRAG_RE\"; then",
+      "    printf '%s' \"$CMD\" | grep -qE '(>>?[[:space:]]*[^|&;]*'\"$TEST_FRAG_RE\"'|\\btee\\b|\\bsed\\b[^|&;]*-i|\\bperl\\b[^|&;]*-i|\\btruncate\\b|\\bdd\\b|\\bcp\\b|\\bmv\\b)' &&",
+      "      block \"shell write into a test file detected. Test files are the oracle and are off limits to the implementer, by any tool. Call escalate instead.\"",
+      "  fi",
+      ""
+    ],
+    "removed": [],
+    "unchanged": 9,
+    "unifiedDiff": "--- /Users/marcusklein/dev/recovery-platform/.claude/agent-gates/guard.sh\n+++ /Users/marcusklein/dev/recovery-platform/.claude/agent-gates/guard.sh\n@@ -1,86 +1,94 @@\n #!/usr/bin/env bash\n # agent-gates/guard.sh — Stage 1 tamper gate for unattended implementer runs.\n #\n@@ 77 unchanged lines @@\n     block \"deleting or reverting test files is not allowed.\"\n   printf '%s' \"$CMD\" | grep -qE 'stryker[^;&|]*--(mutate|ignore)' &&\n     block \"narrowing the mutation scope from inside a run is not allowed; the glob lives in stryker.config.json.\"\n+  # Shell write vectors into protected paths. Closes the heredoc bypass found in\n+  # Stage 1 testing: an agent told not to use Edit/Write overwrote a test file with\n+  # `cat > file <<EOF` and succeeded, because this section only covered rm/git.\n+  if printf '%s' \"$CMD\" | grep -qE \"$TEST_FRAG_RE\"; then\n+    printf '%s' \"$CMD\" | grep -qE '(>>?[[:space:]]*[^|&;]*'\"$TEST_FRAG_RE\"'|\\btee\\b|\\bsed\\b[^|&;]*-i|\\bperl\\b[^|&;]*-i|\\btruncate\\b|\\bdd\\b|\\bcp\\b|\\bmv\\b)' &&\n+      block \"shell write into a test file detected. Test files are the oracle and are off limits to the implementer, by any tool. Call escalate instead.\"\n+  fi\n+\n fi\n \n exit 0"
+  }
+}

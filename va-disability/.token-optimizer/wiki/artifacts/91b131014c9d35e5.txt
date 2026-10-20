@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "path": "/Users/marcusklein/dev/research/va-disability/vre/CHAPTER-31-LEGAL-KB.md",
+  "operation": "applied",
+  "metadata": {
+    "editsApplied": 1,
+    "linesChanged": 4,
+    "originalLines": 337,
+    "finalLines": 341,
+    "tokensSaved": 5129,
+    "tokenCount": 269,
+    "originalTokenCount": 5398,
+    "compressionRatio": 0.049833271582067434,
+    "duration": 7,
+    "verified": true,
+    "wasBackedUp": true
+  },
+  "diff": {
+    "added": [
+      "",
+      "> **SOURCE OF TRUTH for Chapter 31 law and citation-verification status.** If",
+      "> `VRE-EVALUATION-PREP-2026-09-17.md` §4 or §10 disagrees with this file, **this file wins**.",
+      "> Record new verification verdicts here, not there."
+    ],
+    "removed": [],
+    "unchanged": 13,
+    "unifiedDiff": "--- /Users/marcusklein/dev/research/va-disability/vre/CHAPTER-31-LEGAL-KB.md\n+++ /Users/marcusklein/dev/research/va-disability/vre/CHAPTER-31-LEGAL-KB.md\n@@ -1,337 +1,341 @@\n ---\n topic: chapter-31-entitlement-law\n created: 2026-09-13\n status: reference KB — citations verified against primary sources\n sources_verified: yes (17/17 items; 5 corrections applied)\n ---\n \n+\n+> **SOURCE OF TRUTH for Chapter 31 law and citation-verification status.** If\n+> `VRE-EVALUATION-PREP-2026-09-17.md` §4 or §10 disagrees with this file, **this file wins**.\n+> Record new verification verdicts here, not there.\n # Chapter 31 / VR&E Entitlement — Verified Legal Reference\n \n > **Why this file exists.** A prior research pass on this corpus had **40 of 109 citations\n@@ 324 unchanged lines @@\n   pass. Verify before relying.\n - How a **pending** claim is weighed under § 21.52 (§5 above).\n - Which remedy VA treats as authoritative after a denial followed by a rating increase."
+  }
+}

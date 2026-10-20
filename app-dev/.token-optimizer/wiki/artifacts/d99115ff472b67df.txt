@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "pattern": "**/skills/deep-research*/**/SKILL.md",
+  "metadata": {
+    "totalMatches": 12,
+    "returnedCount": 12,
+    "truncated": false,
+    "tokensSaved": 0,
+    "tokenCount": 301,
+    "originalTokenCount": 301,
+    "compressionRatio": 1,
+    "duration": 563,
+    "cacheHit": false,
+    "savingsClassification": "unmeasured",
+    "savingsReason": "No comparable unoptimized glob response was materialized; caller-requested pagination is not optimizer-created savings."
+  },
+  "files": [
+    "plugins/cache/ecc/ecc/2.2.1/.agents/skills/deep-research/SKILL.md",
+    "plugins/cache/ecc/ecc/2.2.1/.kiro/skills/deep-research/SKILL.md",
+    "plugins/cache/ecc/ecc/2.2.1/docs/ja-JP/skills/deep-research/SKILL.md",
+    "plugins/cache/ecc/ecc/2.2.1/docs/zh-CN/skills/deep-research/SKILL.md",
+    "plugins/cache/ecc/ecc/2.2.1/skills/deep-research/SKILL.md",
+    "plugins/marketplaces/ecc/.agents/skills/deep-research/SKILL.md",
+    "plugins/marketplaces/ecc/.kiro/skills/deep-research/SKILL.md",
+    "plugins/marketplaces/ecc/docs/ja-JP/skills/deep-research/SKILL.md",
+    "plugins/marketplaces/ecc/docs/zh-CN/skills/deep-research/SKILL.md",
+    "plugins/marketplaces/ecc/skills/deep-research/SKILL.md",
+    "plugins/synced/f78e5507-833c-49f8-93e6-07090f2eb551_03678580-b672-4453-8029-5b90eea6299d/deep-research/skills/deep-research/SKILL.md",
+    "skills/deep-research/SKILL.md"
+  ]
+}
