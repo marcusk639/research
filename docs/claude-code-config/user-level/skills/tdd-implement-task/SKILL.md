@@ -44,7 +44,11 @@ the same way:
 1. Ask the user (as in Phase 1).
 2. Record the answer in the task file's `Open Questions`.
 3. Re-delegate the affected work.
-4. If a locked test is affected, use the test-change procedure.
+4. If a locked test is affected, or the answer adds behavior no test covers, use the
+   test-change procedure.
+5. If code has already been reviewed (Phase 6 or later) and the answer changes the
+   spec, that code was reviewed against an outdated spec. Set `unreviewed` (Phase 7),
+   or restart Phase 6 at pass 1 if you're still in Phase 6.
 
 Never resolve a spec question by guessing.
 
@@ -72,8 +76,9 @@ task `blocked`.
     `test(T<NN>): <title>` / `feat(T<NN>): <title>`.
   - With `split`, test files changed after the first commit (through the test-change
     procedure) go into the second commit and are listed in the report.
-  - At the start, record `git status --porcelain`. If the directory is not a git repo,
-    downgrade to `none`. Before each commit, if any file to be committed already had
+  - At the start, record `git status --porcelain` and copy every file it lists as
+    modified or untracked into `run-dir/pre-run/` (these are the user's own changes). If
+    the directory is not a git repo, downgrade to `none`. Before each commit, if any file to be committed already had
     uncommitted changes before the run, skip that commit and say so. With `split`, if the
     tests commit was skipped, skip the code commit too (committed code must never ship
     ahead of its tests). If only the code commit was skipped, the report must state that
@@ -251,18 +256,25 @@ the reviewed baseline. The review diff is the difference between `run-dir/review
 the working tree, for every non-guarded file the implementer reports changing (also
 check `git status --porcelain` when in git). Produce it with
 `git diff --no-index -- run-dir/reviewed/<path> <path>` or `diff -u`. For a changed file
-with no baseline copy, use `git diff -- <path>` if it's tracked (and copy its
-pre-change version from `git show HEAD:<path>` into the baseline). Otherwise, include its
-full content. After every **clean** review, refresh `run-dir/reviewed/` with the
-current versions of those files.
+with no baseline copy, take its pre-change version from `run-dir/pre-run/` if it's there
+(the user's version), otherwise from `git show HEAD:<path>` if it's tracked, and copy that
+into the baseline. If neither exists, it's a new file: include its full content.
+
+The baseline is refreshed (overwritten with the current versions of those files) only
+at two points: when Phase 6 finishes clean, and after each clean review in Phase 7
+step 3. **Never** refresh it between Phase 6 passes. Every Phase 6 pass, verification
+passes included, reviews the whole implementation against the Phase 5 baseline.
 
 **Guard check, after every implementer invocation (here and in Phases 6–7):**
 1. **Guarded files:** re-expand `guard-globs.txt` (same filters as 4a), recompute the
    hashes, and diff against `manifest.sha256`. A changed or deleted file is a
    violation. So is a **new** match, if the implementer's own file list or the
    timestamps show it created the file. A file produced by one of your own test runs is
-   not a violation: rehash right after each of your runs and investigate where any
-   new match came from instead of assuming.
+   not a violation. Right after each of your runs, record the hashes of any new guard
+   matches in `run-dir/post-run.sha256` (never in `manifest.sha256`, which only 4a and the
+   test-change procedure update). Investigate each one instead of assuming it's harmless.
+   Phase 8 requires every new match to be explained (generated output that the guard
+   globs should exclude, then excluded) or quarantined.
 2. **Mixed config files:** diff each against its copy in `run-dir/locked/`. A change
    inside a listed test section is a violation. Other changes (for example adding a
    dependency) are allowed. Log them and include them in the review diff.
@@ -295,7 +307,8 @@ modify tests. They review code as written.
 ## Phase 7 — Test, fix, review loop
 
 Keep one flag, **`unreviewed`**:
-- It starts `false` (Phase 6 ended clean).
+- It starts `false` only if Phase 6 actually finished with a clean pass and nothing
+  changed afterwards. Otherwise go back to Phase 6.
 - It becomes `true` whenever the implementer changes code.
 - It becomes `false` only when a code review of those changes comes back clean.
 
@@ -331,27 +344,38 @@ Repeat. **Cap: 5 cycles** (one cycle = one run of step 1).
 
 ### Test-change procedure (the only way a guarded file changes)
 
-1. You (the orchestrator) write down which test is wrong, the spec text it contradicts,
-   and why. "The code doesn't do this" is never a reason.
+1. You (the orchestrator) write down which test is wrong or missing, the spec text
+   involved, and why. "The code doesn't do this" is never a reason. Name **every guarded
+   file** the change needs: tests, fixtures, helpers, test sections of mixed config
+   files.
 2. If the right behavior isn't obvious from the spec, ask the user.
-3. Delegate the change to `tdd-test-author`, then run one `tdd-test-reviewer`
-   verification pass (accuracy + adversarial) on the changed tests.
+3. Delegate the change to `tdd-test-author`, then run a `tdd-test-reviewer`
+   verification pass (all three focuses) on the changed files. If it's blocking, fix
+   and verify again (at most 3 passes, then the cap rule).
 4. Before locking again, diff the guard against the manifest and the mixed-config
-   copies. Only the files named in step 1 may have changed. Any other change is an
+   copies. Only the guarded files named in step 1 may have changed. Any other change is an
    incident: restore it and log it. Also check the changed tests for real skip or
    only-marker syntax (`@pytest.mark.skip`, `pytest.skip(`, `it.skip(`, `describe.skip(`,
    `.only(`, `xit(`, `xdescribe(`, `t.Skip(`, or the framework's equivalent). Any such
    marker is rejected.
 5. Lock again (4a: update the manifest and `run-dir/locked/`). Log the change (test,
-   reason, before/after summary) for the report. Return to Phase 7 step 1, so the tests
-   rerun against the changed test.
+   reason, before/after summary) for the report.
+6. Return to where the procedure was entered:
+   - **From Phase 4b** (after the lock): go back to the start of 4b.
+   - **From Phase 5:** resume Phase 5. Re-delegate the implementer with the changed tests.
+   - **From Phase 6:** delegate the implementer to bring the code in line with the
+     changed tests (guard check), then restart Phase 6 at pass 1. The pass count keeps
+     accumulating toward the cap.
+   - **From Phase 7:** go to step 1, so the tests rerun against the changed tests. The
+     loop's exit still requires `unreviewed` to be clear.
 
 ## Phase 8 — Integrity check
 
 All of the following must hold, otherwise return to Phase 7 (this counts against
 Phase 7's cycle cap):
 
-- The guard hashes match the final manifest, with no unexplained new matches. The test
+- The guard hashes match the final manifest. Every new match in `post-run.sha256`
+  or from the implementer is explained or quarantined. The test
   sections of mixed config files match their locked copies. Every manifest change has a
   logged test change behind it.
 - No skip or only-marker syntax (as listed in the test-change procedure) in the task's
