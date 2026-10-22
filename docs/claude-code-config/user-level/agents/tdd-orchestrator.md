@@ -58,6 +58,8 @@ disk.
 - Current wave: <n> · Current task: T<NN> (per-task progress: .tdd-runs/T<NN>/state.md)
 - Wave questions asked: <wave numbers>
 - Set-aside work: <T<NN>: .tdd-runs/T<NN>/set-aside/ … or none>
+- Known failures: .tdd-runs/known-failures.txt (failing tests the user accepted, each with
+  its source)
 
 ## Log
 - <ISO time> <event: stage change / T<NN> started / done / blocked (reason) / retried / set aside>
@@ -71,8 +73,9 @@ Update it at every stage change and every task outcome.
    2. Continue at the recorded `Stage`. For `Stage: breakdown`, rerun the breakdown from
       its Phase 1. For `breakdown-validate`, rerun the breakdown's Phase 5 validation
       before the gate. Never skip validation because `INDEX.md` exists.
-   3. A task marked `in-progress` is resumed by carrying out the implement skill on it.
-      The skill detects its own `state.md` and follows its **Resuming** rules. Never
+   3. The recorded **current task**, if `in-progress`, is resumed by carrying out the
+      implement skill on it. The skill detects its own `state.md` and follows its
+      **Resuming** rules. This is safe only because no other task has run since. Never
       restart a task's Phase 0 setup or delete its run directory yourself.
    4. Tell the user where you're resuming.
 2. **`RUN-STATE.md` exists for a different plan.** Ask the user before touching
@@ -82,11 +85,23 @@ Update it at every stage change and every task outcome.
    `Stage: breakdown-validate` (its validation may not have finished) and continue.
 4. **Every start or resume:** list any `blocked` tasks, and any `in-progress` task that
    isn't the recorded current task (for example, left by a manual
-   `/tdd-implement-task` run). For each, ask the user to retry/resume it, leave it
-   blocked, or (for in-progress) mark it blocked.
-   - A retried root task goes back to runnable. Its dependents that were blocked with
-     the reason `dependency T<NN> blocked` go back to `todo`.
-   - If its work was set aside (see 5b), restore it first.
+   `/tdd-implement-task` run). For each, ask the user to **retry it fresh**, or to leave
+   it (or mark it) `blocked`.
+   - **Why fresh, and never resumed:** other tasks may have changed the working tree
+     since, so the task's old lock, baselines and ownership records no longer
+     describe the tree. Resuming would claim, quarantine or overwrite other tasks' work.
+   - **To retry fresh:**
+     1. If its partial work is still in the working tree, set it aside first (5b).
+     2. Move its run directory to `.tdd-runs/T<NN>/attempt-<k>/`.
+     3. Remove any of its entries from `known-failures.txt`.
+     4. Set `Status: todo`.
+
+     The skill then starts from Phase 0 with a new baseline, pre-run snapshot and lock.
+     Tell the test author and implementer that the archived attempt
+     (`attempt-<k>/set-aside/`) exists. They may consult it as a draft, but everything
+     goes through the full write, review and lock process again.
+   - The retried root task becomes runnable. Its dependents that were blocked with the
+     reason `dependency T<NN> blocked` go back to `todo`.
 
 ## 3. Stage A — Breakdown
 
@@ -138,7 +153,8 @@ recommended answer. Record every answer in the right task file's `Open Questions
 For each runnable task in the wave, in ID order:
 1. Set `Current task` in `RUN-STATE.md`.
 2. Carry out **every phase (0–9) of `tdd-implement-task`** on the task file with
-   `--commit <mode> --run-baseline <tasks-dir>/.tdd-runs/run-baseline.log`. Follow the
+   `--commit <mode> --run-baseline <tasks-dir>/.tdd-runs/run-baseline.log
+   --known-failures <tasks-dir>/.tdd-runs/known-failures.txt`. Follow the
    skill exactly:
    - its role separation (you never write tests or production code)
    - its guard, `state.md` upkeep, loops and caps (a cap hit asks the user)
@@ -146,13 +162,25 @@ For each runnable task in the wave, in ID order:
      introduced earlier in the run
 
    Its Phase 1 will usually find nothing new after 5a. Ask about anything it does find.
+
+   If its Phase 0 stops on an **unknown failure** (broken earlier in the run and not
+   accepted), work out from the earlier tasks' cycle logs which task introduced it.
+   Ask the user to choose:
+   - **(a) Fix it now as a new task.** Its earlier run state is stale, so it is never
+     resumed. Write a fix task `T<NN>-fix<k>-<slug>.md` from the template:
+     - Goal: the failing tests pass again, without changing the behavior they specify.
+     - ACs: one per failing test.
+     - Context: the cycle logs that point to the cause.
+     - Depends on: the introducing task.
+
+     Add it to `INDEX.md`. Run it through the skill (5b) before this task, then restart
+     this task's Phase 0.
+   - **(b) Accept the failure.** Add it to `known-failures.txt` with its source, and
+     restart this task.
+   - **(c) Stop the run.**
 3. When the task finishes:
    - **`done`:** give the user one progress line, for example
      `T03 done — 14 tests, 2 fix cycles, report: tasks/T03-….report.md (4/9 tasks)`.
-     If its Phase 0 reported failures that weren't in the run baseline (broken earlier in
-     the run), work out from the earlier tasks' cycle logs which task introduced them.
-     Ask the user whether to reopen that task (`in-progress`, resumed through the skill's
-     Phase 7) or to continue and list the failures in the run report.
    - **`blocked`:**
      1. Record the reason.
      2. Ask the user what to do with the task's partial work (tests, stubs, code): leave
@@ -161,9 +189,15 @@ For each runnable task in the wave, in ID order:
         - save `git diff -- <its files>` to `.tdd-runs/T<NN>/set-aside/changes.patch`
         - move its new untracked files into `.tdd-runs/T<NN>/set-aside/files/`
         - restore its tracked files to their `pre-run/` or `HEAD` version
+        - if `state.md` records commits (for example a `split` tests commit), its
+          committed stubs and tests stay in `HEAD` unless the user agrees to
+          `git revert <sha>`. If they decline, say plainly that the work could not be
+          fully set aside.
 
         Only ever touch files the task's run identified as its own work. Record the
-        choice in `RUN-STATE.md`.
+        choice in `RUN-STATE.md`. If the user chooses to leave the work in the tree, add
+        the task's failing tests to `known-failures.txt` (source: `T<NN> blocked, left
+        in tree`), so later tasks aren't blocked by them.
      3. With `--strict`, go to Stage D.
      4. Otherwise, mark every task that depends on it, directly or indirectly, `blocked`
         with the reason `dependency T<NN> blocked` (task file and `INDEX.md`). Tell the
@@ -183,8 +217,8 @@ Stage C ends when no task is runnable.
 1. Run the full suite one last time and save the output to
    `<tasks-dir>/.tdd-runs/run-final.log`.
 2. Write `<tasks-dir>/RUN-REPORT.md` with these sections:
-   - **Outcome:** `complete` only if every task is `done` and the full suite passes apart
-     from failures recorded in `run-baseline.log`. Otherwise `incomplete`, with the
+   - **Outcome:** `complete` only if every task is `done`, the full suite passes apart
+     from failures recorded in `run-baseline.log`, and `known-failures.txt` is empty. Otherwise `incomplete`, with the
      reasons.
    - **Tasks:** ID, title, status, test count, fix cycles, commit SHAs or
      "not committed", and a link to the report.
@@ -195,8 +229,11 @@ Stage C ends when no task is runnable.
    - **Test changes and guard incidents:** collected from the task reports.
    - **Caps hit and the user's decisions.**
    - **Blocked tasks:** the root cause, what each is waiting on, and where any set-aside
-     work is, with how to restore it (`git apply <patch>` plus moving the files back).
-   - **Final suite result:** compared with the run baseline.
+     work is, with how to restore it by hand (`git apply --3way <patch>`, resolving any
+     conflicts, plus moving the files back). Retries don't restore it. They start fresh
+     and use it only as a reference draft.
+   - **Final suite result:** compared with the run baseline, with every entry in
+     `known-failures.txt` and its source.
    - **Follow-ups:** remaining risks from the task reports.
 
    To retry blocked tasks later, rerun the same launch command. The start-up check in

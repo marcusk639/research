@@ -1,7 +1,7 @@
 ---
 name: tdd-implement-task
 description: Complete one task file (from /tdd-task-breakdown) using strict, spec-first test-driven development across separate agents. Read the task end to end, ask clarifying questions, have a test author write positive/negative/edge/error tests from the spec (not from current code), review the tests in three passes, lock them and confirm they fail first, have a separate implementer write the code, review the code in three passes, then run a test-fix-review loop until every test passes and review is clean. Optional commits via --commit (default none).
-argument-hint: <path-to-task-file> [--commit none|split|single]
+argument-hint: <path-to-task-file> [--commit none|split|single] [--run-baseline <log>] [--known-failures <file>]
 disable-model-invocation: true
 ---
 
@@ -64,8 +64,11 @@ task `blocked`.
 ## Arguments and setup
 
 - `$ARGUMENTS`: the task file path (required), `--commit none|split|single` (default
-  **`none`**), and `--run-baseline <log>` (optional, passed by `tdd-orchestrator`: the
-  full-suite result from before the first task of a plan run).
+  **`none`**), and two options passed by `tdd-orchestrator`:
+  - `--run-baseline <log>`: the full-suite result from before the first task of a plan
+    run
+  - `--known-failures <file>`: failing tests the user has already accepted during the
+    run
   Commit modes:
   - `none`: never commit. Leave all changes in the working tree.
   - `split`: two commits, tests and stubs first (after Phase 4b), then code (after
@@ -142,12 +145,22 @@ resume, not a fresh start.
    file location and naming globs, fixtures, test-runner config files, how mocks are
    done here.
 4. On a fresh start, run the full suite once and save the output to
-   `run-dir/baseline.log`. **If the baseline suite is already failing, record which tests
-   fail.** They are not this task's to fix. They are excluded from "all tests pass" only
-   if they're unrelated to the task, and the report must list them. With
-   `--run-baseline`, a test counts as pre-existing only if it also fails in that run
-   baseline. Anything else failing now was broken earlier in the plan run. Report it to
-   the user rather than excluding it. Do not run this skill on two tasks in the same working
+   `run-dir/baseline.log`. Every test already failing here must be classified before
+   going on:
+   - **Accepted failure:**
+     - without `--run-baseline`: any failure unrelated to this task
+     - with it: a failure that also fails in the run baseline, or is listed in
+       `--known-failures`
+
+     Record it in `run-dir/accepted-failures.txt`. It's not this task's to fix. It's
+     excluded from "all tests pass", and the report lists it.
+   - **Unknown failure** (only possible with `--run-baseline`): something broken earlier
+     in the plan run that nobody has accepted. **Stop before Phase 1.** Report the
+     failures to the user (or the orchestrator) and ask whether to accept them for this
+     task (add them to `accepted-failures.txt`), or to stop so the task that caused them
+     can be reopened. Never start on top of an unknown failure.
+
+   Do not run this skill on two tasks in the same working
    tree at once. Each run's deliberately failing tests would corrupt the other's
    baseline and results (parallel runs need separate git worktrees).
 5. Write a **working summary** (shown to the user):
@@ -367,7 +380,7 @@ Repeat. **Cap: 5 cycles** (one cycle = one run of step 1).
 
 1. **Run** the task's tests and then the full suite. Save the output to
    `run-dir/cycle-<n>.log`.
-2. **If anything fails** (not counting the pre-existing failures recorded in Phase 0),
+2. **If anything fails** (not counting the tests in `accepted-failures.txt`),
    diagnose each failure before changing anything. Read the failure, the test, and the
    spec. Decide which case it is:
    - **The code is wrong** (the default assumption). Delegate to `tdd-implementer` with
@@ -435,7 +448,7 @@ Phase 7's cycle cap):
 - No skip or only-marker syntax (as listed in the test-change procedure) in the task's
   test files. No test file was deleted.
 - Every `TC-n` and every row of the final matrix exists as a test, and every one passes.
-- The full suite passes apart from the pre-existing failures recorded in Phase 0.
+- The full suite passes apart from the tests in `accepted-failures.txt`.
 - `unreviewed` is clear.
 - The task's `Definition of Done` checklist is satisfied, item by item.
 
@@ -459,7 +472,7 @@ Write `<task-dir>/T<NN>-<slug>.report.md` with these sections:
   for each.
 - **Test changes and guard incidents:** each change with its reason, quarantined files,
   and allowed mixed-config changes (for example new dependencies), or "none".
-- **Pre-existing suite failures:** or "none".
+- **Accepted suite failures:** from `accepted-failures.txt`, with their sources, or "none".
 - **Caps hit and decisions:** or "none".
 - **Remaining risks / follow-ups.**
 
@@ -474,5 +487,5 @@ Tell the user the result in a few lines and link the report.
 - Never weaken, skip, or delete a test to get to green. A failing test is evidence. Fix
   the code, or change the test only through the test-change procedure.
 - The task is never marked `done` while any test fails (apart from recorded
-  pre-existing failures) or any code change is unreviewed.
+  accepted failures) or any code change is unreviewed.
 - Report results exactly as they are. If tests fail, say so with the output.
