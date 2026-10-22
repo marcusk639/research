@@ -25,8 +25,23 @@ delete the old copy from `~/.claude/` by hand.
 | `agents/tdd-test-reviewer.md` | Read-only; three-pass test review (coverage → accuracy → adversarial) |
 | `agents/tdd-implementer.md` | Writes production code; never touches tests, fixtures, or test config (hash-guarded) |
 | `agents/tdd-code-reviewer.md` | Read-only; three-pass code review (spec/correctness → robustness → quality and test-gaming) |
+| `agents/tdd-orchestrator.md` | Runs a whole plan: breakdown → your approval → every task in dependency order, with resumable state and a run report |
 
 ## Flow
+
+Whole plan, one command (must be the main session, since it spawns the role agents):
+
+```bash
+claude --agent tdd-orchestrator "path/to/plan.md [--commit none|split|single] [--strict]"
+```
+
+It breaks the plan down, **waits for your approval**, asks each wave's clarifying
+questions in one batch, then runs every task through the steps below, one at a time. A
+blocked task blocks only the tasks that depend on it (`--strict` stops the run instead).
+State lives in `tasks/RUN-STATE.md`, so rerunning the same command resumes. The result
+goes in `tasks/RUN-REPORT.md`.
+
+Per skill:
 
 ```
 plan ──/tdd-task-breakdown──▶ tasks/T01..Tnn + INDEX.md

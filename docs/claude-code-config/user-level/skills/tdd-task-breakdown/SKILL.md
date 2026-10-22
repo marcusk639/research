@@ -149,8 +149,11 @@ listed assumptions, or stop.
 ## Report
 
 Tell the user: the number of tasks and waves, the output path, assumptions made,
-non-blocking questions left open, and the command to start:
-`/tdd-implement-task <out>/T01-<slug>.md`.
+non-blocking questions left open, and how to start:
+- one task at a time: `/tdd-implement-task <out>/T01-<slug>.md`
+- the whole set, unattended between questions:
+  `claude --agent tdd-orchestrator "<plan-path> --out <out>"` (it picks up the existing
+  `INDEX.md`)
 
 ## Constraints
 
