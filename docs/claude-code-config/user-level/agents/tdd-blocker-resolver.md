@@ -64,15 +64,24 @@ session**: reset the pass counter to 1 every time you start.
 1. **The current task is `in-progress`:** resume it first through the skill, exactly as
    orchestrator §2 resumes its current task, with the arguments recorded in the log,
    including `--blocker-id` if it was a retry. Then handle its outcome (§5).
-2. **An entry is `resolving` with an unfinished split:** its journal (§7) shows
-   `split started` without `split committed`. Roll it back:
-   - restore `INDEX.md` and the dependents' task files from
-     `.tdd-runs/B-NN-split-backup/`
-   - delete the `pending-split` sub-task files
-   - restore the original's status from the backup
+2. **An entry is `resolving` with an unfinished split.**
+   - **Journal shows `split committing` without `split committed`:** finish the commit
+     (§4c step 5). Every step there is idempotent.
+   - **Journal shows `split started` without `split committing`:** roll it back:
+     - restore `INDEX.md`, `known-failures.txt`, the original task file and the
+       dependents' task files from `.tdd-runs/B-NN-split-backup/`
+     - delete the sub-task files whose IDs the journal recorded at `split started`,
+       whatever their status
 
-   Set the entry to `open`. No attempt is counted.
-3. **Any other entry is still `resolving`:** an interrupted attempt that never reached
+     Set the entry to `open`. No attempt is counted.
+3. **An entry is `resolving` and its journal shows `skill started`:** the skill ran, but
+   its outcome may not have been handled. Read the task's status now:
+   - `done`: run the **done** outcome (§5).
+   - `blocked` with B-NN: run the **blocked again** outcome.
+   - `todo`, with the run directory archived by a Phase 0 stop: run the matching
+     **stopped** outcome. The skill's report or the log says which kind.
+   - `in-progress`: step 1 already handled it.
+4. **Any other entry is still `resolving`:** an interrupted attempt that never reached
    the skill.
    - Set it back to `open`.
    - Archive the task's run directory if one exists.
@@ -93,9 +102,16 @@ and one of these holds:
 - **Run-level:** `Task: none (run-level)`. These are earlier-failure entries.
 
 An `open` entry whose budget is used up is not actionable. Set it to `needs-human` (§5).
-An entry that is `open` but whose task no longer lists `B-NN` (for example, the task was
-completed another way) gets a resolver row explaining that, and its status becomes
-`resolved`.
+**Closed outside the resolver.** Any unresolved entry (`open`, `needs-human`, or
+`resolving` after recovery) is task-bound, but its task no longer lists `B-NN`. For
+example, a human finished the task and marked it `done`. Check the task's status:
+- **`done` or `superseded`:** add a resolver row explaining what you found, then run the
+  **done** outcome (§5): resolve the entry, clear its known failures, and remove
+  `(B-NN)` from its dependents.
+- **Blocked under a different entry:** don't resolve B-NN. Set it to `needs-human`, with
+  a note pointing to the other entry, and move the `Blocks` list over to that entry
+  (update the dependents' reasons to match).
+- **Anything else:** set it to `needs-human`, describing the inconsistency.
 
 Process actionable entries in ID order.
 
@@ -169,7 +185,10 @@ Process actionable entries in ID order.
    Journal: `brief written`.
 4. Set `Current task: T<NN>` in `RUN-STATE.md`. Log the exact arguments. Carry out the
    implement skill as `tdd-orchestrator` §5b runs a task (same arguments, including
-   `--target-failures` if the task has a file), plus `--blocker-id B-NN`. Journal:
+   `--target-failures` if the task has a file), plus `--blocker-id B-NN` and
+   `--attempt <n>`. `<n>` is this attempt's number, so a row the skill writes shares the
+   number of any row you already wrote for the same attempt (an environment fix, a fix
+   task, `cleared`, or `stopped`). Journal:
    `skill started`. Keep the `known-failures.txt` entries sourced to B-NN in place during
    the run. A target failure takes precedence over an accepted one in the skill.
 5. Handle the outcome (§5).
@@ -188,8 +207,9 @@ which references B-NN in its description.
 ### 4c. Split
 
 1. Apply the **4a precondition** first.
-2. Back up `INDEX.md` and every dependent task file to `.tdd-runs/B-NN-split-backup/`.
-   Journal: `split started`.
+2. Back up `INDEX.md`, `known-failures.txt`, the original task file, and every
+   dependent task file to `.tdd-runs/B-NN-split-backup/`. Reserve the sub-task IDs
+   (the next free ones). Journal: `split started: <sub-task IDs>`.
 3. Carry out the breakdown skill's **Phases 3–5 scoped to this one task, unattended**.
    Produce two or more sub-tasks with the next free IDs, which together cover exactly
    the original's ACs and required test cases.
@@ -206,7 +226,7 @@ which references B-NN in its description.
    - If validation still fails at its cap: roll back (§2, recovery step 2) and record
      why in the entry. If a targeted retry hasn't been tried, leave the entry `open` for
      it. Otherwise set `needs-human`.
-5. **Commit the split:**
+5. **Commit the split.** Journal `split committing` first. Then:
    - mark the original `superseded (by T<a>, T<b>, …)`
    - set the sub-tasks to `todo`
    - remove the `known-failures.txt` entries sourced to B-NN (the work is out of the
@@ -220,15 +240,17 @@ which references B-NN in its description.
 
 ## 5. Outcomes of a retry
 
-Exactly one `Attempts` row per attempt. When a retry blocks again the skill writes it.
-You write it for every other outcome.
+Every row carries its attempt's number in `#`. An attempt may have several rows (for
+example `resolver-env-fix`, then the skill's `resolver-retry` row when the retry blocks
+again), and the budget counts **distinct attempt numbers**. The skill writes the row when
+a retry blocks again. You write every other row.
 
 | Outcome | What to do |
 |---------|------------|
 | **`done`** | Add a `resolver-retry` row with outcome `resolved`. Set the entry to `resolved`. Remove the `known-failures.txt` entries sourced to B-NN. Remove the reason `(B-NN)` from every task listed in `Blocks`. Each task with no reasons left becomes `todo`. |
 | **Blocked again** (the skill extended B-NN) | Apply orchestrator 5b-5: incomplete set-aside means adding the failing tests to known failures with source B-NN, and dependents keep the B-NN reason. If the budget is now used up, set `needs-human` and rewrite `To unblock` with what has been ruled out, the remaining hypotheses, and exactly what a human must decide or do. Otherwise set it `open` for the next pass. |
-| **Stopped in Phase 0 on an unknown failure** (the skill archived and reset the task) | Add a row with outcome `stopped: unknown failure <tests>`. Handle the failure as orchestrator 5b-3 does, but any blocker it would open extends B-NN. Its fix task is a separate task. Set the task back to `blocked (B-NN)`, and the entry back to `open` (the next pass retries it) or to `needs-human` if the budget is used up. |
-| **Stopped in Phase 0 on its dependency check** | Add a row with outcome `stopped: dependency T<x> not done`. Describe the inconsistency in the entry. Set the task back to `blocked (B-NN)` and the entry to `needs-human`. Never open a second entry. |
+| **Stopped in Phase 0 on an unknown failure** (the skill archived and reset the task) | Add a `resolver-retry` row with this attempt's number and the outcome `stopped: unknown failure <tests>`. The failure isn't this task's own, so handle it as orchestrator 5b-3 does: a fix task, or a **separate run-level** earlier-failure entry that becomes its known-failure source. Never file it under B-NN. Its fix task is a separate task. Set the task back to `blocked (B-NN)`, and the entry back to `open` (the next pass retries it) or to `needs-human` if the budget is used up. |
+| **Stopped in Phase 0 on its dependency check** | Add a `resolver-retry` row with this attempt's number and the outcome `stopped: dependency T<x> not done`. Describe the inconsistency in the entry. Set the task back to `blocked (B-NN)` and the entry to `needs-human`. Never open a second entry. |
 
 ## 6. Running tasks
 

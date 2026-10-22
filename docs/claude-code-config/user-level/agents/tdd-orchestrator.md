@@ -99,10 +99,13 @@ Update it at every stage change and every task outcome.
       - `finished`: say so and point to `RUN-REPORT.md`. If `BLOCKERS.md` has entries with
         a filled-in `Decision`, suggest launching `tdd-blocker-resolver`. Do nothing
         else.
-   3. The recorded **current task**, if `in-progress`, is resumed by carrying out the
+   3. **Only when `Stage: executing`:** the recorded **current task**, if `in-progress`,
+      is resumed by carrying out the
       implement skill on it. The skill detects its own `state.md` and follows its
       **Resuming** rules. This is safe only because no other task has run since. Never
-      restart a task's Phase 0 setup or delete its run directory yourself.
+      restart a task's Phase 0 setup or delete its run directory yourself. In
+      `resolving`, leave the current task to the resolver's recovery, which resumes it
+      with its logged arguments (including `--blocker-id`).
    4. Tell the user where you're resuming (one line).
 2. **`RUN-STATE.md` exists for a different plan.** Ask the user before touching
    anything.
@@ -198,9 +201,10 @@ For each runnable task in the wave, in ID order:
    - `--unattended`, unless the run is interactive
    - `--blocker-id B-NN`, only when the resolver is retrying a blocker
 
-   When the resolver is running this section for a retry of B-NN, every blocker that the
-   steps below would open **extends B-NN instead**. Never open a second entry for the same
-   task.
+   When the resolver is running this section for a retry of B-NN, every **task-bound**
+   blocker that the steps below would open **extends B-NN instead**. Never open a second
+   entry for the same task. A failure that isn't the task's own, such as an unknown
+   earlier failure (5b-3), still gets its own **run-level** entry.
 
    Follow the skill exactly:
    - its role separation (you never write tests or production code)

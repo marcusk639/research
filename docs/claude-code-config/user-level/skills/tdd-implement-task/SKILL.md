@@ -1,7 +1,7 @@
 ---
 name: tdd-implement-task
 description: Complete one task file (from /tdd-task-breakdown) using strict, spec-first test-driven development across separate agents. Read the task end to end, ask clarifying questions, have a test author write positive/negative/edge/error tests from the spec (not from current code), review the tests in three passes, lock them and confirm they fail first, have a separate implementer write the code, review the code in three passes, then run a test-fix-review loop until every test passes and review is clean. Optional commits via --commit (default none). With --unattended it never waits on the user: low-risk ambiguities are assumed and logged, real blockers are written to BLOCKERS.md as fully described tasks with suggested fixes, and the task's partial work is set aside.
-argument-hint: <path-to-task-file> [--commit none|split|single] [--run-baseline <log>] [--known-failures <file>] [--target-failures <file>] [--unattended] [--blockers <file>] [--blocker-id <B-NN>]
+argument-hint: <path-to-task-file> [--commit none|split|single] [--run-baseline <log>] [--known-failures <file>] [--target-failures <file>] [--unattended] [--blockers <file>] [--blocker-id <B-NN>] [--attempt <n>]
 disable-model-invocation: true
 ---
 
@@ -104,8 +104,8 @@ blocker.
    - With `--blocker-id B-NN` (a resolver retry), **every** blocker in this run extends
      B-NN. Never open a second entry. Update `What happened`, the hypothesis, the
      suggested fixes and `Type` with the new evidence. Add an `Attempts` row with
-     `By: resolver-retry` and the outcome `blocked again at <phase>`. Leave the status to
-     the resolver.
+     `#` set to the `--attempt` number, `By: resolver-retry`, and the outcome
+     `blocked again at <phase>`. Leave the status to the resolver.
    - Otherwise, append a new entry with the next free ID. Its first `Attempts` row says
      `By: original-run`.
 
@@ -163,6 +163,8 @@ first. Unattended runs do it automatically.
   - `--blockers <file>`: where blocker entries go (default `<tasks-dir>/BLOCKERS.md`)
   - `--blocker-id <B-NN>`: this run is a retry of that blocker; extend its entry rather
     than opening a new one
+  - `--attempt <n>`: with `--blocker-id`, the resolver's attempt number, used for the
+    `Attempts` row
 
   Commit modes:
   - `none`: never commit. Leave all changes in the working tree.

@@ -82,11 +82,12 @@ already show. -->
 ### Attempts
 
 <!-- By: original-run | orchestrator | resolver-retry | resolver-fix-task | resolver-split | resolver-env-fix | resolver-decision.
-Each attempt gets exactly one row. The skill writes it when a resolver retry blocks
-again. The resolver writes it for every other outcome. The attempt budget counts the
-resolver-retry, resolver-fix-task, resolver-split and resolver-env-fix rows after the
-latest resolver-decision row (or all of them, if there is none). So a human decision
-starts a fresh budget, and the decision row itself isn't an attempt. -->
+Each row's # is its attempt number. One attempt may have several rows (for example an
+environment fix followed by the retry's outcome). The attempt budget counts the
+distinct attempt numbers among resolver-retry, resolver-fix-task, resolver-split and
+resolver-env-fix rows after the latest resolver-decision row (or all of them, if there
+is none). So a human decision starts a fresh budget, and the decision row itself isn't
+an attempt. -->
 
 | # | When | By | Strategy | Outcome | Evidence |
 |---|------|----|----------|---------|----------|

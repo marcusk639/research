@@ -133,9 +133,9 @@ listed assumptions, or stop. When a caller runs these phases unattended (for exa
 `tdd-blocker-resolver` splitting a task), don't ask. Return the remaining problems to the
 caller.
 
-Tasks with status `superseded` or `pending-split` are left out of the coverage, overlap
-and dependency checks. A task being split is treated as already replaced by its
-sub-tasks. When adding or replacing tasks in an existing set, update `INDEX.md` in place
+Tasks with status `superseded`, and the task currently being split (named by the
+caller), are left out of the coverage, overlap and dependency checks. Its
+`pending-split` sub-tasks are **always included**, as its replacement. When adding or replacing tasks in an existing set, update `INDEX.md` in place
 (rows and matrix) rather than rewriting it.
 
 1. **Coverage:** every requirement `R-n` maps to at least one task, and every task maps
