@@ -1,6 +1,6 @@
 ---
 name: tdd-implement-task
-description: Complete one task file (from /tdd-task-breakdown) using strict, spec-first test-driven development across separate agents. Read the task end to end, ask clarifying questions, have a test author write positive/negative/edge/error tests from the spec (not from current code), review the tests in three passes, lock them and confirm they fail first, have a separate implementer write the code, review the code in three passes, then run a test-fix-review loop until every test passes and review is clean. Use when the user says "implement T03", "TDD this task", or runs it on a task file.
+description: Complete one task file (from /tdd-task-breakdown) using strict, spec-first test-driven development across separate agents. Read the task end to end, ask clarifying questions, have a test author write positive/negative/edge/error tests from the spec (not from current code), review the tests in three passes, lock them and confirm they fail first, have a separate implementer write the code, review the code in three passes, then run a test-fix-review loop until every test passes and review is clean. Optional commits via --commit (default none).
 argument-hint: <path-to-task-file> [--commit none|split|single]
 disable-model-invocation: true
 ---
@@ -17,41 +17,69 @@ The roles are user-level subagents, invoked with the `Agent` tool:
 
 | Role | `subagent_type` | Can edit |
 |------|-----------------|----------|
-| Test author | `tdd-test-author` | test files (+ interface stubs, phase 2 only) |
+| Test author | `tdd-test-author` | test files (+ interface stubs, until Phase 4b ends) |
 | Test reviewer | `tdd-test-reviewer` | nothing (read-only) |
-| Implementer | `tdd-implementer` | production code, never tests |
+| Implementer | `tdd-implementer` | production code, never tests or test config |
 | Code reviewer | `tdd-code-reviewer` | nothing (read-only) |
 
-This skill must run in the **main thread** (a session started normally, or with
-`claude --agent tdd-orchestrator`). Subagents cannot spawn subagents. If the `Agent` tool
-is unavailable, or one of the four agents is not installed, stop and tell the user to run
-`docs/claude-code-config/user-level/install.sh` (or copy the agents into
-`~/.claude/agents/`).
+This skill must run in the **main session**. Subagents cannot spawn subagents. If the
+`Agent` tool is unavailable, or one of the four agents is not installed, stop and tell
+the user to run `install.sh` from the `docs/claude-code-config/user-level/` directory of
+their config repo (or copy the agents into `~/.claude/agents/`).
 
-Each subagent starts with a blank context. Every delegation prompt must include: the
-absolute path of the task file, the paths of its dependency task files, the test
-commands, the phase, and exactly what to return. Never assume a subagent remembers an
-earlier invocation.
+**Delegation prompts.** Each subagent starts with a blank context, so every prompt must
+include:
+- the absolute path of the task file and its dependency task files
+- the test commands
+- the phase, and the pass focus if it's a review
+- exactly what to return
+
+Reviewers have no shell, so paste in the text they need: the current `git diff` (or the
+full contents of new files), and the relevant test-run output. Never assume a subagent
+remembers an earlier invocation.
+
+**Spec questions from any agent.** Spec gaps reported by the test author, spec questions
+from either reviewer, and test/spec conflicts reported by the implementer are all handled
+the same way:
+1. Ask the user (as in Phase 1).
+2. Record the answer in the task file's `Open Questions`.
+3. Re-delegate the affected work.
+4. If a locked test is affected, use the test-change procedure.
+
+Never resolve a spec question by guessing.
+
+**Caps.** Every loop below has a cap. When a cap is hit, don't stop silently and don't
+fake success. Show the user the outstanding findings or failures, what was tried, and
+your diagnosis, then ask with `AskUserQuestion` whether to (a) continue for another round
+of the same size, (b) answer or adjust something and continue, or (c) stop and mark the
+task `blocked`.
 
 ## Arguments and setup
 
 - `$ARGUMENTS`: the task file path (required) and `--commit none|split|single` (default
   **`none`**).
   - `none`: never commit. Leave all changes in the working tree.
-  - `split`: two commits, tests first (after Phase 4b) and code second (after Phase 8).
-    The history then shows the tests came first.
+  - `split`: two commits, tests and stubs first (after Phase 4b), then code (after
+    Phase 8). The history then shows the tests came first.
   - `single`: one commit with tests and code after Phase 8.
-  Commits stage **only the files this run created or changed**, added by explicit path
-  (never `git add -A`/`.`). They never include the run directory (`.tdd-runs/`) or
-  the task/INDEX files, are never pushed, and use the repo's commit-message convention
-  if it has one, otherwise `test(T<NN>): <title>` / `feat(T<NN>): <title>`. With `split`,
-  test changes made after the first commit go into the second one and are listed in
-  the report. At the start, record `git status --porcelain`. If the directory is not a
-  git repo, or a file this run needs to commit already had uncommitted changes before
-  the run, downgrade to `none` and say so. Never commit someone else's changes.
-- **Run directory:** `<task-dir>/.tdd-runs/T<NN>/`. It holds the test-lock manifest, the
-  snapshot copies of the locked tests, and the command logs. Create it at the start. If
-  the repo isn't ignoring it, suggest adding `.tdd-runs/` to `.gitignore` (don't edit
+
+  Commit rules:
+  - Stage **only the files this run created or changed**, added by explicit path
+    (never `git add -A`/`.`).
+  - Never include the run directory (`.tdd-runs/`) or the task/INDEX files.
+  - Never push.
+  - Use the repo's commit-message convention if it has one, otherwise
+    `test(T<NN>): <title>` / `feat(T<NN>): <title>`.
+  - With `split`, test files changed after the first commit (through the test-change
+    procedure) go into the second commit and are listed in the report.
+  - At the start, record `git status --porcelain`. If the directory is not a git repo,
+    downgrade to `none`. Before each commit, if any file to be committed already had
+    uncommitted changes before the run, skip that commit and say so. With `split`, the
+    report must state that the tests commit exists and the code is uncommitted. Never
+    commit someone else's changes.
+- **Run directory:** `<task-dir>/.tdd-runs/T<NN>/`. It holds the test-guard manifest, the
+  snapshot copies of guarded files, and the command logs. Create it at the start. If the
+  repo isn't ignoring it, suggest adding `.tdd-runs/` to `.gitignore` (don't edit
   `.gitignore` unasked).
 - Set the task file's `Status` to `in-progress` (and its row in `INDEX.md`, if present).
 
@@ -60,14 +88,18 @@ earlier invocation.
 1. Read the **entire task file**, top to bottom, before anything else. Then read every
    dependency task file's `Interfaces` section, the source-plan section it cites, and
    every file under `Context` and `Likely Files`.
-2. Read the existing code the task touches and the repo's test conventions: framework,
-   file location, naming, fixtures, how mocks are done here.
-3. Confirm the task's test commands actually run (for example, run the full suite once
-   and record the baseline in `run-dir/baseline.log`). **If the baseline suite is
-   already failing, record which tests fail.** They are not this task's to fix. They
-   are excluded from "all tests pass" only if they're unrelated, and the report must
-   list them.
-4. Write a **working summary** (shown to the user):
+2. **Dependency check:** every task in `Depends on` must have `Status: done`. If one
+   doesn't, stop and tell the user. Never build on an unfinished dependency.
+3. Read the existing code the task touches and the repo's test conventions: framework,
+   file location and naming globs, fixtures, test-runner config files, how mocks are
+   done here.
+4. Run the full suite once and save the output to `run-dir/baseline.log`. **If the
+   baseline suite is already failing, record which tests fail.** They are not this task's
+   to fix. They are excluded from "all tests pass" only if they're unrelated to the task,
+   and the report must list them. Do not run this skill on two tasks in the same working
+   tree at once. Each run's deliberately failing tests would corrupt the other's
+   baseline and results (parallel runs need separate git worktrees).
+5. Write a **working summary** (shown to the user):
    - what behavior must exist when done
    - the ACs in your own words
    - the interfaces
@@ -101,17 +133,21 @@ Delegate to `tdd-test-author`. The prompt states:
   additional cases it identifies. Each row gives the ID, the AC it covers, the kind
   (positive / negative / edge / error / regression), the input, and the expected
   observable result. Then write the tests.
-- For interfaces the task creates that don't exist yet, it may create **minimal
-  stubs**: the exact signature from the task's `Interfaces` section, with a body that
-  only raises or returns a "not implemented" error. This makes tests fail on
-  assertions rather than imports. No logic in stubs.
-- Return: the matrix, the list of test files written, the list of stub files written.
+- **Stubs are requested:** for each interface in the task's `Interfaces` section that
+  the task creates and that doesn't exist yet, create a minimal stub. Use the exact
+  signature, with a body that only raises or returns "not implemented". This makes
+  tests fail on assertions rather than imports. No logic in stubs. (Omit this point if
+  the task creates no new interfaces.)
+- Return: the matrix, the test files written, the stub files written, the self-check
+  output, and any spec gaps.
 
-## Phase 3 — Review the tests (three passes)
+## Phase 3 — Review the tests (three passes, then verify)
 
 Run three review passes **in order**, each a fresh `tdd-test-reviewer` invocation with one
-focus. After each pass, send its blocking findings to `tdd-test-author` to fix
-(include the findings verbatim), then start the next pass on the fixed tests.
+focus. Include the task file path, the matrix, the test file paths, and the author's
+latest self-check output. After each pass, send its blocking findings to
+`tdd-test-author` to fix (findings verbatim, stub fixes allowed), then start the next
+pass on the fixed tests.
 
 1. **Coverage:** every AC and every `TC-n` is tested. Every input-accepting or fallible AC
    has negative/error tests. Boundaries are covered. Nothing in the matrix is missing
@@ -126,18 +162,30 @@ focus. After each pass, send its blocking findings to `tdd-test-author` to fix
    cleanup.
 
 Reviewers label each finding `blocking` or `non-blocking`. A pass is **clean** when it
-has no blocking findings. If pass 3 isn't clean, run more passes with the
-adversarial-plus-coverage focus until one is clean. **Cap: 5 passes total.** If it's
-still not clean, stop and show the user the outstanding findings.
+has no blocking findings.
+
+**Verification passes:** if any of the three passes was blocking, the fixes made after
+it haven't been checked against their own focus yet. Run a **verification pass** with
+**all three focuses**, listing the earlier findings so the reviewer confirms each one is
+fixed. Repeat (fix, then verify) until a verification pass is clean. The phase is done
+when the last pass is clean and no fix has happened since. **Cap: 5 passes total**,
+then follow the cap rule.
 
 ## Phase 4 — Lock the tests and confirm they fail
 
-**4a. Lock.**
-1. Write `run-dir/manifest.sha256` with `sha256sum` (or `shasum -a 256`) of every test
-   file from Phase 2.
-2. Copy each file into `run-dir/locked/`, keeping its relative path.
+**4a. Lock (the test guard).** The guard protects **every** file that decides test
+outcomes, not only this task's tests:
+- this task's test files
+- every existing test file matching the repo's test globs
+- test-runner config (for example `pytest.ini`, `pyproject.toml` test sections,
+  `jest.config.*`, `vitest.config.*`, `conftest.py`, `setupTests.*`)
+- shared fixtures and test helpers
 
-From now on, a test file may change **only** through the test-change procedure below.
+Write the glob list to `run-dir/guard-globs.txt`. Hash every matching file into
+`run-dir/manifest.sha256` with `sha256sum` (or `shasum -a 256`). Copy each file into
+`run-dir/locked/`, keeping its relative path.
+
+From now on, a guarded file may change **only** through the test-change procedure below.
 
 **4b. Confirm they fail.** Run the task's test command and save the output to
 `run-dir/red.log`. Classify every test:
@@ -145,42 +193,49 @@ From now on, a test file may change **only** through the test-change procedure b
 - **Fails for the right reason:** an assertion failure, or the stub's not-implemented
   error. Expected.
 - **Fails for the wrong reason:** a syntax error, a bad import of existing code, broken
-  fixture or setup, or a missing test dependency. The test is broken. Send it back to
-  the test author (and one Phase 3 adversarial pass), then lock it again.
-- **Passes:** allowed only for a `regression`-kind row that guards existing behavior.
-  Any other passing test is meaningless or tests the wrong thing. Send it back the same
-  way.
+  fixture or setup, or a missing test dependency. Also any `regression`-kind test that
+  fails: either the test or your understanding of existing behavior is wrong, so check
+  it against `baseline.log`. The test is broken.
+- **Passes:** allowed only for a `regression`-kind test that guards existing behavior.
+  Any other passing test is meaningless or tests the wrong thing.
 
-Proceed only when every non-regression test fails for the right reason. With
-`--commit split`, commit the tests (and stubs) now.
+Send wrong-reason and wrongly passing tests back to the test author, run one
+verification pass (all focuses) on the changes, lock again (4a), then run 4b again.
+**Cap: 3 rounds.** Proceed only when every non-regression test fails for the right reason
+and every regression test passes. With `--commit split`, commit the tests and stubs now.
 
 ## Phase 5 — Write the code (implementer)
 
 Delegate to a **new** `tdd-implementer`. The prompt states:
 
 - Implement the task file's spec. The locked tests are the spec made executable.
-- Read the tests, but **never create, edit, rename, delete, skip, or disable a test
-  file**.
+- Read the tests, but **never create, edit, rename, delete, skip, or disable any test file,
+  fixture, or test config**.
 - Do not special-case test inputs, detect the test environment, or hardcode expected
   values. The code must be correct for inputs the tests don't use.
 - Replace the stubs with real implementations and follow existing codebase patterns.
-- The implementer may run the tests while working.
+- **Do not run the test suite in this phase or Phase 6.** The tests run after the code
+  passes review (Phase 7). A build, typecheck, or lint is allowed.
 - If it believes a test contradicts the spec, it must **stop and report** the test, the
-  spec text, and why. It does not work around it.
-- Return: the files changed, a summary of the design, and any suspected test or spec
-  conflicts.
+  spec text, and why. It does not work around it. (Handle per "Spec questions".)
+- Return: the files changed, a summary of the design, the build/typecheck result, and any
+  suspected test or spec conflicts.
 
-**After every implementer invocation (here and in Phases 6–7)**, check the test lock.
-Recompute the hashes, compare them with the manifest, and look for new
-`skip`/`xit`/`xdescribe`/`.only`/`@pytest.mark.skip`/`t.Skip` markers or deleted test
-files. If anything changed, restore the files from `run-dir/locked/`, log the incident
-in the report, and re-delegate with a reminder of the rule.
+**Guard check, after every implementer invocation (here and in Phases 6–7):**
+1. Re-expand `guard-globs.txt`, recompute the hashes, and diff against
+   `manifest.sha256`. Any file that is changed, deleted, or **new** (a match that's not in
+   the manifest) is a violation.
+2. Also scan the task's test files for skip/only markers (`skip`, `xit`, `xdescribe`,
+   `.only`, `@pytest.mark.skip`, `t.Skip`, and the equivalents in this framework).
+3. On any violation: restore from `run-dir/locked/`, delete the new files, log the
+   incident for the report, and re-delegate with a reminder of the rule.
 
-## Phase 6 — Review the code (three passes)
+## Phase 6 — Review the code (three passes, then verify)
 
 Three passes **in order**, each a fresh `tdd-code-reviewer` invocation with one focus.
-After each pass, send its blocking findings to `tdd-implementer` to fix (lock check
-afterward), then start the next pass on the fixed code.
+Include the task file path, the locked test paths, and the current diff. After each pass,
+send its blocking findings to `tdd-implementer` to fix (guard check afterward), then start
+the next pass on the fixed code.
 
 1. **Matches the spec and is correct:** every AC is implemented as specified, with
    correct logic and correct interfaces (exact signatures and errors). Nothing outside
@@ -192,90 +247,105 @@ afterward), then start the next pass on the fixed code.
    code or duplication, no needless complexity. **No special-casing of test inputs, no
    hardcoded expected values, no test-environment detection.**
 
-The clean/blocking rules and the **5-pass cap** are the same as Phase 3. Reviewers
-do not run or modify tests. They review code as written.
+The verification-pass rule, the clean/blocking rules and the **5-pass cap** are the same
+as Phase 3 (verification passes cover all three code focuses). Reviewers do not run or
+modify tests. They review code as written.
 
 ## Phase 7 — Test, fix, review loop
 
-Repeat until the exit condition holds. **Cap: 5 cycles.** If the cap is hit, stop and
-show the user the remaining failures, what was tried, and your diagnosis.
+Keep one flag, **`unreviewed`**:
+- It starts `false` (Phase 6 ended clean).
+- It becomes `true` whenever the implementer changes code or a test changes through the
+  test-change procedure.
+- It becomes `false` only when a code review of those changes comes back clean.
+
+Repeat. **Cap: 5 cycles** (one cycle = one run of step 1).
 
 1. **Run** the task's tests and then the full suite. Save the output to
    `run-dir/cycle-<n>.log`.
-2. **Exit** when every task test passes, the full suite passes apart from the
-   pre-existing failures recorded in Phase 0, and the last review was clean. Go to
-   Phase 8.
-3. **Diagnose each failure** before changing anything. Read the failure, the test, and
-   the spec. Decide which case it is:
+2. **If anything fails** (not counting the pre-existing failures recorded in Phase 0),
+   diagnose each failure before changing anything. Read the failure, the test, and the
+   spec. Decide which case it is:
    - **The code is wrong** (the default assumption). Delegate to `tdd-implementer` with
-     the failure output, the test name, and the AC it checks. The fix must make the
-     code do what the feature should do, not merely satisfy the assertion. Check the
-     lock afterward.
-   - **The test contradicts the spec.** Use the test-change procedure below. Never edit
-     the test to fit the code.
+     the failure output, the test name, and the AC it checks. The implementer may run
+     the failing tests from now on. The fix must make the code do what the feature should
+     do, not merely satisfy the assertion. Run the guard check. Set `unreviewed`.
+   - **The test contradicts the spec.** Use the test-change procedure. Never edit the
+     test to fit the code.
    - **The spec is ambiguous or contradictory.** Ask the user, record the answer in the
      task file, then apply it through whichever case it implies.
    - **A regression in another part of the suite.** Treat it as "the code is wrong",
      unless the task's spec explicitly changes that behavior, in which case it's a test
      change.
-4. **Review** once the previously failing tests pass. Run a `tdd-code-reviewer` pass
-   focused on the changes made in this cycle (all three focus areas, scoped to the diff).
-   If it has blocking findings, send them to the implementer.
-5. **If the code changed in step 3 or 4**, go back to step 1 (the tests run again). If
-   the review was clean and no code changed since the last run passed, the exit
-   condition holds.
 
-### Test-change procedure (the only way a locked test changes)
+   Then go back to step 1.
+3. **If everything passes and `unreviewed` is set**, run a `tdd-code-reviewer` pass with
+   all three focuses, scoped to the changes since the last clean review (paste that
+   diff). If it's clean, clear `unreviewed` and go to step 4. Nothing changed since the
+   passing run. If it's blocking, delegate the fixes to `tdd-implementer` (run the guard
+   check, keep `unreviewed` set) and go back to step 1: modified code always gets its
+   tests run again.
+4. **Exit to Phase 8** when everything passes and `unreviewed` is clear. That means
+   every code change since the last full run has been reviewed clean, and the run came
+   after the last change.
+
+### Test-change procedure (the only way a guarded file changes)
 
 1. You (the orchestrator) write down which test is wrong, the spec text it contradicts,
    and why. "The code doesn't do this" is never a reason.
 2. If the right behavior isn't obvious from the spec, ask the user.
-3. Delegate the change to `tdd-test-author`, then run one `tdd-test-reviewer` pass
-   (accuracy + adversarial) on the changed tests.
-4. Lock the tests again: update `manifest.sha256` and `run-dir/locked/`. Log the change
-   (test, reason, before/after summary) for the report.
+3. Delegate the change to `tdd-test-author`, then run one `tdd-test-reviewer`
+   verification pass (accuracy + adversarial) on the changed tests.
+4. Lock again (4a: update the manifest and `run-dir/locked/`). Log the change (test,
+   reason, before/after summary) for the report. Set `unreviewed` so the loop reruns the
+   tests and reviews.
 
 ## Phase 8 — Integrity check
 
-All of the following must hold, otherwise go back to the phase that failed:
+All of the following must hold, otherwise return to Phase 7 (this counts against
+Phase 7's cycle cap):
 
-- The test hashes match the final manifest. Every manifest change has a logged test
-  change behind it.
-- No new skip or only-markers in the task's test files. No test file was deleted.
-- Every `TC-n` and every row of the matrix from Phases 2–3 exists as a test, and every
-  one passes.
+- The guard hashes match the final manifest, with no new files matching the guard globs.
+  Every manifest change has a logged test change behind it.
+- No skip or only-markers in the task's test files. No test file was deleted.
+- Every `TC-n` and every row of the final matrix exists as a test, and every one passes.
 - The full suite passes apart from the pre-existing failures recorded in Phase 0.
+- `unreviewed` is clear.
 - The task's `Definition of Done` checklist is satisfied, item by item.
 
-With `--commit split` or `single`, commit now (production code, plus tests for
-`single`; never the run directory).
+With `--commit single`, commit the production code and tests now. With `--commit split`,
+commit the production code plus any test files changed after the first commit. Never
+commit the run directory.
 
 ## Phase 9 — Report
 
 Write `<task-dir>/T<NN>-<slug>.report.md` with these sections:
 
-- **Summary:** status, files changed, commit SHAs or "not committed".
-- **Clarifications:** the questions asked and the answers.
+- **Summary:** status, files changed, commit SHAs or "not committed" (with the reason
+  if a commit was skipped).
+- **Clarifications:** the questions asked and the answers, including spec questions
+  raised by agents.
 - **Test matrix:** the final matrix with pass status.
 - **Test review:** findings per pass and how each was resolved.
-- **Failure check:** the classification from Phase 4b.
+- **Failure check:** the classification from Phase 4b, with the number of rounds.
 - **Code review:** findings per pass and how each was resolved.
-- **Test-fix cycles:** the number of cycles, with the failures and diagnoses for each.
-- **Test changes and lock incidents:** each change with its reason, or "none".
+- **Test-fix cycles:** the number of cycles, with the failures, diagnoses and reviews
+  for each.
+- **Test changes and guard incidents:** each change with its reason, or "none".
 - **Pre-existing suite failures:** or "none".
+- **Caps hit and decisions:** or "none".
 - **Remaining risks / follow-ups.**
 
-Set the task's `Status` to `done` (or `blocked` if a cap or an unanswered question
-stopped the run) in both the task file and `INDEX.md`. Tell the user the result in a
-few lines and link the report.
+Set the task's `Status` to `done` (or `blocked`) in both the task file and `INDEX.md`.
+Tell the user the result in a few lines and link the report.
 
 ## Hard rules
 
 - The orchestrator never writes tests or production code. It delegates.
 - The test author never reads the implementation of the code under change. The
-  implementer never edits a test.
+  implementer never edits a guarded file.
 - Never weaken, skip, or delete a test to get to green. A failing test is evidence. Fix
   the code, or change the test only through the test-change procedure.
-- Every cap that is hit ends in a report to the user, never a silent stop or a fake
-  success.
+- The task is never marked `done` while any test fails (apart from recorded
+  pre-existing failures) or any code change is unreviewed.
 - Report results exactly as they are. If tests fail, say so with the output.

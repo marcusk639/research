@@ -47,10 +47,11 @@ spec gap in your return message.
      dependence, no real network, and a controlled clock and seed.
    - Assertions must be specific enough that a wrong or hardcoded implementation fails.
      Use more than one example input per rule so a lookup table can't pass.
-3. **Stubs (only in the initial write, and only when asked).** For interfaces the task
-   creates that don't exist yet, create the exact signature from the task's
-   `Interfaces` section with a body that only raises or returns "not implemented". No
-   logic.
+3. **Stubs (only when the orchestrator asks, and only before code is written).** For
+   interfaces the task creates that don't exist yet, create the exact signature from
+   the task's `Interfaces` section with a body that only raises or returns "not
+   implemented". No logic. You may fix a stub's signature in response to review
+   findings before implementation starts. Never touch stubs after that.
 4. **Self-check.** Run the test file(s) to confirm they're collected and execute without
    syntax, import, or fixture errors. Before any production code exists (the initial
    write and review fixes), every non-regression test must **fail**, and fail on an
@@ -67,6 +68,8 @@ why you didn't. Keep the matrix in sync with the tests.
 ## Never
 
 - Write or change production code (other than the stubs in step 3).
+- Change test files outside this task, shared fixtures, or test-runner config, unless
+  the orchestrator explicitly asks.
 - Weaken an assertion to make a test pass or easier to pass.
 - Mark tests skip/only/xfail.
 

@@ -1,6 +1,6 @@
 ---
 name: tdd-task-breakdown
-description: Break an implementation plan into concrete, discrete, well-defined tasks that one agent can build end to end with test-driven development. Writes one task file per task (goal, scope, interfaces, Given/When/Then acceptance criteria, required positive/negative/edge/error test cases, test command, definition of done) plus a dependency-ordered INDEX.md. Use when the user has an implementation plan and asks to "break this into tasks", "make TDD tasks", or "split the plan for agents". Output is the input format for /tdd-implement-task.
+description: Break an implementation plan into concrete, discrete, well-defined tasks that one agent can build end to end with test-driven development. Writes one task file per task (goal, scope, interfaces, Given/When/Then acceptance criteria, required positive/negative/edge/error test cases, test command, definition of done) plus a dependency-ordered INDEX.md. Output is the input format for /tdd-implement-task.
 argument-hint: <path-to-implementation-plan> [--out <tasks-dir>]
 disable-model-invocation: true
 ---
@@ -71,7 +71,9 @@ Rules for a well-formed task:
 
 Order the tasks by dependency. Group tasks that have no dependency on each other into
 **waves**: wave 1 depends on nothing, and wave N depends only on earlier waves. Tasks in
-the same wave may be built in parallel.
+the same wave have no dependency on each other. They may be built in parallel only
+in separate git worktrees, because in one working tree each run's deliberately failing
+tests would corrupt the other's results.
 
 ## Phase 4 — Write the task files
 
@@ -125,7 +127,9 @@ Source plan: <relative path> · Generated: <date> · Tasks: <n>
 ## Phase 5 — Validate (repeat until clean)
 
 Check the whole set against this list. Fix every failure, then run the whole
-list again. Stop only after a full pass finds nothing.
+list again. Stop only after a full pass finds nothing. **Cap: 5 passes.** If problems
+remain after that, show them to the user and ask whether to continue, accept them as
+listed assumptions, or stop.
 
 1. **Coverage:** every requirement `R-n` maps to at least one task, and every task maps
    to at least one requirement (no scope creep).

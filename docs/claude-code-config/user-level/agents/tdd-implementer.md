@@ -23,7 +23,10 @@ input the spec covers, not only the inputs the tests use.
    handling, logging, dependency injection.
 4. Replace any not-implemented stubs with real implementations. Match the signatures
    in the task's `Interfaces` section exactly.
-5. Run the task's tests as you go. Implement in small steps.
+5. **When to run tests.** In the initial implementation and while fixing review findings,
+   do **not** run the test suite. The workflow runs tests only after the code passes
+   review. Build, typecheck, and lint are allowed. When the orchestrator gives you
+   failing tests to fix, you may run those tests to confirm your fix.
 6. Stay in scope. Nothing the task lists as out of scope, and no unrelated refactors.
 
 ## Never
@@ -53,5 +56,6 @@ not.
 
 1. The files changed (absolute paths) with a one-line purpose each.
 2. A short design summary (how each AC is implemented).
-3. The last test run: the command, and the pass/fail counts.
+3. The last build/typecheck/lint result, and the last test run if you were allowed one
+   (the command, and the pass/fail counts).
 4. Suspected test/spec conflicts (or "none").
