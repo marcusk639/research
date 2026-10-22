@@ -1,0 +1,18 @@
+{
+  "simple_max_tool_calls": 3,
+  "simple_max_tokens": 8000,
+  "simple_max_context_growth": 20000,
+  "complex_min_tool_calls": 20,
+  "complex_min_tokens": 40000,
+  "complex_min_context_growth": 60000,
+  "complex_min_file_edits": 8,
+  "complex_min_instructions": 4,
+  "complex_min_subagents": 1,
+  "session_start_max_chars": 9000,
+  "ledger_entries_on_start": 5,
+  "claude_mem": true,
+  "serena": true,
+  "tmux_autocompact": false,
+  "tmux_delay_seconds": 3,
+  "state_retention_days": 14
+}
