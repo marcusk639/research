@@ -47,8 +47,10 @@ the same way:
 4. If a locked test is affected, or the answer adds behavior no test covers, use the
    test-change procedure.
 5. If code has already been reviewed (Phase 6 or later) and the answer changes the
-   spec, that code was reviewed against an outdated spec. Set `unreviewed` (Phase 7),
-   or restart Phase 6 at pass 1 if you're still in Phase 6.
+   spec, that code was reviewed against an outdated spec. Record the amended spec items
+   in `run-dir/spec-amendments.md`. Then either set `unreviewed` with
+   **spec-amended** mode (Phase 7), or restart Phase 6 at pass 1 if you're still in
+   Phase 6.
 
 Never resolve a spec question by guessing.
 
@@ -251,14 +253,15 @@ Delegate to a **new** `tdd-implementer`. The prompt states:
   suspected test or spec conflicts.
 
 **Review diff.** Before the first delegation in this phase, copy every production file
-the task may touch (the `Likely Files` plus the stubs) into `run-dir/reviewed/`. This is
+the task may touch (the `Likely Files` plus the stubs) into `run-dir/reviewed/`, and
+also into `run-dir/phase5-baseline/`, which is never refreshed. `run-dir/reviewed/` is
 the reviewed baseline. The review diff is the difference between `run-dir/reviewed/` and
 the working tree, for every non-guarded file the implementer reports changing (also
 check `git status --porcelain` when in git). Produce it with
 `git diff --no-index -- run-dir/reviewed/<path> <path>` or `diff -u`. For a changed file
 with no baseline copy, take its pre-change version from `run-dir/pre-run/` if it's there
 (the user's version), otherwise from `git show HEAD:<path>` if it's tracked, and copy that
-into the baseline. If neither exists, it's a new file: include its full content.
+into both `run-dir/reviewed/` and `run-dir/phase5-baseline/`. If neither exists, it's a new file: include its full content.
 
 The baseline is refreshed (overwritten with the current versions of those files) only
 at two points: when Phase 6 finishes clean, and after each clean review in Phase 7
@@ -301,7 +304,9 @@ the next pass on the fixed code.
    hardcoded expected values, no test-environment detection.**
 
 The verification-pass rule, the clean/blocking rules and the **5-pass cap** are the same
-as Phase 3 (verification passes cover all three code focuses). Reviewers do not run or
+as Phase 3 (verification passes cover all three code focuses). A **restart** (after a
+spec or test change) resets the pass count to zero. Restarts have their own cap of
+**2**, and a third restart follows the cap rule. Reviewers do not run or
 modify tests. They review code as written.
 
 ## Phase 7 — Test, fix, review loop
@@ -334,10 +339,14 @@ Repeat. **Cap: 5 cycles** (one cycle = one run of step 1).
    Then go back to step 1.
 3. **If everything passes and `unreviewed` is set**, run a `tdd-code-reviewer` pass with
    all three focuses, scoped to the review diff (the changes since the last clean
-   review). If it's clean, clear `unreviewed` and go to step 4. Nothing changed since the
-   passing run. If it's blocking, delegate the fixes to `tdd-implementer` (run the guard
-   check, keep `unreviewed` set) and go back to step 1: modified code always gets its
-   tests run again.
+   review). In **spec-amended** mode, review the **whole implementation** instead,
+   diffed against `run-dir/phase5-baseline/`, and give the reviewer
+   `spec-amendments.md` so it checks the code against each amended item.
+   - If it's clean, clear `unreviewed` (and spec-amended mode) and go to step 4.
+     Nothing has changed since the passing run.
+   - If it's blocking, delegate the fixes to `tdd-implementer` (run the guard check,
+     keep `unreviewed` set) and go back to step 1. Modified code always gets its tests
+     run again.
 4. **Exit to Phase 8** when everything passes and `unreviewed` is clear. That means
    every code change since the last full run has been reviewed clean, and the run came
    after the last change.
@@ -364,8 +373,7 @@ Repeat. **Cap: 5 cycles** (one cycle = one run of step 1).
    - **From Phase 4b** (after the lock): go back to the start of 4b.
    - **From Phase 5:** resume Phase 5. Re-delegate the implementer with the changed tests.
    - **From Phase 6:** delegate the implementer to bring the code in line with the
-     changed tests (guard check), then restart Phase 6 at pass 1. The pass count keeps
-     accumulating toward the cap.
+     changed tests (guard check), then restart Phase 6 at pass 1.
    - **From Phase 7:** go to step 1, so the tests rerun against the changed tests. The
      loop's exit still requires `unreviewed` to be clear.
 
