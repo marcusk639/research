@@ -98,6 +98,9 @@ blocker.
 
 **Blocker protocol.** When a blocker occurs:
 1. **Stop the current phase.** Don't push on, and don't start other work in this task.
+   Write `phase: blocking (B-NN)` to `state.md` (with the entry ID once known). Update
+   `blocking-step:` there as each step below completes (`entry`, `set-aside: patch`,
+   `set-aside: restored`, `set-aside: reverted`, `report`).
 2. **Write or extend the blocker entry** in the `--blockers` file (default
    `<tasks-dir>/BLOCKERS.md`), following
    [`blocker-template.md`](blocker-template.md):
@@ -236,6 +239,7 @@ resume, not a fresh start.
 | 6 | Restart Phase 6 at pass 1. This counts as a restart. |
 | 7 | Set `unreviewed: true` (the last code change may never have been reviewed). Go to step 1. |
 | 8–9 | Redo Phase 8. Check `state.md` and `git log` for commits already made before committing anything. |
+| blocking | **Finish the blocker protocol** from the recorded `blocking-step`. Never resume the phase that blocked. Every step is idempotent: the entry is extended rather than duplicated, a saved patch isn't overwritten, files already restored are left as they are, and a commit is only reverted if `git log` shows it isn't already reverted. |
 
 ## Phase 0 — Understand
 
