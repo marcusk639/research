@@ -1,7 +1,7 @@
 ---
 name: tdd-implement-task
 description: Complete one task file (from /tdd-task-breakdown) using strict, spec-first test-driven development across separate agents. Read the task end to end, ask clarifying questions, have a test author write positive/negative/edge/error tests from the spec (not from current code), review the tests in three passes, lock them and confirm they fail first, have a separate implementer write the code, review the code in three passes, then run a test-fix-review loop until every test passes and review is clean. Optional commits via --commit (default none).
-argument-hint: <path-to-task-file> [--commit none|split|single] [--run-baseline <log>] [--known-failures <file>]
+argument-hint: <path-to-task-file> [--commit none|split|single] [--run-baseline <log>] [--known-failures <file>] [--target-failures <file>]
 disable-model-invocation: true
 ---
 
@@ -64,11 +64,14 @@ task `blocked`.
 ## Arguments and setup
 
 - `$ARGUMENTS`: the task file path (required), `--commit none|split|single` (default
-  **`none`**), and two options passed by `tdd-orchestrator`:
+  **`none`**), and three options passed by `tdd-orchestrator`:
   - `--run-baseline <log>`: the full-suite result from before the first task of a plan
     run
   - `--known-failures <file>`: failing tests the user has already accepted during the
     run
+  - `--target-failures <file>`: for a fix task, the existing failing tests it exists to
+    make pass
+
   Commit modes:
   - `none`: never commit. Leave all changes in the working tree.
   - `split`: two commits, tests and stubs first (after Phase 4b), then code (after
@@ -94,7 +97,11 @@ task `blocked`.
     ahead of its tests). If only the code commit was skipped, the report must state that
     the tests commit exists and the code is uncommitted. Never commit someone else's
     changes.
-- **Run directory:** `<task-dir>/.tdd-runs/T<NN>/`. It holds the test-guard manifest, the
+- **Run directory:** `<task-dir>/.tdd-runs/T<NN>/`, where `T<NN>` is the task's ID
+  (every task, including a fix task, has its own unique ID). **Archiving** it means
+  moving its contents, except earlier `attempt-*` folders, into
+  `.tdd-runs/T<NN>/attempt-<k>/` (the next free `k`). This leaves no top-level
+  `state.md`, so the next run is a fresh start. It holds the test-guard manifest, the
   snapshot copies of guarded files, and the command logs. Create it at the start. If the
   repo isn't ignoring it, suggest adding `.tdd-runs/` to `.gitignore` (don't edit
   `.gitignore` unasked).
@@ -154,11 +161,14 @@ resume, not a fresh start.
 
      Record it in `run-dir/accepted-failures.txt`. It's not this task's to fix. It's
      excluded from "all tests pass", and the report lists it.
+   - **Target failure:** listed in `--target-failures`. Fixing it is this task's job. It
+     is not accepted and not excluded. It counts as one of this task's tests: it should
+     fail for the right reason in 4b and must pass by Phase 8.
    - **Unknown failure** (only possible with `--run-baseline`): something broken earlier
      in the plan run that nobody has accepted. **Stop before Phase 1.** Report the
-     failures to the user (or the orchestrator) and ask whether to accept them for this
-     task (add them to `accepted-failures.txt`), or to stop so the task that caused them
-     can be reopened. Never start on top of an unknown failure.
+     failures to the user (or the orchestrator). **Archive the run directory** and set
+     the task's `Status` back to `todo`, so the next attempt starts fresh against the
+     tree as it is then. Never start on top of an unknown failure.
 
    Do not run this skill on two tasks in the same working
    tree at once. Each run's deliberately failing tests would corrupt the other's
@@ -448,6 +458,7 @@ Phase 7's cycle cap):
 - No skip or only-marker syntax (as listed in the test-change procedure) in the task's
   test files. No test file was deleted.
 - Every `TC-n` and every row of the final matrix exists as a test, and every one passes.
+  So does every test in `--target-failures`.
 - The full suite passes apart from the tests in `accepted-failures.txt`.
 - `unreviewed` is clear.
 - The task's `Definition of Done` checklist is satisfied, item by item.

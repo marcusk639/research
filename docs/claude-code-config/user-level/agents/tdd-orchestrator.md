@@ -91,8 +91,14 @@ Update it at every stage change and every task outcome.
      since, so the task's old lock, baselines and ownership records no longer
      describe the tree. Resuming would claim, quarantine or overwrite other tasks' work.
    - **To retry fresh:**
-     1. If its partial work is still in the working tree, set it aside first (5b).
-     2. Move its run directory to `.tdd-runs/T<NN>/attempt-<k>/`.
+     1. **Its partial work must already be out of the tree.** That's true if it was set
+        aside when it blocked (5b). If it was left in the tree, never set it aside now:
+        other tasks may since have edited the same files, and restoring or diffing them
+        would capture or wipe their work. Instead, list the task's earlier files for
+        the user. Retry only after the user has dealt with them themselves (removed
+        them, or confirmed they should stay as existing code, which the run report then
+        notes as unreviewed). Otherwise leave the task `blocked`.
+     2. Archive its run directory (as the implement skill defines it).
      3. Remove any of its entries from `known-failures.txt`.
      4. Set `Status: todo`.
 
@@ -166,17 +172,22 @@ For each runnable task in the wave, in ID order:
    If its Phase 0 stops on an **unknown failure** (broken earlier in the run and not
    accepted), work out from the earlier tasks' cycle logs which task introduced it.
    Ask the user to choose:
-   - **(a) Fix it now as a new task.** Its earlier run state is stale, so it is never
-     resumed. Write a fix task `T<NN>-fix<k>-<slug>.md` from the template:
+   The skill has already archived the task's run directory and set it back to `todo`,
+   so whatever runs it next starts fresh.
+   - **(a) Fix it now as a new task.** The introducing task's run state is stale, so it is
+     never resumed. Write a fix task with the **next free ID**, `T<MM>-<slug>.md`, from
+     the template:
+     - Title: `Fix for T<NN>: …`
      - Goal: the failing tests pass again, without changing the behavior they specify.
      - ACs: one per failing test.
      - Context: the cycle logs that point to the cause.
      - Depends on: the introducing task.
 
-     Add it to `INDEX.md`. Run it through the skill (5b) before this task, then restart
-     this task's Phase 0.
-   - **(b) Accept the failure.** Add it to `known-failures.txt` with its source, and
-     restart this task.
+     Write the failing tests to `.tdd-runs/T<MM>-target-failures.txt`. Add the task to
+     `INDEX.md` (noting "fix for T<NN>"). Run it through 5b with
+     `--target-failures <that file>`, before this task. Then run this task again.
+   - **(b) Accept the failure.** Add it to `known-failures.txt` with its source, then run
+     this task again.
    - **(c) Stop the run.**
 3. When the task finishes:
    - **`done`:** give the user one progress line, for example
@@ -185,7 +196,9 @@ For each runnable task in the wave, in ID order:
      1. Record the reason.
      2. Ask the user what to do with the task's partial work (tests, stubs, code): leave
         it in the working tree, or set it aside. Recommend setting it aside, because
-        stubs and failing tests would disturb later tasks. To set it aside:
+        stubs and failing tests would disturb later tasks. This is the **only** point
+        where work can be set aside safely. No other task has run since, so the task's
+        own ownership records still describe the tree. To set it aside:
         - save `git diff -- <its files>` to `.tdd-runs/T<NN>/set-aside/changes.patch`
         - move its new untracked files into `.tdd-runs/T<NN>/set-aside/files/`
         - restore its tracked files to their `pre-run/` or `HEAD` version
