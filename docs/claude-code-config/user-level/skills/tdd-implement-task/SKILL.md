@@ -22,9 +22,10 @@ The roles are user-level subagents, invoked with the `Agent` tool:
 | Implementer | `tdd-implementer` | production code, never tests or test config |
 | Code reviewer | `tdd-code-reviewer` | nothing (read-only) |
 
-This skill must run in the **main session**. Subagents cannot spawn subagents. If the
-`Agent` tool is unavailable, or one of the four agents is not installed, stop and tell
-the user to run `install.sh` from the `docs/claude-code-config/user-level/` directory of
+Run this skill in the **main session**, or under the `tdd-orchestrator` agent launched
+with `claude --agent`. It asks the user questions and delegates to four agents, so it needs
+both `AskUserQuestion` and the `Agent` tool. If the `Agent` tool is unavailable, or one of
+the four agents is not installed, stop and tell the user to run `install.sh` from the `docs/claude-code-config/user-level/` directory of
 their config repo (or copy the agents into `~/.claude/agents/`).
 
 **Delegation prompts.** Each subagent starts with a blank context, so every prompt must
@@ -62,8 +63,10 @@ task `blocked`.
 
 ## Arguments and setup
 
-- `$ARGUMENTS`: the task file path (required) and `--commit none|split|single` (default
-  **`none`**).
+- `$ARGUMENTS`: the task file path (required), `--commit none|split|single` (default
+  **`none`**), and `--run-baseline <log>` (optional, passed by `tdd-orchestrator`: the
+  full-suite result from before the first task of a plan run).
+  Commit modes:
   - `none`: never commit. Leave all changes in the working tree.
   - `split`: two commits, tests and stubs first (after Phase 4b), then code (after
     Phase 8). The history then shows the tests came first.
@@ -72,16 +75,18 @@ task `blocked`.
   Commit rules:
   - Stage **only the files this run created or changed**, added by explicit path
     (never `git add -A`/`.`).
-  - Never include the run directory (`.tdd-runs/`) or the task/INDEX files.
+  - Never include anything under the tasks directory: task files, `INDEX.md`, reports,
+    `RUN-STATE.md`, `RUN-REPORT.md`, and `.tdd-runs/`.
   - Never push.
   - Use the repo's commit-message convention if it has one, otherwise
     `test(T<NN>): <title>` / `feat(T<NN>): <title>`.
   - With `split`, test files changed after the first commit (through the test-change
     procedure) go into the second commit and are listed in the report.
-  - At the start, record `git status --porcelain` and copy every file it lists as
-    modified or untracked into `run-dir/pre-run/` (these are the user's own changes). If
-    the directory is not a git repo, downgrade to `none`. Before each commit, if any file to be committed already had
-    uncommitted changes before the run, skip that commit and say so. With `split`, if the
+  - On a **fresh** start (not a resume), record `git status --porcelain` into
+    `run-dir/pre-run-status.txt`. Copy every file it lists as modified or untracked
+    (outside the tasks directory) into `run-dir/pre-run/`. These are the user's own
+    changes. If the directory is not a git repo, downgrade to `none`. Before each commit,
+    if any file to be committed is in `pre-run/`, skip that commit and say so. With `split`, if the
     tests commit was skipped, skip the code commit too (committed code must never ship
     ahead of its tests). If only the code commit was skipped, the report must state that
     the tests commit exists and the code is uncommitted. Never commit someone else's
@@ -91,6 +96,40 @@ task `blocked`.
   repo isn't ignoring it, suggest adding `.tdd-runs/` to `.gitignore` (don't edit
   `.gitignore` unasked).
 - Set the task file's `Status` to `in-progress` (and its row in `INDEX.md`, if present).
+
+## Task state and resuming
+
+Keep `run-dir/state.md` current. It must always let a fresh session continue safely.
+Fields:
+- phase and step
+- `unreviewed` and `spec-amended`
+- Phase 3 pass count, Phase 4b round count, Phase 6 pass count and restart count, Phase 7
+  cycle count
+- `phase5-baseline taken: yes/no`
+- commits made (SHAs)
+
+Write it **before** every delegation and at every phase change. In Phase 7, set
+`unreviewed: true` in it *before* delegating to the implementer, not after.
+
+**Resuming.** If `run-dir/state.md` already exists when the skill starts, this is a
+resume, not a fresh start.
+- **Never re-create** `pre-run/`, `pre-run-status.txt`, `baseline.log`, `matrix.md`,
+  `locked/`, `manifest.sha256`, `phase5-baseline/`, or `reviewed/` when they exist.
+- Any file that differs from its `pre-run/` copy, or from `HEAD` when it has no `pre-run/`
+  copy, is **this task's work**, never the user's.
+- Always redo Phase 0's reading steps (1–3, 5). Do not re-run the baseline if it exists.
+- If `manifest.sha256` exists, run the guard check before anything else.
+- Then continue from the recorded phase. Counts carry over from `state.md`.
+
+| Recorded phase | Resume at |
+|---|---|
+| 0–1 | Phase 1. |
+| 2–3 | Delegate the test author to complete or correct the existing test files against `matrix.md`. Then Phase 3 from pass 1. |
+| 4 | 4a only if the manifest is missing, then 4b. |
+| 5 | If `phase5-baseline taken` is not `yes`, build both baselines from `pre-run/` or `git show HEAD:<path>`, **never from the working tree**, then mark it taken. Re-delegate the implementer to finish (tell it the code may be partly written). Then Phase 6. |
+| 6 | Restart Phase 6 at pass 1. This counts as a restart. |
+| 7 | Set `unreviewed: true` (the last code change may never have been reviewed). Go to step 1. |
+| 8–9 | Redo Phase 8. Check `state.md` and `git log` for commits already made before committing anything. |
 
 ## Phase 0 — Understand
 
@@ -102,10 +141,13 @@ task `blocked`.
 3. Read the existing code the task touches and the repo's test conventions: framework,
    file location and naming globs, fixtures, test-runner config files, how mocks are
    done here.
-4. Run the full suite once and save the output to `run-dir/baseline.log`. **If the
-   baseline suite is already failing, record which tests fail.** They are not this task's
-   to fix. They are excluded from "all tests pass" only if they're unrelated to the task,
-   and the report must list them. Do not run this skill on two tasks in the same working
+4. On a fresh start, run the full suite once and save the output to
+   `run-dir/baseline.log`. **If the baseline suite is already failing, record which tests
+   fail.** They are not this task's to fix. They are excluded from "all tests pass" only
+   if they're unrelated to the task, and the report must list them. With
+   `--run-baseline`, a test counts as pre-existing only if it also fails in that run
+   baseline. Anything else failing now was broken earlier in the plan run. Report it to
+   the user rather than excluding it. Do not run this skill on two tasks in the same working
    tree at once. Each run's deliberately failing tests would corrupt the other's
    baseline and results (parallel runs need separate git worktrees).
 5. Write a **working summary** (shown to the user):
@@ -149,6 +191,8 @@ Delegate to `tdd-test-author`. The prompt states:
   the task creates no new interfaces.)
 - Return: the matrix, the test files written, the stub files written, the self-check
   output, and any spec gaps.
+
+Save the returned matrix to `run-dir/matrix.md`, and keep it in sync after every fix.
 
 ## Phase 3 — Review the tests (three passes, then verify)
 
@@ -252,9 +296,11 @@ Delegate to a **new** `tdd-implementer`. The prompt states:
 - Return: the files changed, a summary of the design, the build/typecheck result, and any
   suspected test or spec conflicts.
 
-**Review diff.** Before the first delegation in this phase, copy every production file
-the task may touch (the `Likely Files` plus the stubs) into `run-dir/reviewed/`, and
-also into `run-dir/phase5-baseline/`, which is never refreshed. `run-dir/reviewed/` is
+**Review diff.** Before the first delegation in this phase, unless `state.md` says
+`phase5-baseline taken: yes`, copy every production file the task may touch (the
+`Likely Files` plus the stubs) into `run-dir/reviewed/`, and also into
+`run-dir/phase5-baseline/`, which is never refreshed. Then record
+`phase5-baseline taken: yes`. `run-dir/reviewed/` is
 the reviewed baseline. The review diff is the difference between `run-dir/reviewed/` and
 the working tree, for every non-guarded file the implementer reports changing (also
 check `git status --porcelain` when in git). Produce it with

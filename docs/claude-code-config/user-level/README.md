@@ -51,8 +51,10 @@ task ──/tdd-implement-task──▶ understand → clarify → tests → 3×
      → integrity check → report
 ```
 
-`/tdd-implement-task` must run in the main session (subagents can't spawn
-subagents). The implementer is stopped from changing tests by detection, not prevention:
+`/tdd-implement-task` runs in the main session (or under `tdd-orchestrator`). It asks
+you questions and delegates to the four role agents, which have no `Agent` tool of their
+own. Each task keeps its progress in `.tdd-runs/T<NN>/state.md`, so an interrupted task
+resumes safely. The implementer is stopped from changing tests by detection, not prevention:
 it needs edit tools for the code. So the orchestrator hashes every file that decides test
 outcomes (all test files, fixtures, test-runner config) and restores them after every
 implementer call. It runs one task per working tree at a time. Parallel runs need
