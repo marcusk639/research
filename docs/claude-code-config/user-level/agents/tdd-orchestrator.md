@@ -95,11 +95,13 @@ Update it at every stage change and every task outcome.
         aside when it blocked (5b). If it was left in the tree, never set it aside now:
         other tasks may since have edited the same files, and restoring or diffing them
         would capture or wipe their work. Instead, list the task's earlier files for
-        the user. Retry only after the user has dealt with them themselves (removed
-        them, or confirmed they should stay as existing code, which the run report then
-        notes as unreviewed). Otherwise leave the task `blocked`.
+        the user and leave the task `blocked`. Retry only after the user confirms they
+        have removed that work from the tree themselves. Keeping it isn't an option:
+        a fresh run would treat it as the user's own code, so it would never be
+        reviewed or committed.
      2. Archive its run directory (as the implement skill defines it).
-     3. Remove any of its entries from `known-failures.txt`.
+     3. Remove its entries from `known-failures.txt`. This is safe because its failing
+        tests left the tree in step 1.
      4. Set `Status: todo`.
 
      The skill then starts from Phase 0 with a new baseline, pre-run snapshot and lock.
@@ -174,8 +176,9 @@ For each runnable task in the wave, in ID order:
    Ask the user to choose:
    The skill has already archived the task's run directory and set it back to `todo`,
    so whatever runs it next starts fresh.
-   - **(a) Fix it now as a new task.** The introducing task's run state is stale, so it is
-     never resumed. Write a fix task with the **next free ID**, `T<MM>-<slug>.md`, from
+   - **(a) Fix it now as a new task.** Offer this only when the introducing task is
+     `done` and isn't the task being run. If it's anything else, offer only (b) and (c),
+     and say why. The introducing task's run state is stale, so it is never resumed. Write a fix task with the **next free ID**, `T<MM>-<slug>.md`, from
      the template:
      - Title: `Fix for T<NN>: …`
      - Goal: the failing tests pass again, without changing the behavior they specify.
@@ -189,6 +192,12 @@ For each runnable task in the wave, in ID order:
    - **(b) Accept the failure.** Add it to `known-failures.txt` with its source, then run
      this task again.
    - **(c) Stop the run.**
+
+   If the skill stops on its **dependency check** (a dependency isn't `done`), don't run
+   the task again. Mark it `blocked` with the reason `dependency T<NN> not done`, tell
+   the user, and continue as for a blocked task. This shouldn't happen, because only
+   runnable tasks are started. If it does, the dependency graph or statuses are
+   inconsistent, so report it.
 3. When the task finishes:
    - **`done`:** give the user one progress line, for example
      `T03 done — 14 tests, 2 fix cycles, report: tasks/T03-….report.md (4/9 tasks)`.
