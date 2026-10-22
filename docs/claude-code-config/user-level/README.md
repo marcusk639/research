@@ -25,21 +25,37 @@ delete the old copy from `~/.claude/` by hand.
 | `agents/tdd-test-reviewer.md` | Read-only; three-pass test review (coverage → accuracy → adversarial) |
 | `agents/tdd-implementer.md` | Writes production code; never touches tests, fixtures, or test config (hash-guarded) |
 | `agents/tdd-code-reviewer.md` | Read-only; three-pass code review (spec/correctness → robustness → quality and test-gaming) |
-| `agents/tdd-orchestrator.md` | Runs a whole plan: breakdown → your approval → every task in dependency order, with resumable state and a run report |
+| `agents/tdd-orchestrator.md` | Runs a whole plan: breakdown → your approval → every task unattended, in dependency order → blocker resolution → run report. Resumable. |
+| `agents/tdd-blocker-resolver.md` | Works through `BLOCKERS.md`: re-diagnoses, retries fresh with a strategy brief, splits oversized tasks, creates fix tasks, applies human decisions. Runs as the orchestrator's last stage or standalone. |
+| `skills/tdd-implement-task/blocker-template.md` | The format of a `BLOCKERS.md` entry: a blocker written up as a task, with ranked suggested fixes |
 
 ## Flow
 
 Whole plan, one command (must be the main session, since it spawns the role agents):
 
 ```bash
-claude --agent tdd-orchestrator "path/to/plan.md [--commit none|split|single] [--strict]"
+claude --agent tdd-orchestrator "path/to/plan.md [--commit none|split|single] [--interactive] [--strict]"
 ```
 
-It breaks the plan down, **waits for your approval**, asks each wave's clarifying
-questions in one batch, then runs every task through the steps below, one at a time. A
-blocked task blocks only the tasks that depend on it (`--strict` stops the run instead).
-State lives in `tasks/RUN-STATE.md`, so rerunning the same command resumes. The result
-goes in `tasks/RUN-REPORT.md`.
+1. **Kickoff (interactive):** it breaks the plan down, asks its clarifying questions, and
+   **waits for your approval** of the task set.
+2. **Unattended run:** every task goes through the steps below, one at a time, in
+   dependency order. Nothing waits on you:
+   - low-risk ambiguities are assumed and logged for your review
+   - anything else becomes a **blocker**, written to `tasks/BLOCKERS.md` as a fully
+     described task with ranked suggested fixes
+   - the blocked task's partial work is set aside, its dependents are skipped, and the
+     run continues
+3. **Resolution:** when no runnable work is left, the `tdd-blocker-resolver` process
+   attempts each blocker (2 attempts by default). It retries fresh with a strategy
+   brief, splits oversized tasks, creates fix tasks, and fixes in-repo environment
+   problems. Spec decisions are never guessed. They become `needs-human`.
+4. **Report:** the result goes in `tasks/RUN-REPORT.md`. To continue after answering
+   `needs-human` entries (fill in their `Decision` sections):
+   `claude --agent tdd-blocker-resolver "path/to/tasks"`.
+
+State lives in `tasks/RUN-STATE.md`, so rerunning the same command resumes.
+`--interactive` asks you mid-run instead. `--strict` stops at the first blocker.
 
 Per skill:
 
@@ -59,7 +75,8 @@ it needs edit tools for the code. So the orchestrator hashes every file that dec
 outcomes (all test files, fixtures, test-runner config) and restores them after every
 implementer call. It runs one task per working tree at a time. Parallel runs need
 separate worktrees. Every review and fix loop has a cap. Hitting one asks you whether to
-continue rather than stopping silently.
+continue when run interactively. Unattended (`--unattended`), it becomes a documented
+blocker. It never stops silently.
 
 Design rationale and evidence (agents deleting or hardcoding tests, reward hacking that
 grows with task size): `optimal-ai-dev-flow/findings/w3-verification.md`,

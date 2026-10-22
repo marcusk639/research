@@ -1,7 +1,7 @@
 ---
 name: tdd-implement-task
-description: Complete one task file (from /tdd-task-breakdown) using strict, spec-first test-driven development across separate agents. Read the task end to end, ask clarifying questions, have a test author write positive/negative/edge/error tests from the spec (not from current code), review the tests in three passes, lock them and confirm they fail first, have a separate implementer write the code, review the code in three passes, then run a test-fix-review loop until every test passes and review is clean. Optional commits via --commit (default none).
-argument-hint: <path-to-task-file> [--commit none|split|single] [--run-baseline <log>] [--known-failures <file>] [--target-failures <file>]
+description: Complete one task file (from /tdd-task-breakdown) using strict, spec-first test-driven development across separate agents. Read the task end to end, ask clarifying questions, have a test author write positive/negative/edge/error tests from the spec (not from current code), review the tests in three passes, lock them and confirm they fail first, have a separate implementer write the code, review the code in three passes, then run a test-fix-review loop until every test passes and review is clean. Optional commits via --commit (default none). With --unattended it never waits on the user: low-risk ambiguities are assumed and logged, real blockers are written to BLOCKERS.md as fully described tasks with suggested fixes, and the task's partial work is set aside.
+argument-hint: <path-to-task-file> [--commit none|split|single] [--run-baseline <log>] [--known-failures <file>] [--target-failures <file>] [--unattended] [--blockers <file>] [--blocker-id <B-NN>]
 disable-model-invocation: true
 ---
 
@@ -39,6 +39,13 @@ Reviewers have no shell, so paste in the text they need: the **review diff** (de
 Phase 5) and the relevant test-run output. Never assume a subagent
 remembers an earlier invocation.
 
+**Strategy brief.** `tdd-blocker-resolver` may write
+`<tasks-dir>/.tdd-runs/T<NN>-strategy.md` before retrying a blocked task. It holds the
+earlier diagnosis, what failed, and the chosen approach. If it exists, read it in Phase 0,
+include it in **every** delegation prompt, and use it in your own diagnoses. The earlier
+attempt's set-aside work it points to is a **reference draft only**. Everything still
+goes through the full write, review and lock process.
+
 **Spec questions from any agent.** Spec gaps reported by the test author, spec questions
 from either reviewer, and test/spec conflicts reported by the implementer are all handled
 the same way:
@@ -59,7 +66,85 @@ Never resolve a spec question by guessing.
 fake success. Show the user the outstanding findings or failures, what was tried, and
 your diagnosis, then ask with `AskUserQuestion` whether to (a) continue for another round
 of the same size, (b) answer or adjust something and continue, or (c) stop and mark the
-task `blocked`.
+task `blocked`. In unattended mode, a cap hit is a blocker (see below).
+
+## Unattended mode
+
+With `--unattended`, the skill **never waits on the user**. It's used for long runs
+(`tdd-orchestrator` and `tdd-blocker-resolver` pass it). Every place in this skill that
+says "ask the user" follows this table instead:
+
+| Situation | Unattended behavior |
+|-----------|---------------------|
+| An ambiguity or spec question (Phase 1, spec questions from agents, Phase 7 "spec is ambiguous") that passes the **low-risk test** below | Assume the conventional default and record it in the task's `Open Questions` as `Q: … — Assumed (unattended): … because …`. Continue. |
+| An ambiguity or spec question that fails the low-risk test | **Blocker** (type `spec-question`). |
+| Test-change procedure step 2: the right behavior isn't clear from the spec | **Blocker** (type `test-spec-conflict`). |
+| Any cap hit | **Blocker** (type `cap-hit`). |
+| An environment or tooling failure the role agents can't fix within the task's scope (a missing tool, a service that won't start, credentials, network) | **Blocker** (type `environment`). |
+| Phase 0 unknown failure | Unchanged: stop, archive, report. The orchestrator handles it. If this skill was run directly (no orchestrator), it's a **blocker** (type `earlier-failure`). |
+| Phase 0 dependency check fails | Stop without a blocker entry. The orchestrator records it. Run directly, it's a **blocker** (type `other`). |
+
+**The low-risk test.** Assume a default only if **all** of these hold. Otherwise it's a
+blocker.
+- It doesn't change anything in the task's `Interfaces` section, or any contract a
+  dependent task relies on.
+- It doesn't decide externally visible behavior the plan cares about: error types,
+  messages or statuses that callers handle, output and persistence formats, security,
+  authorization, or data retention or loss.
+- There's a clear conventional choice: an established pattern in this codebase, the
+  repo's existing behavior in the same situation, or the recommended answer in the task
+  file.
+- Reversing it later is a local change to this task's code and tests.
+
+**Blocker protocol.** When a blocker occurs:
+1. **Stop the current phase.** Don't push on, and don't start other work in this task.
+2. **Write or extend the blocker entry** in the `--blockers` file (default
+   `<tasks-dir>/BLOCKERS.md`), following
+   [`blocker-template.md`](blocker-template.md):
+   - With `--blocker-id B-NN` (a retry of an existing blocker), add a row to that entry's
+     `Attempts` table. Update `What happened`, the hypothesis, the suggested fixes and
+     `Type` with the new evidence, and set its status back to `open`.
+   - Otherwise, append a new entry with the next free ID.
+
+   Fill **every section** from the evidence in `run-dir` and the reviews. "Suggested
+   fixes" must be concrete and ranked, and each must say whether it needs a human
+   decision. For `spec-question` and `test-spec-conflict`, `To unblock` must state the
+   exact question, the options, and a recommendation.
+3. **Set aside** the task's partial work (next section) and record the outcome in the
+   entry's `State of the work`.
+4. Write the Phase 9 report with status `blocked` and the blocker ID. Set
+   `Status: blocked` in the task file and `INDEX.md`, with the reason `B-NN`.
+5. Return. The caller continues with other work.
+
+## Setting aside a blocked task's work
+
+This is only safe **at the moment the task blocks**, because no other task has run since
+and this run's records still say exactly which files are its own. Never set aside work
+later (a retry needs the work already out of the tree). Interactive runs ask the user
+first. Unattended runs do it automatically.
+
+1. **Find the task's own work:**
+   - files that differ from their `pre-run/` copy
+   - files with no `pre-run/` copy that differ from `HEAD`, or are new and untracked
+
+   Exclude the tasks directory. Check the list against the files reported by the test
+   author and implementer and the guard manifest's task test files. A file that doesn't
+   fit those, and the user didn't change, means the records are inconsistent. Don't
+   touch it, and list it in the entry.
+2. Save `git diff` of those tracked files, plus a diff against their `pre-run/` copies
+   where one exists, to `run-dir/set-aside/changes.patch`. Move new untracked files into
+   `run-dir/set-aside/files/`, keeping their paths.
+3. Restore each tracked file to its `pre-run/` copy if it has one, otherwise to `HEAD`.
+4. **Commits** this run made (from `state.md`):
+   - Unattended: `git revert --no-edit <sha>` newest first. This adds revert commits and
+     deletes nothing.
+   - Interactive: ask first.
+   - If a revert conflicts, run `git revert --abort`, leave that commit in place, and
+     record it as `not reverted` with the reason.
+5. Run the full suite. It should match `baseline.log` (apart from accepted failures).
+   Record any difference in the entry. A task whose set-aside is incomplete (a commit not
+   reverted, or files it didn't dare touch) says so in its entry, so the orchestrator can
+   add its failing tests to the run's known failures.
 
 ## Arguments and setup
 
@@ -71,6 +156,10 @@ task `blocked`.
     run
   - `--target-failures <file>`: for a fix task, the existing failing tests it exists to
     make pass
+  - `--unattended`: never wait on the user (see "Unattended mode")
+  - `--blockers <file>`: where blocker entries go (default `<tasks-dir>/BLOCKERS.md`)
+  - `--blocker-id <B-NN>`: this run is a retry of that blocker; extend its entry rather
+    than opening a new one
 
   Commit modes:
   - `none`: never commit. Leave all changes in the working tree.
@@ -487,8 +576,10 @@ Write `<task-dir>/T<NN>-<slug>.report.md` with these sections:
 - **Caps hit and decisions:** or "none".
 - **Remaining risks / follow-ups.**
 
-Set the task's `Status` to `done` (or `blocked`) in both the task file and `INDEX.md`.
-Tell the user the result in a few lines and link the report.
+Set the task's `Status` to `done` (or `blocked`, with its blocker ID) in both the task
+file and `INDEX.md`. In unattended mode, also list every `Assumed (unattended)` decision
+under **Clarifications**, so a human can review them later. Tell the user the result in a
+few lines and link the report.
 
 ## Hard rules
 
@@ -500,3 +591,5 @@ Tell the user the result in a few lines and link the report.
 - The task is never marked `done` while any test fails (apart from recorded
   accepted failures) or any code change is unreviewed.
 - Report results exactly as they are. If tests fail, say so with the output.
+- In unattended mode, never wait on the user, and never guess past the low-risk test.
+  Anything that fails it is a fully documented blocker, not an assumption.
