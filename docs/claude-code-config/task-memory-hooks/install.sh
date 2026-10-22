@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Install the task-memory hooks into the user-level Claude Code config.
 #
-#   ./install.sh [--tmux-autocompact] [--autocompact-pct N | --no-autocompact-pct]
+#   ./install.sh [--tmux-autocompact] [--background-checkpoints]
+#                [--autocompact-pct N | --no-autocompact-pct]
 #
 # Idempotent: re-running replaces this bundle's hook entries and leaves every
 # other hook, env var and setting alone. settings.json is backed up first.
@@ -12,31 +13,47 @@ CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 DEST="$CLAUDE_DIR/hooks/task-memory"
 TM_HOME="$CLAUDE_DIR/task-memory"
 TMUX_AUTOCOMPACT=0
+MODE=inline
 PCT=60
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --tmux-autocompact) TMUX_AUTOCOMPACT=1 ;;
+    --background-checkpoints) MODE=background ;;
     --autocompact-pct) PCT="${2:?--autocompact-pct needs a value 1-100}"; shift ;;
     --no-autocompact-pct) PCT="" ;;
-    -h|--help) sed -n '2,8p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,9p' "$0"; exit 0 ;;
     *) echo "unknown option: $1" >&2; exit 2 ;;
   esac
   shift
 done
 
 command -v python3 >/dev/null || { echo "python3 is required" >&2; exit 1; }
+if [ -n "$PCT" ] && ! { [ "$PCT" -ge 1 ] 2>/dev/null && [ "$PCT" -le 100 ]; }; then
+  echo "--autocompact-pct must be an integer from 1 to 100 (got: $PCT)" >&2; exit 2
+fi
+
+# Tested on Claude Code 2.1.307. Older versions may not know the PostCompact
+# event or the SessionStart "compact" source; warn rather than guess.
+TESTED="2.1.307"
+if command -v claude >/dev/null; then
+  CC_VERSION="$(claude --version 2>/dev/null | grep -Eo '^[0-9]+\.[0-9]+\.[0-9]+' || true)"
+  if [ -n "$CC_VERSION" ] && [ "$(printf '%s\n%s\n' "$TESTED" "$CC_VERSION" | sort -t. -k1,1n -k2,2n -k3,3n | head -1)" != "$TESTED" ]; then
+    echo "warning: Claude Code $CC_VERSION is older than $TESTED (the version these hooks were tested on)." >&2
+    echo "         If /hooks or settings validation complains, update Claude Code or run ./uninstall.sh." >&2
+  fi
+fi
 
 mkdir -p "$DEST" "$TM_HOME"
 cp "$SRC/hooks/task_memory.py" "$DEST/task_memory.py"
 chmod +x "$DEST/task_memory.py"
 [ -f "$TM_HOME/config.json" ] || cp "$SRC/config.default.json" "$TM_HOME/config.json"
 
-python3 - "$CLAUDE_DIR" "$DEST" "$TM_HOME" "$TMUX_AUTOCOMPACT" "$PCT" <<'PY'
+python3 - "$CLAUDE_DIR" "$DEST" "$TM_HOME" "$TMUX_AUTOCOMPACT" "$PCT" "$MODE" <<'PY'
 import json, sys, shutil, time
 from pathlib import Path
 
-claude_dir, dest, tm_home, tmux, pct = sys.argv[1:6]
+claude_dir, dest, tm_home, tmux, pct, mode = sys.argv[1:7]
 settings_path = Path(claude_dir) / "settings.json"
 state_path = Path(tm_home) / "install-state.json"
 MARK = "task-memory/task_memory.py"
@@ -90,6 +107,7 @@ if not env:
 config_path = Path(tm_home) / "config.json"
 config = json.loads(config_path.read_text())
 config["tmux_autocompact"] = tmux == "1"
+config["checkpoint_mode"] = mode
 config_path.write_text(json.dumps(config, indent=2) + "\n")
 
 settings_path.write_text(json.dumps(settings, indent=2) + "\n")
@@ -100,4 +118,5 @@ PY
 echo "installed task-memory hooks -> $DEST"
 echo "data + config        -> $TM_HOME (edit config.json to tune thresholds)"
 [ "$TMUX_AUTOCOMPACT" = 1 ] && echo "tmux auto-/compact: ON (only acts when Claude runs inside tmux)"
+echo "checkpoint mode: $MODE"
 echo "Restart Claude Code (or open /hooks) to load the hooks."
