@@ -96,7 +96,10 @@ Update it at every stage change and every task outcome.
         other tasks may since have edited the same files, and restoring or diffing them
         would capture or wipe their work. Instead, list the task's earlier files for
         the user and leave the task `blocked`. Retry only after the user confirms they
-        have removed that work from the tree themselves. Keeping it isn't an option:
+        have removed that work from the tree themselves. Commits count too: if
+        `state.md` (in its run directory) records commits that were never reverted (for
+        example a `split` tests commit), the work is still in `HEAD`. The retry also
+        needs the user to agree to `git revert` those commits. Keeping it isn't an option:
         a fresh run would treat it as the user's own code, so it would never be
         reviewed or committed.
      2. Archive its run directory (as the implement skill defines it).
