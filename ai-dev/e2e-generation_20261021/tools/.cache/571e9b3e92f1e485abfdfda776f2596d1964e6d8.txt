@@ -1,0 +1,790 @@
+__HTTP 200__
+                                                   Autonomous Large Language Model Agents
+                                                   Enabling Intent-Driven Mobile GUI Testing
+                                                           Juyeon Yoon                                   Robert Feldt                                      Shin Yoo
+                                                              KAIST                          Chalmers University of Technology                             KAIST
+                                                     juyeon.yoon@kaist.ac.kr                     robert.feldt@chalmers.se                           shin.yoo@kaist.ac.kr
+
+
+
+                                            Abstract—GUI testing checks if a software system behaves            quantified using activity or widget coverage, i.e., the number of
+                                         as expected when users interact with its graphical interface,          Android activities (screens) or widgets that have been covered
+
+
+
+
+arXiv:2311.08649v1 [cs.SE] 15 Nov 2023
+                                         e.g., testing specific functionality or validating relevant use case   by the automated testing technique.
+                                         scenarios. Currently, deciding what to test at this high level is a
+                                         manual task since automated GUI testing tools target lower level          However, a recent empirical study of Android develop-
+                                         adequacy metrics such as structural code coverage or activity          ers [8] reports that the primary test design strategy adopted
+                                         coverage. We propose D ROIDAGENT, an autonomous GUI testing            by Android developers is to follow the usage model of the
+                                         agent for Android, for semantic, intent-driven automation of           apps. Developers overwhelmingly prefer test cases that target
+                                         GUI testing. It is based on Large Language Models and support
+                                                                                                                individual features and use cases, which are higher level test
+                                         mechanisms such as long- and short-term memory. Given an
+                                         Android app, D ROIDAGENT sets relevant task goals and subse-           objectives compared to activity coverage, a structural testing
+                                         quently tries to achieve them by interacting with the app. Our         objective. The emphasis on more semantic test objectives can
+                                         empirical evaluation of D ROIDAGENT using 15 apps from the             also be seen when developers are questioned about the format
+                                         Themis benchmark shows that it can set up and perform realistic        of automatically generated test cases that they ideally want.
+                                         tasks, with a higher level of autonomy. For example, when testing
+                                                                                                                Surprisingly, the most popular choice is natural language
+                                         a messaging app, D ROIDAGENT created a second account and
+                                         added a first account as a friend, testing a realistic use case,       rather than any test API scripts. Further, developers want
+                                         without human intervention. On average, D ROIDAGENT achieved           expected outputs, as well as steps of use cases and specific
+                                         61% activity coverage, compared to 51% for current state-of-           app features, in the automatically generated tests. These results
+                                         the-art GUI testing techniques. Further, manual analysis shows         reveal a gap between what is being offered by automated
+                                         that 317 out of the 374 autonomously created tasks are realistic
+                                                                                                                Android testing techniques, and what developers want in test
+                                         and relevant to app functionalities, and also that D ROIDAGENT
+                                         interacts deeply with the apps and covers more features.               automation in Android.
+                                            Index Terms—software testing, GUI testing, test automation,            This paper presents D ROIDAGENT1 with the aim of bring-
+                                         artificial intelligence, large language model                          ing the level of Android GUI testing automation closer to
+                                                                                                                developer preferences and expectations. Instead of going af-
+                                                                I. I NTRODUCTION                                ter structural testing goals such as higher activity coverage,
+                                            Testing mobile applications at the GUI level to ensure their        D ROIDAGENT automatically comes up with natural language
+                                         quality in terms of functionality and usability is a critical part     descriptions of specific tasks that can be achieved using the
+                                         of app development. However, it also remains a costly task due         given App Under Testing (AUT), and subsequently tries to
+                                         to the ever-growing complexity of applications and inherent            interact with the GUI of the AUT with specific intent to
+                                         issues about the Android ecosystem such as rapid platform              achieve those tasks. If successful, D ROIDAGENT will produce
+                                         evolution and device fragmentation.                                    a GUI test case script that can achieve the specific task, leaving
+                                            To address the challenges in GUI testing, there has been a          the developer with both a natural language task description as
+                                         large amount of research efforts [1], [2], [3] to automate the         well as executable test scripts. To the best of our knowledge,
+                                         various aspects of mobile GUI testing. Most of the existing            D ROIDAGENT is the first Android GUI testing technique that
+                                         techniques focus on exploring the GUI states of a given app as         can automatically generate high level testing scenarios based
+                                         much as possible. For example, DroidBot [4] adopts a greedy            on sequences of identified tasks.
+                                         exploration policy that prioritises unexplored widgets as a next          D ROIDAGENT achieves this by using multiple Large Lan-
+                                         exploration target. Humanoid [1] adopt deep learning in hope           guage Model (LLM) instances that interact and externally act
+                                         to mimic human-like exploration paths by utilising pretrained          as an autonomous agent. LLMs have been used to automate
+                                         models to weigh probable GUI actions, aligning them with               Android GUI testing before, but either in more limited con-
+                                         frequently performed actions based on real human traces.               texts, or with much less autonomy than D ROIDAGENT. For
+                                         More recently, reinforcement learning has been applied to GUI          example, Liu et al. [9] proposed an approach to generate
+                                         testing to effectively discover novel GUI states using curiosity-      appropriate text inputs for a given GUI widget by prompting
+                                         based reward functions [5], [6], [7]. While these approaches
+                                         have revealed actual bugs in Android apps, we also note that             1 D ROIDAGENT is publicly available from https://github.com/testing-agent/
+                                         their objectives remain exploration of app structures, typically       droidagent
+an LLM with textual descriptions of the current GUI state,          core component of an Anrdoid app is called an activity, which
+while Wen et al. [10] extended DroidBot [4] to generate a           generally implements one screen (or one set of coherent func-
+sequence of GUI actions from a given textual description of         tionalities) of a given app [16]. The list of contained activities
+task. Lately, GPTDroid [11] showed that, given a summary            are available in the manifest file contained in any apps. An
+of past exploration and descriptions of current GUI state,          activity can be essentially viewed as a tree hierarchy, in which
+LLMs can choose a human-like next event to continue the             each node represents a GUI component, named “widget” in
+exploration. Unlike existing approaches, D ROIDAGENT sets           this paper, or a container grouping related widgets. Android
+its own testing goals autonomously, and can coherently follow       SDK provides tools and interfaces to query such views and
+long-term plans it has generated in order to accomplish those       interact with the contained widgets, enabling actions like
+tasks. The autonomy of D ROIDAGENT is inspired by the               button presses or inputting text in textfields. Various testing
+work on LLM-based cognitive architecture [12] as outlined           frameworks [17], [4] have been built on top of ADB (Android
+for software testing in Feldt et al. [13].                          Debug Bridge), part of the Android SDK, for automation.
+   We have empirically evaluated D ROIDAGENT, using 15                 1) Inference of possible actions: GUI testing is often for-
+apps from Themis benchmark [14], against four baselines:            mulated as a problem of choosing the best next action based on
+two traditional GUI state exploration techniques, DroidBot [4]      a specific GUI state [3], [18], [2], [19]. The possible actions
+and Humanoid [1], an LLM-based GUI state exploration tech-          can be determined from actionable widgets with properties
+nique, GPTDroid [11], and a random GUI testing technique,           like “clickable” or “editable”. While the number of possible
+Monkey [15]. D ROIDAGENT has automatically generated 374            actions on a specific GUI state is limited due to the relatively
+unique tasks for 15 studied apps: a manual assessment shows         small screen size of mobile devices, there can be numerous
+that 85% of generated tasks are relevant and viable, while          actions, especially when considering a list of items.
+59% are successfully accomplished by D ROIDAGENT. While                2) GUI state description: Humans typically perceive An-
+trying to achieve these tasks, D ROIDAGENT also reports the         droid UI based on the visual appearance of views on screen.
+highest average activity coverage of 61%, compared to 51%           For language models, conveying such visual information can
+achieved by Humanoid. Our results suggest that LLM-based            still be challenging. Previous work [9], [11], [20] rather
+autonomous agents can potentially automate Android GUI              choose to use textual properties included in a widget (e.g.,
+testing at a higher, more semantic level than GUI state explo-      resource id, content description, and text), which
+ration, and that this can even improve lower-level coverage.        provide a brief hint about the function of the widget.
+   The technical contributions of this paper are as follows:           Specifically, Liu et al. [11] combined textual descriptions
+   • We present D ROIDAGENT , an autonomous Android GUI             of all the contained widgets, and used it as a dynamic context
+      testing technique that can set and execute app specific       for prompting the language model to generate a next action.
+      tasks on its own. It produces natural language descriptions   However, this makes it challenging to convey the hierarchical
+      of tasks, and test scripts that achieve them.                 structure of GUI states and widgets. Meanwhile, another recent
+   • We empirically evaluate D ROIDAGENT against four base-         work [21] adopt the style of HTML documents to represent hi-
+      line techniques, using Android apps taken from a widely       erarchical structure of an Android view. However, since LLMs
+      used Themis benchmark. Our results show that D ROIDA-         are also trained on large codebases, and on relevant formats,
+      GENT is capable of generating relevant and useful app         for D ROIDAGENT we adopt JSON notation to describe GUI
+      usage tasks, which it subsequently accomplishes auto-         state and, thus, to represent hierarchical data.
+      matically by interacting with the GUI of the given app.
+                                                                    B. Autonomous Agents with Large Language Models
+   • We provide a replication package of D ROIDAGENT that
+      includes its public implementation.                              LLMs have been proven effective in various tasks, including
+   The rest of the paper is organised as follows. Section II        software testing automation [22], [23], [11], [21], [24]. Yet,
+presents background information about Android testing as well       the primary use of LLMs has been through single, templated
+as agents based on LLMs. Section III describes the internal         prompts possibly with few-shot examples of desired behav-
+architecture of D ROIDAGENT, while Section IV presents an           ior [25]. Recent LLMs, like OpenAI’s GPT-3.5 and GPT-4,
+illustrative example of how D ROIDAGENT operates when               can directly use external tools through function calls, making
+given an app. Section V describes the settings of our empirical     it easier for LLM-based libraries like LangChain [26] and
+evaluation, the results of which are reported in Section VI,        AutoGPT [27] to support hybridising LLMs with external
+while Section VIII discusses threats to validity. Finally, Sec-     tools.
+tion IX concludes.                                                     By including additional memory structures to overcome the
+                                                                    LLMs’ limited context lengths, autonomous agents can be built
+                      II. BACKGROUND                                that combine both long-term planning and interaction with the
+  This section outlines some background information.                use of external tools. The memory component of an LLM-
+                                                                    driven autonomous agent can be implemented as key-value
+A. GUI Testing on Android                                           stores where a local neural network model embeds the text
+ In Android mobile applications, users primarily interact with      (value) to a vector (key). This embedding database is then used
+GUI components such as buttons, text fields, and menus. A           to find content similar to the current context, e.g., actions that
+have already been tried in the current state. In D ROIDAGENT,       covered/uncovered activities as a proxy for the exploration
+we use the ChromaDB library [28] which implements such an           progress together with information about all activities as well
+embedding database for texts.                                       as the activity of the current state.
+   With long-term memory and the ability to use tools, au-             3) Initial knowledge: D ROIDAGENT is designed to be
+tonomous agents can be built to achieve significant goals. The      initialised with initial knowledge. In default mode, a profile
+design of such agent architectures can be based on cognitive        of a virtual user (persona), the ultimate “goal” of the persona,
+architectures [29], that was originally proposed as models of       and a sentence denoting the beginning of the exploration,
+the human mind, e.g., multi-agent social simulation [12], and       [PERSONA] started [APP NAME] is used.
+3D world exploration [30], and typically also include planning         In our experiment, we include the following goal description
+and reflection. When designing D ROIDAGENT it is particularly       to facilitate overall diversity: [PERSONA]’s ultimate goal
+important that it can recover from undesired exploration paths      is to visit as many pages as possible and try
+and that it preserves knowledge about the application as            their core functionalities. However, one can customise
+exploration continues. In the following, we describe in detail      the goal to adapt to different exploration and testing modes
+how our agent-based design achieves this.                           as well. Assuming a social messenger app, the human
+                                                                    tester invoking D ROIDAGENT could provide a goal such as:
+                      III. F RAMEWORK                               [PERSONA]’s ultimate goal is to check whether the
+   D ROIDAGENT is designed with an agent-based architecture         app supports interactions between multiple users.
+with four main LLM-based agents performing specific tasks:             We additionally guide the LLM implementing the Planner
+Planner, Actor, Observer, Reflector. It is further supported by     agent to further consider several generally desirable properties
+three different memory modules (short, long, and spatial),          when generating a new task: diversity (the task should cover
+with two retrieval modules that extract relevant information        new functionality), realism (the task should be possible on the
+from memory and format it for use by the agents. The Actor          app), difficulty (the task should be feasible in the fixed action
+and Observer form an “inner” loop trying to perform tasks           length limit), and importance (the task using core and basic
+which have been planned by the Planner and which is later           functions of the app should be prioritised).
+reflected upon by the Reflector. Figure 1 illustrates the role
+of each component and highlights the main information flow.         B. Actor and Observer
+We describe individual components of D ROIDAGENT below;                The short-term working memory stores the current task’s
+further, Section IV will provide a concrete working example.        execution history, and is cleared after each planning step to
+                                                                    register the newly planned task. Both the Actor and Observer
+A. Task Planner                                                     access it to retrieve context, and save their actions and obser-
+   A key part of D ROIDAGENT is the continuous planning of          vations.
+high-level tasks to be achieved. These tasks can also directly         1) Function-call based action selection: Actor chooses the
+be used to “describe” what lower-level actions, performed by        appropriate next action to achieve a given task. To reduce
+other agents, actually mean. Essentially, tasks are the basis       the number of tokens in LLM prompts, the Actor is given
+for intent-driven testing. The tasks should ideally correspond      a set of action types (such as “touch” or “set text”) as
+to semantically meaningful steps when testing AUT, as well          well as a list of widgets in the current screen, instead of
+as align with coherent functionalities of the target application.   combinations of them. Actor subsequently selects an Android
+In short, the tasks should be those that a human would want         action type, such as “touch” or “set text”, as well as a target
+to achieve next, given the current testing state.                   widget to apply the action to. The prior actions, most recent
+   Generating a viable but also diverse task is crucial, or the     observation (response) of the application, and the critique of
+exploration risks being stuck trying to repeatedly perform          recent progress (explained below), are also provided to be
+impossible, irrelevant, or already achieved tasks. We achieve       considered when recommending the next action to try.
+this by combining information from three different sources             2) Additional action types: Actor also supports three types
+into a prompt for the planning LLM agent:                           of actions not directly derived from the widgets of the current
+   1) High-level task history: To continuously generate di-         page: “wait”, “back”, and “end task”. Mobile testing tools
+verse and consistent tasks, the planner should be aware of the      have struggled with detecting loading screens, often using
+past exploration history. Instead of history of GUI actions, the    prolonged wait times after each action. The loading screen’s
+planner is provided with textual summaries of N (20 in our          presence can be identified by checking for loading messages or
+experiment) most recent tasks, and M (five in our experiment)       icon resource identifiers, and we discovered that the LLMs we
+most relevant task knowledge. The historical information is         used can quite effectively detect loading screens and decide to
+inserted into long-term memory by the Reflector, described          wait. So, instead of a fixed long wait, we let the Actor decide
+in III-C below, and then retreived and assembled by the task        when to wait. The “back” action is for navigating back, and
+retriever, described in III-D1.                                     the “end task” action allows the Actor to conclude the task
+   2) Total and visited activities: D ROIDAGENT maintains the       before the fixed max action limit (13 in our experiments).
+number of times each activity has been visited in the spatial          3) Observing and summarising the outcome(s): The state
+memory, and the Widget retriever then includes the list of          of GUI may change after taking an action. D ROIDAGENT
+                                                            Working Memory (Short-term Memory)                                                  Widget Knowledge Memory (Spatial Memory)
+
+                                      GUI State                                                                                                                            Widget-wise observations
+                                                              Current GUI State                Previous GUI State
+                                      Describer
+                                                                                                                                                                               touch
+                                                                                                                                                                               Count: 3              ...
+                                                             Current
+                                                              Task
+                                                                            action        observation   action
+                                                                                                                 observation
+                                                                                                                  +critique
+                                                                                                                                …                                              scroll
+                                                                                                                                                                               Count: 1
+
+   [New Task] Create a new flashcard in
+   the "My Deck" deck
+                                                                                                                          Widget Retriever
+  [ACTION] Fill a textfield that has content_desc
+  "Front" with "What is the capital city of France?"
+  [OBSERVATION] [...] has been filled with the text
+  “What is the capital city of France?”
+  [ACTION] Fill a textfield [...] with “Paris”
+                                                                                                                                          self-
+                             …                                                                                                  Actor   critique
+                                                                                             Task                                                                   Task
+                                                       A    Planner                                        B                                                     Termination            C       Reflector
+   [Task Result] Person X successfully                                                     Initiation
+   created a new flashcard in the "My Deck"                                                                                  Observer
+   deck with the question[...]
+   [Reflection] The app provides a
+   dropdown field to select the deck[...]
+                                                                                                                                                                                            Retrieve
+                                                                                          Task Retriever
+   [New Task] Attach a photo to the                                                                                                                                                         Save
+   flashcard
+                                                            Task History Memory (Long-term Memory)
+   [Reflection] The app allows users to add
+   images, audio, and advanced[...]                              Initial Knowledge                               Summary of Task 1
+                                                                                                                    (Success)
+                                                                                                                                         Summary of Task 2
+                                                                                                                                            (Failure)
+                                                                                                                                                                       … Task Summary
+                                                                                                                                                                               New Task
+                                                                                                                                                                               Summary
+                                                                   Virtual User Profile
+                                                                   of “[PERSONA]”
+                                                                                                                   Task Reflection 1         Task Reflection 1                              Task Reflection 1
+                                                             Ultimate Goal of [PERSONA]
+                                                                                                                   Task Reflection 2         Task Reflection 2                              Task Reflection 2
+   [New Task] Attach an audio clip to the
+   flashcard[...]                                          [PERSONA] started [APP_NAME]                            Task Reflection 3         Task Reflection 3                              Task Reflection 3
+
+
+
+
+                                                                  Fig. 1. Overview of D ROIDAGENT with a task example.
+
+
+
+updates its perception of a screen with a structured textual                                                C. Task Reflector
+representation (JSON). However, for the Actor to capture the                                                   Once a task execution round finishes, either by the Actor
+current task context, it needs to be informed about the outcome                                             calling the “end task” function or reaching the maximum
+of the previous action. We use a separate Observer agent to                                                 action length limit, Reflector is activated to reflect on and
+summarise the pertinent outcome of an action based on a diff                                                create a concise description of the results of trying to perform
+of the prior and updated GUI states represented as multi-line                                               the task (binary label indicating task success or failure as
+strings. This is because representing both the prior and updated                                            well). The input to this process is the entire task execution
+state would lead to long prompts that may confuse the LLM.                                                  history including the self-critique and all observations from
+                                                                                                            the working memory, the current GUI state, and the ultimate
+                                                                                                            goal (from task planning). We instruct the Reflector to “derive
+   4) Self-critique: The Actor may not always choose the                                                    memorable reflections to help planning next tasks and to
+desired action. Once Actor starts down a wrong path by                                                      be more effective to achieve the ultimate goal”. We found
+initiating an undesirable action, it becomes challenging to                                                 that this elaborate reflection process can help avoid that the
+“escape” from that incorrect exploration trajectory. Therefore,                                             overall system “forgets” useful knowledge acquired during
+besides offering action results as observations, we incorporate                                             task execution, given that individual agents summarise their
+an additional element called “self-critique” into the Actor                                                 knowledge. We also found that having different agents focused
+of D ROIDAGENT. Periodically (after every three actions in                                                  on specific tasks also helps avoid that involved LLM instances
+the experiments), the self-critique element generates feedback                                              drifts from their purpose, i.e. starts hallucinating or straying
+based on the task execution history up to that point and the                                                from their intended function.
+current GUI state description. This involves a separate prompt,
+which explicitly asks for both a review of the task execution                                               D. Memory Retrieval Modules
+history and, if the Actor appears to be struggling, a suggested                                                1) Task Retriever: Long-term memory contains a history
+workaround plan. The prompt is sent to a more advanced                                                      of performed task, i.e. task-specific knowledge as well as
+model, GPT-4, while the “main” conversation querying the                                                    reflections on whether the task succeeded (indicates this task
+next action is handled by GPT-3.5. Consequently, the gener-                                                 is supported by the app) or not. D ROIDAGENT uses the
+ated critique is injected to the Actor’s prompting context for                                              textualised GUI state (basically a concatenation of widget
+selecting the next action.                                                                                  properties) captured at task initiation as key/query for storing/
+retrieving task knowledge. This also allows the Planner to                        B. Executing the task
+obtain task knowledge derived from past task executions from                         Once a task is registered, Actor generates a sequence of
+similar GUI states, helped by the task retriever.                                 GUI actions to achieve the task. The taken action and the
+   2) Widget Retriever: In manual GUI exploration, a tester                       observation, stored in the working memory, are again tied
+accumulates knowledge about the AUT by interacting with                           together as a virtual conversation thread between the app user
+widgets. Similarly, we introduce a memory type akin to                            and the agent. The following example is the excerpt from
+human spatial memory, which lets the agent “remember”                             such a conversation thread. The texts for User are generated
+observations after interacting with a widget and to recall them                   based on the action results from the Observer, whereas the
+for future interactions. To achieve this, the Observer stores the                 “virtual” responses of Assistant are the stringified GUI actions
+observations not only to the “volatile” working memory, but                       previously performed. On the last User message, the current
+also to a specific widget knowledge (spatial) memory. Each                        screen description, with the widget knowledge is appended.
+widget is assigned with a signature containing the activity                       * User: My name is Jade Green and I am using an application named
+it is contained in, textual properties such as resource id,                             AnkiDroid to accomplish the following task: Create a new flashcard
+                                                                                         in the "My Deck" deck with [...truncated...] What should be the
+content description, and text2 ; the signature of the target                            first action?
+widget is used as a primary key to store and retrieve the
+                                                                                  * Assistant: Fill a textfield that has content_desc "Front" with "What
+observation. Additionally, the embedding of the GUI state                               is the capital city of France?"
+serves as a secondary key in order to fetch observations from
+                                                                                  * User: I performed the action you suggested. What should be the next
+the actions performed from a similar state to the current                               action?
+one. To limit the amount of information that goes into the
+                                                                                  * Assistant: Fill a textfield that has content_desc "Back" with "Paris"
+prompts the widget retriever summarises the N most relevant
+observations (5 in our experiments), per widget. This summary                     * User: I performed the action, and as a result, the textfield that had
+                                                                                        the content_desc "Back" was filled with [...truncated...] This
+is then added to the widget dictionary in the JSON-formatted                            time, I’ll give you the full content of the current page as
+GUI state, under the property widget role inference.                                    follows:
+                                                                                         {
+                                                                                             page name: NoteEditor,
+                 IV. A N I LLUSTRATIVE E XAMPLE                                              page visit count: 11,
+                                                                                             children: [
+   In this section, we illustrate the execution of D ROIDAGENT                               ...
+with an example. We use the “AnkiDroid” as the target appli-                                     ID: 11,
+                                                                                                 widget type: TextView,
+cation, a flashcard app for memorising various information. We                                   content description: Save,
+inject a basic profile of a specific user persona, named “Jade                                   possible action types: [touch, long touch],
+                                                                                                 num prev actions: 2,
+Green” into the prompt of the Planner and Actor model, with                                      widget role inference: The widget allows the user to
+account credentials associated with the app.                                                         save their inputs and add new cards, possibly in a
+                                                                                                     note-taking or flashcard application.
+                                                                                         [...truncated...]
+A. Planning a new task                                                                   select the next action or end the task by calling one of the
+                                                                                               given function that corresponds to a specific action.
+   The exploration begins with the task planning phase by
+Planner, where it sets a plan based on its goal and desirable                        Given the conversation thread, the model responds by
+properties of the task. The answer format is enforced by a                        choosing the next action by calling the corresponding func-
+template in the prompt; generated answer contains a reasoning                     tion. The chosen action, touching the “Save” button, is then
+step, a suggested task, and an end condition of the task. The                     converted to an actual GUI event and relayed to the app.
+end condition is further provided to Actor with the task itself                   {
+to help Actor decide whether the task is accomplished or                              "name": "touch",
+                                                                                      "arguments": {"target_widget_ID": 11}
+not. The following are the actual reasoning steps produced                        }
+by D ROIDAGENT, for the task “Create a new flashcard”:
+Reasoning about Jade Green’s new task: Considering the realism,                   C. Criticising the task execution
+      importance, diversity, and difficulty of the tasks, Jade Green
+      should continue adding flashcards to the newly created "My Deck".              The critique component periodically activates and generates
+      This is a realistic and important task, as it is a basic function           feedback from the full task execution history as well as
+      of the AnkiDroid app and it also helps Jade Green to diversify
+      their activities within the app. This task is not too difficult,            the current GUI state description. As other components, the
+      as Jade Green has already started this process and is familiar              generation of critique is enforced to follow a certain template
+      with the NoteEditor page.
+Jade Green’s next task: Create a new flashcard in the "My Deck" deck              of reasoning step. We demonstrate an actual critique example,
+      with the question "What is the capital city of France?" and the             pointing out that nothing has been added to the desired deck.
+      answer "Paris".
+End condition of Jade Green’s next task: The task is known to be                  Critique of task execution so far: Jade Green has correctly filled in
+      completed when a new flashcard with [...truncated...] is                          the question and answer fields, but the flashcard seems to be
+      successfully added to the "My Deck" deck.                                         saved in the "Default" deck instead of the intended "My Deck".
+                                                                                        This might have happened because Jade Green changed the selected
+                                                                                        deck from "My Deck" to "Default" after creating the flashcard.
+                                                                                  Need a workaround plan?: Yes
+  2 The text property of an editable textfield is omitted; if a widget does not   Workaround plan for Jade Green: Jade Green needs to ensure that the
+contain any stable textual properties, we use its “bounds” property instead,            correct deck ("My Deck") is selected before saving the flashcard.
+which corresponds to the position and size of the widget.
+D. Reflecting on the task                                                    4) RQ4. Cost: What is the monetary cost of running
+   At the end of the task execution, the reflector generates a             D ROIDAGENT with the latest state-of-the-art large language
+summary of the task result, and derives the knowledge from                 models? With RQ4, we aim to present the present-day cost
+the task execution history. The following is the example of the            of running D ROIDAGENT, and provide a view for adopting
+task result and knowledge derivation with the given template               D ROIDAGENT in practice.
+for the step-by-step reflection.                                           B. Experimental Setup
+Summary of the task result: Jade Green successfully created a new             In this section, we describe our experimental setup.
+      flashcard in the "My Deck" deck with the question "What is the
+      capital city of France?" [...truncated...]
+                                                                              1) Subjects: Table I shows the 15 subject apps we study.
+Task done successfully?: Yes                                               We start the app selection from the widely used Themis
+Reflections on the task:
+- Jade Green has learned how to create a new flashcard by filling the ’
+                                                                           benchmark [14], which originally contains 23 open-source
+      Front’ and ’Back’ fields with question and answer respectively and   Android apps. We are forced to exclude eight apps due to
+       then saving it.
+- Jade Green has learned that the app provides a dropdown field to
+                                                                           deprecated servers or APIs, three apps whose functionalities
+      select the deck where the flashcard will be saved.                   depend heavily on remote servers and are not easily resettable,
+- Jade Green has learned that the app shows a popup message indicating
+      the number of cards added.
+                                                                           one app that crashes on startup, and another that has only a sin-
+                                                                           gle activity. We selected five additional apps from FDroid [31]
+                                                                           to broaden the range of our subject app categories.
+E. Planning another task with learnt knowledge                                2) Metrics: Our primary metric is screen coverage, with
+   As an exploration continues on and discovers more widgets               a specific focus on activity coverage in Android serving as
+and activities, ideally, the task planning process should benefit          an indicator for exploration diversity. Activity coverage is
+from information about the past task executions. The subse-                typically defined by the number of activities accessed during
+quent task, “attaching a photo to the flashcard”, illustrated in           the exploration of the AUT. We only take account of internal
+Figure 1, is based on previously creating a new flashcard. The             activities that include the package name of the target applica-
+new task derives new knowledge from the observation that the               tion, since there can be external activities that do not represent
+app allows users to add images, audio clip, recording audio,               any accessible screens within the AUT (they typically exist to
+and so on, to the flashcard. In future task planning, Planner              detect memory leaks or to perform crash reports).
+retrieves such knowledge and generate a new task, “Attach an                  While activity coverage is widely used and effective in
+audio clip to the flashcard” with the following reasoning steps.           evaluating the “breadth” of exploration, it doesn’t necessarily
+                                                                           capture the desired “depth” of the exploration. For instance, an
+Reasoning about Jade Green’s new task: To provide a diverse and
+      realistic task that makes use of the core functionality of the app
+                                                                           exploration technique might navigate to a specific activity, it
+      , Jade Green should try to add an audio clip to a flashcard, which   may also return to the previous one without any additional
+       is an important feature of AnkiDroid to enhance learning
+      efficiency. This task is not too difficult as it is similar to the
+                                                                           interaction. To further evaluate if the test cases generated
+       previous task of adding an image to a flashcard.                    by each technique encompass the target app’s comprehensive
+Jade Green’s next task: Add an audio clip to a flashcard.
+                                                                           functionality, we employ the concept of “feature coverage”.
+                                                                           This represents the fraction of functional features covered
+                          V. E VALUATION                                   by test cases, as delineated in the taxonomy suggested by
+                                                                           Coppola et al. [32]. Given that we do not have precise
+  This section describes our experimental setup.                           specifications for the subject apps, we categorise all discerned
+                                                                           functional features of each app identified by all comparison
+A. Research Questions                                                      target techniques, until the consensus of three authors. We
+   Our evaluation aims to answer the following questions.                  then report the number of features covered by each technique.
+   1) RQ1. Testing Effectiveness: How does D ROIDAGENT                        3) Baselines: We compare D ROIDAGENT with the follow-
+compare to existing exploration techniques in exploring di-                ing four baselines described below:
+verse functions within a limited time budget? With RQ1,                       • Monkey [15]: Monkey is a widely used random Android
+we aim to assess the diversity and depth of D ROIDAGENT’s                        GUI exploration tool for Android.
+exploration, primarily based on screen coverage.                              • DroidBot [4]: DroidBot is a systematic input generation
+   2) RQ2. Usefulness: How effectively do the tasks generated                    tool for Android GUI exploration.
+by D ROIDAGENT serve as maintainable testing scenarios, re-                   • Humanoid [1]: Humanoid incorporates a deep neural net-
+flecting the supported functionalities of AUTs? With RQ2, we                     work model trained using real-world human interactions
+aim to find out whether the tasks generated by D ROIDAGENT                       and produces a sequence of GUI actions.
+are useful as valid test scenarios, which can be used for                     • GPTDroid [11]: GPTDroid interacts with an LLM in a
+regression testing or further test case generation.                              chat-like fashion to produce a series of GUI actions.
+   3) RQ3. Ablation: How does each component of the agent                     Note that, since GPTDroid does not provide a replication
+architecture impact the agent’s exploration effectiveness? With            package, we reimplemented it based on the description in
+RQ3, we aim to assess the contribution of each component of                the paper. However, one of their component is a distinct
+the agent architecture to the overall exploration effectiveness.           local language model that converts the natural-language LLM
+                                                                                    TABLE I
+                                                            A NDROID APPLICATIONS USED IN D ROIDAGENT ’ S EVALUATION .
+
+                    App Name             App ID    From      Category          # of Activity     App Name                    App ID       From      Category              # of Activity
+                    ActivityDiary          AD      Themis    Personal Diary              10      openlauncher                        OP   Themis    App Launcher                     7
+                    AnkiDroid              AK      Themis    Card Learning               22      osmeditor4android                   OM   Themis    Map                             18
+                    AntennaPod             AN      Themis    Podcast Manager             10      MaterialFB                          MF   F-Droid   Social                           4
+                    Markor                 MK      Themis    Text Editor                  9      collect                             CL   F-Droid   Form Data Collector             37
+                    Omni-Notes             ON      Themis    Notebook                    12      APhotoManager                       AP   F-Droid   Photo Manager                    9
+                    Phonograph             PG      Themis    Music Player                12      MyExpenses                          ME   F-Droid   Expense Tracking                40
+                    Scarlet-Notes          SN      Themis    Notebook                     8      OpenTracks                          OT   F-Droid   Sports & Health                 24
+                    commons                CM      Themis    Wikimedia                   17
+
+
+
+
+                           TABLE II                                                                       DroidAgent
+
+
+   N UMBER OF C OVERED ACTIVITIES PER A PP B Y E ACH T ECHNIQUE                                                      Task
+
+                                                                                                             Synchronize the
+                                                                                                             existing AnkiDroid                                                           end_task
+                                                                                                             account with the app.
+Subjects              D ROIDAGENT          DroidBot    GPTDroid   Humanoid     Monkey    Total
+APhotoManager                        5             5          4           5         5       9
+ActivityDiary                       10             3          6           5         5      10
+AnkiDroid                           15            14          6          13        13      22                Humanoid
+AntennaPod                           4             3          1           5         3      10
+Markor                               4             4          4           5         5       9
+MaterialFB                           3             1          3           3         2       4            …                                                                                …
+MyExpenses                          15             7         12           7        11      40
+Omni-Notes                           5             3          5           6         3      12
+OpenTracks                          16             7         11          10        16      24
+Phonograph                          11             7          6           9         9      12
+Scarlet-Notes                        3             3          4           3         3       8
+collect                             13            12          2           9         9      37
+commons                             14            11          7          12         5      17
+                                                                                                    Fig. 2. Example of distinct exploration patterns on MyAccount activities from
+openlauncher                         6             2          3           3         4       7       AnkiDroid application between Humanoid and D ROIDAGENT.
+osmeditor4android                    9             5          6          12         8      18
+Total                           133               87         80         107       101     239
+
+
+                                                                                                    application. On average, D ROIDAGENT achieves an activity
+response into a GUI event. The construction of the model                                            coverage of 60.7%, slightly exceeding the best baseline, Hu-
+requires a large amount of labelled data, which we could not                                        manoid, with an average coverage of 51.4%. A Wilcoxon
+replicate in our experimental context. Therefore, we replaced                                       signed rank test indicated that the number of activities cov-
+this component with a function call-based action selector, the                                      ered by D ROIDAGENT was statistically significantly higher
+same we employed in implementing Actor in D ROIDAGENT.                                              than those covered by Humanoid (p < 0.045). For those
+Instead of the GPT-3 model mentioned in the original paper,                                         applications that D ROIDAGENT discovers significantly more
+we used the GPT-3.5 (16K context) model. We refer to this                                           activities than other baselines, the functionalities supported
+reimplemented version as GPTDroid in the rest of the paper.                                         by the applications are relatively intuitive and follow the
+   For each tool, we allocate a two-hour exploration budget.                                        common sense. However, D ROIDAGENT finds it more difficult
+We set up an emulator (Nexus 7, API 25) with 2GB RAM                                                to visit more activities compared to other baselines against
+and a 1GB SDCard. Each tool runs on a 64-bit Ubuntu 20.04                                           some specific AUTs: our analysis shows that these apps either
+machine with an i7-1075H CPU (12 cores) and 32GB memory.                                            have widgets that do not have any textual properties (e.g.,
+   4) Large Language Models: We use GPT-3.5 model with                                              the widgets in Scarlet-Notes consist of only icons or images
+extended 16K context length (gpt-3.5-turbo-0613-16k from                                            without content descriptions), or has a single view containing
+OpenAI) for the action selection model implementing Actor                                           distinct interactable subregions (e.g., Google Map view on
+and Observer of D ROIDAGENT. The summarisation process                                              osmeditor4android).
+of the widget knowledge retriever, as discussed in Sec-                                                Figure 3 depicts the change in activity coverage over time.
+tion III-D2, requires a shorter prompting context, so we                                            We observe the trend on the AnkiDroid app as a representative,
+employ the standard GPT-3.5 model with a 4K context                                                 in which the techniques including D ROIDAGENT show a
+(gpt-3.5-turbo-0613) for this module. For the components                                            similar degree of activity coverage after two hours. Humanoid
+crucial to outcomes, specifically the Planner, Reflector, and                                       shows a relatively higher growth rate in the first 30 minutes
+self-critique module of the Actor agent, we employ the GPT-4                                        compared to others, but it fails to discover more activities
+model (gpt-4-0613).                                                                                 afterwards. Figure 2 illustrates one reason for this difference
+                                                                                                    by showing a different exploration patterns of D ROIDAGENT
+                                         VI. R ESULTS                                               and baselines on the same activity accessed, MyAccount,
+   We present the results of our evaluation in this section.                                        in the AnkiDroid application. This activity can be easily
+                                                                                                    covered by clicking “Synchronization” button on the main app
+A. Testing Effectiveness (RQ1)                                                                      screen, but the actual synchronisation with the server requires
+  Table II displays the number of activities covered by                                             logging into the application first. D ROIDAGENT succeeds to
+D ROIDAGENT compared to other testing techniques for each                                           automatically sign into the application with the given profile,
+                                                    TABLE III                                                                                                                                      Feature Coverage Comparison
+                                                                                                                                                  25
+                                            C RASH D ETECTION R ESULTS                                                                                                                                                                                Humanoid
+
+
+
+
+                                                                                                                          # of Covered Features
+                                                                                                                                                  20                                                                                                  DroidAgent
+ Subjects                               D ROIDAGENT           DroidBot        GPTDroid       Humanoid      Monkey                                 15
+ APhotoManager                                       #                   #            ×              #            #                               10
+ ActivityDiary                                       ×                   ×            ×              ×            ×
+ AnkiDroid                                           ×                   ×            ×              ×            ×                                  5
+ AntennaPod                                          #                   ×            ×              ×            ×                                  0
+ Markor                                              ×                   ×            ×              #            ×                                          AP    AD    AK            AN     MK    MF       ME    ON      OT   PG   SN     CL   CM   OP    OM
+ MaterialFB                                          ×                   ×            ×              ×            #                                                                                               App ID
+ MyExpenses                                          ×                   ×            ×              ×            ×
+ Omni-Notes                                          #                   ×            #              #            #
+ OpenTracks                                          ×                   ×            ×              ×            ×
+ Phonograph                                          #                   #            ×              #            #
+                                                                                                                          Fig. 4. Comparison of the number of covered features by D ROIDAGENT and
+ Scarlet-Notes                                       ×                   ×            ×              ×            ×       Humanoid.
+ collect                                             ×                   ×            ×              ×            ×
+ commons                                             #                   #            ×              ×            ×
+ openlauncher
+ osmeditor4android
+                                                     ×
+                                                     ×
+                                                                         ×
+                                                                         ×
+                                                                                      ×
+                                                                                      ×
+                                                                                                     ×
+                                                                                                     ×
+                                                                                                                  ×
+                                                                                                                  ×
+                                                                                                                                                                                           Number of Generated Tasks / Task Lengths
+                                                                                                                                                     50
+
+
+
+
+                                                                                                                           # of actions # of tasks
+ Total                                                5                  3             1             4                4
+
+                                                                                                                                                         0
+                                         Activity Coverage by Time (App: AnkiDroid)
+                                                                                                         DroidAgent                                  10
+                       0.6                                                                               DroidBot
+                                                                                                         Humanoid                                     5
+
+
+   Activity Coverage
+                                                                                                         GPTDroid
+                       0.4
+                                                                                                                                                              AP    AD       AK            AN MK MF ME ON OT PG SN                          CL CM OP OM
+                       0.2
+
+                                                                                                                          Fig. 5. The number of tasks per application and number of actions per task.
+                       0.0
+                             0   1000     2000       3000         4000       5000     6000    7000
+                                                            Time (s)
+
+                                                                                                                          found during a lengthy yet meaningless GUI exploration. For
+Fig. 3. Activity coverage measured by time for two hours of exploration.                                                  instance, in the “commons” app, the application crashes when
+(Application name: AnkiDroid)
+                                                                                                                          one attempts to upload a picture and then cancels the process
+                                                                                                                          mid-upload. The crash can be presented to a developer along
+and wait for the synchronisation to be completed by selecting                                                             with a task description of image uploading, which we believe
+“Wait” action. On the other hand, Humanoid just triggers                                                                  aids in more effectively reproducing the issue.
+“BACK” action without any interactions on the activity.
+                                                                                                                          B. Usefulness of Generated Testing Scenarios (RQ2)
+   Figure 4 compares the feature coverage between D ROIDA-
+GENT and Humanoid, the best-performing baseline in activity                                                                  We answer RQ2 by assessing the viability and reliability
+coverage. D ROIDAGENT consistently covers a significantly                                                                 of the generated tasks. We first present quantitative results for
+larger number of features than Humanoid (D ROIDAGENT                                                                      number of tasks, viability, and reliability, and then present a
+average: 13.9, Humanoid average: 7.3) across all subjects;                                                                qualitative case study of some generated tasks.
+this holds even where Humanoid has higher activity coverage.                                                                 1) RQ2-1. Task statistics: D ROIDAGENT planned and ex-
+The result suggests that D ROIDAGENT doesn’t just navigate                                                                ecuted on average 36 tasks (standard deviation: 8.8) per
+the activities, but also engages in meaningful interactions to                                                            AUT. Figure 5 shows the distribution of the number of tasks
+encompass the features of the AUTs. A Wilcoxon signed                                                                     generated per each application, and the number of actions
+rank test indicated that the number of features covered by                                                                (i.e., task length) that have been taken to complete each task.
+D ROIDAGENT was statistically significantly higher than those                                                             Although we set 13 as a maximum number of actions per
+covered by Humanoid (p < 0.0008).                                                                                         task, the average task lengths vary across applications (min:
+   Additionally, we report the crashes found by each technique                                                            7.4, max: 11.2, mean: 8.9), as the Actor of D ROIDAGENT can
+in Table III. D ROIDAGENT finds five crashes in total (one                                                                end the task earlier.
+of them had been reported as a past GitHub issue), while
+Humanoid finds four crashes in total (one of them had been                                                                                                                                         Manual Assessment of Tasks
+reported). It’s worth noting that the current goal setting of                                                                                                                         30
+
+                                                                                                                                                                         # of Tasks
+D ROIDAGENT, as outlined in Section III-A3 focuses on the
+efficient exploration by covering core functionalities within a                                                                                                                       20
+fixed time budget.                                                                                                                                                                    10
+   Nevertheless, D ROIDAGENT still shows crash finding capa-                                                                                                                                Total (Unique)        Possible      Completed
+bility on par with other baselines, suggesting its potential as a
+viable GUI testing technique. Further, we argue that the crash                                                                 Fig. 6. Manual assessment result of the generated tasks by D ROIDAGENT.
+(which is exposed as an abrupt closing of the app) observed
+during a specific meaningful task, generated by D ROIDAGENT,                                                                2) RQ2-2. Task reliability: D ROIDAGENT’s Reflector labels
+is more readily understood by developers compared to those                                                                the task result based on whether the task was successfully
+completed or not. To assess this classification of task results,                                                       Activity Coverage Comparison (Ablation)
+                                                                                                    1.0                                                                       DroidAgent
+we have manually checked and labeled the completion status                                                                                                                    NoKnowledge
+
+
+
+                                                                                Activity Coverage
+                                                                                                                                                                              NoKnowledgeAndCritique
+of each task, as well as whether the tasks are viable with                                                                                                                    Actor-only
+                                                                                                    0.5
+the AUT: a task is viable when it follows the supported
+functionality of the app, and completed when the relevant
+functionalities of the apps are utilised by the Actor. Figure 6                                     0.0
+                                                                                                           AnkiDroid    ActivityDiary   collect    commons       Phonograph
+shows that, among all 374 unique tasks generated for 15
+applications, we deemed 85% as viable, and 59% as completed                                               Fig. 8. Average of activity coverage for each ablation setting.
+by D ROIDAGENT. Based on this manual labelling, we report
+that the Reflector achieves a relatively high level of accuracy
+in task result assessment, with precision of 0.72, recall of 0.77,              skipping it). These scripts are either source from the bench-
+and F1 score of 0.74.                                                           mark (Themis) or crafted by the authors (FDroid subjects),
+   3) RQ2-3. Case study: As a case study, we present a                          aiming at simply bypassing the process. Conversely, D ROIDA-
+couple of tasks generated by D ROIDAGENT. By producing                          GENT can autonomously sign into both apps without these
+test sequences in association with “task”, D ROIDAGENT can                      scripts when provided with the relevant account credentials
+create complex multi-task scenarios.                                            in its persona profile, making the sign-in process seamlessly
+                                                                                integrates into its exploration routine. D ROIDAGENT also
+                                                                                exhibits adaptability in handling the app’s “hidden” login
+         Task #30                                                               features, like the redirected login screen encountered during
+                                                                                data synchronisation as previously highlighted (Figure 2).
+Add a new activity named
+“Gym Workout”                                                                   Such scenarios cannot be handled by the login script without
+                                                                                adequate prior knowledge of the app’s features. It’s worth
+                                                                                noting that even with automated login scripts, the login process
+         Task #31
+                                                                                might fail due to issues like temporary server errors during
+Explore the details and
+statistics of the newly
+                                                                                login requests. D ROIDAGENT can address such flakiness by
+added “Gym Workout”
+activity
+                                                                                adaptively retrying the failed action (e.g., re-clicking the login
+                                                                                button), making it more resilient.
+         Task #32                                                               C. Ablation (RQ3)
+Search for a specific
+activity, "Gym Workout",
+                                                                                   Figure 8 compares the activity coverage of each of
+using the search function.                                                      D ROIDAGENT’s ablation settings. We selected a subset of our
+                                                                                subjects with more than ten activities. The “NoKnowledge”
+                                                                                setting refers to the D ROIDAGENT that excludes the use of
+Fig. 7. Example of subsequent tasks consistently reusing generated test data.
+                                                                                knowledge retrievers. While it incorporates D ROIDAGENT’s
+                                                                                Planner and Reflector, the task retriever does not supply task
+Case 1: Reusing created app data: We observe that                               knowledge to the Planner. Furthermore, the GUI state descrip-
+D ROIDAGENT is able to reuse app data created during the                        tions given to the Actor and Planner lack widget knowledge,
+exploration. Figure 7 illustrates two consecutive tasks in                      as the retriever is disabled. Similarly, the “NoKnowledgeAnd-
+the “ActivityDiary” app. D ROIDAGENT tries to search for a                      Critique” setting refers to the D ROIDAGENT that additionally
+specific activity and successfully inputs a valid query, “Gym                   excludes the use of the self-critique module of the Actor agent.
+Workout”, which is an activity name created during a previous                   Finally, the “Actor-only” setting refers to the D ROIDAGENT
+task. Subsequently, D ROIDAGENT verifies that the targeted                      that only utilises the Actor without self-critique module. It
+activity appears on the screen and proceeds to view its details.                operates without registered task, consistently generating GUI
+   Such patterns of reusing previously created internal app                     actions based on the current GUI state and recent actions. Both
+data are commonly observed in our subject applications.                         the presence of knowledge retrievers and self-critique module
+For instance, in the “AnkiDroid” app, tasks like reviewing                      seem to positively enhance D ROIDAGENT’s effectiveness in
+the flashcard and rating the difficulty were conducted after                    exploring the broader parts of the application.
+creating a new flashcard. Compared to D ROIDAGENT, baseline
+techniques often struggle to access functionalities that require                D. Cost (RQ4)
+specific pre-existing app data. For example, they might search                    Having demonstrated D ROIDAGENT’s ability to effectively
+for an internal item using a query that is irrelevant and does                  explore app screens, a vital question arises: what is the cost
+not yield any search results.                                                   of running the agent for app exploration and testing? We
+Case 2: Login Automation: Two of our subjects (commons,                         measured the total number of tokens contained in the prompt
+MaterialFB) require login steps at startup to access main                       and the generated output both for GPT-3.5 and GPT-4 models,
+functionalities. For baseline techniques, as done in prior                      as shown in Figure 9. The number of tokens for the prompt
+research, we use login scripts (or setup scripts for simply                     depend on the complexity of GUI layout of each application.
+                                    Number of Tokens for Model Input/Output              but later it successfully works around the issue by using a
+   gpt-3.5-prompt-tokens                                                                 shorter email address.
+     gpt-4-prompt-tokens
+gpt-3.5-completion-tokens
+                                                                                         B. Testing external use of an mobile application
+ gpt-4-completion_tokens
+                                                5                             6
+                                           10                            10                 A mobile application is not always used in isolation. In
+                                                    Number of Tokens
+                                                                                         fact, it is both possible to temporarily navigate out of the
+                                                                                         app under test and return to the app (e.g., selecting a picture
+Fig. 9. Number of tokens for GPT-3.5/GPT-4 model input/output (log scale).               from the gallery app, share an app data via email), and start
+                                                                                         the app from the external app (e.g., opening a link from a
+                                                                                         browser). In the former case (temporary navigation to the
+                                                                                         external app), to avoid accidentally being out of the app
+                                                                                         too long, D ROIDAGENT currently imposes a fixed interaction
+                                                                                         limit on external apps and returns to the target app automat-
+                                                                                         ically. However, we observe some cases that D ROIDAGENT
+                                                                                         prematurely terminated essential interactions in the external
+                                                                                         app due to this limit. Additionally, some activities among
+   Task 1: Create a new              Task 2: Create a second user                        the subject apps were exclusively triggered by external apps,
+   account in the Chat App           account on the Chat App                             such as the WidgetConfiguration activity, which is only
+                                                                                         accessed by an app launcher. By design, D ROIDAGENT is not
+                                                                                         limited to the target app. Broadening D ROIDAGENT’s scope
+                                                                                         to test functionalities of AUT across multiple apps presents a
+                                                                                         promising avenue for future exploration.
+
+                                                                                                         VIII. T HREATS TO VALIDITY
+
+                                                                                         Internal Validity. Our study might be affected by the inher-
+     Task 3: Initiate a chat with          Adaptation: Fix             Feedback: Email
+     the second account created            email address               length limit      ent randomness associated with LLMs. Given the monetary
+                                                                                         constraints linked to API requests, we could not conduct mul-
+Fig. 10. Example of testing scenarios by D ROIDAGENT for creating multiple               tiple runs, potentially leaving biases. Additionally, one of the
+accounts in a simple chat app.                                                           baselines, our version of GPTDroid, includes modifications to
+                                                                                         some of its components. In our implementation, we observed
+                                                                                         that the LLM context limit was reached post ten actions,
+Accordingly, the present-time cost for running D ROIDAGENT
+                                                                                         forcing a reset of the preceding conversation prompt, an issue
+on a single application with a two-hour budget ranges between
+                                                                                         not tackled in the original paper.
+$13 to $22, summing up the cost from both the GPT-3.5 and
+GPT-4 models, averaging $18.1. Given the trend of decreasing                             External Validity. Our study utilised a relatively limited set
+cost per token charged by OpenAI, as well as the rapid                                   of benchmarks as well as underlying LLMs, and therefore
+advancements of open source LLMs, we expect the cost of                                  may not generalise. We tried to use an existing benchmark
+running D ROIDAGENT to be reduced and affordable.                                        of Android apps, Themis [14]. Further studies of more apps
+                                                                                         and other open source LLMs are needed to address this threat.
+                             VII. D ISCUSSION
+  This section decribes a couple of observed behaviour of                                                      IX. C ONCLUSION
+D ROIDAGENT that warrants some discussion and future work.
+                                                                                            We present D ROIDAGENT, an autonomous testing agent for
+A. Testing social applications                                                           Android GUI testing. Unlike existing automated GUI testing
+   So far, testing of social applications that would require                             tools for Android, D ROIDAGENT sets its own meaningful tasks
+multiple accounts has been considered out of scope for the                               according to the functionalities of the app under test, and
+existing exploration techniques. We demonstrate the potential                            subsequently seeks to achieve them. Our empirical evaluation
+of applying D ROIDAGENT on testing multi-user interactions                               of D ROIDAGENT against four baselines shows that D ROIDA-
+in Figure 10, which contains testing scenarios generated by                              GENT is capable of exploring more Android activities on
+D ROIDAGENT with a custom goal of “testing multiple user                                 average, despite doing so while trying to achieve meaningful
+interactions”. The first account created follows the persona                             app specific tasks. D ROIDAGENT also exhibits some novel
+profile, and the credentials for the second account is newly                             behaviour, such as reusing data it created earlier for later
+synthesised as a variation of the persona profile. Moreover,                             interactions with the app, or creating multiple accounts to test
+while creating the second account, D ROIDAGENT encounters a                              the app. We believe autonomous agents can make significant
+truncated email address due to the length limit of the textfield,                        contributions to automation of GUI testing.
+                               R EFERENCES                                         [15] “Ui/application exerciser monkey,” https://developer.android.com/studio/
+                                                                                        test/other-testing-tools/monkey.
+ [1] Y. Li, Z. Yang, Y. Guo, and X. Chen, “Humanoid: A deep learning-
+                                                                                   [16] “Introduction to activities,” https://developer.android.com/guide/
+     based approach to automated black-box android app testing,” in 2019
+                                                                                        components/activities/intro-activities.
+     34th IEEE/ACM International Conference on Automated Software En-
+                                                                                   [17] “Espresso: Android gui testing framework,” https://developer.android.
+     gineering (ASE). IEEE, 2019, pp. 1070–1073.
+                                                                                        com/training/testing/espresso.
+ [2] T. Su, G. Meng, Y. Chen, K. Wu, W. Yang, Y. Yao, G. Pu, Y. Liu, and
+                                                                                   [18] Y. Zhao, T. Yu, T. Su, Y. Liu, W. Zheng, J. Zhang, and W. G. Halfond,
+     Z. Su, “Guided, stochastic model-based gui testing of android apps,” in
+                                                                                        “Recdroid: automatically reproducing android application crashes from
+     Proceedings of the 2017 11th Joint Meeting on Foundations of Software
+                                                                                        bug reports,” in 2019 IEEE/ACM 41st International Conference on
+     Engineering, 2017, pp. 245–256.
+                                                                                        Software Engineering (ICSE). IEEE, 2019, pp. 128–139.
+ [3] K. Mao, M. Harman, and Y. Jia, “Sapienz: Multi-objective automated
+                                                                                   [19] T. Gu, C. Sun, X. Ma, C. Cao, C. Xu, Y. Yao, Q. Zhang, J. Lu, and
+     testing for android applications,” in Proceedings of the 25th international
+                                                                                        Z. Su, “Practical gui testing of android applications via model abstraction
+     symposium on software testing and analysis, 2016, pp. 94–105.
+                                                                                        and refinement,” in 2019 IEEE/ACM 41st International Conference on
+ [4] Y. Li, Z. Yang, Y. Guo, and X. Chen, “Droidbot: a lightweight ui-guided
+                                                                                        Software Engineering (ICSE). IEEE, 2019, pp. 269–280.
+     test input generator for android,” in 2017 IEEE/ACM 39th International
+                                                                                   [20] P. Liu, X. Zhang, M. Pistoia, Y. Zheng, M. Marques, and L. Zeng,
+     Conference on Software Engineering Companion (ICSE-C).               IEEE,
+                                                                                        “Automatic text input generation for mobile testing,” in 2017 IEEE/ACM
+     2017, pp. 23–26.
+                                                                                        39th International Conference on Software Engineering (ICSE). IEEE,
+ [5] Y. Zheng, Y. Liu, X. Xie, Y. Liu, L. Ma, J. Hao, and Y. Liu, “Automatic
+                                                                                        2017, pp. 643–653.
+     web testing using curiosity-driven reinforcement learning,” in 2021
+                                                                                   [21] S. Feng and C. Chen, “Prompting is all your need: Automated
+     IEEE/ACM 43rd International Conference on Software Engineering
+                                                                                        android bug replay with large language models,” arXiv preprint
+     (ICSE). IEEE, 2021, pp. 423–435.
+                                                                                        arXiv:2306.01987, 2023.
+ [6] M. Pan, A. Huang, G. Wang, T. Zhang, and X. Li, “Reinforcement
+                                                                                   [22] M. Nass, E. Alegroth, and R. Feldt, “Improving web element localization
+     learning based curiosity-driven testing of android applications,” in
+                                                                                        by using a large language model,” arXiv preprint arXiv:2310.02046,
+     Proceedings of the 29th ACM SIGSOFT International Symposium on
+                                                                                        2023.
+     Software Testing and Analysis, 2020, pp. 153–164.                             [23] C. Lemieux, J. P. Inala, S. K. Lahiri, and S. Sen, “Codamosa: Escaping
+ [7] Y. Zhao, B. Harrison, and T. Yu, “Dinodroid: Testing android apps using            coverage plateaus in test generation with pre-trained large language
+     deep q-networks,” arXiv preprint arXiv:2210.06307, 2022.                           models,” in International conference on software engineering (ICSE),
+ [8] M. Linares-Vásquez, C. Bernal-Cárdenas, K. Moran, and D. Poshy-                  2023.
+     vanyk, “How do developers test android applications?” in 2017 IEEE            [24] P. Brie, N. Burny, A. Sluÿters, and J. Vanderdonckt, “Evaluating a large
+     International Conference on Software Maintenance and Evolution (IC-                language model on searching for gui layouts,” Proceedings of the ACM
+     SME). IEEE, 2017, pp. 613–622.                                                     on Human-Computer Interaction, vol. 7, no. EICS, pp. 1–37, 2023.
+ [9] Z. Liu, C. Chen, J. Wang, X. Che, Y. Huang, J. Hu, and Q. Wang,               [25] S. Kang, J. Yoon, and S. Yoo, “Large language models are few-
+     “Fill in the blank: Context-aware automated text input generation for              shot testers: Exploring llm-based general bug reproduction,” in 2023
+     mobile gui testing,” in 2023 IEEE/ACM 45th International Conference                IEEE/ACM 45th International Conference on Software Engineering
+     on Software Engineering (ICSE). IEEE, 2023, pp. 1355–1367.                         (ICSE). IEEE, 2023, pp. 2312–2323.
+[10] H. Wen, H. Wang, J. Liu, and Y. Li, “Droidbot-gpt: Gpt-powered ui             [26] “Langchain: a framework for developing applications powered by lan-
+     automation for android,” arXiv preprint arXiv:2304.07061, 2023.                    guage models,” https://www.langchain.com.
+[11] Z. Liu, C. Chen, J. Wang, M. Chen, B. Wu, X. Che, D. Wang,                    [27] “Autogpt: An autonomous GPT-4 experiment,” https://github.com/
+     and Q. Wang, “Chatting with gpt-3 for zero-shot human-like mobile                  Significant-Gravitas/Auto-GPT, 2023.
+     automated gui testing,” arXiv preprint arXiv:2305.09434, 2023.                [28] “Chroma,” https://docs.trychroma.com/.
+[12] J. S. Park, J. C. O’Brien, C. J. Cai, M. R. Morris, P. Liang, and M. S.       [29] J. E. Laird, The Soar cognitive architecture. MIT press, 2019.
+     Bernstein, “Generative agents: Interactive simulacra of human behavior,”      [30] G. Wang, Y. Xie, Y. Jiang, A. Mandlekar, C. Xiao, Y. Zhu, L. Fan, and
+     arXiv preprint arXiv:2304.03442, 2023.                                             A. Anandkumar, “Voyager: An open-ended embodied agent with large
+[13] R. Feldt, S. Kang, J. Yoon, and S. Yoo, “Towards autonomous test-                  language models,” arXiv preprint arXiv:2305.16291, 2023.
+     ing agents via conversational large language models,” arXiv preprint          [31] “Fdroid: Free and open source android app repository,” https://f-droid.
+     arXiv:2306.05152, 2023.                                                            org/en/.
+[14] T. Su, J. Wang, and Z. Su, “Benchmarking automated gui testing for            [32] R. Coppola and E. Alégroth, “A taxonomy of metrics for gui-based test-
+     android against real-world bugs,” in Proceedings of the 29th ACM Joint             ing research: A systematic literature review,” Information and Software
+     Meeting on European Software Engineering Conference and Symposium                  Technology, p. 107062, 2022.
+     on the Foundations of Software Engineering, 2021, pp. 119–130.
+

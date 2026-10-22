@@ -1,0 +1,893 @@
+__HTTP 200__
+                                               LLM-Explorer: Towards Efficient and Affordable
+                                                  LLM-based Exploration for Mobile Apps
+                                                                  Shanhui Zhao1,† , Hao Wen1,† , Wenjie Du1,2 , Cheng Liang1,3 ,
+                                                                  Yunxin Liu1,5 , Xiaozhou Ye4 , Ye Ouyang4 , Yuanchun Li1,5,6,‡
+                                                 1 Institute for AI Industry Research (AIR), Tsinghua University 2 Hong Kong University of Science and
+
+                                                Technology 3 Beijing University of Posts and Telecommunications 4 AsiaInfo Technologies (China), Inc
+                                                   5 Shanghai Artificial Intelligence Laboratory 6 Beijing Academy of Artificial Intelligence (BAAI)
+
+
+
+
+arXiv:2505.10593v1 [cs.SE] 15 May 2025
+                                         ABSTRACT                                                                          KEYWORDS
+                                         Large language models (LLMs) have opened new opportuni-                           Mobile App Exploration, Large Language Models, Software
+                                         ties for automated mobile app exploration, an important and                       Testing, LLM-based Agent
+                                         challenging problem that used to suffer from the difficulty
+                                                                                                                           ACM Reference Format:
+                                         of generating meaningful UI interactions. However, existing                       Shanhui Zhao1,† , Hao Wen1,† , Wenjie Du1,2 , Cheng Liang1,3 ,, Yunxin
+                                         LLM-based exploration approaches rely heavily on LLMs to                          Liu1,5 , Xiaozhou Ye4 , Ye Ouyang4 , Yuanchun Li1,5,6,‡ . 2025. LLM-
+                                         generate actions in almost every step, leading to a huge cost of                  Explorer: Towards Efficient and Affordable LLM-based Exploration
+                                         token fees and computational resources. We argue that such                        for Mobile Apps. In The 31st Annual International Conference on
+                                         extensive usage of LLMs is neither necessary nor effective,                       Mobile Computing and Networking (ACM MobiCom ’25), November
+                                         since many actions during exploration do not require, or may                      3–7, 2025, Hong Kong, China. ACM, New York, NY, USA, 15 pages.
+                                         even be biased by the abilities of LLMs. Further, based on the                    https://doi.org/10.1145/3680207.3723494
+                                         insight that a precise and compact knowledge plays the central
+                                         role for effective exploration, we introduce LLM-Explorer, a                      1    INTRODUCTION
+                                         new exploration agent designed for efficiency and affordabil-
+                                                                                                                           Automated mobile app exploration is a long-standing research
+                                         ity. LLM-Explorer uses LLMs primarily for maintaining the
+                                                                                                                           problem, with lots of important applications including app
+                                         knowledge instead of generating actions, and knowledge is
+                                                                                                                           testing [7, 9, 16–19, 22, 23], malware detection [1, 3, 4, 32],
+                                         used to guide action generation in a LLM-less manner. Based
+                                                                                                                           and in-app data crawling [10, 11, 14]. The performance of mo-
+                                         on a comparison with 5 strong baselines on 20 typical apps,
+                                                                                                                           bile app exploration is usually measured by coverage, i.e. the
+                                         LLM-Explorer was able to achieve the fastest and highest
+                                                                                                                           number of activities or lines of code reached in a limited
+                                         coverage among all automated app explorers, with over 148x
+                                                                                                                           period of time. Higher activity coverage correlates with bet-
+                                         lower cost than the state-of-the-art LLM-based approach.
+                                                                                                                           ter overall system performance. Several existing approaches,
+                                                                                                                           including Humanoid [17], GPTDroid [21], and DroidAgent
+                                         CCS CONCEPTS
+                                                                                                                           [39], have adopted this metric to evaluate their effectiveness.
+                                         • Human-centered computing → Ubiquitous and mobile                                Recently, emerging intelligent smartphone agents [13, 15, 34]
+                                         computing; • Computing methodologies → Artificial intel-                          also rely on exploration to collect necessary knowledge for
+                                         ligence.                                                                          task automation. Since the main interface of mobile apps is
+                                         † Co-primary authors.                                                             the graphical user interface (GUI or UI for short), the explo-
+                                         ‡ Corresponding author: Yuanchun Li (liyuanchun@air.tsinghua.edu.cn).             ration of mobile apps is also usually grounded by GUI - The
+                                                                                                                           exploration agent navigates between different GUI states of
+                                         Permission to make digital or hard copies of all or part of this work for         an app by sending different GUI actions (touch, scroll, input
+                                         personal or classroom use is granted without fee provided that copies are not
+                                         made or distributed for profit or commercial advantage and that copies bear       text, etc.), just like how human users interact with the app.
+                                         this notice and the full citation on the first page. Copyrights for components       The key question in mobile app exploration is how to gen-
+                                         of this work owned by others than ACM must be honored. Abstracting with           erate the GUI actions that can efficiently discover new func-
+                                         credit is permitted. To copy otherwise, or republish, to post on servers or to    tionalities in the app. The major policies include random
+                                         redistribute to lists, requires prior specific permission and/or a fee. Request   [7, 24, 25] (randomly selecting which UI elements to inter-
+                                         permissions from permissions@acm.org.
+                                         ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China
+                                                                                                                           act with and how), model-based [2, 16, 31, 38] (creating a
+                                         © 2025 Association for Computing Machinery.                                       model or representation of the UI and derive test cases to
+                                         ACM ISBN 979-8-4007-1129-9/25/11. . . $15.00                                      systematically cover different parts of the app functions), and
+                                         https://doi.org/10.1145/3680207.3723494                                           learning-based [12, 17, 37] (leveraging machine learning or
+ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China                                                                    Zhao et al.
+
+
+reinforcement learning techniques to generate test actions).      rather than planning future actions at each step (i.e. being fore-
+Many explorers adopt a mixture of different policies. Despite     sighted). Since LLMs are trained by learning patterns from
+lots of existing attempts, there is still much room of improve-   large datasets, they are usually considered to have only weak
+ment in app exploration. Mobile apps are dynamic, featuring       forms of creativity [8]. On the contrary, an agent can be cre-
+a wide variety of user interfaces with diverse combinations       ative during exploration if it compares the candidate actions
+of UI elements, and unique UI actions leading to different        (and action combinations) against a high-quality knowledge.
+states. This complexity makes comprehensive exploration           Maintaining the knowledge is mainly about information sum-
+challenging, emphasizing the need for strategic testing meth-     marization, where LLMs can be more helpful.
+ods [19, 28, 30, 40]. Therefore, we aim to efficiently cover         Based on the insight, LLM-Explorer handles the auto-
+as much app functionality as possible without needing to          matic app exploration process with two main modules: LLM-
+explore every single UI state, which might be infinite. Achiev-   assisted Knowledge Maintenance and Knowledge-guided Ex-
+ing higher and faster coverage requires a deep understanding      ploration. The LLM-assisted Knowledge Maintenance mod-
+of the apps’ functionalities and historical traces, which is      ule is responsible for recording and categorizing reached UIs
+difficult for most existing exploration agents.                   to prevent repetitive explorations or loops. This is crucial as
+   Recently, pretrained foundation models, represented by         variations in UI states or actions can make it challenging, even
+large language models (LLMs), have demonstrated remark-           for LLMs. To address this, we introduce an app knowledge
+able performance in language understanding, reasoning, and        that contains abstract representations of UI states, elements
+generation. Which makes it possible for LLM-based agents to       and actions, as well as abstract interaction graphs to track
+understand and execute tasks in a human-like fashion. Since       transitions between UI states. The Knowledge-guided Explo-
+the app GUI can also be represented by natural language text      ration module then selects the next UI action to execute based
+and images, the LLM-based agents can potentially better un-       on the maintained knowledge, with LLMs being occasionally
+derstand the functionalities of apps and therefore improve        invoked to tackle particularly complex UI actions (e.g. text in-
+the exploration performance. Such an idea has already been        put). This approach aims to enhance exploration efficiency by
+studied in prior work [30]. For example, GPTDroid [21] in-        reducing unnecessary LLM queries and focusing on strategic
+troduces a method to generate testing actions by directly pass-   knowledge management and interaction planning.
+ing the current GUI information and historic trace to LLMs.          We evaluate the effectiveness of our LLM-Explorer ap-
+DroidAgent [39] uses multiple autonomous agents for gen-          proach on 20 apps, in comparison with strong baselines includ-
+erating unexplored tasks, observing the interface, generating     ing DroidAgent, GPTDroid, Humanoid, Droidbot, and Mon-
+actions, and judging and reflecting on task completion. These     key. We also included the human exploration performance for
+approaches have demonstrated the ability of LLM to generate       reference. The results have demonstrated that LLM-Explorer
+more meaningful GUI actions.                                      can achieve 4%-35% higher activity coverage than the base-
+   However, existing LLM-based exploration approaches have        lines within a fixed time, matching human-level exploration
+led to two important issues, limited efficiency and huge cost.    efficiency on some apps. Compared with other LLM-based
+The two issues originate from one cause - the excessive de-       exploration approaches (DroidAgent and GPTDroid), LLM-
+pendence on LLMs. Existing approaches extensively query           Explorer can reduce the LLM cost by 9x-148x times.
+the LLMs to generate or plan steps, which is slow and costly         Our work makes the following technical contributions:
+(e.g. generating a GUI action typically consumes around 500
+                                                                    (1) We study the LLM-based mobile app exploration with
+tokens and 3 seconds, and exploring an app usually takes thou-
+                                                                        specific consideration on affordability, which can po-
+sands of steps). Actually, most steps during exploration do
+                                                                        tentially benefit cost-sensitive individual mobile app
+not demand much LLM-based reasoning and planning, which
+                                                                        developers and market-scale app analyzers.
+is analogous to human exploration of unknown places that is
+                                                                    (2) We propose a new abstraction of an app’s exploration
+aimless at most times. Moreover, asking LLMs to generate
+                                                                        knowledge, which is maintained by LLMs and can
+each action may bias the exploration process against unusual
+                                                                        guide efficient future exploration. We believe this ab-
+use cases, which are also important for exploration.
+                                                                        straction is also useful for a broader scope of app anal-
+   To address the above problems, we propose to combine the
+                                                                        ysis.
+ability of LLMs and careful interaction knowledge modeling
+                                                                    (3) Through a comprehensive evaluation, we demonstrate
+in mobile app exploration. Our key insight is that the corner-
+                                                                        the effectiveness of our approach over strong baselines
+stone of efficient exploration is the knowledge maintenance
+                                                                        and the potential to advance the field of mobile app
+and utilization, instead of the action generation and planning
+                                                                        exploration.
+abilities. Specifically, similar to human or robots exploring
+a new environment, the key to efficient app exploration is          Our code is open-sourced at https://github.com/MobileLLM/
+reducing repetitive meaningless actions (i.e. being creative),    LLM-Explorer.
+LLM-Explorer                                                             ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China
+
+
+2 BACKGROUND AND MOTIVATION                                       preferences. For example, a contact list’s UI may constantly
+2.1 Mobile App Exploration                                        evolve due to additions or modifications to the contacts, cre-
+                                                                  ating potentially infinite states. This variability can trap auto-
+App exploration is also called app traversal, crawling, or        matic explorers in endless loops if they fail to recognize these
+fuzzing based on different usage scenarios [14, 16, 40]. The      changes as the same state.
+goal of automated mobile app exploration is to traverse the          2) Large action space. Some apps include a large number
+functions of an app by automatically interacting with it. Since   of interactive UI elements, a lot of which are similar or repet-
+the main interface of mobile apps is GUI, the output of app       itive, (e.g. time selectors, date pickers, checkbox list). This
+exploration is usually a sequence of GUI actions, including       complexity makes comprehensive app exploration difficult,
+touching, scrolling, typing text, etc. Based on different pur-    necessitating strategic testing plans to manage the extensive
+poses of app exploration, the output of exploration may also      variety of options effectively.
+include the comprehensive report detailing the discovered            3) Non-deterministic behaviors. Mobile apps may ex-
+bugs or issues, the performance metrics of the app, the data      hibit unpredictable behaviors due to various factors, such as
+crawled from the app, or the screenshots or videos recording      network latency, server-side processing, or interactions with
+the exploration process. More efficient and sufficient explo-     other apps and services. These inconsistencies can make it
+ration usually leads to better performance in downstream          challenging to navigate to specific UI states, hindering the
+applications, such as more bugs detected (for app testing),       explorer’s ability to conduct thorough explorations.
+more precise malware classification (for malware detection),
+and more accurate task automation (for task automation).
+   The major performance metric of app exploration is the         2.3    AI and LLM for Mobile App Exploration
+coverage. Unlike software testing approaches whose perfor-        The aforementioned difficulties are mainly due to the lack of
+mance is usually measured with code coverage (i.e. number of      semantic understanding of GUI interactions, where AI tech-
+reached source code lines), mobile app explorers usually deal     niques, especially LLMs can be helpful. Machine learning
+with apps without source code available. The fundamental          models have the potential to enhance UI exploration effi-
+building block of an Android application is called activity,      ciency by detecting dynamic UI changes and reducing repet-
+which represents a function component that provides a UI          itive actions. They excel in understanding UI component
+screen for users to interact with. For instance, an email app     dependencies and relationships, enabling them to generate
+has different activities for different functions including the    context-based test cases [10, 29].
+inbox, reading email, editing email, and settings. Therefore,        However, most existing AI-based exploration methods, in-
+measuring the effectiveness of an automated app explorer is       cluding deep learning [17, 36] and reinforcement learning
+often based on the activity coverage, i.e. how many unique        approaches [26, 27, 35], depend heavily on extensive training
+activities can be reached within a fixed time.                    data and struggle with application generalization [6, 17]. De-
+   Besides, implementing a mobile app explorer involves sev-      spite various innovations, these methods often fall short of the
+eral key concepts about the GUI: 1) UI state refers to the        human ability to quickly identify interactive elements, some-
+current state of the mobile app visible through the user inter-   times causing inefficiency or endless loops. LLMs, with their
+face, which can interact with a user or an automatic explorer.    extensive pretraining on large-scale data and alignment with
+2) UI element is a visual component that users can interact       human preferences, present remarkable semantic understand-
+with in a UI screen, including buttons, checkboxes, input         ing and zero-shot generalization ability for unseen apps and
+boxes, etc. 3) UI action encompasses the interactions (such       pages. This makes using LLMs a promising solution for mim-
+as clicks, text inputs, swipes) performed by users or automatic   icking human users’ capabilities in app exploration [21, 39].
+explorer to on UI elements to navigate or manipulate the app’s       Nevertheless, applying LLMs to mobile app exploration
+functionality. The job of an explorer is to send appropriate UI   still presents several challenges. First, utilizing LLMs, whether
+actions to navigate between different UI states.                  deployed on the cloud or locally, incurs high inference costs.
+                                                                  Accessing LLMs often involves considerable delays and ex-
+2.2    Difficulties of App Exploration                            penses. Given that thoroughly exploring an app with high
+Despite the numerous efforts in automatic app exploration, it     activity coverage typically needs numerous steps to explore
+faces fundamental challenges that hinder its further improve-     an app (1,000+ steps at least), querying LLMs at each step
+ment. Existing app explorers can hardly match the efficiency      leads to significant latency and costs. Second, LLMs could
+and effectiveness of human users in traversing the app func-      fall short in the creative thinking required for comprehensive
+tions. The main difficulties include:                             app testing. They may tend to consistently select the main
+   1) Dynamic UI states. Many apps can dynamically change         functions of the app based on its common sense while over-
+content and layouts based on user data, interactions, or even     looking less apparent features [8]. This oversight can restrict
+ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China                                                                          Zhao et al.
+
+
+the exploration of all app activities and hinder the discovery     the UI element in the state, and the UI action type (touch,
+of critical issues.                                                scroll, etc.). To properly compress the knowledge, we in-
+                                                                   troduce abstract UI states, elements, actions, and interaction
+3 OUR APPROACH: LLM-EXPLORER                                       graph in LLM-Explorer.
+                                                                      An abstract UI state, symbolized as 𝑠𝑖𝑎𝑏𝑠 , represents a group
+3.1 Overview
+                                                                   of UI states 𝑠𝑖(1) , 𝑠𝑖(2) , ..., 𝑠𝑖( 𝑗 ) encountered during exploration
+We propose LLM-Explorer, an automated mobile applica-              that serve the same set of functions within an app. The actual
+tion exploration system powered by LLMs to address the             states of an abstract state may differ visually with differ-
+aforementioned challenges. The main idea of LLM-Explorer           ent content (e.g. two Contacts screens with different contact
+is to maintain a high-quality app knowledge to guide the           names), but they are expected to share similar use cases.
+exploration process. As shown in Figure 1, LLM-Explorer               Abstract UI actions group together similar user interactions,
+comprises two main modules: the LLM-assisted Knowledge             often invoking the same function or API call but with differ-
+Maintenance module and the Knowledge-guided Exploration            ent parameters. This method identifies repetitive components
+module.                                                            within an application (such as dates or contact names) that
+   The LLM-assisted Knowledge Maintenance module uti-              usually result in the same abstract UI state upon interaction.
+lizes LLMs to simplify the raw data of the exploration process,    By categorizing these interactions under a single abstract ac-
+forming abstract app knowledge. It merges states and actions       tion, it simplifies the action space and avoids potential infinite
+with similar functions into abstract states and actions, creat-    loops. An abstract UI action is defined by four key compo-
+ing an Abstract Interaction Graph for smooth and efficient         nents: Action Type, Actual Element, Exploration Flag, and
+app navigation. The Knowledge-guided Exploration module            Function: 1) Action Type includes the four most common
+utilizes the insights stored in the app knowledge, strategi-       interactions: touch, long touch, scroll, and input. 2) Actual
+cally choosing UI actions and devising test plans with context     Element refers to specific UI elements involved in the action.
+awareness. If the chosen action is not executable in the current   These can either be a collection of elements within a single
+UI state, LLM-Explorer navigates to the corresponding UI           UI state that share similar functions or elements that are po-
+states using the Abstract Interaction Graph for guidance.          sitioned identically across multiple actual states within an
+                                                                   abstract state. 3) Exploration Flag indicates the exploration
+3.2    LLM-assisted Knowledge Maintenance                          status of an action with three possible values: unexplored (not
+The input of the LLM-assisted Knowledge Maintenance mod-           yet executed), explored (has been executed by the exploration
+ule is a raw UI exploration trace, including a list of UI test     module), and ineffective (found to be non-functional or lead-
+steps featuring UI states, elements, and actions. The module       ing to no UI changes). 4) Function denotes the functionality
+maintains a high-quality app knowledge composed of abstract        of the group of actual elements summarized by LLM.
+UI states, elements, actions, and an Abstract Interaction Graph       The Abstract Interaction Graph (AIG) is a directed graph,
+(AIG). Prior approaches [16, 17] also maintain a UI transition     whose nodes represent abstract UI states, and edges corre-
+graph composed of raw states and actions, while we try to          spond to abstract UI actions. The source of the edge (abstract
+compress the knowledge components based on their seman-            action) is the abstract UI state it is performed on, and the tar-
+tic meanings. The idea is simple yet effective as it imitates      get is the resulting UI state after the action is performed. This
+how human users memorize concepts and reduce repetitive            model offers a more concise representation compared to the
+behaviors.                                                         conventional UI Transition Graph (UTG) [10, 16]. By omit-
+   There are two problems to solve for maintaining the app         ting redundant actions and consolidating dynamic UI states,
+knowledge: (i) Identifying UI states is crucial as seemingly       the AIG enables a more efficient navigation of UI states.
+identical UIs may represent different states, while dynam-
+ically changing UIs might belong to the same state. This           3.2.2 Knowledge Update. LLM-Explorer updates the app
+distinction prevents excessive growth of app knowledge and         knowledge after each exploration step. Each exploration step
+aids in choosing efficient navigation paths. (ii) Reducing the     produces a tuple, representing the starting UI state (𝑠 ′ ), the
+UI action space is necessary because UIs can have many sim-        UI action taken (𝑎 ′ ), and the ensuing UI state (𝑠).
+ilar components, such as a calendar app’s date elements for a         Firstly, the abstract states are updated by matching the new
+month. Documenting every UI action increases redundancy            UI state with existing states. We attempted two methods to
+and complicates the exploration module.                            match the abstract UI states: the rule-based method and the
+                                                                   LLM-based method. The rule-based method capitalizes on the
+3.2.1 Knowledge Organization. LLM-Explorer builds up               insight that UIs with similar functions, such as 𝑠𝑖(𝑚) and 𝑠𝑖(𝑛) ,
+the exploration knowledge by summarizing the raw interac-          often share comparable element structures. The differences lie
+tion trace. Each step of the raw trace includes the UI state,      in some dynamic UI element properties such as text content,
+LLM-Explorer                                                                 ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China
+
+
+
+
+                                            Figure 1: The workflow of LLM-Explorer.
+
+selection status, scrolling positions, etc. Specifically, after          Thirdly, LLM-Explorer updates the Abstract Interaction
+excluding these dynamic properties, if two states 𝑠𝑖(𝑚) and           Graph 𝐺. If the abstract UI state 𝑠 𝑎𝑏𝑠 of the current state is
+𝑠𝑖(𝑛) have the same set of elements, we combine them into a           newly created, LLM-Explorer creates a new node for the cur-
+singular abstract UI state 𝑠𝑖𝑎𝑏𝑠 . On the other hand, the LLM-        rent 𝑠 𝑎𝑏𝑠 in 𝐺. Subsequently, LLM-Explorer checks whether
+                                                                                                                        ′
+based method queries LLMs to determine if two UI states are           there is a directed edge from the abstract state 𝑠 𝑎𝑏𝑠 of the last
+functionally equivalent. It is based on the former researches         state to 𝑠 𝑎𝑏𝑠 in 𝐺 with the attribute of the executed action. If
+that prove LLMs to be effective for summarizing UI functions          such an edge does not exist, it is added to the graph.
+and answering UI-related questions [29, 34]. We found that               The whole process is depicted in Algorithm 1.
+using the rule-based method is more effective for merging the
+abstract states. If the new UI state 𝑠 does not belong to either      3.3    Knowledge-guided Exploration Policy
+of the abstract UI state in the app knowledge, LLM-Explorer           3.3.1 Policy Overview. Algorithm 2 illustrates the explo-
+recognizes it as a new abstract UI state 𝑠𝑖𝑎𝑏𝑠 and adds it to the     ration process. At the beginning, LLM-Explorer analyzes the
+app knowledge.                                                        current UI state and initializes the app’s knowledge with it.
+    Secondly, LLM-Explorer updates the set of abstract UI             It then enters a loop where it continuously executes actions,
+actions. When encountering a new abstract UI state, LLM-              and updates the knowledge. This process continues until all
+Explorer aggregates possible UI actions that could be per-            abstract actions in the app’s knowledge have been explored,
+formed upon it into abstract UI actions {𝑎𝑎𝑏𝑠       𝑎𝑏𝑠
+                                               1 , 𝑎 2 ...}, facil-
+                                                                      marking the end of the exploration.
+itated by querying LLMs. This is effective because LLMs                  At the start of each explore step, the exploration agent
+excel at grouping repetitive UI components into generalized           first chooses an abstract action from the app knowledge to be
+categories, thereby narrowing down the action space signifi-          executed based on the app-wide action selection method. Next,
+cantly. These newly incorporated abstract actions are labeled         the agent verifies if the target element of the chosen action is
+as 𝑢𝑛𝑒𝑥𝑝𝑙𝑜𝑟𝑒𝑑. Meanwhile, for the action 𝑎 that has just been         present in the current UI state of the app. If it is, the action is
+taken, its status is updated based on the UI state it leads to.       executed immediately. If not, LLM-Explorer navigates to the
+The abstract state resulting from this action is compared to the      UI state where the target UI element is located based on the
+preceding state’s abstract state. If the resulting abstract state     fault-tolerant navigation path finder. After executing the UI
+matches the previous one, it indicates that action 𝑎 didn’t           action, LLM-Explorer updates the app knowledge with the
+change the state, and the action is marked as 𝑖𝑛𝑒 𝑓 𝑓 𝑒𝑐𝑡𝑖𝑣𝑒.         new state transition, represented as (𝑠𝑖 , 𝑎𝑖 , 𝑠𝑖+1 ).
+Otherwise, it is marked as 𝑒𝑥𝑝𝑙𝑜𝑟𝑒𝑑.
+                                                                      3.3.2 App-wide Action Selector. LLM-Explorer intro-
+                                                                      duces a novel strategy that focuses on individual UI elements
+ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China                                                                                      Zhao et al.
+
+
+Algorithm 1 Knowledge Update Process of LLM-Explorer.                                across the entire app. This differs significantly from the ex-
+ Input: Existing knowledge 𝐾 (including raw trace 𝐾 .𝑇 , abstract states 𝐾 .𝑆,       isting methods that focus on UI state granularity [16, 17, 21].
+    abstract actions 𝐾 .𝐴, abstract interaction graph 𝐾 .𝐺), last state 𝑠 ′ , last   This strategy stems from the insight that exploring an app
+    action 𝑎 ′ , and new state 𝑠                                                     by its individual UI elements could be more effective than
+ Output: Updated knowledge
+                                                                                     examining through its various UI states. This is because an
+ 1: function U PDATE K NOWLEDGE(𝐾, 𝑠 ′ , 𝑎 ′ , 𝑠):
+ 2:     Add (𝑠 ′ , 𝑎 ′ , 𝑠 ) to the raw trace 𝐾 .𝑇                                   application can potentially generate an infinite combination
+ 3:     Try classify 𝑠 to existing abstract states 𝐾 .𝑆                              of UI states by mixing and matching different elements. How-
+ 4:     if 𝑠 matches existing abstract states 𝐾 .𝑆 then                              ever, the number of distinct UI elements, aside from some
+ 5:          𝑠 𝑎𝑏𝑠 ← matched abstract state of 𝑠 in 𝐾 .𝑆                             minor variations like content descriptions or colors, remains
+ 6:     else
+                                                                                     limited. As a result, the exploring algorithm could reach com-
+ 7:          𝑠 𝑎𝑏𝑠 ← create new abstract state from 𝑠
+ 8:          Add 𝑠 𝑎𝑏𝑠 into 𝐾 .𝑆                                                     pletion once it has examined all the UI elements. This is in
+ 9:     end if                                                                       contrast to UI state granularity methods, which may find them-
+10:     for each new action 𝑎 in state 𝑠 do                       ⊲ LLM assisted     selves in continuous loops when faced with dynamic UI states.
+11:           if 𝑎 doesn’t match existing actions 𝐾 .𝐴 then                          Consequently, at each exploration step, LLM-Explorer selects
+12:                𝑎𝑎𝑏𝑠 ← create new abstract action from 𝑎
+                                                                                     and executes an abstract UI action from the app knowledge,
+13:                𝑎𝑎𝑏𝑠 .𝑒𝑥𝑝𝑙𝑜𝑟𝑎𝑡𝑖𝑜𝑛_𝑓 𝑙𝑎𝑔 ← unexplored
+14:                Add 𝑎𝑎𝑏𝑠 into 𝐾 .𝐴                                                rather than selecting a UI state to investigate.
+15:           end if                                                                     Using its high-quality app knowledge that encompasses all
+16:     end for                                                                      UI actions, LLM-Explorer is able to choose from all the UI
+17:     𝑠 ′ 𝑎𝑏𝑠 ← matched abstract state of 𝑠 ′ in 𝐾 .𝑆                              actions encountered rather than being restricted to the actions
+18:     𝑎 ′ 𝑎𝑏𝑠 ← matched abstract action of 𝑎 ′ in 𝐾 .𝐴
+                                                                                     available in the current UI state. LLM-Explorer starts by go-
+19:     𝑎 ′ 𝑎𝑏𝑠 .𝑒𝑥𝑝𝑙𝑜𝑟𝑎𝑡𝑖𝑜𝑛_𝑓 𝑙𝑎𝑔 ← explored
+20:     if 𝑠 ′ 𝑎𝑏𝑠 = 𝑠 𝑎𝑏𝑠 then                                                      ing through the abstract actions in app knowledge, pulling
+21:           𝑎 ′ 𝑎𝑏𝑠 .𝑒𝑥𝑝𝑙𝑜𝑟𝑎𝑡𝑖𝑜𝑛_𝑓 𝑙𝑎𝑔.𝑎𝑑𝑑 (ineffective)                           out actions available in the current UI state that are labeled as
+22:     end if                                                                       𝑢𝑛𝑒𝑥𝑝𝑙𝑜𝑟𝑒𝑑. This creates a set of UI actions, among which it
+23:     Update graph 𝐾 .𝐺 with transition (𝑠 ′ 𝑎𝑏𝑠 , 𝑎 ′ 𝑎𝑏𝑠 , 𝑠 𝑎𝑏𝑠 )               randomly picks one as the next action to explore. If no unex-
+24:     return Updated knowledge 𝐾
+                                                                                     plored actions are found in the current state, LLM-Explorer
+25: end function
+                                                                                     widens its search to all UI states, gathering all the unexplored
+Algorithm 2 Exploration Policy of LLM-Explorer.                                      elements and action types to form an action pool, from which
+ Input: App under test, the device for testing
+                                                                                     it randomly selects the next action for exploration. Compared
+ Output: Exploration knowledge and log                                               to the LLM agents that select actions only from the current
+ 1: function E XPLORE -M AIN(𝑎𝑝𝑝):                                                   UI state [21, 39], this strategy saves LLM queries because it
+ 2:    𝑠𝑖 ← Observe GUI state of the 𝑎𝑝𝑝                    ⊲ Get initial state      does not query LLM when navigating to a specific UI state.
+ 3:    𝐾 ← 𝑈 𝑝𝑑𝑎𝑡𝑒𝐾𝑛𝑜𝑤𝑙𝑒𝑑𝑔𝑒 ( ∅, 𝑛𝑢𝑙𝑙, 𝑛𝑢𝑙𝑙, 𝑠𝑖 ) ⊲ Initialize knowledge
+ 4:    𝑛𝑎𝑣_𝑠𝑡𝑒𝑝𝑠 ← ∅                            ⊲ Initialize navigation steps        3.3.3 Fault-tolerant Navigating Path Finder. The explo-
+ 5:    while 𝐾 .𝑢𝑛𝑒𝑥𝑝𝑙𝑜𝑟𝑒𝑑_𝑎𝑏𝑠𝑡𝑟𝑎𝑐𝑡 _𝑎𝑐𝑡𝑖𝑜𝑛𝑠 ≠ ∅ do                                  ration agent of LLM-Explorer should possess the capability
+ 6:        if 𝑛𝑎𝑣_𝑠𝑡𝑒𝑝𝑠 ≠ ∅ then                             ⊲ Try navigation        to navigate to a specific UI state, especially when the required
+ 7:            𝑎𝑖 ← pop next action from 𝑛𝑎𝑣_𝑠𝑡𝑒𝑝𝑠
+ 8:        else                                             ⊲ Try exploration
+                                                                                     UI action is not available in the current state. This can be
+ 9:            𝑎𝑖 ← 𝑆𝑒𝑙𝑒𝑐𝑡𝐸𝑥𝑝𝑙𝑜𝑟𝑒𝐴𝑐𝑡𝑖𝑜𝑛 (𝐾, 𝑠𝑖 )                                     achieved by utilizing the abstract UI interaction graph, where
+10:             if 𝑎𝑖 ∉ 𝑠𝑖 .𝑎𝑣𝑎𝑖𝑙𝑎𝑏𝑙𝑒_𝑎𝑐𝑡𝑖𝑜𝑛𝑠 then ⊲ Switch to navigation            the exploration agent can select the shortest path from the
+11:                 𝑛𝑎𝑣_𝑠𝑡𝑒𝑝𝑠 ← 𝐹𝑖𝑛𝑑𝑁 𝑎𝑣𝑖𝑔𝑎𝑡𝑒𝑃𝑎𝑡ℎ (𝐾, 𝑠𝑖 , 𝑎𝑖 )                      current to the target UI state where the UI action is available.
+12:                 𝑎𝑖 ← pop next action from 𝑛𝑎𝑣_𝑠𝑡𝑒𝑝𝑠                              In this graph, edges represent UI actions, allowing for sequen-
+13:             end if
+14:        end if
+                                                                                     tial navigation. Should the shortest path fails, the system will
+15:        if 𝑎𝑖 is a text input action then                                         attempt alternative paths for a limited number of times.
+16:            𝑎𝑖 ← 𝐺𝑒𝑛𝑒𝑟𝑎𝑡𝑒𝐼𝑛𝑝𝑢𝑡𝑇 𝑒𝑥𝑡 (𝑠𝑖 , 𝑎𝑖 )             ⊲ LLM assisted            However, due to unpredictable app behavior, the target
+17:        end if                                                                    abstract UI state might sometimes be unreachable. In these
+18:        Perform action 𝑎𝑖 on the device                                           cases, LLM-Explorer will restart the app and attempt to navi-
+19:        Observe new state 𝑠𝑖+1
+20:        𝐾 ← 𝑈 𝑝𝑑𝑎𝑡𝑒𝐾𝑛𝑜𝑤𝑙𝑒𝑑𝑔𝑒 (𝐾, 𝑠𝑖 , 𝑎𝑖 , 𝑠𝑖+1 )
+                                                                                     gate from the initial state to the target UI state again. If this
+21:        if 𝑎𝑖 is navigation and 𝑠𝑖+1 doesn’t match 𝑛𝑎𝑣_𝑠𝑡𝑒𝑝𝑠 then                 approach also fails, the navigation attempt will be deemed
+22:            𝑛𝑎𝑣_𝑠𝑡𝑒𝑝𝑠 ← 𝑈 𝑝𝑑𝑎𝑡𝑒𝑁 𝑎𝑣𝑖𝑔𝑎𝑡𝑒𝑃𝑎𝑡ℎ (𝐾, 𝑛𝑎𝑣_𝑠𝑡𝑒𝑝𝑠 )                      as failed, and the corresponding action will be removed from
+23:        end if                                                                    the interaction graph so that future navigations can avoid
+24:     end while                                                                    generating infeasible paths.
+25: end function
+                                                                                     3.3.4 Content-aware Input Text Generator. Generating
+                                                                                     human-like input text for text boxes is complex, as it requires
+LLM-Explorer                                                                    ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China
+
+
+understanding how to use the mobile apps. Thus, we rely              Now suppose you are analyzing an app named "Calculator", the current GUI page shows following elements:
+
+                                                                     <button id=0 alt='History' bound_box=552,98,684,230></button>
+on LLMs for this task. LLM-Explorer generates a structured           <button id=1 alt='Unit converter'
+prompt based on the name of the app under test and the current       bound_box=684,98,816,230></button>
+                                                                     <button id=2 alt='Settings'
+                                                                     bound_box=816,98,948,230></button>
+state information, and then queries LLM to obtain the input          <button id=3 alt='About' bound_box=948,98,1080,230></button>
+                                                                     <p id=4 bound_box=0,419,1080,816>0</p>
+text. An example is shown in Figure 3.                               <button id=5 bound_box=22,838,248,1037>%</button>
+                                                                     <button id=6 bound_box=292,838,518,1037>^</button>
+                                                                     ... ...
+
+
+3.4    Detailed Usage of LLM                                         Please think step by step:
+                                                                      Page description: short (less than 20 words) description of the
+                                                                     function of current page
+In this section, we further clarify the usage of LLM in our           Elements description: short (less than 20 words) summary of
+                                                                     main control elements in current page, comma separated
+approach and analyze the cost. LLM-Explorer involves LLMs             Same-function elements: groups of element ids, each group
+                                                                     contains multiple elements that lead to the same function or
+in two parts, including knowledge organization and text input        share common characteristics, comma separated. The elements
+                                                                     with different layouts and redirect targets are less likely to have
+generation.                                                          the same function.
+                                                                     <example>
+   Using LLM for Knowledge Organization. The LLM
+is firstly utilized to categorize a group of similar UI actions,     You should respond in the following format:
+                                                                     {
+grouping them into an abstract UI action for app knowledge             "Page description": "",
+                                                                       "Element description": "",
+management, as detailed in Section 3.2.2. The structure of the       }
+                                                                       “Same-function elements": [{"elements": [], "function": ""}]
+
+prompt is illustrated in Figure 2, which is composed of four
+                                                                     Response:
+modules. It begins with an introduction including the testing        {
+                                                                         "Page description": "Basic calculator functions",
+app name and an explanation of the purpose of the prompt.                "Element description": "History, Unit converter, Settings, About, Number and operation buttons, Clear,
+                                                                     Equal",
+Next, the UI is represented in the HTML syntax in line with              "Same-function elements": [
+                                                                             {
+previous studies [29]. A chain-of-thought prompting module                             "elements": [9,10,11,13,14,15,17,18,19,21,22],
+                                                                                       "function": " Number buttons ",
+[33] is also included to encourage LLMs’ logical reasoning.                  },
+                                                                               ... ...
+The output format is required to be a json dict for straight-            ]
+                                                                     }
+forward parsing. LLMs are expected to generate a merging
+instruction for UI elements, with the aim of consolidating ele-     Figure 2: The prompt for knowledge organization. From
+ments with the same functions into a single UI element. This        top to bottom: general instructions, UI representation, chain-
+approach simplifies the action space by combining actions on        of-thought module, output format, and response, respectively.
+these elements, which have similar functionality, into a single
+abstract UI action.                                                  Now suppose you are analyzing a GUI page with following
+                                                                     elements:
+   Using LLM for Content-Aware Input Generation. LLM-
+                                                                     <p id=0 bound_box=28,634,1052,756>Add a new note</p>
+Explorer also employs the LLM to generate text inputs for            <input id=1 bound_box=72,804,1008,957>Label</input>
+UI elements, such as input boxes, based on the current UI            <p id=2 bound_box=72,1001,1008,1076>New note
+                                                                     type:</p>
+context. Figure 3 illustrates the prompt structure. It provides      <checkbox id=3 bound_box=72,1076,1008,1197>Text
+the information about the current UI state and the specific          note</checkbox>
+                                                                     ……
+input box to be filled and requests LLMs to generate the input
+text. We observe that LLMs could generate human-like input           For the input tag id=1, give an example of possible input;
+                                                                     the input example you generate should be short and
+data, such as usernames, phone numbers, email addresses,             precise, based on the elements on the current interface.
+etc.
+                                                                     Please respond in the following format:
+   These two usages of LLM are uneasy for traditional AI             Input text: "<the generated input text>"
+techniques since it involves few-shot understanding of diverse
+                                                                     Response: "Input text: \"Meeting agenda\""
+UI content and free-form text generation.
+   According to the usages, the LLM queries of LLM-Explorer         Figure 3: The prompt for content-aware input generation.
+are determined by the number of unique states/actions (in           From top to bottom, the prompt comprises: overall guidance,
+knowledge organization) and the number of text input boxes          page representation, input request, response format, and re-
+(in input generation). These numbers are bounded for most           sponse, respectively.
+of the apps, although there might be a few exceptions with
+very dynamic GUI. Meanwhile, these numbers are guaran-
+teed to be smaller than the number of steps, since each unique      4       EVALUATION
+state/action or input box maps to at least one step in the explo-   We implemented LLM-Explorer with Python and Java atop
+ration. Therefore, LLM-Explorer is expected to have much            DroidBot [16] and GPT-3.5 (specific version: gpt-3.5-turbo-
+slower token consumption than existing approaches that use          1106), and we conducted experiments on real app exploration
+LLM for action generation.                                          tasks to evaluate its performance. In total, the experiments
+ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China                                                                  Zhao et al.
+
+
+cost about $1,000 for GPT services, including both GPT-3.5         selected based on their proficiency with computers and smart-
+and GPT-4 usage, covering LLM-Explorer and all baselines.          phones, with priority given to those with a background in com-
+                                                                   puter science. They were all from our campus, had at least five
+                                                                   years of smartphone experience, and possessed foundational
+4.1    Experimental Setup                                          knowledge in computer science. The number of participants
+Benchmark Apps. We mainly evaluated LLM-Explorer on                is determined by how many times each benchmark app can be
+20 apps collected from F-Droid and Google Play. The apps           explored. While we acknowledge the limited scale of the user
+used in our study were selected based on the following rules:      study, we emphasize that six participants sufficed to explore
+1. Apps were chosen from the most common categories in             each app twice. This provides adequate exploration coverage
+app stores, with 1-3 apps selected per category. 2. Open-          per app. Participants were asked to explore all the pages and
+source versions of apps were prioritized where available. The      elements with different functions within the apps. The explo-
+sources and complexity of the apps is shown in Table 1. We         ration time for each app was required to be no less than 10
+didn’t include more apps for analysis due to the expensive         minutes and the exploration of an app ended when the partic-
+cost of LLM services. However, we believe these apps are           ipant felt there was no more to explore. During the process,
+representative enough since they cover the most common app         our backend system automatically recorded the activities ex-
+functionalities including contact management, messaging,           plored by the participants. In the end, each app was explored
+photography, playing music, email management, and so on.           for more than twice, and we took the union of explored states
+   Hardware. We evaluate the end-to-end performance of             as the final result. To the best of our knowledge, this is also
+LLM-Explorer on real Android devices and emulators with            the first time in the community to compare against reference
+Android 10. The exploration agents run on a desktop with 2         human performance in app exploration.
+NVIDIA GeForce RTX 3090 GPUs and 48GB memory.                         Metrics. Similar to most existing work on mobile app ex-
+   Baselines. We chose DroidAgent [39], GPTDroid [21],             ploration, we test our method and the baselines by comparing
+Humanoid [17], DroidBot [16], and Monkey [7] as our base-          the progressive coverage, i.e. the improvement of coverage
+lines. DroidAgent and GPTDroid are LLM-based automated             over time and the achieved final coverage. Since measuring
+exploration methods. DroidAgent uses LLMs (GPT-4 and               the source code coverage is difficult for compiled APKs, we
+GPT-3.5) to plan tasks, observe the page, generate actions,        opt for monitoring the activity coverage (i.e. the ratio of Ac-
+determine task completion, etc. GPTDroid uses an LLM to            tivities reached by the agent among all Activities defined in
+choose the next action based on the current UI state. Hu-          the app), which is also a common practice.
+manoid uses a deep neural network to generate human-like UI
+actions during exploration. DroidBot is a generic app testing
+framework, in which we used the default depth-first traversal      4.2    Exploration Effectiveness and Efficiency
+policy to explore the apps. Monkey is a popular and official       To evaluate the effectiveness and efficiency of LLM-Explorer,
+command-line tool for automated app fuzz testing. Note that        we test 20 popular apps with LLM-Explorer and the five
+since the source code of GPTDroid is not fully usable at           baselines. To ensure fair comparisons, each method was given
+the time of our experiments, we use DroidAgent’s reimple-          a fixed exploration time of 2 hours.
+mentation of GPTDroid, which uses a function-call-based               Table 2 presents the final activity coverage achieved by
+action selector instead of the matching network in GPTDroid.       each method. The results show that LLM-Explorer is able to
+We also use GPT-3.5 instead of GPT-3 in GPTDroid. We               achieve a higher activity coverage than all baseline methods.
+also compared other variations of LLM-Explorer based on            While there is still some gap to human performance, it can
+different LLMs (Vicuna-13B and GPT-4 (specific version:            attain a similar or even higher level of coverage than human
+gpt-4-1106-preview) in Section 4.4.                                exploration on some simple apps.
+   Reference Human Performance. Since certain app activ-              Figure 4 and Figure 5 illustrate the progressive activity
+ities lack predefined navigation logic set by developers, the      coverage of LLM-Explorer and baselines over time and over
+upper limit of activity coverage during exploration may not        the number of steps, respectively.
+reach 100%. Therefore, to better understand the performance           As shown in Figure 4, at the beginning of exploration,
+of the automated explorers, we included human performance          LLM-Explorer, Humanoid, and DroidBot achieved similar
+as a reference for the upper bound of explorable activities. The   coverage growth rates, which were significantly higher than
+human performance is collected with a user study approved by       DroidAgent, GPTDroid, and Monkey. This is because they
+our Institutional Review Board (IRB) with the research ques-       could send actions at a faster speed and the actions could
+tion “How many activities of apps can human users reach?”.         easily reach new activities in the early stage. Gradually, the
+We invited 6 experienced smartphone users to explore the           growth rates slowed down as discovering new activities be-
+20 apps in Table 2 using our lab device. Participants were         came harder, while LLM-Explorer and DroidAgent began
+LLM-Explorer                                                           ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China
+
+
+                                     Table 1: Information about the benchmark apps
+
+   App Name              From     Activity Count    Complexity        App Name         From      Activity Count     Complexity
+ Activity Diary  F-Droid                 11           Medium       App Launcher       F-Droid            8              Low
+   Calculator    F-Droid                 12           Medium         Calendar         F-Droid           18             Medium
+     Camera      F-Droid                  8            Low            Clock           F-Droid           14             Medium
+    Contacts     F-Droid                 12           Medium          Draw            F-Droid            8              Low
+  File Manager   F-Droid                 15           Medium         Gallery          F-Droid           23              High
+  Google Mail   Google Play              64            High         Keyboard          F-Droid           10              Low
+     Markor      F-Droid                 11           Medium       Music Player       F-Droid           16             Medium
+  My Expenses    F-Droid                 53            High           Notes           F-Droid           10              Low
+  Open Tracks    F-Droid                 24            High       SMS Messenger       F-Droid           16             Medium
+ Voice Recorder  F-Droid                 12           Medium        Wikipedia         F-Droid           57              High
+
+                Table 2: The activity coverage achieved by LLM-Explorer and baselines on 20 typical apps.
+
+                App         LLM-Explorer      DroidAgent   GPTDroid    Humanoid     DroidBot     Monkey      Human
+         Activity Diary         90.91%         100.00%      54.55%      90.91%       81.82%      45.45%      100.00%
+         App Launcher           87.50%          87.50%      75.00%      75.00%       12.50%      37.50%       87.50%
+          Calculator            83.33%          83.33%      50.00%      58.33%       83.33%      25.00%       83.33%
+           Calendar             61.11%          61.11%      22.22%      55.56%       33.33%      16.67%       61.11%
+            Camera              87.50%          87.50%      75.00%      75.00%       87.50%      50.00%       87.50%
+             Clock              57.14%          42.86%      28.57%      57.14%       28.57%      35.71%       57.14%
+           Contacts             75.00%          75.00%      41.67%      58.33%       50.00%      58.33%       83.33%
+             Draw               62.50%          75.00%       12.5%      62.50%       75.00%      50.00%       75.00%
+         File Manager           73.33%          26.67%      26.67%      40.00%       53.33%      46.67%       53.33%
+            Gallery             52.17%          47.83%      21.74%      44.00%       21.74%      13.04%       59.09%
+         Google Mail            25.00%          21.88%       4.69%      21.88%        7.81%       3.13%       28.13%
+           Keyboard             70.00%          70.00%      10.00%      70.00%       70.00%      70.00%       70.00%
+            Markor              54.55%          36.36%      36.36%      18.18%       36.36%      18.18%       54.55%
+         Music Player           62.50%          62.50%      12.50%      56.25%       68.75%      18.75%       75.00%
+         My Expenses            26.42%          26.42%       7.55%      15.09%       13.21%      18.87%       52.38%
+             Notes              80.00%          70.00%      10.00%      70.00%       70.00%      10.00%       80.00%
+         Open Tracks            66.67%          66.67%      29.17%      33.33%       37.50%      50.00%       50.00%
+        SMS Messenger           81.25%           87.5%      18.75%      43.75%       50.00%      25.00%       75.00%
+        Voice Recorder          66.67%          50.00%      25.00%      58.33%       66.67%      25.00%       66.67%
+          Wikipedia             28.07%          24.56%      10.53%      42.11%       26.32%       7.02%       35.71%
+               Average          64.58%         60.13%       28.62%      52.28%       48.68%      31.22%      66.74%
+
+
+to have higher growth rates than the others with the help of     with the number of steps at the end of exploration, which
+LLMs. Eventually, LLM-Explorer was able to achieve the           we thought was because LLM-based action selection became
+highest activity coverage.                                       less effective for discovering more detailed and unusual ac-
+   In Figure 5, the coverage of LLM-Explorer gradually con-      tivities. In Table 3, we show the average single-step time of
+verged at about 1500 steps, faster than most of the base-        LLM-Explorer and baselines.
+lines. During exploration, although DroidAgent’s per-step           The advantages of LLM-Explorer over the baselines could
+actions were more effective in contributing to activity cov-     be attributed to the following reasons: (i) LLM-Explorer
+erage improvement, DroidAgent’s each step was more time-         merges states with identical functionality into a single ab-
+consuming due to the fact that it requested LLM extensively      stract state, thereby eliminating redundant exploration of
+for reasoning and planning, with the lowest number of actions    states with the same functionality. This strategy allows the
+generated in the 2-hour exploration. We also observed that       exploration process to focus on discovering more unknown
+the activity coverage growth rate of DroidAgent decreased        features of the app under test. Our further analysis found that
+ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China                                                                   Zhao et al.
+
+
+                                                                 Table 4: The average number of tokens and average cost
+                                                                 consumed by LLM-Explorer, DroidAgent and GPTDroid
+                                                                 when exploring an app. GPT-3.5, GPT-3.5-16K, and GPT-4
+                                                                 represent the tokens consumed when exploring an app using
+                                                                 the corresponding model, respectively. Cost denotes the total
+                                                                 cost of LLM when exploring an app.
+                                                                       Method      GPT-3.5     GPT-3.5-16K      GPT-4      Cost($)
+                                                                  LLM-Explorer    96,884.2           0            0        0.11
+                                                                   DroidAgent    1,384,079.0   1,141,095.29   335,913.29   16.31
+                                                                   GPTDroid      993,939.35          0            0        1.07
+
+Figure 4: Progressive activity coverage of LLM-Explorer
+and baselines over time. The brown dotted line is the refer-
+ence human performance.                                          LLM-Explorer repeatedly exploring duplicate elements with
+                                                                 the same functionality. For example, within the “file import”
+                                                                 page of the File Manager app, LLM-Explorer can combine
+                                                                 the file name buttons on the page into the same abstract ele-
+                                                                 ment. This makes it possible to explore the page by importing
+                                                                 a file only once, thereby accomplishing the exploration of the
+                                                                 file import functionality.
+                                                                    We further analyzed why LLM-Explorer failed in some
+                                                                 cases: (i) LLM-Explorer merged different states into an ab-
+                                                                 stract state based on rules, but if there was a unique element
+                                                                 in the state, LLM-Explorer could not efficiently merge the
+                                                                 state with the previous state. We also tried using LLM to
+                                                                 merge states, but the result was not satisfactory, so we didn’t
+                                                                 adopt this solution in the end. (ii) In LLM-assisted knowledge
+Figure 5: Progressive activity coverage of LLM-Explorer
+                                                                 maintenance, LLM may incorrectly treat elements with dif-
+and baselines over steps within 2 hours. The brown dotted
+                                                                 ferent functions as having the same function, resulting in the
+line is the reference human performance. The maximum step
+                                                                 merging of elements that could reach different activities into
+differs for each method due to the different per-step time.
+                                                                 one abstract element, causing LLM-Explorer to miss some
+Note that Monkey produced over 20,000 steps in 2 hours of
+                                                                 activities when exploring. Examples are given in section 4.5.
+exploration, but the activity coverage nearly converged after
+10,000 steps, so this figure only shows up to 10,000 steps.
+                                                                 4.3     LLM Cost of Exploration
+Table 3: Average per-step time of LLM-Explorer and base-         LLM-Explorer uses the LLM in two scenarios including
+lines. LE: LLM-Explorer, DA: DroidAgent, GD: GPTDroid,           knowledge maintenance and input text generation. GPTDroid
+HU: Humanoid, DB: DroidBot, MO: Monkey.                          and DroidAgent use LLMs mainly for action generation, and
+                                                                 also for planning, observing, etc. We compare the number
+         Method        LE     DA      GD     HU   DB     MO      of tokens and API fees consumed by different methods dur-
+                                                                 ing the exploration process. Table 4 shows the average cost
+      Time (seconds)   5.19   19.10   5.59   3.19 2.94   0.79
+                                                                 of using LLM to explore an app. As compared to DroidA-
+                                                                 gent (which achieved comparative coverage as ours), LLM-
+each app has 128 abstract states on average. LLM-Explorer re-    Explorer significantly reduced the average cost of exploring
+duced the numbers of redundant state and action visits by 4.08   an app from $16.31 to $0.11, which was over 148 times less.
+and 14.71 per abstract state, which effectively reduces the         We also compared the number of query and the number
+exploration space. (ii) LLM-Explorer performs exploration        of query tokens during exploration for different methods,
+based on abstract actions, which allows a more comprehen-        as shown in Table 5. LLM-Explorer reduces the number of
+sive coverage of all functionalities within the current app,     query by 18.48 and 9.40 times compared to DroidAgent and
+including those that are not primary features, such as viewing   GPTDroid respectively. At the same time, LLM-Explorer
+the list of contributors on the “About” page of Notes app.       used fewer input tokens while obtaining approximately twice
+(iii) LLM-Explorer’s LLM-assisted knowledge maintenance          the number of output tokens compared to other methods, and
+strategy of merging functionally identical elements avoids       also had the lowest average token count per query.
+LLM-Explorer                                                           ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China
+
+
+Table 5: Number of queries and average number of query
+tokens by LLM-Explorer, DroidAgent and GPTDroid.
+        Method             LLM-Explorer   DroidAgent GPTDroid
+   Number of queries          157.12       2903.15   1476.51
+ Input tokens per query       507.15        933.71    623.00
+ Output tokens per query      109.47         51.80     50.17
+
+
+
+
+                                                                 Figure 7: The progressive LLM token consumption of
+                                                                 LLM-Explorer, DroidAgent, and GPTDroid.
+
+                                                                 it with AWQ [20] to 4bit and deployed it on a desktop com-
+                                                                 puter equipped with an NVIDIA GeForce RTX 3090 GPU.
+                                                                 As shown in Figure 8, there were slight decreases in coverage
+                                                                 for most of the apps when using LLM-Explorer with Vicuna-
+                                                                 13B instead of the default GPT-3.5. The reason was mainly
+                                                                 due to the decreased quality of LLM responses. Specifically,
+                                                                 the smaller Vicuna-13B model may return responses with in-
+                                                                 correct formats, invalid element ids, or wrong classifications,
+                                                                 leading to inaccurate summarization of abstract elements.
+                                                                 Although we had queried the LLM for multiple times to in-
+                                                                 crease the chances of good responses, the problem was not
+Figure 6: The cost of exploration in all apps under test by      easily avoidable. However, the Vicuna-based LLM-Explorer
+LLM-Explorer, DroidAgent, GPTDroid, respectively.                still exhibited acceptable overall performance, suggesting that
+                                                                 LLM-Explorer does not heavily rely on a larger LLM and
+   To understand the relation between the cost of the ex-        may be further improved with local model training.
+ploration process and the complexity of the apps, we ana-           Using GPT-4. We also evaluated the performance of LLM-
+lyzed the exploration cost of LLM-Explorer, DroidAgent and       Explorer with GPT-4. As depicted in Figure 8, there were
+GPTDroid on different apps. As shown in Figure 6, the cost       slight increases in coverage for most apps, attributed to the
+of LLM-Explorer is more adaptive for different apps, with        higher quality responses from GPT-4. However, despite the
+lower cost on the apps with smaller number of activities (App    superior reasoning capability of GPT-4 compared to GPT-
+Launcher, Keybord, etc.) while higher cost on more com-          3.5, the enhancement in average coverage was not significant.
+plex apps (My Expenses, SMS Messenger, etc.). However,           Using GPT-3.5 in LLM-Explorer is good enough for most
+DroidAgent and GPTDroid do not clearly show this adap-           apps, except for some complicated apps (e.g. Wikipedia) that
+tivity, and won’t significantly reduce costs when exploring      demand more advanced knowledge management. These find-
+simpler apps. Meanwhile, the costs increased linearly with the   ings suggest that using the most powerful LLMs may not be
+step count in DroidAgent and GPTDroid, while the increase        necessary and we choose GPT-3.5 as the default choice.
+of LLM-Explorer was sublinear, as shown in Figure 7. Such
+adaptivity and sublinearity come from the way LLM-Explorer       4.5    Case Studies
+uses LLM, which has been discussed in Section 3.4.               We further dive deeper into the succeeded and failed cases of
+                                                                 LLM-Explorer to understand its advantages and limitations.
+4.4   Model Variation Test                                         Cases outperforming human. LLM-Explorer achieved
+Given the pivotal role of the LLM (GPT-3.5) in the explo-        better coverage than human on three apps including File Man-
+ration policy of LLM-Explorer, we evaluate its influence by      ager, Open Tracks and SMS Messenger. We compared the
+replacing it with a weaker and a stronger variant. The results   activities reached by human and LLM-Explorer to understand
+are shown in Figure 8.                                           the reasons. In Open Tracks, human participants missed the
+   Using a Smaller Local LLM. We first tested the perfor-        Marker Edit and Marker Detail activities. This was because
+mance of LLM-Explorer with Vicuna-13B [5]. We quantized          these two activities require the creation of a marker first, but
+ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China                                                                           Zhao et al.
+
+                                                                    Select a file and    Touch "Share"     Touch "Save as"    Arrive at Save As
+                                                                  touch "more option"       button             button              activity
+
+
+
+
+                                                                                                                              Successfully reach
+                                                                                                                               Save As Activity
+
+
+
+
+Figure 8: The activity coverage achieved by LLM-                   Select a folder and   Touch "Share"            No "Save as" button
+Explorer on 10 apps with different LLMs.                          touch "more option"       button               in the "Save via" page
+
+
+
+the creation of a marker fails when the GPS signal is weak. For
+other activities that LLM-Explorer explored but human users
+                                                                                                                                Cannot reach
+did not, it was mainly due to human participants overlooking                                                                   Save As Activity
+detailed functions, such as the Recycle Bin Conversations
+activity in SMS Messenger, and the Save As activity in File
+Manager. The feasible path to reach the Save As activity is
+shown in the top half of Figure 9. To reach the activity, one
+needs to select a file, click the “More Options” button, click
+the “Share” button, and finally click the “Save as” button on     Figure 9: A case where LLM-Explorer outperformed
+the screen. The “Save as” was invisible when the human user       the human performance. Top: LLM-Explorer successfully
+selected a folder (instead of a file) to share, and the Save As   reached the Save As activity by selecting a file to save. Bot-
+activity was unreachable. Such a detailed function was uneasy     tom: Human users only tried to select a folder, which couldn’t
+to be noticed by human users, while automated explorers can       reach the Save As activity.
+solve this problem through extensive traversal.
+                                                                        "Calculation" Page       "About" Page     "Import folder" Page
+   Effects of LLM-assisted Knowledge Management. The
+knowledge of LLM-Explorer could help to reduce the number
+of redundant actions. Figure 10 shows the same-function
+element groups determined by the LLM in three different GUI
+pages. The elements in each box were considered to have the
+same function and their actions were stored as one abstract
+action. In the Calculator app, LLM-Explorer grouped the
+number entry buttons as a cluster, and all arithmetic symbol
+buttons as another cluster. In the About page, LLM-Explorer
+was able to group several communication platforms in the
+SOCIAL section as a cluster having the same function. In the
+Import Folder page, LLM-Explorer can group several folders        Figure 10: Illustrations of same-function elements deter-
+together. Such groupings reduced a lot of meaningless actions     mined by LLM-assisted knowledge maintenance module.
+and action combinations.
+   Effects of Content-aware Input Text Generation. LLM-              (i) Failed to reach activities requiring cross-app jumps.
+Explorer also uses LLM to generate text input. Figure 11          LLM-Explorer performed poorly for activities that need to be
+shows LLM-Explorer’s input when creating a new contact            navigated across apps. For example, as shown in Figure 12, in
+in the Contacts app. LLM-Explorer was able to fill in the         the Contacts app, the path to reach the Insert Or Edit Contact
+contact’s name, phone number, and address information based       Activity was to click on the Dialpad button and then click
+on the element description. After entering the user name “John    the “Add” button on the Dialpad page. However, since the
+Doe”, it could generate email address information associated      Dialpad page used by Contacts belongs to the Dialer app (not
+with the contact name. These meaningful inputs made LLM-          the app under test), LLM-Explorer automatically returned to
+Explorer easier to pass the input checks in the apps.             the Contacts app without further exploration. This kind of
+   We also analyzed the situations where LLM-Explorer per-        failure could potentially be fixed by allowing the agent to
+formed worse. The main causes are as follows.                     explore outside the target app for more steps.
+LLM-Explorer                                                                    ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China
+
+      Create a new     Input name, phone            Input email                                   "About" page of
+                                                                                 Contacts app                       SMS Messenger app
+         contact        number, address               address                                      Contacts app
+
+
+                                                                                                                          LLM:
+                                                                                                      LLM:
+                                                                                                                      Same function
+                                                                                                  Same function
+                                                                                                                        elements
+                                                                                                    elements
+
+                                                                                     LLM:
+                                                                                 Same function
+                                                                                   elements
+
+
+
+
+Figure 11: Examples of meaningful text inputs generated                   Figure 13: The LLM-assisted knowledge maintenance
+by LLM-Explorer in the Contacts app.                                      module of LLM-Explorer may mistakenly group actions
+                                                                          with different functions into one abstract action.
+      Contacts app        Dialer app              Contacts app
+                                                                          specified app but hinders the discovery of activities that re-
+                                   Fail                                   quire cross-app transitions. A potential solution is to merge
+                                                                          the abstract interaction graphs of different apps into a uni-
+                                                         NEW              fied graph, allowing LLM-Explorer to search for possible
+                                                 Insert Or Edit Contact   cross-app return paths when transitioning to another app and
+                                          Fail          Activity
+                                                                          enabling more effective cross-app navigation and exploration.
+                                                                             Utilization of VLMs in app exploration. Incorporating
+                                                                          visual modalities, such as screenshots, into prompts using
+                                                                          state-of-the-art multimodal models like GPT-4o is an effec-
+                                                                          tive approach to maintaining higher-quality app knowledge
+Figure 12: LLM-Explorer failed to reach the activity that
+                                                                          and has the potential to enhance system performance. Screen-
+required cross-app navigation.
+                                                                          shots provide crucial information that may not be accurately
+   (ii) Errors in maintaining the knowledge. In the LLM-                  conveyed through text alone, such as descriptions of images
+assisted knowledge maintenance module, the LLM may falsely                and icons within the interface. However, adding visual modal-
+classify elements with different functions into the same group,           ities typically leads to increased token consumption, which
+resulting in some useful actions being grouped into the same              consequently raises system overhead.
+abstract action in the knowledge and ignored in future ex-
+plorations. For example, when LLM-Explorer explored the                   6   CONCLUSION
+page shown in Figure 13, the knowledge maintenance module                 We present an LLM-based exploration agent for mobile apps.
+incorrectly judged the elements in the purple box as hav-                 Experiment results show that our method can achieve effec-
+ing the same function. As a result, in the app knowledge,                 tive and efficient exploration, outperforming strong baselines.
+actions of these elements were combined as one abstract ac-               By wisely choosing when and how to use LLM in the explo-
+tion. However, in fact, they could navigate to different GUIs.            ration process, we can significantly reduce the cost of LLMs
+Similarly, in the About page of the contacts app, the touch               while maintaining high exploration performance. We believe
+actions on the “Privacy policy” button and the “Third-party               that the synergy between LLM and well-organized domain
+licenses” button were combined into the same abstract ac-                 knowledge is the key to making intelligent agents and services
+tion. LLM-Explorer only touched the “Privacy policy” button               more affordable.
+and completed the exploration of this part early, missing the
+chance to visit the License activity by touching the “Third-              ACKNOWLEDGEMENT
+party licenses” button. These errors could be mitigated by                This work is supported by National Natural Science Foun-
+using better LLMs to generate more precise abstractions.                  dation of China (Grant No.62272261), Tsinghua University
+                                                                          (AIR)–AsiaInfo Technologies (China) Inc. Joint Research
+5   DISCUSSION                                                            Center, Wuxi Research Institute of Applied Technologies,
+Cross-app navigation. LLM-Explorer automatically navi-                    Tsinghua University (Grant No.20242001120) and Beijing
+gates back when detecting a transition to another app. This               Academy of Artificial Intelligence (BAAI). Wenjie Du and
+design ensures that the exploration remains focused on the                Cheng Liang contributed as interns at Tsinghua University.
+ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China                                                                                           Zhao et al.
+
+
+REFERENCES                                                                            IEEE Transactions on Mobile Computing 21, 4 (2022), 1492–1507.
+ [1] Anshul Arora, Sateesh K. Peddoju, Vikas Chouhan, and Ajay Chaud-                 https://doi.org/10.1109/TMC.2020.3021987
+     hary. 2018. Hybrid Android Malware Detection by Combining Super-            [15] Yuanchun Li, Hao Wen, Weijun Wang, et al. 2024. Personal LLM
+     vised and Unsupervised Learning. In Proceedings of the 24th Annual               Agents: Insights and Survey about the Capability, Efficiency and Secu-
+     International Conference on Mobile Computing and Networking (Mobi-               rity. arXiv preprint arXiv:2401.05459 (2024).
+     Com ’18). Association for Computing Machinery, New York, NY, USA,           [16] Yuanchun Li, Ziyue Yang, Yao Guo, and Xiangqun Chen. 2017. Droid-
+     798–800. https://doi.org/10.1145/3241539.3267768                                 Bot: A Lightweight UI-Guided Test Input Generator for Android.
+ [2] Nataniel P. Borges, Maria Gómez, and Andreas Zeller. 2018. Guiding               In Proceedings of the 39th International Conference on Software
+     App Testing with Mined Interaction Models. In Proceedings of the 5th             Engineering Companion (ICSE-C ’17). IEEE Press, 23–26. https:
+     International Conference on Mobile Software Engineering and Systems              //doi.org/10.1109/ICSE-C.2017.8
+     (MOBILESoft ’18). Association for Computing Machinery, New York,            [17] Yuanchun Li, Ziyue Yang, Yao Guo, and Xiangqun Chen. 2019. Hu-
+     NY, USA, 133–143. https://doi.org/10.1145/3197231.3197243                        manoid: A deep learning-based approach to automated black-box an-
+ [3] Abhijit Bose, Xin Hu, Kang G. Shin, and Taejoon Park. 2008. Behav-               droid app testing. In 2019 34th IEEE/ACM International Conference
+     ioral detection of malware on mobile handsets. In Proceedings of the             on Automated Software Engineering (ASE). IEEE, 1070–1073.
+     6th International Conference on Mobile Systems, Applications, and           [18] Chieh-Jan Mike Liang, Nicholas D. Lane, Niels Brouwers, et al. 2014.
+     Services (MobiSys ’08). Association for Computing Machinery, New                 Caiipa: Automated Large-Scale Mobile App Testing through Contextual
+     York, NY, USA, 225–238. https://doi.org/10.1145/1378600.1378626                  Fuzzing. In Proceedings of the 20th Annual International Conference
+ [4] Haipeng Cai. 2020. Assessing and improving malware detection sustain-            on Mobile Computing and Networking (MobiCom ’14). Association
+     ability through app evolution studies. ACM Transactions on Software              for Computing Machinery, New York, NY, USA, 519–530. https:
+     Engineering and Methodology (TOSEM) 29, 2 (2020), 1–28.                          //doi.org/10.1145/2639108.2639131
+ [5] Wei-Lin Chiang, Zhuohan Li, Zi Lin, Ying Sheng, Zhanghao Wu, Hao            [19] Hao Lin, Jiaxing Qiu, Hongyi Wang, Zhenhua Li, Liangyi Gong, Di
+     Zhang, Lianmin Zheng, Siyuan Zhuang, Yonghao Zhuang, Joseph E.                   Gao, Yunhao Liu, Feng Qian, Zhao Zhang, Ping Yang, and Tianyin
+     Gonzalez, Ion Stoica, and Eric P. Xing. 2023. Vicuna: An Open-                   Xu. 2023. Virtual Device Farms for Mobile App Testing at Scale:
+     Source Chatbot Impressing GPT-4 with 90%* ChatGPT Quality. https:                A Pursuit for Fidelity, Efficiency, and Accessibility. In Proceedings
+     //lmsys.org/blog/2023-03-30-vicuna/                                              of the 29th Annual International Conference on Mobile Computing
+ [6] Biplab Deka, Zifeng Huang, Chad Franzen, Joshua Hibschman, Daniel                and Networking (ACM MobiCom ’23). Association for Computing
+     Afergan, Yang Li, Jeffrey Nichols, and Ranjitha Kumar. 2017. Rico:               Machinery, New York, NY, USA, Article 45, 17 pages. https://doi.org/
+     A Mobile App Dataset for Building Data-Driven Design Applications.               10.1145/3570361.3613259
+     In Proceedings of the 30th Annual ACM Symposium on User Inter-              [20] Ji Lin, Jiaming Tang, Haotian Tang, Shang Yang, Xingyu Dang, and
+     face Software and Technology (UIST ’17). Association for Computing               Song Han. 2023. AWQ: Activation-aware Weight Quantization for
+     Machinery, New York, NY, USA, 845–854. https://doi.org/10.1145/                  LLM Compression and Acceleration. arXiv (2023).
+     3126594.3126651                                                             [21] Zhe Liu, Chunyang Chen, Junjie Wang, et al. 2023. Make LLM a Test-
+ [7] Android Developers. [n. d.]. UI/Application Exerciser Monkey. https:             ing Expert: Bringing Human-like Interaction to Mobile GUI Testing via
+     //developer.android.com/studio/test/other-testing-tools/monkey.                  Functionality-aware Decisions. In Proceedings of the 45th International
+ [8] Giorgio Franceschelli and Mirco Musolesi. 2023. On the creativity of             Conference on Software Engineering (ICSE). IEEE/ACM.
+     large language models. arXiv preprint arXiv:2304.00008 (2023).              [22] Zhe Liu, Chunyang Chen, Junjie Wang, Xing Che, Yuekai Huang, Jun
+ [9] Yongxiang Hu, Xuan Wang, Yingchuan Wang, Yu Zhang, Shiyu Guo,                    Hu, and Qing Wang. 2023. Fill in the Blank: Context-aware Automated
+     Chaoyi Chen, Xin Wang, and Yangfan Zhou. 2024. AUITestAgent: Au-                 Text Input Generation for Mobile GUI Testing. In 2023 IEEE/ACM 45th
+     tomatic Requirements Oriented GUI Function Testing. arXiv preprint               International Conference on Software Engineering (ICSE). 1355–1367.
+     arXiv:2407.09018 (2024).                                                         https://doi.org/10.1109/ICSE48619.2023.00119
+[10] Forrest Huang, Gang Li, Tao Li, and Yang Li. 2023. Automatic                [23] Zhe Liu, Cheng Li, Chunyang Chen, Junjie Wang, Boyu Wu, Yawen
+     Macro Mining from Interaction Traces at Scale. arXiv preprint                    Wang, Jun Hu, and Qing Wang. 2024. Vision-driven Automated Mobile
+     arXiv:2310.07023 (2023).                                                         GUI Testing via Multimodal Large Language Model. arXiv preprint
+[11] Haojian Jin, Minyi Liu, Kevan Dodhia, Yuanchun Li, Gaurav Srivastava,            arXiv:2407.03037 (2024).
+     Matthew Fredrikson, Yuvraj Agarwal, and Jason I. Hong. 2018. Why            [24] Aravind Machiry, Rohan Tahiliani, and Mayur Naik. 2013. Dynodroid:
+     Are They Collecting My Data? Inferring the Purposes of Network                   An Input Generation System for Android Apps. In Proceedings of
+     Traffic in Mobile Apps. Proc. ACM Interact. Mob. Wearable Ubiquitous             the 2013 9th Joint Meeting on Foundations of Software Engineering
+     Technol. 2, 4, Article 173 (dec 2018), 27 pages. https://doi.org/10.1145/        (ESEC/FSE 2013). Association for Computing Machinery, New York,
+     3287051                                                                          NY, USA, 224–234. https://doi.org/10.1145/2491411.2491450
+[12] Yuanhong Lan, Yifei Lu, Zhong Li, Minxue Pan, Wenhua Yang, Tian             [25] Ke Mao, Mark Harman, and Yue Jia. 2016. Sapienz: Multi-Objective
+     Zhang, and Xuandong Li. 2024. Deeply Reinforcing Android GUI                     Automated Testing for Android Applications. In Proceedings of the
+     Testing with Deep Reinforcement Learning. In Proceedings of the                  25th International Symposium on Software Testing and Analysis (ISSTA
+     46th IEEE/ACM International Conference on Software Engineering                   2016). Association for Computing Machinery, New York, NY, USA,
+     (ICSE ’24). Association for Computing Machinery, New York, NY,                   94–105. https://doi.org/10.1145/2931037.2931054
+     USA, Article 71, 13 pages. https://doi.org/10.1145/3597503.3623344          [26] Minxue Pan, An Huang, Guoxin Wang, Tian Zhang, and Xuandong Li.
+[13] Sunjae Lee, Junyoung Choi, Jungjae Lee, Hojun Choi, Steven Y Ko,                 2020. Reinforcement learning based curiosity-driven testing of Android
+     Sangeun Oh, and Insik Shin. 2023. Explore, select, derive, and recall:           applications. In Proceedings of the 29th ACM SIGSOFT International
+     Augmenting llm with human-like memory for mobile task automation.                Symposium on Software Testing and Analysis (ISSTA 2020). Association
+     arXiv preprint arXiv:2312.03003 (2023).                                          for Computing Machinery, New York, NY, USA, 153–164. https:
+[14] Tong Li, Yong Li, Mohammad Ashraful Hoque, Tong Xia, Sasu                        //doi.org/10.1145/3395363.3397354
+     Tarkoma, and Pan Hui. 2022. To What Extent We Repeat Our-                   [27] Andrea Romdhana, Alessio Merlo, Mariano Ceccato, and Paolo Tonella.
+     selves? Discovering Daily Activity Patterns Across Mobile App Usage.             2022. Deep reinforcement learning for black-box testing of android
+LLM-Explorer                                                                          ACM MobiCom ’25, November 3–7, 2025, Hong Kong, China
+
+
+     apps. ACM Transactions on Software Engineering and Methodology            [34] Hao Wen, Yuanchun Li, Guohong Liu, Shanhui Zhao, Tao Yu, Toby Jia-
+     (TOSEM) 31, 4 (2022), 1–29.                                                    Jun Li, Shiqi Jiang, Yunhao Liu, Yaqin Zhang, and Yunxin Liu. 2024.
+[28] Konstantin Rubinov and Luciano Baresi. 2018. What Are We Missing               Autodroid: Llm-powered task automation in android. In Proceedings of
+     When Testing Our Android Apps? Computer 51, 4 (2018), 60–68.                   the 30th Annual International Conference on Mobile Computing and
+     https://doi.org/10.1109/MC.2018.2141024                                        Networking. 543–557.
+[29] Bryan Wang, Gang Li, and Yang Li. 2023. Enabling Conversational           [35] Husam N Yasin, Siti Hafizah Ab Hamid, and Raja Jamilah Raja Yusof.
+     Interaction with Mobile UI Using Large Language Models. In Proceed-            2021. Droidbotx: Test case generation tool for android applications
+     ings of the 2023 CHI Conference on Human Factors in Computing Sys-             using Q-learning. Symmetry 13, 2 (2021), 310.
+     tems (CHI ’23). Association for Computing Machinery, New York, NY,        [36] Faraz YazdaniBanafsheDaragh and Sam Malek. 2021. Deep GUI:
+     USA, Article 432, 17 pages. https://doi.org/10.1145/3544548.3580895            Black-box GUI Input Generation with Deep Learning. In 2021 36th
+[30] Junjie Wang, Yuchao Huang, Chunyang Chen, Zhe Liu, Song Wang,                  IEEE/ACM International Conference on Automated Software Engineer-
+     and Qing Wang. 2024. Software Testing with Large Language Mod-                 ing (ASE). 905–916. https://doi.org/10.1109/ASE51524.2021.9678778
+     els: Survey, Landscape, and Vision. IEEE Transactions on Software         [37] Faraz YazdaniBanafsheDaragh and Sam Malek. 2022. Deep GUI:
+     Engineering (2024), 1–27. https://doi.org/10.1109/TSE.2024.3368208             black-box GUI input generation with deep learning. In Proceedings of
+[31] Wenyu Wang, Dengfeng Li, Wei Yang, Yurui Cao, Zhenwen Zhang,                   the 36th IEEE/ACM International Conference on Automated Software
+     Yuetang Deng, and Tao Xie. 2018. An Empirical Study of Android                 Engineering (ASE ’21). IEEE Press, 905–916. https://doi.org/10.1109/
+     Test Generation Tools in Industrial Cases. In Proceedings of the 33rd          ASE51524.2021.9678778
+     ACM/IEEE International Conference on Automated Software Engineer-         [38] Chao-Chun Yeh, Shih-Kun Huang, and Sung-Yen Chang. 2013. A
+     ing (ASE ’18). Association for Computing Machinery, New York, NY,              black-box based android GUI testing system. In Proceeding of the 11th
+     USA, 738–748. https://doi.org/10.1145/3238147.3240465                          Annual International Conference on Mobile Systems, Applications, and
+[32] Yin Wang, Ming Fan, Xicheng Zhang, Jifei Shi, Zhaoyu Qiu, Haijun               Services (MobiSys ’13). Association for Computing Machinery, New
+     Wang, and Ting Liu. 2024. LIReDroid: LLM-Enhanced Test Case                    York, NY, USA, 529–530. https://doi.org/10.1145/2462456.2465717
+     Generation for Static Sensitive Behavior Replication. In Proceedings of   [39] Juyeon Yoon, Robert Feldt, and Shin Yoo. 2023. Autonomous Large
+     the 15th Asia-Pacific Symposium on Internetware (Internetware ’24).            Language Model Agents Enabling Intent-Driven Mobile GUI Testing.
+     Association for Computing Machinery, New York, NY, USA, 81–84.                 arXiv preprint arXiv:2311.08649 (ICST 2024) (2023).
+     https://doi.org/10.1145/3671016.3671404                                   [40] Li Lyna Zhang, Chieh-Jan Mike Liang, Wei Zhang, and Enhong Chen.
+[33] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Fei Xia,               2017. Towards A Contextual and Scalable Automated-testing Service
+     Ed Chi, Quoc V Le, Denny Zhou, et al. 2022. Chain-of-thought prompt-           for Mobile Apps. In Proceedings of the 18th International Workshop
+     ing elicits reasoning in large language models. Advances in neural             on Mobile Computing Systems and Applications (HotMobile ’17). As-
+     information processing systems 35 (2022), 24824–24837.                         sociation for Computing Machinery, New York, NY, USA, 97–102.
+                                                                                    https://doi.org/10.1145/3032970.3032972
+

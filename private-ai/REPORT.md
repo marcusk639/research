@@ -12,7 +12,7 @@ How should the Private AI venture be documented, from the founder's consolidated
 
 ### The business in one page
 
-- **What it is:** a managed private-AI service, installed in the client's building, never sending data to an outside AI provider. That claim needs qualifying; see [C9](12-open-questions.md#contradictions-found).
+- **What it is:** a managed private-AI service, installed in the client's building, never sending client data to an outside AI provider. Two qualifiers: off-site backups and failover ([C9](12-open-questions.md#contradictions-found)), and at TWK, firm-only knowledge runs on Glass under the hybrid decision.
 - **Who pays, in order:** CPA firms, then law firms, then the plants and industrial contractors of the Lake Charles–Westlake–Sulphur corridor.
 - **Why they buy:** compliance first, then productivity.
   - IRC §7216 and IRS OPR Alert 2026-19 for tax preparers.
@@ -62,47 +62,66 @@ Capital needed: about $375K (base). The plan raises $400K: debt $150–250K, the
 - The §7216 attorney opinion is not yet obtained.
 - The VA Effective-Date & CUE Engine is parked (Oct 19, 2026).
 
+### Resolved Oct 20, 2026
+
+- **Decision:** TWK runs hybrid. Firm knowledge goes on Glass; client data stays on the appliance.
+- **Hiring:** the first W-2 hire moves to about months 15–24, gated on MRR of about $20–25K, with contract backup first.
+- **Decision: calendar.** Installs avoid only active storm watches, and setup is billed 50% at signing.
+- **Decision: gates and kill rule.** Gates are reset at months 6, 9 and 12, counting signed professional-firm contracts. MRR targets are $5K, $9K and $14K.
+- **Regenerated 3-year model** ([model/private-ai-3yr-model-2026-10-20.xlsx](model/private-ai-3yr-model-2026-10-20.xlsx)).
+  - The original plan is reproduced by calibration.
+  - Base: revenue ~$190K / $507K / $898K; breakeven at month 18; capital need ~$220K against the $400K raise.
+  - About $75–85K is needed before the raise closes in month 5.
+  - (Superseded: an earlier revenue-only re-run had base Year 1 at ~$210K and MRR ~$14K; the base case only ~$14K MRR at month 12, so it leans on one-time setup fees.)
+- **Industrial:** the Year-1 base is $35–60K, and the first plant PO is expected in months 7–12.
+
+See [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md).
+
 ### Top open issues
 
-1. TWK deployment model: on-prem appliance vs Claude-based "Glass" vs hybrid.
-2. Hiring triggers vs a plan with 4–5 clients at month 12.
-3. The industrial 12-month target vs Year-1 total revenue.
+1. Size founder capital or an early partial close for the ~$75–85K needed before month 5.
+2. Karbon data classification under the hybrid split.
+3. Price-test contractor compliance retainers.
 
-All 21 contradictions and 12 gaps: [12-open-questions.md](12-open-questions.md).
+Everything else: [12-open-questions.md](12-open-questions.md).
 
 ## Document map
 
-| File                                                           | Purpose                                                             |
-| -------------------------------------------------------------- | ------------------------------------------------------------------- |
-| [CONTEXT.md](CONTEXT.md)                                       | Short briefing for future Claude sessions                           |
-| [01-business-overview.md](01-business-overview.md)             | Idea, why now, why this founder, positioning                        |
-| [02-business-model.md](02-business-model.md)                   | Revenue model, pricing, unit economics, margins                     |
-| [03-products-and-services.md](03-products-and-services.md)     | Every offer, bundle, tier and add-on, with prices                   |
-| [04-market-and-clients.md](04-market-and-clients.md)           | Segments, sizing, named targets, buyer roles, TWK, competition      |
-| [05-go-to-market.md](05-go-to-market.md)                       | Sales tracks, channel partners, process, door-opening, objections   |
-| [06-technical-architecture.md](06-technical-architecture.md)   | Appliance stack, design rules, integrations, RAG platform           |
-| [07-compliance-and-legal.md](07-compliance-and-legal.md)       | §7216, Safeguards, ABA 512, PSM, contracts, insurance, model origin |
-| [08-implementation-roadmap.md](08-implementation-roadmap.md)   | Horizons, phases, 90-day plans, hiring, runbooks, metrics, stages   |
-| [09-financials-and-funding.md](09-financials-and-funding.md)   | 3-year model, capital need, raise structure, use of funds           |
-| [10-risks-and-kill-criteria.md](10-risks-and-kill-criteria.md) | Risk register and pivot rules                                       |
-| [11-related-workstreams.md](11-related-workstreams.md)         | TWK, RAG platform, fractional CTO, SDVOSB, VA CUE, entity           |
-| [12-open-questions.md](12-open-questions.md)                   | Pending decisions, items to verify, contradictions and gaps         |
-| [13-sources.md](13-sources.md)                                 | Source documents and outside sources                                |
-| [glossary.md](glossary.md)                                     | Terms and abbreviations                                             |
-| [prompts/init.md](prompts/init.md)                             | The prompt and source material these docs were written from         |
+| File                                                                                     | Purpose                                                                             |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [CONTEXT.md](CONTEXT.md)                                                                 | Short briefing for future Claude sessions                                           |
+| [01-business-overview.md](01-business-overview.md)                                       | Idea, why now, why this founder, positioning                                        |
+| [02-business-model.md](02-business-model.md)                                             | Revenue model, pricing, unit economics, margins                                     |
+| [03-products-and-services.md](03-products-and-services.md)                               | Every offer, bundle, tier and add-on, with prices                                   |
+| [04-market-and-clients.md](04-market-and-clients.md)                                     | Segments, sizing, named targets, buyer roles, TWK, competition                      |
+| [05-go-to-market.md](05-go-to-market.md)                                                 | Sales tracks, channel partners, process, door-opening, objections                   |
+| [06-technical-architecture.md](06-technical-architecture.md)                             | Appliance stack, design rules, integrations, RAG platform                           |
+| [07-compliance-and-legal.md](07-compliance-and-legal.md)                                 | §7216, Safeguards, ABA 512, PSM, contracts, insurance, model origin                 |
+| [08-implementation-roadmap.md](08-implementation-roadmap.md)                             | Horizons, phases, 90-day plans, hiring, runbooks, metrics, stages                   |
+| [09-financials-and-funding.md](09-financials-and-funding.md)                             | 3-year model, capital need, raise structure, use of funds                           |
+| [10-risks-and-kill-criteria.md](10-risks-and-kill-criteria.md)                           | Risk register and pivot rules                                                       |
+| [11-related-workstreams.md](11-related-workstreams.md)                                   | TWK, RAG platform, fractional CTO, SDVOSB, VA CUE, entity                           |
+| [12-open-questions.md](12-open-questions.md)                                             | Pending decisions, items to verify, contradictions and gaps                         |
+| [13-sources.md](13-sources.md)                                                           | Source documents and outside sources                                                |
+| [model/private-ai-3yr-model-2026-10-20.xlsx](model/private-ai-3yr-model-2026-10-20.xlsx) | Regenerated 3-year financial model (four scenarios)                                 |
+| [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md)                           | Oct 20 decisions and research-based revisions (supersede 01–13 where they conflict) |
+| [glossary.md](glossary.md)                                                               | Terms and abbreviations                                                             |
+| [prompts/init.md](prompts/init.md)                                                       | The prompt and source material these docs were written from                         |
 
 ## Labels used
 
-| Label              | Meaning                                               |
-| ------------------ | ----------------------------------------------------- |
-| [Estimate]         | An estimate in the source, kept as given              |
-| [To verify]        | Flagged for checking before use                       |
-| **Decision**       | Something the founder decided                         |
-| **Plan**           | Something the founder plans, not yet a firm decision  |
-| **Recommendation** | A recommendation from research, not a decision        |
-| TODO               | A fact the section needs that the source doesn't give |
+| Label              | Meaning                                                            |
+| ------------------ | ------------------------------------------------------------------ |
+| [Estimate]         | An estimate in the source, kept as given                           |
+| [Sourced]          | File 14 only: from outside research, linked inline                 |
+| [Analysis]         | File 14 only: derived or assumed in that file, not from the source |
+| [To verify]        | Flagged for checking before use                                    |
+| **Decision**       | Something the founder decided                                      |
+| **Plan**           | Something the founder plans, not yet a firm decision               |
+| **Recommendation** | A recommendation from research, not a decision                     |
+| TODO               | A fact the section needs that the source doesn't give              |
 
-Figures are kept exactly as given, with their ranges. All facts are as of 2026-10-19.
+Figures are kept exactly as given, with their ranges. Files 01–13 are as of 2026-10-19; file 14 is as of 2026-10-20.
 
 ## Sources
 

@@ -1,0 +1,658 @@
+__HTTP 200__
+                  iDFlakies: A Framework for Detecting
+                   and Partially Classifying Flaky Tests
+                                 Wing Lam, Reed Oei, August Shi, Darko Marinov, Tao Xie
+                               University of Illinois at Urbana-Champaign, Urbana, IL 61801, USA
+                                     {winglam2,reedoei2,awshi2,marinov,taoxie}@illinois.edu
+
+
+   Abstract—Regression testing is increasingly important with            lead to flaky tests include concurrency, test-order dependency,
+the wide use of continuous integration. A desirable requirement          resource leaks, real time, network/IO issues, etc. [38].
+for regression testing is that a test failure reliably indicates a           Previous work [38], [46], [56] on flaky tests points out that
+problem in the code under test and not a false alarm from
+the test code or the testing infrastructure. However, some test          one substantial cause of flaky tests is the presence of test-
+failures are unreliable, stemming from flaky tests that can non-         order dependencies. Such dependencies can make the same
+deterministically pass or fail for the same code under test. There       tests (say, t1 and t2 ) pass when run in one order (say, t1
+are many types of flaky tests, with order-dependent tests being          before t2 ) but fail when run in another order (say, t2 before
+a prominent type.                                                        t1 ) because of some resource shared between the tests (e.g.,
+   To help advance research on flaky tests, we present (1) a
+framework, iDFlakies, to detect and partially classify flaky tests;      the state in the main memory or on the file system). Following
+(2) a dataset of flaky tests in open-source projects; and (3) a study    prior work [56], we refer to flaky tests whose only source
+with our dataset. iDFlakies automates experimentation with our           of non-determinism is order dependencies as order-dependent
+tool for Maven-based Java projects. Using iDFlakies, we build a          (OD) tests. Unlike other types of flaky tests whose causes
+dataset of 422 flaky tests, with 50.5% order-dependent and 49.5%         of non-determinism may be hard to control, OD tests can
+not. Our study of these flaky tests finds the prevalence of two
+types of flaky tests, probability of a test-suite run to have at least   deterministically pass or fail depending on the order in which
+one failure due to flaky tests, and how different test reorderings       the tests are run [35]. We refer to all other types of flaky tests,
+affect the number of detected flaky tests. We envision that our          which are not OD tests, as non-order-dependent (NOD) tests.
+work can spur research to alleviate the problem of flaky tests.              One important obstacle to performing research on flaky
+                                                                         tests is obtaining a dataset of current flaky tests in real-
+                        I. I NTRODUCTION
+                                                                         world projects, similar to datasets such as SIR [17] and
+   Regression testing is becoming increasingly important and             Defects4J [33] that enabled research studies on regression
+popular as both industry and the open-source community                   testing, automated debugging, and program repair. Some prior
+widely adopt continuous integration (CI) [30], [49]. When                work studies only flaky tests from older code versions [14] or
+developers make changes to code, CI runs tests on the code               focuses on only flaky tests that had been fixed [38]. Other work
+version with the changes to check whether the changes intro-             does not classify flaky tests into OD or NOD tests, or performs
+duce regressions. In an ideal world, failures from regression            studies on only a relatively small number of projects [46], [56].
+tests would reliably signal faults in the developer’s latest                 To offer a dataset of current flaky tests in real-world
+changes, be they in the code under test or the test code, and            projects, we develop a framework, called iDFlakies, for col-
+every test failure would warrant investigation.                          lecting flaky tests from a large number of open-source projects,
+   Unfortunately, some test failures may not be due to the latest        and create a dataset of such flaky tests. The core of our
+changes but due to so-called flaky tests. Previous work [20],            framework is our tool that can (1) detect flaky tests by
+[38] defines flaky tests as tests that may non-deterministically         reordering and rerunning tests in a project and (2) partially
+pass or fail even on the same version of the code under test.            classify flaky tests as likely OD or NOD tests by checking
+Both practitioners and researchers are increasingly reporting            various test orders. Our current tool does not further classify
+problems with flaky tests [5], [11], [12], [14], [20], [22], [34],       the causes of the flaky tests. We implement our tool as a Maven
+[36], [38], [40]–[43], [46], [53], [56], [57], including from            plugin for Java projects that use JUnit tests. The tool offers
+large organizations such as Facebook [25], Google [18], [19],            five configurations to run the tests and detect flaky ones. The
+Huawei [32], Microsoft [26]–[28], and Mozilla [16]. A key                base configuration simply reruns the original order of the tests
+problem is that flaky tests lead to unreliable signals from CI           many times to check whether the result of any test changes;
+and can erode the trust of developers in their regression testing.       any test that passes and fails for the same code version in
+   Flaky-test failures stem from a variety of causes, including          the same test order is by definition a flaky, NOD test. The
+faults in the code under test, faults in the test code [38], or          other configurations reorder the test methods and classes to
+unreliable testing infrastructure [32], [34]. Despite the false          focus on detecting OD tests, but these configurations can also
+alarms that flaky tests can raise, these tests can sometimes             detect NOD tests along the way. Following Zhang et al. [56],
+detect real faults in the code under test and are therefore kept in      our tool reorders tests using random orderings or reversing
+regression test suites. Frequent causes of non-determinism that          the original order of the tests. However, our tool differs from
+
+
+ ©2019 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or
+ future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for
+ resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works.
+Zhang et al.’s tool in that our tool’s random orderings do             1   public void assertIsShutdownAlready() {
+not interleave test methods from different test classes. An            2    shutdownListenerManager.new
+                                                                                 InstanceShutdownStatusJobListener().dataChanged("/
+ordering that interleaves tests from test classes would not be                   test_job/instances/127.0.0.1@-@0", Type.
+produced by popular testing frameworks, such as JUnit. Our                       NODE_REMOVED, "");
+                                                                       3    verify(schedulerFacade, times(0)).shutdownInstance();
+study (Section VI) shows that first randomizing the test classes       4   }
+and then the test methods within each test class can detect the               Fig. 1. An OD test from the Elastic-Job [3] project.
+most flaky tests overall.
+   In addition to our core tool, our framework offers automated        1   @Test(timeout=2000)
+                                                                       2   public void testIssue() throws Exception {
+experimentation using our tool. In particular, our framework           3    final int port = SocketUtil.getAvailablePort();
+takes a list of URLs of open-source Java projects and a commit         4    WebSocketServer server = new WebSocketServer( new
+                                                                                 InetSocketAddress( port ) ) { ...}
+for each project, builds a Docker image for running each               5     ...
+project, and then runs our tool with a given set of config-            6   }
+urations to detect flaky tests for each project. We wrap the               Fig. 2. An NOD test from the Java WebSockets [8] project.
+experimental runs into Docker images to increase the repro-
+ducibility of our results. Furthermore, we make our framework         order of tests [21]. Detecting OD tests is important in general,
+publicly available [7], allowing researchers to easier use our        because test frameworks can change the test order, even when
+tool in their research experiments on flaky tests.                    running all the tests, thereby causing the failures of OD tests
+   We apply our framework on 683 projects, and limit the              to affect developers. Moreover, techniques that shorten time
+cost of exploring different reordering configurations on them         of regression testing—including test-suite reduction [48], [50],
+by setting a time limit of up to 56 hours per project. Our            [51], [54], test selection [15], [23], [37], [44], [45], [47], [52],
+experiments find 82 projects with at least one flaky test and a       [55], and test parallelization [4]—select only a subset of tests
+total of 422 flaky tests, of which 50.5% are classified as OD         to run and could additionally expose failures of OD tests.
+and 49.5% as NOD, based on the observed runs. Moreover, a                Figure 1 shows an example OD test that our tool
+developer running regression tests often cares not just whether       found in a project from our study. Elastic-Job [3] is
+individual tests pass or fail but whether the entire test suite has   a popular Java project with over 4500 stars on GitHub
+any test failure. We compute the probability that one run of          as of January 2019. The project contains an OD test
+the test suite leads to flaky-test failures as the percentage of      in its ShutdownListenerManagerTest class. The test,
+our tool’s runs with at least one (flaky) test failure; we find the   assertIsShutdownAlready, is OD because its passing de-
+probability to be as high as 50.0%. We also find that running         pends on some tests not to run before it. This dependence
+tests under random orders detects the most overall flaky tests,       exists because Line 3 of assertIsShutdownAlready checks
+and it has about the same probability to detect NOD tests as          whether an instance of a class variable is shut down, and the
+running the tests in the same original order many times.              instance is started by some other tests. The test passes by itself
+   This paper makes the following main contributions:                 or in orders where the tests that start the instance are run after
+Tool. We develop and make publicly available a tool to detect         the OD test. However, the test fails when the tests that start
+flaky tests; our tool can be easily integrated into Maven             the instance, but do not shut it down, are run directly before
+projects that use JUnit.                                              assertIsShutdownAlready.
+Framework. We present an end-to-end framework, iDFlakies,
+that researchers can use to easily extend and apply our tool to       B. Non-order-dependent (NOD) test
+detect flaky tests and classify them into two types.                     NOD tests are flaky tests that can pass or fail depending on
+Dataset. We describe a collection of artifacts, including             any reason other than solely on the order in which the tests are
+Docker images and test-run logs, that we use to create the            run. Tests of this type are flaky due to concurrency, timeouts,
+dataset and detect flaky tests. iDFlakies and our artifacts are       network/IO, etc. [38].
+publicly available [7].                                                  Figure 2 shows an example NOD test that our tool found in
+Study. We present a study of flaky tests in open-source Java          a project from our study. Java WebSockets [8] is a popular Java
+projects. Our findings include the prevalence of OD and NOD           project with over 4800 stars on GitHub as of January 2019.
+types of flaky tests and how to automatically detect these tests.     The project contains an NOD test in its Issue713Test class.
+                                                                      The test, testIssue, is NOD because it is given a timeout
+               II. E XAMPLES OF F LAKY T ESTS                         on Line 1, and on some executions of the test, the setup of the
+  We show two example flaky tests—one order-dependent                 WebSocket server and the broadcasting of some messages take
+(OD) and one non-order-dependent (NOD)—that can non-                  so long that the test times out. However, in some executions,
+deterministically pass or fail when run on the same code.             even on the same machine, the test is able to finish, due to
+                                                                      differences in the load of the machine.
+A. Order-dependent (OD) test                                             A test could be flaky depending on both the order of the tests
+  OD tests are flaky tests that can pass or fail depending on         and some other non-deterministic cause(s). For example, a
+only the order in which the tests are run [56], i.e., OD tests        flaky test may pass or fail only in a certain order, while always
+can be made to deterministically pass or fail by fixing the           passing or always failing in all other orders. We aim to classify
+such tests as NOD, because unlike pure OD tests, the execution      some NOD tests, our tool runs the original order up to a user-
+results for these tests cannot be deterministically reproduced      specified number of times (by default three). If every run has
+in some order. However, our tool classifies tests based on the      some failing test(s), our tool currently discards the module. In
+observed runs, and if it does not encounter a relevant run, it      the future, we plan to improve how our tool handles failing
+may mis-classify a test as OD when it depends on both the           tests, e.g., it could remove failing tests from the test suite
+test order and some other non-deterministic cause(s).               and proceed with the remaining tests. In our evaluation, the
+                                                                    original order does pass for the majority of the modules (945
+                        III. OUR TOOL                               modules pass, 476 modules do not pass).
+   We develop a tool that detects flaky tests and classifies each      Figure 3 shows an example run of our tool, using the
+as either OD or NOD; our tool does not further classify the         random-class-method configuration and 8 rounds. In the setup
+NOD tests into more precise causes of flaky tests [38]. As          step, the tool runs the original order and all four tests pass. In
+inputs, our tool conceptually takes a test suite, a configuration   the running step, the tool runs these tests 8 times based on the
+for ordering the tests, and the number of times to run the test     specified configuration. In the end, it detects two flaky tests:
+suite based on the configuration. The available configurations      an OD test t1 from ATest (ATest#t1) and an NOD test t3
+are described in Section III-A. As output, our tool produces the    from BTest (BTest#t3).
+detected flaky tests, the type of each flaky test (OD or NOD),         To classify each failed test, the classification step can rerun
+and the exact order in which each flaky test fails. To detect       two test orders: (1) the truncated failing order with all tests
+flaky tests, our tool repeatedly runs the test suite based on the   from the failing order up to and including the failing test; and
+configuration specified by the user. We refer to a single run       (2) the truncated original order with all tests from the original
+of the test suite as a round. The default configuration orders      order up to and including the failing test. If the test fails in
+the tests using random-class-method with 20 rounds. In our          the truncated failing order and passes in the truncated original
+evaluation, we find that the random-class-method configuration      order, our tool classifies the test as OD. If the test passes in the
+detects the most flaky tests.                                       truncated failing order or fails in the truncated original order,
+   We implement our tool as a Maven plugin that can be              our tool classifies the test as NOD. The classification reruns
+integrated into any project that builds using Maven and runs        of the truncated failing order are critical to classify each test
+tests using JUnit. A Maven project is organized into one or         as OD or NOD; when a test fails in an order different from
+more modules, and each module contains its own code and             the original order (in which the test passed), the tool could
+tests. Like most Maven plugins, our tool runs separately on         not immediately determine whether the test fails due to the
+each module. Our tool uses our own custom test runner to            change in the order or due to some other flakiness. The reruns
+control the order of running JUnit test methods, hence, our         of the truncated original order are not cost-beneficial, and in
+tool can work on only Maven projects whose tests are written        our evaluation failed in only 3 of 7441 classification runs, so
+using JUnit. There are three main steps in our tool. The setup      we recommend that only truncated failing orders be run.
+step checks whether all tests of a module pass; if not, our tool       In our example, BTest#t3 fails in round 3. In the clas-
+stops further exploration for that module. If all tests pass, the   sification step, when rerunning the truncated failing order,
+module proceeds to the next step. The running step runs the         BTest#t3 passes. Therefore, the tool classifies BTest#t3 as
+module’s test suite based on the user-specified configuration       an NOD test, because it failed and passed in the same order. In
+and the number of rounds. For each round that contains some         contrast, ATest#t1 fails in rounds 7 and 8. In round 7, when
+test failure(s), our tool performs the classification step. The     rerunning the truncated failing order, ATest#t1 fails again,
+classification step reruns failing and passing orders of a test     and when rerunning the truncated original order, ATest#t1
+to classify it as OD or NOD.                                        passes. Therefore, the tool classifies ATest#t1 as an OD test.
+   During the setup step, our tool checks whether all tests            Even if a test fails twice in the same order, it is no guarantee
+pass in the original order. To determine this order, our tool       that the test is really OD, because other factors could have
+runs Maven’s unit-test plugin, Surefire [10], and collects the      made an NOD test to fail twice. For example, the test shown
+test logs (that Surefire stores in .xml files). From these logs,    in Figure 2 could time out twice in a row due to the machine
+our tool extracts the original order in which Surefire ran          load, independent of the test order. Our tool can recheck a
+test classes and test methods within the classes. Even if the       test failure again even if it previously classified the test. A
+tests pass with Surefire, they could fail with our plugin that      test classified as OD can be later reclassified as NOD in a
+uses our custom test runner. Thus, our tool runs the tests          future round. However, a test classified as NOD can never be
+in the original order using our custom runner, and checks           reclassified as OD. In our example, the same test ATest#t1
+if the result of every test is PASS or SKIP. SKIP indicates         fails in round 8 and is classified again as an OD test.
+that a developer intentionally ignores the test. A test could
+fail in the original order due to being flaky but also due to       A. Configurations
+several other factors, including our testing environment being         Our tool has five configurations for ordering tests:
+wrong, our tool having limitations, or the code under test being    (1) original-order repeatedly runs the tests in the original
+actually broken. We cannot easily distinguish these factors. In     order and classifies any failing test as NOD. The configuration
+an attempt to get all tests to pass, even in the presence of        cannot detect OD tests, because the order is always the same.
+         Fig. 3. A sample run of our tool using the random-class-method configuration with 8 rounds, detecting an OD test and an NOD test.
+
+(2) random-class (RandomC) repeatedly runs test classes in a               later, its prior classification is known (OD or NOD), so one
+random order but keeps methods in each class in the same                   need not run the classification step again. However, we allow
+order as in the original order (e.g., orders 2 and 5 from                  a certain percentage of failures to be rechecked, i.e., the
+Figure 3). Maven Surefire can already randomize the order                  classification step is rerun although the prior classification is
+of test classes, but it neither runs the test suite repeatedly nor         known. If this percentage is 100%, the classification step runs
+classifies flaky tests as OD or NOD.                                       for every failing test, with a potential high runtime cost. If this
+(3) random-class-method (RandomC+M) repeatedly runs test                   percentage is 0%, no test is rechecked, increasing the chance
+methods in a random order, hierarchically randomizing first                to mis-classify some NOD tests as OD. If this percentage
+the order of the test classes and then the methods within test             is in between, then each failing test is selected with that
+classes but not interleaving methods from different classes.               percentage to be rechecked. In our experimentation, we use
+Figure 3 illustrates this configuration.                                   20% to control the runtime cost but still have some benefit
+(4) reverse-class (ReverseC) reverses the order of all test                of increased accuracy. We find that 29 tests are first mis-
+classes from the original order but keeps the test methods                 classified as OD tests and later re-classified as NOD tests. For
+in the same order as the original order (e.g., order 5 from                greater accuracy in classification, we recommend setting this
+Figure 3); our tool runs this configuration only once to limit             percentage to 100% when using our tool with spare machine
+the time for experiments (although repeated runs could detect              time available (e.g., overnight or over the weekend).
+some more NOD tests but no new OD tests).                                     If our tool ever classifies a test as NOD, including during
+(5) reverse-class-method (ReverseC+M) reverses the order of                rechecking, it overall classifies the test as NOD, even if some
+all test classes and methods from the original order (e.g., order          classifications were OD. In other words, the tool classifies as
+8 from Figure 3); similar to reverse-class, this configuration             NOD all tests that fail non-deterministically for some order,
+runs only once.                                                            even if they fail largely deterministically in other orders and
+   All configurations, except the original-order, reorder some             thus have characteristics of both types of flaky tests. Many
+tests from the original order and can detect OD tests. For                 NOD tests fail in more than one round (in our evaluation, 125
+these configurations, if the tool finds a failing test, it proceeds        out of 209 NOD tests fail more than once), so even if the test
+to the classification step (Section III-B). The original-order             is incorrectly classified as OD in one round, later rechecking
+configuration skips the classification step because all failing            can likely correctly re-classify the test as NOD.
+tests from this configuration are classified as NOD tests.
+                                                                           C. Rounds and timeouts
+B. Classification                                                            Our tool can be set to run for a specified number of rounds
+   When our tool finds a test failure in an order (called failing          (Rounds) for each module of a project, a specified amount
+order) different from the original order (in which the test                of time (Timeout) for an entire project, or the minimum of
+passed), it needs to classify whether the test is OD or NOD.               the two (Both). We expect that developers would use Rounds,
+For this classification, our tool can run the test again in the            because they know how long their test suite runs, but we
+failing order and in the original order. If the test both fails            used Both in our large-scale experiments, because we did
+again in the failing order and passes again in the original order,         not know a priori how long various test suites run. Rounds:
+our tool classifies the test as an OD test. Otherwise, our tool            Given a number of rounds, the tool runs each module for
+classifies it as an NOD test.                                              that number of rounds before proceeding to the next module.
+   The test classification can happen at two stages. When                  Section VI-D discusses the trade-off between running mod-
+a test fails for the first time, its classification is unknown,            ules “depth-first” vs. “breadth-first”. Timeout: Given a total
+so the classification step must be run. If the same test fails             amount of time, the tool computes the number of rounds to
+                                                   Fig. 4. Overview of the iDFlakies framework.
+
+run as ⌊Ttimeout /Toriginal ⌋, where Toriginal is the time the original   tainer for each Docker image and first modifies the project’s
+order took to run the entire project. Both: Given both a number           pom.xml files (the build configuration files for a Maven
+of rounds and a timeout, our tool first calculates the number             project) to include our Maven plugin. Next, the framework
+of rounds as for Timeout, and then chooses the minimum of                 determines the number of rounds to run our tool; in the
+that calculated number and the given number of rounds.                    Timeout or Both modes (Section III-C), the framework finds
+                                                                          the time that Maven took to run all the tests in the setup
+                 IV. I DF LAKIES F RAMEWORK
+                                                                          step and uses that time to compute the number of rounds.
+   In addition to our core tool, we also develop a framework,             The framework then proceeds to run our tool for each tool
+iDFlakies, for using the tool on various projects. At a high              configuration that the user specified.
+level, the framework takes as input a list of project URLs
+and commits, and outputs a database with various information              C. Summarizing step
+including how long a module’s test suite takes to run, in which              While the running step logs various information from the
+configurations a module’s test suite is run, and the OD and               projects into log files, the summarizing step parses these logs
+NOD tests detected for each configuration. Figure 4 shows an              to create a SQL database. The database contains several tables
+overview of the framework. It has three main steps: (1) setup             that allow easily querying the details for each module, for all
+of the projects, (2) running our tool on the projects to detect           modules of a project, or even across projects. The user can
+flaky tests, and (3) summarizing the results for the user. The            obtain information such as the time a module’s test suite takes
+code for all three steps is publicly available [7].                       to run, the various configurations the module was run with, the
+A. Setup step                                                             number of rounds that our tool runs for each configuration, the
+                                                                          rounds that contain at least one failing test and the names of
+   Given a list of project URLs and Git SHAs corresponding
+                                                                          those failing tests, the results of the classification steps, which
+to a commit for each project, our framework first constructs
+                                                                          round detected which flaky test, and whether each test was
+a Docker image [2] for each project and commit pair. Each
+                                                                          classified as OD or NOD. All of the logs used to create the
+image provides an isolated environment for each project and
+                                                                          database are also saved, including test orders, test results, stack
+eases the reproduction of our experimentation. Our Docker
+                                                                          traces of failed tests, output from tests, and build output. More
+images are also publicly available [7].
+                                                                          details about the database and logs are on our website [7].
+   Our framework first builds a base Docker image on top of
+Ubuntu 16.04 by installing the basic necessary software such                                      V. S TUDY S ETUP
+as Git, Java, and Maven. In particular, our framework currently
+uses Java 8 and Maven 3.5.4. On top of this base Docker                      All projects in our study are Java projects that build with
+image, the framework builds a Docker image for each project               Maven [9] and use JUnit. We check whether a project builds
+by cloning the version of the project’s repository specified by           with Maven by looking for a pom.xml file at the root of
+the commit SHA. The framework then builds the commit SHA                  the project’s repository. We collected the projects from three
+and runs its tests, specifically with mvn clean install                   sources: (1) 44 projects from recent related work [14], [46],
+-DskipTests -fn -B followed by mvn test -fn -B. Our                       (2) 150 most popular Java projects from GitHub [6] up until
+framework aims to run as many modules as possible, and the                October 2018, and (3) 500 most popular Java projects from
+-fn option instructs Maven to not stop at the first failing               GitHub that were updated within the month of November
+module but still execute the other modules. Modules that fail             2018. We determine the popularity of GitHub projects using
+mvn test do not proceed to the running step.                              the number of stars.
+                                                                             The projects from related work [14], [46] are prominent Java
+B. Running step                                                           projects that have flaky tests. Instead of using the same, mostly
+  The running step runs our tool for each project in its own              old, versions of the projects used in the prior work [14], [46],
+Docker container. The framework starts up a Docker con-                   we use a more recent version, because we may report the flaky
+tests that we detect to the project developers, and researchers                                                                                                                                                                 50.0%
+                                                                                                                     50.0%
+may want to study not-yet-fixed flaky tests, e.g., such that
+                                                                                                                                                                                                                 46.8%
+tools for automated fixing do not overfit to the history. In total,
+we use 44 projects from the two papers [14], [46]. When we
+
+
+
+
+                                                                      Probability of a round detecting flaky tests
+union those projects with the top 150 most popular projects                                                          40.0%                   Flaky Type
+from GitHub, we obtain 183 projects that contain a total of                                                                                      OD
+2921 modules and 1880362 tests.                                                                                                                  NOD
+                                                                                                                                                 any
+   We break our projects into two sets, comprehensive and ex-
+                                                                                                                     30.0%
+tended. The comprehensive set includes all 183 projects from
+sources (1) and (2), and we evaluate all five configurations of
+our tool on these 183 projects. We find random-class-method
+to be the most effective configuration for detecting flaky tests.                                                    20.0%
+The extended set includes all of the projects from source (3),
+and to limit the cost of our experimentation, we evaluate only                                                                                                                    12.6%
+                                                                                                                                                                                          11.7%          11.7%
+the random-class-method configuration on these projects. The                                                                                                       10.4%
+                                                                                                                     10.0%
+extended set consists of 500 projects disjoint from the projects
+from the comprehensive set. These 500 projects contain a total                                                                                                                                                           5.3%
+                                                                                                                                                            3.2%
+of 2250 modules and 93722 tests. The extended set has fewer                                                                    2.7%   2.7%           2.2%                  2.4%
+                                                                                                                                                                                                  1.3%
+                                                                                                                                              1.0%
+tests than the comprehensive set although the extended set has                                                        0.0%
+more projects, because it has relatively smaller projects.                                                                      Original       Random C            Random C+M              Reverse C             Reverse C+M
+   Of all 5171 modules from the 683 projects, iDFlakies is                                                                                                     Configuration
+able to explore 945 modules for flaky tests. iDFlakies cannot
+explore the other 4226 modules (from 597 projects) because                                                           Fig. 5. Probability of a configuration to detect at least one flaky test.
+462 modules could not be built by Maven, 2830 modules
+do not declare JUnit as a dependency in its pom.xml file or              As described in Section V, our dataset contains two sets:
+have no tests, 476 modules’ tests do not pass in any of three         for comprehensive, we run all five configurations on the 183
+rounds in the original order, and 458 modules encounter some          projects; for extended, we run only the random-class-method
+limitations of our tool. We plan to improve the tool to handle        configuration on the 500 projects. RQ1 (Section VI-A) uses
+more modules in the future.                                           both sets of our dataset, while RQ2 and RQ3 (Sections VI-B
+   In summary, among the 945 modules that iDFlakies can               and VI-C, respectively) use only the comprehensive set, be-
+explore, it detects 38 modules (from 31 projects) with at least       cause they compare the configurations.
+one OD test and 82 modules (from 63 projects) with at least
+                                                                      A. RQ1. Breakdown of flaky-test types
+one NOD test, for a union of 111 modules (from 82 projects)
+with at least one OD or NOD test (and some modules have                  Our evaluation detects a total of 422 flaky tests from 111
+both OD and NOD tests). Our project website [7] provides              modules in 82 projects. Of 422 flaky tests, 213 (50.5%)
+more details for all projects used in our study.                      are classified as OD tests and 209 (49.5%) as NOD tests,
+                                                                      based on the observed runs. While the overall percentage
+                     VI. S TUDY RESULTS                               of OD tests is slightly higher than the percentage of NOD
+   The main goal of our study is to detect flaky tests in open-       tests, the two are rather close. Note that our study heavily
+source projects and to compare the configurations that one            focuses on randomizing test orders to detect OD tests, because
+could use to detect these tests. More specifically, our study         automatically distinguishing/classifying OD tests from NOD
+addresses the following main research questions:                      tests can be done fairly well. Section VI-C describes the
+RQ1: What is the breakdown of OD and NOD tests in open-               breakdown of the flaky tests detected for each test reordering
+source projects?                                                      configuration. The projects in our study likely have many more
+RQ2: What is the probability of a round (test-suite run)              NOD tests that could be detected by changing some aspects of
+containing at least one flaky-test failure?                           our experiments. For example, running multiple test suites in
+RQ3: What ordering configurations detect the most flaky tests?        the same machine (not each in its own machine) would allow
+   The reason for RQ1 is to understand which types of flaky           competing for machine resources to more likely cause failures
+tests are more prevalent among those detected in open-source          of NOD tests.
+projects. The reason for RQ2 is to understand how often flaky
+tests impact developers’ development cycle and to illustrate          B. RQ2. Probability of a round containing a flaky-test failure
+the need for better solutions to detect flaky tests. The reason          The probability that an individual flaky test fails—measured
+for RQ3 is to help developers understand the potential trade-         as the ratio of the number of rounds in which a test fails over
+offs of different ordering configurations and better utilize their    the number of rounds in which the test was run—varies a lot,
+resources (e.g., developers’ time and machine resources) in           from under 1% to over 50% in our experiments. In practice, a
+detecting flaky tests.                                                developer running tests usually cares not about individual tests
+but the status of the entire test suite, i.e., whether all the tests    causes the OD test to fail. The probability of failure should
+pass or some fail. Given this concern, we study the probability         be again 50% unless there are many tests that can set up the
+of a round failing, i.e., containing at least one flaky-test failure.   OD test. We plan to further explore the notions of “bad” and
+Figure 5 shows for each configuration the percentage of failing         “good” tests in the future.
+rounds further broken down into the percentages for rounds
+that contain at least one OD or NOD test.                               C. RQ3. Configurations detecting most flaky tests
+   The percentage of failing rounds can be calculated assuming             Table I shows the breakdown of the number of flaky tests
+the test failures to be either (1) correlated with one another or       detected by the different configurations for each project from
+(2) independent of one another. If failures are correlated, then        our comprehensive set. The table shows the breakdown for
+rounds with multiple failures affect the percentage as much             both OD and NOD tests, except for the original order that
+as rounds with one failure. If failures are independent, then           can detect only NOD tests. The table also shows the number
+one round with multiple failures could have been multiple               of rounds run for the original-order and random-class-method
+rounds with fewer failures per round. Due to the difficulty             configurations; the number of rounds for random-class is
+of precisely determining whether failures are independent, we           similar to the number for random-class-method. While these
+compute percentages for round failures simply based on the              numbers would be ideally the same, there are various reasons
+observed rounds. Namely, we compute the percentages as the              for different numbers, including timeouts, tool crashes, and
+ratio of the number of rounds where one or more flaky tests             repeated experiments. The numbers of rounds for reverse-
+fail over the total number of rounds for each configuration             class-method and reverse-class are much lower; in fact, our
+(but only for modules that have flaky tests). If a failing round        tool runs each of those two configurations for only one round
+contains both OD and NOD tests, then that round counts as               in one experiment, but we performed multiple experiments
+one for both types of flaky tests as well as for “Any”.                 while developing our tool and kept most of the logs to provide
+   Figure 5 visualizes the results. We see that the reverse-class-      the largest dataset for analysis of flaky tests.
+method configuration has the highest probability of producing           OD tests: As shown in Table I, among all configurations, the
+a failing round, 50.0% overall probability of detecting one or          random-class-method detects the greatest number of unique
+more flaky tests just from running one round. More precisely,           OD tests, 162 (i.e., 88.0% of all OD tests detected across
+reverse-class-method has a 46.8% probability of producing               all configurations). This result matches our expectations: ran-
+a failing round due to OD tests and a 5.3% probability of               domly reordering test methods provides the most reordering
+producing a failing round due to NOD tests. For quickly                 flexibility among configurations, giving more opportunities for
+determining whether a test suite may contain flaky tests, our           different reorderings to expose OD tests. In general, Table I
+results suggest that the developers should run the reverse-class-       shows that reordering test methods rather than just test classes
+method configuration. We also find that developers who run              helps with detecting flaky tests; both random-class-method
+their tests only in the Maven-specified, original order have a          and reverse-class-method detect more flaky tests than random-
+low overall probability of producing a failing round, 2.7%.             class and reverse-class, respectively (while the corresponding
+   Of particular interest are the percentages of rounds that fail       configurations explore a similar number of rounds).
+due to OD tests for random-class and random-class-method.                  Considering that the random-class-method configuration
+Intuitively, an OD test can fail because either a “bad” test is         runs many more rounds than the reverse-class-method config-
+run before it or a “good” test is not run before it. Consider the       uration, it is expected that random-class-method detects more
+case where an OD test fails due to some “bad” test(s) running           (OD and NOD) flaky tests. Indeed, the reverse-class-method
+before the OD test and “polluting” the shared state, causing            configuration detects only 47 OD tests (25.5% of all OD tests
+the OD test to start running in an undesirable state [12], [13],        detected across all configurations). Interestingly, the reverse-
+[24]. Assume that there is one such polluting test and one OD           class-method configuration detects 4 tests not detected by
+test. Given a uniformly random ordering of the tests, there is          the random-class-method configuration. However, the random-
+a 50% probability of the polluting test to be ordered before            class-method configuration detects 119 tests not detected
+the OD test. If there are more polluting tests, the probability is      by the reverse-class-method configuration. As a result, we
+even higher that at least one polluting test runs before the OD         strongly recommend developers to first run the reverse-class-
+test. However, with the exception of the reverse-class-method           method configuration once to quickly detect a portion of the
+configuration having a 46.8% probability of a failing round,            OD tests and then use the random-class-method configuration
+our reordering configurations have the percentages much lower           to detect more OD tests.
+than 50%. These low percentages suggest that the test suite                Overall, we find that the random-class-method configuration
+has some “cleaner” tests, which clean the polluted state such           performs the best, although the other configurations also
+that the OD test can then run successfully, and these cleaner           sometimes detect flaky tests not detected by random-class-
+tests are frequently ordered to run between the polluting test(s)       method. Our findings suggest that it is desirable to research
+and the OD test.                                                        new approaches that can help quickly find the test orders that
+   The other case is a missing “good” test: if an OD test needs         would detect the most OD tests. Such new approaches could
+another test to run before it to set up a desirable state for that      be substantially better than randomly selecting test orders, and
+OD test, then not having that set up test run before the OD test        we plan to explore them in the future.
+                                                           TABLE I
+   T HE NUMBER OF FLAKY TESTS THAT EACH CONFIGURATION DETECTS IN THE COMPREHENSIVE SET. “A LL” IS THE NUMBER OF UNIQUE TESTS .
+
+                                         Original       RandomC        RandomC+M          ReverseC      ReverseC+M             All
+ Project Slug - Module                Round NOD        OD NOD      Round   OD NOD        OD NOD         OD     NOD      OD    NOD     All
+ activiti/activiti                        88       0     0     0       66   20    0        0       0      0      0       20       0    20
+ alibaba/fastjson                         67       0    12     0      158   13    2        3       0      4      0       13       2    15
+ apache/hadoop - m1                       14       0     0     0       14    2    0       18     10       0      0       20     10     30
+                    - m2                  14       0    22     1        7   22    1        0       0      0      0       22       1    23
+                    - m3                  15       0     1     0       10    1    0        1       0      1      0        1       0     1
+                    - m4                  15       1     0     0       14    2    0        0       0      4      7        6       8    14
+ apache/hbase                             14       1     0     0       13    0    1        0       0      0      1        0       1     1
+ apache/incubator-dubbo - m1              32       0     0     1       53    0    0        0       0      0      0        0       1     1
+                            - m2          33       0     2     7       76    4    2        0       0      1      0        4       9    13
+                            - m3          39       0     0     0       37    1    0        0       0      1      0        1       0     1
+                            - m4          42       0     1     0       91    4    0        0       0      2      0        4       0     4
+                            - m5          47       0     0     0       38    3    0        0       0      0      0        3       0     3
+                            - m6         131       2     0     0       49    0    0        0       0      0      0        0       2     2
+ apache/jackrabbit-oak                    16       0     0     0       14    2    0        0       0      2      0        2       0     2
+ apache/struts                           114       0     0     0      342    4    0        0       0      0      0        4       0     4
+ crawlscript/webcollector               4140       1     0     1    16503    0    1        0       0      0      0        0       1     1
+ doanduyhai/achilles                     356       0     0     0      278    0    1        0       0      0      0        0       1     1
+ dropwizard/dropwizard                    76       0     0     1      248    1    1        0       0      0      0        1       1     2
+ elasticjob/elastic-job-lite - m1        288       2     0     0      839    0    0        0       0      0      0        0       2     2
+                             - m2        307       3     0     0      826    0    1        0       0      0      0        0       3     3
+                             - m3        335       0     2     0      815    7    1        0       0      2      0        7       1     8
+ google/jimfs                             42       1     0     0      108    0    0        0       0      0      0        0       1     1
+ jfree/jfreechart                        166       0     0     0      290    1    0        0       0      0      0        1       0     1
+ jodaorg/joda-time                       206       1     0     0      146    0    0        0       0      0      0        0       1     1
+ kevinsawicki/http-request              2317       0     0     0     2013   28    0        0       0     28      0       28       0    28
+ knightliao/disconf                      344       0     0     0     1359    0    1        0       0      0      0        0       1     1
+ looly/hutool                            842       0     0     0      650    0    1        0       0      0      0        0       1     1
+ orbit/orbit                              35       0     0     1      123    0    0        0       0      0      0        0       1     1
+ oryxproject/oryx                         60       1     0     0      131    0    1        0       0      0      0        0       1     1
+ querydsl/querydsl                        14       3     0     0        0    0    0        0       0      0      0        0       3     3
+ spotify/helios                           25       1     0     1       71    0    1        0       0      0      0        0       1     1
+ spring-projects/spring-boot - m1          8       1     0     0       12    0    0        0       0      0      0        0       1     1
+                               - m2       12       0     0     0       13    2    0        0       0      2      0        2       0     2
+ square/otto                             815       1     0     0     3243    0    0        0       0      0      0        0       1     1
+ square/retrofit - m1                     87       0     0     2      331    0    2        0       0      0      0        0       2     2
+                   - m2                   87       0     0     4      331    0    5        0       0      0      0        0       7     7
+ tootallnate/java-websocket              666      21     0    30     1653    0   47        0       0      0      1        0     52     52
+ undertow-io/undertow                     15       0     0     4       65    1    3        0       0      0      0        1       4     5
+ wildfly/wildfly                          10       0     0     0       35   44    0        0       0      0      0       44       0    44
+ wro4j/wro4j                              34       0     0     0      116    0    2        0       0      0      0        0       2     2
+ Total                                 11968      40    40    53    31181  162   74       22     10      47      9      184    122    306
+
+NOD tests: Table I and Figure 5 show that most configurations          For NOD tests detected by both original-order and random-
+have similar probability to detect NOD tests. The percentages          class-method, we compare the probability of a round detecting
+for the two reverse configurations differ from the other config-       the test but find no generalizable differences. Specifically, a
+urations, but these two configuration have much fewer rounds           Wilcoxon signed-rank test shows that the probabilities are
+and thus by chance could have much higher or lower prob-               statistically different, with p < 0.05, for the (26) tests in the
+abilities. Even if some configuration has a higher probability         comprehensive set but not statistically different from the (33)
+to detect at least one failure in a round, it may be repeatedly        tests including both comprehensive and extended sets. We plan
+detecting the same NOD tests. A benefit of rerunning original-         to explore in the future whether running the tests in different
+order is that every failure is immediately known to be an NOD          reorderings leads to differences that can more easily expose
+test. In contrast, failures from randomized orders need to be          flakiness in the NOD tests due to various causes.
+classified using the classification step of our tool.                     Our results suggest that simply rerunning tests in the
+   Detection of many NOD tests from randomized orders                  original order where they pass is not a good configuration
+(and the reverse-class-method classification) shows that the           for detecting flaky tests—it cannot detect any OD test, and it
+classification step is important for properly classifying a flaky      does not have a much higher probability to detect even NOD
+test as an OD test or an NOD test. Of the 122 NOD tests                tests. It is better to reorder the tests to increase the probability
+in our comprehensive set, we find that our tool classifies 91          of detecting any type of flaky tests, not just OD tests. In
+as NOD tests using the classification step; the remaining 31           our experiments, the randomizing configurations, along with
+unique NOD tests need no classification step because our tool          the classification step, detect more NOD tests than rerunning
+classifies them as NOD using the original-order configuration.         the tests many times in the same original passing order (but
+with the caveat that randomizing configurations had more             the number of flaky tests. For example, in a run with multiple
+rounds). Our tool currently cannot further analyze or classify       failing tests, all failing tests may be classified as OD, but the
+the cause of flakiness for these NOD tests; we leave that topic      tests after the first failure simply depend on the first failing
+as important future work.                                            test. When that first failing test is fixed, these later OD tests
+                                                                     may also all be fixed. We plan to explore automated debugging
+D. Discussion                                                        of OD tests in the future.
+Running iDFlakies: Currently, our tool runs tests in a multi-        Ratio of types of flaky tests: Our results show that the
+module Maven project in a depth-first manner: given a user-          percentages of flaky tests classified as OD and NOD are
+specified number of rounds (or a user-specified timeout from         quite close (50.5% and 49.5%, respectively). However, prior
+which the tool calculates the number of rounds), our tool first      work [38] classifying fixed flaky tests found a much lower
+runs that number of rounds for one module before proceeding          percentage of flaky tests being OD, 12%. Our tool uses random
+to the next module. An alternative would be breadth-first:           orderings to focus on detecting OD tests. Our tool likely
+our framework would first run our tool on every module               misses many NOD tests and can be improved by adding more
+once before running our tool on every module again for the           variations to test runs in order to detect more NOD tests.
+second round, and so on. However, breadth-first would invoke         FixMethodOrder: We find that 23 of the OD tests detected by
+our tool, and consequently Maven, each time it needs to run          our tool are in test classes annotated with @FixMethodOrder.
+through all modules for one round. Invoking our tool and             This annotation indicates that the test methods in a test class
+Maven adds extra overhead in checking what modules exist,            must run in a certain order, e.g., in the ascending order
+what needs to be rebuilt, what the tests are, etc. Comparing         based on the test-method names. Our tool still detects and
+advantages and disadvantages of depth-first and breadth-first,       reports such OD tests although running them through JUnit
+depth-first avoids the extra overhead of invoking Maven multi-       would not reorder the tests. However, it is still beneficial to
+ple times and more closely matches the usual Maven approach          explore different orderings of test methods in such annotated
+to plugins, with a plugin finishing work on a module before          test classes. First, it could be that there are actually no
+proceeding to the next module. The disadvantage is that depth-       dependencies among the tests, so the annotation is no longer
+first requires knowing the number of rounds, so our tool can         needed and can be removed. Second, it is important to still
+finish running tests for one module before proceeding to the         detect OD tests to help developers know which exact ones
+next one. The advantage of breadth-first is that it allows for the   are OD. For example, we observe that while our tool detected
+usage scenario where a developer runs the framework with no          several OD tests in @FixMethodOrder-annotated test classes
+a priori timeout, running overnight or whenever a machine            from the Activiti/Activiti project [1] at commit SHA
+has idle time. The developer can then stop the framework             b11f757a, the developers introduced a patch that removed
+at any time and receive all the flaky tests detected. The            the ordering of such dependencies and the @FixMethodOrder
+disadvantage of breadth-first is the extra overhead needed for       annotation in a later commit SHA, 5a1cb8ae.
+Maven. Currently, we do not know which way of running
+modules is faster and provides more benefits in terms of                             VII. T HREATS TO VALIDITY
+detecting more flaky tests; we plan to implement breadth-first
+and compare empirically with depth-first in the future.                 Our tool and framework may contain faults that could have
+Regression testing: Our tool runs tests in many different or-        affected our results. To mitigate such threat, we implement
+ders aiming to detect the most flaky tests. However, rerunning       extensive logging for our framework and manually investigate
+tests takes a long time and is worth doing only if a developer       a sample of logs generated on a variety of projects. We are
+is purposefully trying to detect a substantial number of flaky       more confident in our core tool but less confident in the
+tests and has the resources for this task. Another way to use        summarizing step of the framework due to its complexity.
+the findings from our study (e.g., that changing the order of           The exact results of our study, namely the flaky tests de-
+the tests increases the chances of detecting flaky tests) is to      tected and their rate of failures, may not be easily reproducible
+incorporate the reorderings with continuous integration and          due to the nature of our experimentation using random orders
+regression testing. The developer can run the tests in different     and the nature of flaky tests non-deterministically passing and
+orders after every change when tests are naturally rerun as part     failing. We attempt to mitigate this threat by logging the
+of the development process, and flaky-test detection from our        (random) orders in which our tool runs the tests so that others
+tool would effectively come “for free”. In fact, we find that        can reproduce the flaky-test behavior by running the same
+8 of the 683 projects from our study already configure their         orders. The logs for all rounds are publicly available [7].
+Surefire (setting the option runOrder to random) to run test            Our classifications of flaky tests into OD or NOD tests may
+classes (but not test methods) in random order.                      occasionally be incorrect. For example, an NOD test could
+First failure: Our framework counts all tests that fail during       fail due to a timeout or network issue, and rerunning in the
+a failing round as flaky tests. However, multiple flaky tests        classification step could lead to it failing again in the same
+that fail in the same failing round can all be failing due to the    order, misleading our tool to classify the test as an OD test.
+same root cause. As such, multiple flaky tests can all be fixed      We attempt to mitigate this threat by having the framework
+in the same way, and the number of fixes may be smaller than         recheck a substantial number of flaky tests’ classifications.
+   Moreover, the actual number of flaky tests in the projects       these dependencies may not necessarily lead to different test
+we study may be (much) higher than what we report. We               outcomes if tests run in different orders. Building on that work,
+likely miss some NOD flaky tests. Also, we currently run only       Gambi et al. [21] developed a technique to more precisely
+unit tests from mvn test and not integration tests from mvn         detect test dependencies and used it to find different test orders
+verify because the latter can take much longer.                     to manifest OD tests. They reported 27 previously unknown
+   Our findings that random-class-method detects the most           OD tests; we report 213 OD tests and also 209 NOD tests. In
+flaky tests among all configurations that we study may not          future work, we can leverage the ideas from Gambi et al. [21]
+generalize to projects other than those we study. We attempt        to detect OD tests faster.
+to mitigate this threat by obtaining a sizable number of popular       Palomba and Zaidman [46] considered the relationship
+Java projects from GitHub and prior studies. Nevertheless,          between code smells and flaky tests, reporting that fixing
+projects written in other languages, or even Java projects not      certain types of code smells can also fix certain flaky tests.
+using Maven or JUnit, may not yield similar results. We use         They reported finding flaky tests through reruns and classifying
+the number of stars on GitHub to obtain popular Java projects,      them into the types introduced by Luo et al. [38]. Palomba
+but they may not be representative of the test suites in all Java   and Zaidman reported 11% of flaky tests to be OD and a
+projects.                                                           large number of flaky tests from a small number of projects.
+                                                                    However, they did not provide us the logs of test runs from
+                    VIII. R ELATED WORK                             their experiments, and thus we cannot directly compare their
+   Luo et al. [38] performed an extensive study of flaky tests      results against ours or investigate the differences.
+by looking through historical commits with fixed flaky tests           Bell et al. [14] leveraged code evolution and code coverage
+and classified these tests into several types, including OD         to determine whether new test failures between two commits
+tests. OD tests were among the top three causes of flaky tests,     are due to flaky tests; they automatically detected flaky tests
+with 12% of the fixed flaky tests being OD. Labuschagne et          that cover no changed parts of the code but have a different
+al. [34] studied regression testing in continuous integration       outcome from the last time the tests run. In contrast, we detect
+and encountered many flaky tests as well, reporting that 13%        flaky tests through reruns on the same commit, but instead of
+of the historical failed builds rerun on Travis CI are due to       just running the tests in the Maven-specified order, we apply
+flaky-test failures. Gao et al. [22] studied system tests and       various configurations to reorder the tests. Both Palomba and
+found that 96% of test failures can be due to flaky tests and       Zaidman [46] and Bell et al. [14] released datasets of flaky
+that the same tests can have as much as 184 lines of code-          tests but for older code versions; our dataset [7] is for the most
+coverage difference between runs. Others [29], [39] also report     recent code versions, includes classification of flaky tests into
+non-deterministic code coverage.                                    OD and NOD, and contains a collection to artifacts to help
+   There is a growing body of work on detecting flaky tests.        others reproduce these flaky tests.
+Our work follows Zhang et al. [56] who detected OD tests
+through random ordering of all test methods in the test suites,                           IX. C ONCLUSION
+with follow-up work [35] that also reported NOD tests through          We have presented our iDFlakies framework, which auto-
+rerunning the same order of tests many times. We also rely          mates experimentation to detect and partially classify flaky
+on random ordering to detect flaky tests and on reruns to           tests using our tool for Maven-based Java projects with JUnit
+classify them into OD and NOD tests. However, unlike Zhang          tests. We have applied our framework on 683 projects. We
+et al. [56], we build our dataset across a much larger number       provide a dataset of 422 flaky tests that we then use for our
+of projects (683 projects vs. 4 projects). Furthermore, our         study on flaky tests. From our dataset, 50.5% of flaky tests are
+random-class-method configuration does not interleave the test      OD, while 49.5% are NOD, based on the observed runs. We
+methods across different test classes, respecting how JUnit         also find that running the random-class-method configuration
+actually runs tests. Our results still confirm Zhang et al.’s       can detect the most flaky tests overall. Both our framework
+finding that running a high number of randomized orders can         and dataset are publicly available [7], and we hope that they
+detect more OD tests than running once the reverse order.           can help involve more researchers in the topic of flaky tests,
+   Gyori et al. [24] proposed the PolDet technique for detecting    e.g., to develop better techniques to detect flaky tests, reduce
+tests that “pollute” the state such that tests that run after       non-determinism or even fix it altogether, label test failures as
+polluters may have different outcomes. PolDet can proac-            flaky or not, or prevent future flaky tests.
+tively report potential test-order dependencies before they
+even occur, because no other test in the current test suite                             ACKNOWLEDGMENTS
+may actually depend on the polluted state. Dually, Huo and          We thank Angello Astorga, Liia Butler, and Owolabi Legunsen
+Clause [31] studied tests with brittle assertions that depend       for their discussions about flaky tests. This work was par-
+on the values derived from inputs not controlled by the tests       tially supported by National Science Foundation grants CCF-
+themselves. Such tests can be order-dependent on other tests        1421503, CNS-1513939, CNS-1564274, CNS-1646305, CNS-
+that conceptually pollute the state that affects the test with      1740916, CCF-1763788, CCF-1816615, and OAC-1839010.
+the brittle assertions. Bell et al. [13] proposed to monitor        We acknowledge support for research on flaky tests and test
+test executions to dynamically detect test dependencies, but        quality from Facebook, Google, Huawei, and Microsoft.
+                               R EFERENCES                                           [32] H. Jiang, X. Li, Z. Yang, and J. Xuan. What causes my test alarm?
+                                                                                          Automatic cause analysis for test alarms in system and integration
+ [1] Activiti. https://github.com/activiti/activiti.                                      testing. In ICSE, pages 712–723, Buenos Aires, Argentina, May 2017.
+ [2] Docker. https://www.docker.com.                                                 [33] R. Just, D. Jalali, and M. D. Ernst. Defects4J: A database of existing
+ [3] Elastic-Job. https://github.com/elasticjob/elastic-job-lite.                         faults to enable controlled testing studies for Java programs. In ISSTA,
+ [4] Executing unit tests in parallel on a multi-CPU/core machine in Vi-                  pages 437–440, San Jose, CA, USA, July 2014.
+     sual Studio. http://blogs.msdn.com/b/vstsqualitytools/archive/2009/12/          [34] A. Labuschagne, L. Inozemtseva, and R. Holmes. Measuring the cost of
+     01/executing-unit-tests-in-parallel-on-a-multi-cpu-core-machine.aspx.                regression testing in practice: A study of Java projects using continuous
+ [5] Flakiness Dashboard HOWTO. http://www.chromium.org/developers/                       integration. In ESEC/FSE, pages 821–830, Paderborn, Germany, Sept.
+     testing/flakiness-dashboard.                                                         2017.
+ [6] GitHub. https://github.com.                                                     [35] W. Lam, S. Zhang, and M. D. Ernst. When tests collide: Evaluating and
+ [7] iDFlakies: Flaky test dataset.                 https://sites.google.com/view/        coping with the impact of test dependence. Technical Report UW-CSE-
+     flakytestdataset/home.                                                               15-03-01, University of Washington Department of Computer Science
+ [8] Java WebSockets. https://github.com/tootallnate/java-websocket.                      and Engineering, Seattle, WA, USA, Mar. 2015.
+ [9] Maven. https://maven.apache.org.                                                [36] T. Lavers and L. Peters. Swing Extreme Testing. Packt Publishing, 2008.
+                                                                                     [37] O. Legunsen, F. Hariri, A. Shi, Y. Lu, L. Zhang, and D. Marinov. An
+[10] Maven Surefire plugin.                    https://maven.apache.org/surefire/
+                                                                                          extensive study of static regression test selection in modern software
+     maven-surefire-plugin.
+                                                                                          evolution. In FSE, pages 583–594, Seattle, WA, USA, Nov. 2016.
+[11] TotT: Avoiding Flakey Tests. http://googletesting.blogspot.com/2008/04/
+                                                                                     [38] Q. Luo, F. Hariri, L. Eloussi, and D. Marinov. An empirical analysis of
+     tott-avoiding-flakey-tests.html.
+                                                                                          flaky tests. In FSE, pages 643–653, Hong Kong, Nov. 2014.
+[12] J. Bell and G. Kaiser. Unit test virtualization with VMVM. In ICSE,
+                                                                                     [39] P. Marinescu, P. Hosek, and C. Cadar. Covrig: A framework for the
+     pages 550–561, Hyderabad, India, June 2014.
+                                                                                          analysis of code, test, and coverage evolution in real software. In ISSTA,
+[13] J. Bell, G. Kaiser, E. Melski, and M. Dattatreya. Efficient dependency               pages 93–104, San Jose, CA, USA, July 2014.
+     detection for safe Java test acceleration. In ESEC/FSE, pages 770–781,          [40] A. M. Memon and M. B. Cohen. Automated testing of GUI applications:
+     Bergamo, Italy, Sept. 2015.                                                          models, tools, and controlling flakiness. In ICSE, pages 1479–1480, San
+[14] J. Bell, O. Legunsen, M. Hilton, L. Eloussi, T. Yung, and D. Marinov.                Francisco, CA, USA, May 2013.
+     DeFlaker: Automatically detecting flaky tests. In ICSE, pages 433–444,          [41] A. M. Memon, Z. Gao, B. N. Nguyen, S. Dhanda, E. Nickell, R. Siem-
+     Gothenburg, Sweden, May 2018.                                                        borski, and J. Micco. Taming Google-scale continuous testing. In ICSE
+[15] L. C. Briand, Y. Labiche, and S. He. Automating regression test selection            SEIP, pages 233–242, Buenos Aires, Argentina, May 2017.
+     based on UML designs. IST, 51(1):16–30, Jan. 2009.                              [42] J. Micco.        Continuous Integration at Google scale.             https:
+[16] G. Brown. Test Verification. https://developer.mozilla.org/en-us/docs/               //eclipsecon.org/2013/sites/eclipsecon.org.2013/files/2013-03-24%
+     mozilla/qa/test verification.                                                        20Continuous%20Integration%20at%20Google%20Scale.pdf.
+[17] H. Do, S. G. Elbaum, and G. Rothermel. Supporting controlled exper-             [43] K. Muşlu, B. Soran, and J. Wuttke. Finding bugs by isolating unit tests.
+     imentation with testing techniques: An infrastructure and its potential              In ESEC/FSE NIER, pages 496–499, Szeged, Hungary, Sept. 2011.
+     impact. ESE, 10(4):405–435, 2005.                                               [44] A. Nanda, S. Mani, S. Sinha, M. J. Harrold, and A. Orso. Regression
+[18] S. Elbaum, A. Mclaughlin, and J. Penix.                         The Google           testing in the presence of non-code changes. In ICST, pages 21–30,
+     dataset     of     testing     results.            https://code.google.com/p/        Berlin, Germany, Mar. 2011.
+     google-shared-dataset-of-test-suite-results.                                    [45] A. Orso, N. Shi, and M. J. Harrold. Scaling regression testing to large
+[19] S. Elbaum, G. Rothermel, and J. Penix. Techniques for improving                      software systems. In FSE, pages 241–251, Newport Beach, CA, USA,
+     regression testing in continuous integration development environments.               Nov. 2004.
+     In FSE, pages 235–245, Hong Kong, Nov. 2014.                                    [46] F. Palomba and A. Zaidman. Does refactoring of test smells induce
+[20] M. Fowler. Eradicating non-determinism in tests. http://www.chromium.                fixing flaky tests? In ICSME, pages 1–12, Shanghai, China, Sept. 2017.
+     org/developers/testing/flakiness-dashboard.                                     [47] G. Rothermel, S. Elbaum, A. G. Malishevsky, P. Kallakuri, and X. Qiu.
+[21] A. Gambi, J. Bell, and A. Zeller. Practical test dependency detection.               On test suite composition and cost-effective regression testing. TOSEM,
+     In ICST, pages 1–11, Vasteras, Sweden, Apr. 2018.                                    13(3):277–331, July 2004.
+[22] Z. Gao, Y. Liang, M. B. Cohen, A. M. Memon, and Z. Wang. Making                 [48] G. Rothermel, M. J. Harrold, J. Ostrin, and C. Hong. An empirical study
+     system user interactive tests repeatable: When and what should we                    of the effects of minimization on the fault detection capabilities of test
+     control? In ICSE, pages 55–65, Florence, Italy, May 2015.                            suites. In ICSM, pages 34–43, Bethesda, MD, USA, Nov. 1998.
+[23] M. Gligoric, L. Eloussi, and D. Marinov. Practical regression test              [49] T. Savor, M. Douglas, M. Gentili, L. Williams, K. Beck, and M. Stumm.
+     selection with dynamic file dependencies. In ISSTA, pages 211–222,                   Continuous deployment at Facebook and OANDA. In ICSE-Companion,
+     Baltimore, MD, USA, July 2015.                                                       pages 21–30, Austin, TX, USA, May 2016.
+[24] A. Gyori, A. Shi, F. Hariri, and D. Marinov. Reliable testing: Detecting        [50] A. Shi, A. Gyori, M. Gligoric, A. Zaytsev, and D. Marinov. Balancing
+     state-polluting tests to prevent test dependency. In ISSTA, pages 223–               trade-offs in test-suite reduction. In FSE, pages 246–256, Hong Kong,
+     233, Baltimore, MD, USA, July 2015.                                                  Nov. 2014.
+[25] M. Harman and P. O’Hearn. From start-ups to scale-ups: Opportunities            [51] A. Shi, A. Gyori, S. Mahmood, P. Zhao, and D. Marinov. Evaluating
+     and open problems for static and dynamic program analysis. In SCAM,                  test-suite reduction in real software evolution. In ISSTA, pages 84–94,
+     pages 1–23, Madrid, Spain, Sept. 2018.                                               Amsterdam, Netherlands, July 2018.
+[26] B. Harry.       How we approach testing VSTS to enable contin-                  [52] A. Shi, S. Thummalapenta, S. Lahiri, N. Bjorner, and J. Czerwonka.
+     uous delivery.        https://blogs.msdn.microsoft.com/bharry/2017/06/28/            Optimizing test placement for module-level regression testing. In ICSE,
+     testing-in-a-cloud-delivery-cadence.                                                 pages 689–699, Buenos Aires, Argentina, May 2017.
+[27] K. Herzig, M. Greiler, J. Czerwonka, and B. Murphy. The art of testing          [53] P. Sudarshan. No more flaky tests on the Go team. http://www.
+     less without sacrificing quality. In ICSE, pages 483–493, Florence, Italy,           thoughtworks.com/insights/blog/no-more-flaky-tests-go-team.
+     May 2015.                                                                       [54] W. E. Wong, J. R. Horgan, S. London, and A. P. Mathur. Effect of test
+[28] K. Herzig and N. Nagappan. Empirically detecting false test alarms                   set minimization on fault detection effectiveness. In ICSE, pages 41–50,
+     using association rules. In ICSE, pages 39–48, Florence, Italy, May                  Sorrento, Italy, Apr. 1995.
+     2015.                                                                           [55] L. Zhang, D. Marinov, L. Zhang, and S. Khurshid. Regression mutation
+[29] M. Hilton, J. Bell, and D. Marinov. A large-scale study of test coverage             testing. In ISSTA, pages 331–341, Minneapolis, MN, USA, July 2012.
+     evolution. In ASE, pages 53–63, Montpellier, France, Sept. 2018.                [56] S. Zhang, D. Jalali, J. Wuttke, K. Muşlu, W. Lam, M. D. Ernst, and
+[30] M. Hilton, T. Tunnell, K. Huang, D. Marinov, and D. Dig. Usage, costs,               D. Notkin. Empirically revisiting the test independence assumption. In
+     and benefits of continuous integration in open-source projects. In ASE,              ISSTA, pages 385–396, San Jose, CA, USA, July 2014.
+     pages 426–437, Singapore, Sept. 2016.                                           [57] C. Ziftci and J. Reardon. Who broke the build?: Automatically
+[31] C. Huo and J. Clause. Improving oracle quality by detecting brittle                  identifying changes that induce test failures in continuous integration at
+     assertions and unused inputs in tests. In FSE, pages 621–631, Hong                   Google scale. In ICSE SEIP, pages 113–122, Buenos Aires, Argentina,
+     Kong, Nov. 2014.                                                                     May 2017.
+

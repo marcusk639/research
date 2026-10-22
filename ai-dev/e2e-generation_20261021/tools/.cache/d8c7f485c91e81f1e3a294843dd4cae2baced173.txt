@@ -1,0 +1,814 @@
+__HTTP 200__
+
+
+
+
+  
+
+ 
+ 
+
+
+
+
+   
+     
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+
+   
+
+   
+
+     
+     
+     
+     
+   
+
+  
+
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+   Firebase Cloud Functions 2nd Gen Scheduler does not work correctly on the emulators. · Issue #5875 · firebase/firebase-tools · GitHub 
+
+
+
+   
+   
+   
+   
+
+    
+   
+
+
+   
+
+
+     
+
+
+   
+  
+
+   
+   
+
+     
+
+ 
+
+
+
+
+
+   
+
+  
+
+
+
+
+     
+
+  
+
+     
+
+    
+
+       
+
+       
+
+     
+     
+     
+
+       
+   
+  
+
+
+
+
+       
+
+
+
+         
+
+
+   
+   
+   
+   
+
+   
+
+       
+   
+
+   
+  
+
+
+
+       
+
+
+     
+   
+
+
+   
+
+
+   
+
+   
+   
+
+   
+   
+   
+
+ 
+ 
+
+
+   
+
+   
+
+   
+     
+       
+      
+
+     
+       Skip to content 
+
+       
+     
+       
+       
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+
+
+
+      
+
+           
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+          
+
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge APPLICATION SECURITY GitHub Advanced Security Find and fix vulnerabilities Code security Secure your code as you build Secret protection Stop leaks before they start EXPLORE Why GitHub Documentation Blog Changelog Marketplace View all features Solutions BY COMPANY SIZE Enterprises Small and medium teams Startups Nonprofits BY USE CASE App Modernization DevSecOps DevOps CI/CD View all use cases BY INDUSTRY Healthcare Financial services Manufacturing Government View all industries View all solutions Resources EXPLORE BY TOPIC AI Software Development DevOps Security View all topics EXPLORE BY TYPE Customer stories Events & webinars Ebooks & reports Business insights GitHub Skills SUPPORT & SERVICES Documentation Customer support Community forum Trust center Partners View all resources Open Source COMMUNITY GitHub Sponsors Fund open source developers PROGRAMS Security Lab Maintainer Community GitHub Stars Archive Program REPOSITORIES Topics Trending Collections Enterprise ENTERPRISE SOLUTIONS Enterprise platform AI-powered developer platform AVAILABLE ADD-ONS GitHub Advanced Security Enterprise-grade security features Copilot for Business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Pricing Search / Sign in Sign up Appearance settings 
+ 
+
+
+
+       
+  
+         
+         You signed in with another tab or window.  Reload  to refresh your session. 
+         You signed out in another tab or window.  Reload  to refresh your session. 
+         You switched accounts on another tab or window.  Reload  to refresh your session. 
+
+        
+ Dismiss alert 
+
+
+  
+ 
+     
+
+   
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+   
+    
+ 
+   
+     
+       
+     
+     
+      
+       {{ message }} 
+
+     
+   
+ 
+   
+ 
+
+
+    
+
+
+
+
+
+
+   
+         
+     
+      
+      
+    
+
+
+    
+
+
+
+
+
+
+
+
+  
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   firebase firebase-tools Repository navigation Code Issues 495  ( 495 ) Pull requests 563  ( 563 ) Discussions Actions Projects Wiki Security and quality Insights More  items 
+ 
+
+
+  
+
+
+
+ 
+     
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+  
+
+
+ 
+  
+   
+   Firebase Cloud Functions 2nd Gen Scheduler does not work correctly on the emulators.   #5875 New issue Copy link New issue Copy link Closed #5891 Closed Firebase Cloud Functions 2nd Gen Scheduler does not work correctly on the emulators. #5875 #5891 Copy link Assignees   Labels emulators: functions reproducible Description gladevise opened  on May 22, 2023 Issue body actions 
+ Firebase Cloud Functions 2nd Gen Scheduler does not work correctly on the emulators. 
+ When I start the emulators and try to execute a function with  firebase functions:shell  , the following error occurs. 
+ firebase  >   scheduleTestV2 ()
+ ' Successfully invoked function. ' 
+firebase  >  ⚠  functions: TypeError: req.header is not a function
+    at httpFunc (/home/username/workspace/tests/firebase-cloud-functions-schedule-v2-not-working-emulator/functions/node_modules/.pnpm/firebase-functions@4.3.1_firebase-admin@11.8.0/node_modules/firebase-functions/lib/v2/providers/scheduler.js:63:26)
+    at /home/username/workspace/tests/firebase-cloud-functions-schedule-v2-not-working-emulator/functions/node_modules/.pnpm/firebase-functions@4.3.1_firebase-admin@11.8.0/node_modules/firebase-functions/lib/v2/trace.js:16:28
+    at /home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:524:16
+    at runFunction (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:506:15)
+    at runCloudEvent (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:523:11)
+    at processBackground (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:490:16)
+    at /home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:689:27
+    at Layer.handle [as handle_request] (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:144:13)
+    at next (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:140:7)
+⚠  Your  function   was  killed because it raised an unhandled error. 
+ I have confirmed that the 1st Gen scheduler functions work fine in the same environment. 
+ firebase  >   scheduleTestV1 ()
+ ' Successfully invoked function. ' 
+firebase  >   >   { " severity " : " INFO " , " message " : " scheduleTestV1 called at 2023-05-22T04:15:25.128Z " } 
+ [REQUIRED] Version info 
+ node: v18.16.0
+firebase-functions: ^4.3.1
+firebase-admin: ^11.8.0
+firebase-tools: 12.1.0
+ 
+ [REQUIRED] Test case 
+ I have published code in the following repository that can reproduce the error. 
+ https://github.com/gladevise/firebase-cloud-functions-schedule-v2-not-working-emulator 
+ [REQUIRED] Steps to reproduce 
+ You can reproduce the error by executing the command in the following steps. 
+ git clone https://github.com/gladevise/firebase-cloud-functions-schedule-v2-not-working-emulator
+
+cd firebase-cloud-functions-schedule-v2-not-working-emulator/functions
+
+pnpm install
+
+pnpm run serve
+ 
+ Run the following on another terminal 
+ pnpm run shell
+
+firebase  >   scheduleTestV1 ()
+ ' Successfully invoked function. ' 
+firebase  >   >   { " severity " : " INFO " , " message " : " scheduleTestV1 called at 2023-05-22T04:15:25.128Z " }
+
+firebase  >   scheduleTestV2 ()
+ ' Successfully invoked function. ' 
+firebase  >  ⚠  functions: TypeError: req.header is not a function
+    at httpFunc (/home/username/workspace/tests/firebase-cloud-functions-schedule-v2-not-working-emulator/functions/node_modules/.pnpm/firebase-functions@4.3.1_firebase-admin@11.8.0/node_modules/firebase-functions/lib/v2/providers/scheduler.js:63:26)
+    at /home/username/workspace/tests/firebase-cloud-functions-schedule-v2-not-working-emulator/functions/node_modules/.pnpm/firebase-functions@4.3.1_firebase-admin@11.8.0/node_modules/firebase-functions/lib/v2/trace.js:16:28
+    at /home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:524:16
+    at runFunction (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:506:15)
+    at runCloudEvent (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:523:11)
+    at processBackground (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:490:16)
+    at /home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:689:27
+    at Layer.handle [as handle_request] (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:144:13)
+    at next (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:140:7)
+⚠  Your  function   was  killed because it raised an unhandled error. 
+ [REQUIRED] Expected behavior 
+ firebase  >   scheduleTestV2 ()
+ ' Successfully invoked function. ' 
+firebase  >   >   { " severity " : " INFO " , " message " : " scheduleTestV2 called at 2023-05-22T04:15:25.128Z " } 
+ [REQUIRED] Actual behavior 
+ firebase > scheduleTestV2()
+'Successfully invoked function.'
+firebase > ⚠  functions: TypeError: req.header is not a function
+    at httpFunc (/home/username/workspace/tests/firebase-cloud-functions-schedule-v2-not-working-emulator/functions/node_modules/.pnpm/firebase-functions@4.3.1_firebase-admin@11.8.0/node_modules/firebase-functions/lib/v2/providers/scheduler.js:63:26)
+    at /home/username/workspace/tests/firebase-cloud-functions-schedule-v2-not-working-emulator/functions/node_modules/.pnpm/firebase-functions@4.3.1_firebase-admin@11.8.0/node_modules/firebase-functions/lib/v2/trace.js:16:28
+    at /home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:524:16
+    at runFunction (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:506:15)
+    at runCloudEvent (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:523:11)
+    at processBackground (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:490:16)
+    at /home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:689:27
+    at Layer.handle [as handle_request] (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:144:13)
+    at next (/home/username/.nvm/versions/node/v18.16.0/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:140:7)
+⚠  Your function was killed because it raised an unhandled error.
+ 
+ Were you able to successfully deploy your functions? 
+ Both  scheduleTestV1  and  scheduleTestV2  can be deployed successfully. 
+ I may have a bad Firebase setup, but please check it out. Reactions are currently unavailable Activity taeold transferred this issue from firebase/firebase-functions on May 22, 2023 aalej added  emulators: functions   on May 22, 2023 aalej   commented   on   May 23, 2023   aalej on May 23, 2023 Contributor More actions Hi  @gladevise , thanks for the detailed description and for providing a test case. I was able to replicate the behavior you mentioned. When calling  scheduleTestV2()  via  functions:shell , an error is raised. 
+ I’ll notify our engineers about this issue so that they can investigate, and I’ll be marking this as reproducible. 👍 React with 👍 1 Reacted by  gladevise aalej added  reproducible   on May 23, 2023 christhompsongoogle assigned  blidd-google on May 23, 2023 blidd-google   commented   on   May 24, 2023   blidd-google on May 24, 2023 Contributor More actions Hi  @gladevise , thanks for reporting this issue. We have a PR implementing a simple fix at  #5891 . if you're curious, you can take a look there for more context about what went wrong. 👍 React with 👍 1 Reacted by  gladevise 🎉 React with 🎉 2 Reacted by  gladevise and Danny Gim blidd-google closed this  as  completed on May 24, 2023 sriganesh-nagaraj   commented   on   Jul 28, 2023   sriganesh-nagaraj on Jul 28, 2023 More actions @gladevise  I'm still facing this issue. Does it work for you? Sign up for free   to join this conversation on GitHub.   Already have an account?   Sign in to comment Metadata Metadata Assignees blidd-google Labels emulators: functions reproducible Type No type Projects No projects Milestone No milestone Relationships None yet Development No branches or pull requests Issue actions Open in GitHub Copilot app 
+ 
+ 
+
+
+
+
+   
+
+ 
+
+     
+   
+
+   
+
+           
+   Footer 
+
+  
+
+
+   
+     
+       
+         
+ 
+       
+        © 2026 GitHub, Inc.
+       
+     
+
+     
+       Footer navigation 
+
+       
+
+
+           
+             Terms 
+           
+
+           
+             Privacy 
+           
+
+
+             
+               Security 
+             
+
+             
+               Status 
+             
+
+           
+             Community 
+           
+
+           
+             Docs 
+           
+
+           
+             Contact 
+           
+
+          
+ 
+   
+     
+      Manage cookies
+     
+   
+ 
+
+   
+     
+       
+        Do not share my personal information
+       
+     
+   
+
+       
+     
+   
+ 
+
+
+
+     
+
+
+
+
+   
+     
+     
+       
+     
+    You can’t perform that action at this time.
+   
+
+     
+   
+     
+     
+       
+         
+       
+       
+     
+   
+ 
+
+     
+   
+   
+ 
+
+     
+   
+     
+       
+       
+     
+   
+ 
+ 
+   
+     
+       
+       
+     
+   
+ 
+
+
+
+
+     
+     
+     
+   
+ 
+

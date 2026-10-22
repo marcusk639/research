@@ -1,0 +1,774 @@
+__HTTP 200__
+                                         Automated Unit Test Improvement using Large Language Models
+                                                                   at Meta
+                                                                                                                      Nadia Alshahwan∗
+                                                                                                                         Jubin Chheda
+                                                                                                                     Anastasia Finegenova
+                                                                                                                        Beliz Gokkaya
+                                                                                                                        Mark Harman
+                                                                                                                          Inna Harper
+                                                                                                                     Alexandru Marginean
+
+
+
+
+arXiv:2402.09171v1 [cs.SE] 14 Feb 2024
+                                                                                                                       Shubho Sengupta
+                                                                                                                          Eddy Wang
+                                                                                                                       Meta Platforms Inc.,
+                                                                                                                    Menlo Park, California, USA
+                                         ABSTRACT                                                                                        1     INTRODUCTION
+                                         This paper describes Meta’s TestGen-LLM tool, which uses LLMs                                   As part of our overall mission to automate unit test generation
+                                         to automatically improve existing human-written tests. TestGen-                                 for Android code, we have developed an automated test class im-
+                                         LLM verifies that its generated test classes successfully clear a set                           prover, TestGen-LLM. TestGen-LLM uses two of Meta’s1 Large
+                                         of filters that assure measurable improvement over the original                                 Language Models (LLMs) to extend existing, human-written, Kotlin
+                                         test suite, thereby eliminating problems due to LLM hallucination.                              test classes by generating additional test cases that cover previ-
+                                         We describe the deployment of TestGen-LLM at Meta test-a-thons                                  ously missed corner cases, and that increase overall test coverage.
+                                         for the Instagram and Facebook platforms. In an evaluation on                                   TestGen-LLM is an example of Assured Offline LLM-Based Software
+                                         Reels and Stories products for Instagram, 75% of TestGen-LLM’s                                  Engineering (Assured Offline LLMSE) [6].
+                                         test cases built correctly, 57% passed reliably, and 25% increased                                 That is, unlike other LLM-based code and test generation tech-
+                                         coverage. During Meta’s Instagram and Facebook test-a-thons, it                                 niques, TestGen–LLM uses Assured Offline LLMSE to embed the
+                                         improved 11.5% of all classes to which it was applied, with 73% of                              language models, as a service, in a larger software engineering
+                                         its recommendations being accepted for production deployment                                    workflow that ultimately recommends fully formed software im-
+                                         by Meta software engineers. We believe this is the first report on                              provements rather than smaller code snippets. These fully-formed
+                                         industrial scale deployment of LLM-generated code backed by such                                code improvements are backed by verifiable guarantees for im-
+                                         assurances of code improvement.                                                                 provement and non-regression of existing behavior. A filtration
+                                                                                                                                         process discards any test case that cannot be guaranteed to meet
+                                         KEYWORDS                                                                                        the assurances.
+                                         Unit Testing, Automated Test Generation, Large Language Models,                                    The filtration process can be used to evaluate the performance of
+                                         LLMs, Genetic Improvement.                                                                      a particular LLM, prompt strategy, or choice of hyper-parameters.
+                                                                                                                                         For this reason, we include telemetry to log the behavior of every
+                                         ACM Reference Format:                                                                           execution so that we can evaluate different choices. However, the
+                                         Nadia Alshahwan, Jubin Chheda, Anastasia Finegenova, Beliz Gokkaya,
+                                                                                                                                         same infrastructure can also be used as a kind of ensemble learning
+                                         Mark Harman, Inna Harper, Alexandru Marginean, Shubho Sengupta, and Eddy
+                                         Wang. 2024. Automated Unit Test Improvement using Large Language Mod-
+                                                                                                                                         approach to find test class improvement recommendations. TestGen-
+                                         els at Meta. In Proceedings of the 32nd ACM Symposium on the Foundations                        LLM thus has two use cases:
+                                         of Software Engineering (FSE ’24), November 15–19, 2024, Porto de Galinhas,                         (1) Evaluation: To evaluate the effects of different LLMs, prompt-
+                                         Brazil. ACM, New York, NY, USA, 12 pages. https://doi.org/XXXXXXX.                                      ing strategies, and hyper-parameters on the automatically
+                                         XXXXXXX                                                                                                 measurable and verifiable improvements they make to exist-
+                                         ∗ Author order is alphabetical. The corresponding author is Mark Harman.                                ing code.
+                                                                                                                                             (2) Deployment: To fully automate human-independent test
+                                         Permission to make digital or hard copies of all or part of this work for personal or                   class improvement, using a collection of LLMs, prompting
+                                         classroom use is granted without fee provided that copies are not made or distributed                   strategies, and hyper-parameters to automatically produce
+                                         for profit or commercial advantage and that copies bear this notice and the full citation
+                                         on the first page. Copyrights for components of this work owned by others than the
+                                                                                                                                                 code improvement recommendations that are backed by
+                                         author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or
+                                         republish, to post on servers or to redistribute to lists, requires prior specific permission   1 The two LLMs used by TestGen-LLM were constructed at Meta for general purpose
+                                         and/or a fee. Request permissions from permissions@acm.org.                                     internal use, but they are not the focus of this paper, which is about an LLM-agnostic
+                                         FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil                           ensemble approach, its application to test class improvement at Meta and our experi-
+                                         © 2024 Copyright held by the owner/author(s). Publication rights licensed to ACM.               ence with it at Meta’s Test-a-thons. Because details are commercially sensitive (and
+                                         ACM ISBN 978-1-4503-XXXX-X/18/06                                                                not relevant to this paper), we do not give details of the two LLMs, simply calling them
+                                         https://doi.org/XXXXXXX.XXXXXXX                                                                 ‘LLM1’ and ‘LLM2’ in this paper.
+FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil                                                      Alshawan and Harman, et al.
+
+
+      (a) Detailed automatically-generated documentation that mea-           pass may reveal a fault. However, it is more likely that the test sim-
+          sures the improvement achieved by the new version of               ply contains an incorrect assertion. We want an entirely automated
+          the test class;                                                    workflow. Without an automatable test oracle [7], TestGen-LLM
+      (b) Verifiable guarantees that the recommended test class does         cannot automatically determine whether a failing test has found
+          not regress any important properties of the existing ver-          a bug, or whether it merely contains an incorrect test assertion.
+          sion of the test class.                                            Therefore, TestGen-LLM discards any test case that does not pass
+   TestGen-LLM has been used in both of these modes. The evalu-              on first execution. The effect of this filter is to preserve only tests
+ation mode was used as a prelude to deployment, allowing us to               that can be used for regression testing [50]. Such tests, since they
+investigate and tune such choices of LLM, prompt strategy and                pass, protect the existing functionality of the system under test
+temperature. It was also used after initial deployment to tune pa-           against future regressions.
+rameters for the subsequent, more widespread, release of the tool               A test that passes on first execution, may only coincidentally pass
+to engineers at Meta. The evaluation mode also allows us to report           on the first occasion on which it is executed. More generally, a test
+findings for evaluation (See Section 3.3).                                   that passes on some occasions and fails on others, when executed
+   Having arrived at sensible parameter choices, based on eval-              in an entirely identical environment, is called a ‘flaky’ test [28].
+uation, TestGen-LLM was used at Meta to support engineers in                 Flaky tests are one of the most significant problems for industrial
+various test improving activities, such as test-a-thons, in which            software testing [19], and so we clearly do not want TestGen-LLM
+a focused team of engineers target a particular aspect of one of             to introduce flakiness. TestGen-LLM thus uses the ‘passes’ filter
+Meta’s products, in order to enhance existing testing.                       to discard any flaky tests. The filter uses the simple, widely-used
+   Initial planning for TestGen-LLM took place in spring 2023 [5],           and effective approach of repeated execution [10, 28]; a test that
+with initial development in summer and autumn, and evaluation                does not pass on every one of five executions is deemed flaky. Since
+and onward optimization through winter 2023. This paper describes            the generated test cases are unit level tests, repeated execution is
+TestGen-LLM and reports our experience in developing and deploy-             a relatively computationally inexpensive approach to filtering out
+ing it, through these test-a-thons for Instagram and Facebook. The           flaky tests.
+primary contributions of the paper are:                                         A candidate test case that passes through the first two filters is
+                                                                             guaranteed to provide reliable signal for regression testing. How-
+    (1) The introduction of the first example of Assured LLM-based           ever, it may simply repeat the test behaviour of one of the existing
+        Software Engineering (Assured LLMSE) [6]. In particular, we          tests. Such duplication of test effort would be a waste of resources.
+        believe this is the first paper to report on LLM-generated code      Furthermore, there will be no meaningful way in which TestGen-
+        that has been developed independent of human intervention            LLM could reliably claim that the original test class had been im-
+        (other than final review sign off), and landed into large scale      proved in some measurable way. Therefore, the final filter applied
+        industrial production systems with guaranteed assurances             to non-flaky passing tests measures their coverage. Any test that
+        for improvement over the existing code base.                         does not improve coverage is also discarded.
+    (2) In an evaluation on Reels and Stories products for Instagram,           The candidate test cases that pass through all three filters are
+        75% of TestGen-LLM test cases generated built correctly, 57%         thus guaranteed to improve the existing test class, and to provide
+        passed reliably, and 25% increased coverage.                         reliable regression test signal. The pre- and post-processing are
+    (3) A report on the qualitative and quantitative results of devel-       steps used to extract test cases and re-construct test classes.
+        opment, deployment and evolution at Meta in 2023. When
+        deployed to incrementally improve the coverage of produc-
+                                                                             2.1    Advantages of code improvement style LLM
+        tion test classes on Instagram and Facebook more gener-
+        ally, TestGen-LLM was able to improve 10% of all classes to                 code generation
+        which it was applied and 73% of its test improvements were           TestGen-LLM uses an approach called ‘Assured LLM-based Soft-
+        accepted by developers, and landed into production.                  ware Engineering’ (Assured LLMSE) [6]. In the remainder of this
+    (4) A description of the lessons learned, open problems and              section, we set the principal advantages we have experienced from
+        research challenges raised by this application of Assured            our development and deployment of TestGen-LLM, focusing on
+        LLMSE to software test improvement.                                  those we believe likely to carry over to other Assured LLMSE ap-
+                                                                             plications, and are not confined merely to test generation.
+2    THE TESTGEN-LLM SYSTEM
+                                                                             2.1.1 Measurable improvement. At Meta, a code change submitted
+TestGen-LLM achieves the assurances it offers to code reviewers              to the Continuous Integration (CI) system is called a ‘diff’ (short
+by applying a series of progressively demanding semantic filters             for differential). The diffs that TestGen-LLM generates include a
+to candidate solutions generated by the language models. Figure 1            precise measurement of the improvement they offer. For testing, the
+depicts the top level architecture of the TestGen-LLM system.                goal is to increase coverage, especially of corner cases that might
+   The first filter simply checks that the candidate code is fully           have been missed. The diffs submitted by TestGen-LLM document
+buildable within the existing infrastructure of the app under test.          their own coverage improvement to support the claim that they
+Any code that does not build is immediately discarded and thereby            improve the code base.
+removed from further consideration.
+   The second filter executes the generated tests, which build by            2.1.2 Verifiable guarantees of non-regression. The diffs also include
+definition, due to their clearing the first filter. Any test that does not   evidence of how they guard against regression. For test generation,
+Automated Unit Test Improvement using Large Language Models at Meta                              FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil
+
+
+
+                                                                                      Improves
+                            Pre-Process            Builds        Yes   Passes   Yes                  Yes   Post-Process
+                                                                                      coverage
+   LLMs     Candidate                                                                                                                                 Onward
+                                                                                                                                 Assuredly
+            test cases                                                                                                                                 code
+                                                                                                                                 improved
+                                                                                                                                                      review
+                                                            No                  No                                               test class
+                                                                                                                                                       in CI
+                                                                          No
+
+
+
+
+                         Figure 1: TestGen-LLM top level architecture (an instance of Assured Offline LLMSE [6]).
+
+
+TestGen-LLM simply augments an existing test class with additional                 More specifically, there has been much discussion on whether
+test cases, retaining all existing test cases and thereby guaranteeing          language models will replace human coders, with many arguments
+there will be no regression, by construction.                                   on all sides, and no shortage of opinions [12]. A debate also con-
+   Assured LLMSE can also target operational characteristics, such              tinues concerning whether LLMs are beneficial or harmful to edu-
+as performance, for which it will necessarily rely on tests to guard            cation, for example, with arguments against [33], and broadly in
+against regression [6]. This was the motivation for our initial focus           favor [20] of their use as educational tools, or as ways to support
+on test generation: once we have reliable automated regression                  existing human-led education efforts [30, 38, 42]. However, since
+testing at scale, we can use Assured LLMSE to target operational                TestGen-LLM is designed to be used as a support tool (to help engi-
+code properties, such as performance.                                           neers rather than to replace them), it is unnecessary for us to enter
+                                                                                into this discussion in this paper. Rather, TestGen-LLM’s goal is to
+2.1.3 Ensemble approach. Different LLMs have different strengths.               provide a recommender system [1], that leaves the software engi-
+Even the same LLM can produce multiple candidate solutions for                  neer in ultimate control of the code that lands into the code base.
+a given prompt. As our results show, although some prompts, pa-                 This also ensures proper engineering oversight and accountability.
+rameters and underlying LLM technologies perform better than                       There has also been much discussion of the problems of relying
+others for a given test class, each combination tends to contribute             on machine-generated code, especially the problem of hallucination
+uniquely to the overall number of test cases found (See Section 3.3).           [12, 29]. The TestGen-LLM approach in particular (and the overall
+It is therefore highly advantageous to formulate the problem in such            Assured LLMSE approach more generally), overcomes hallucination
+a way that it is amenable to an ensemble-style learning approach                by providing automated verifiable guarantees about the semantic
+[11]. In such an ensemble approach, the best aspects of many LLMs,              properties of the code it recommends. These guarantees mean that
+their prompts and parameters, can also be combined to give an                   the language model itself plays its own role in self accountability,
+overall improvement recommendation.                                             providing at least as strong a semantic guarantee as many human
+    The LLM produces code components, not entire programs. Com-                 engineers for the recommendations it makes.
+ponents are composable, and therefore can be provided by multiple
+different LLMs, working as an ensemble. For the test improvement                2.1.5 Caters well to LLMs with limited token window size. The
+instance of Assured LLMSE, each component is a test case. Test                  specific formulation we used for test generation (as the problem
+cases compose very naturally to form a test classes and test suites.            of extending an existing test class), means that the test generation
+    In the more general case of Assured LLMSE [6], LLM recommen-                approach can be effective, even with a very small token window
+dations can be defined as code modifications as they typically are              size. This is because the test class is typically much smaller than
+for automated repair [14, 15, 22, 31, 47]. Code modifications are also          the class under test. TestGen-LLM can and does use prompts that
+composable, and thereby support the overall ensemble approach to                provide both the test class and the class under test.
+Assured LLMSE.                                                                     Providing the class under test does produce better results (as
+                                                                                one would expect, since Retrieval Augmented Generation is known
+2.1.4 Helps humans; does not replace them. By seeking to improve                to perform well [12]). Nevertheless, we have also been able to
+existing code and tests, rather than constructing them from scratch,            successfully extend test classes by providing solely the existing test
+TestGen-LLM works in concert with human engineering effort,                     class, and omitting the class under test and any other details from
+insights and domain expertise; it does not seek to replace them.                the prompt. As our results show, prompts that use solely the test
+TestGen-LLM builds on the positive aspects of language models,                  class (and not the class under test) as part of the prompt context,
+while simultaneously sidestepping two of the most pressing con-                 can still find additional tests. Moreover, such prompts found unique
+cerns, raised in the literature and wider community:                            tests not found by other prompts (see results Section 3.3 for more
+                                                                                details).
+     • Whether language models will replace human coders (TestGen-
+       LLM is a support not a replacement for humans).
+     • Whether language model results can be relied upon (TestGen-              3     TESTGEN-LLM DEPLOYMENT
+       LLM results come with guarantees that ensure they can be                 In a large company like Meta, it is typically not possible to simply
+       relied upon).                                                            switch on a new technology once developed, and apply it at scale.
+FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil                                                  Alshawan and Harman, et al.
+
+
+First, we must perform initial trials, and then cautiously deploy a         In this way we are able to gain valuable insights on the initial
+Minimal Viable Product (MVP), in a well-controlled environment           version of the tooling before deploying at wider scale. Based on
+that allows us to gain experience, before migrating the technol-         the lessons learnt from this initial trail, we went on to develop
+ogy to full deployment. If we simply deploy an MVP without first         a new version of TestGen-LLM, which was used as part of the
+gaining this experience, then relatively small issues in the behav-      next available test-a-thon exercise, in which engineers specifically
+ior of the technology can become considerably magnified at scale.        sought to write new tests and extend existing test cases. We describe
+The magnifying effect of small inefficiencies, errors or overlooked      this next phase of deployment in the next section.
+details, force multiply at this kind of scale. To give a sense of the
+scale, note that the central repository receives well over 100,000
+commits per week [19], while the apps under test have client-side        3.2    Instagram Test-a-thon November 2023
+code bases of tens of millions of lines of code each, communicating      We used the the second version of the TestGen-LLM MVP to gener-
+with back-end server-side infrastructure of hundreds of millions of      ate extra tests as part of the Instagram test-a-thon, which ran from
+lines of code.                                                           November 15th - 20th 2023. Test-a-thons are regular human-centric
+   The deployment workflow thus follows a gradual incremental            activities in which engineers seek allocate specific focused time to
+deployment plan, in which the MVP is gradually evolved and ma-           writing test cases. In the November Instagram test-a-thon, TestGen-
+tured from proof of concept to deployed tool/infrastructure, over        LLM was used in a carefully managed way in order to assess its
+a series of increasingly larger-scale, and increasingly less tightly     suitability for wider and less closely-managed use.
+constrained trials. In the initial phases, the proto-MVP is applied      Initial calibration: The engineer leading the test-a-thon first iden-
+at a very small scale, and in a tightly-controlled environment. In       tified an initial component of interest for her team, so that she could
+the later stages, after working in changes from the feedback on          confirm (or refute) that the diffs generated by the TestGen-LLM
+these initial deployments, the MVP becomes a more fully-fledged          MVP would be suitable for consideration. TestGen-LLM produced
+software engineering tool and is deployed freestanding (without          three diffs for this component, each with a single test class exten-
+detailed human oversight). In this section we describe the process       sion for one of three different sub-components. In all three cases,
+by which we migrated from initial proof of concept to deployment.        the test class improvements were deemed acceptable. It was found
+                                                                         that the verifiable claims for improvement made it easy to accept
+                                                                         and land these tests into production. The engineer also greatly ap-
+                                                                         preciated the way in which the generated tests’ coding style closely
+3.1     Initial Trial                                                    mimicked that of the existing human–written test classes for each
+As an initial trial, we used an initial version of TestGen-LLM to cre-   sub-component. Therefore, based on this initial trial, it was agreed
+ate eight diffs and submitted these into Meta’s standard continuous      to deploy TestGen-LLM as part of the test-a-thon.
+integration code review system.                                          Identifying the test classes to be targeted: During the three days
+   The initial trial re-enforced the importance of giving individual     of the test-a-thon, 36 engineers spent significant portions of their
+guarantees per test case, and the value of the improvement assur-        time focused on writing additional test cases for specific Instagram
+ances. The engineers who reviewed the initial diffs reported that        products targeted by the test-a-thon. The test classes and products
+the following two additional features would maximize the ease and        chosen for the test-a-thon were those that had been the subject of
+speed with which they could review the recommendations from              recent intensive re-factoring activity.
+TestGen-LLM:                                                                 Whenever a diff was submitted by an engineer as part of the
+1. The importance of individual test level guarantees. In the            test-a-thon process between 15th and 18th November 2023, TestGen-
+initial MVP, we had only implemented class-level improvement             LLM was executed on the directory in which the test class resided,
+guarantees. That is, the overall test class is improved, but there       seeking to extend any of the test classes that reside in that directory.
+was no guarantee that each individual test case contributes to this      There is a generally close correspondence between directories and
+improvement. For example, one of the diffs that ultimately landed        sub-components. In particular, all test classes in the directory are
+initially contained four test cases. However, all four were only         typically built using the same build rule and, therefore, TestGen-
+superficially different. By measuring the individual coverage con-       LLM thus automatically measures the additional coverage achieved
+tributed by each test case, the updated version of TestGen-LLM now       over and above all the existing test classes residing in the same
+automatically weeds out such duplicated test effort. This ‘per test      directory as the human-written test class.
+case’ approach (rather than ‘per test class’) is slower to compute,      Simulating a diff time deployment: There are two primary
+but it gives TestGen-LLM the overall ability to more easily mix and      modes in which automated testing can interpose in continuous
+match the results from different LLMs and different responses from       integration, which we typically call ‘diff’ time and ‘post-land’ time
+the same LLM; the ensemble-style approach.                               [2, 4]. At diff time, the tests are recommended to the engineer at
+2. Useful to give more coverage details: The TestGen-LLM initial         the time they submit a related diff, whereas at post-land time, the
+MVP reported only the files for which the improvement suggestion         test is recommended to the engineer at some arbitrary point after
+achieves extra coverage. Some of the engineers who reviewed the          they have landed the relevant diff.
+diffs asked whether the tool could provide full specific coverage            In previous work on deployment of automated testing technology
+information for each file, compared to the original. The TestGen-        at Meta, we have repeatedly found that diff time deployment is far
+LLM MVP was therefore updated to report all details of the coverage      more effective, because it maximizes relevance [19]. When a test is
+achieved.                                                                recommended at diff time, the engineer concerned already has the
+Automated Unit Test Improvement using Large Language Models at Meta                     FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil
+
+
+full context of the existing testing in place, and the code under test.         rank    test author        No, of     lines diffs
+As such, the engineer is in a much better position to quickly and                                            tests covered
+correctly assess the recommended test. This increased relevance                   1. Threads Engineer          40    1,047      8
+typically maximizes the impact of the test recommender system                     2. Home Engineer             34       650     6
+and the signals it provides. For this reason, we seek to prioritize               3. Business Engineer         34       443     3
+diff time deployment, wherever possible.                                          4. Sharing Engineer          33       816     8
+   Through the test-a-thon, we were able to gain experience of diff-              5. Messaging Engineer        18       157     2
+time deployment mode, and thereby gain insights and experience                    6. TestGen-LLM               17    1,460    17
+on how this technology would play out when deployed in this mode.                 7. Friends Engineer          12       143     2
+Although the potential reviewers had technically already landed                   8. Home Engineer             10       273     2
+some of the diffs containing test classes extended by TestGen-LLM,                9. Creators Engineer         10       198     3
+they were much more likely to have context, and to have only                     10. Friends Engineer          10       196     5
+very recently landed test classes in the same directory. However, we      Table 1: Results from the First Instagram Test-a-thon, con-
+cannot claim that this was a perfect example of diff time deployment:     ducted in November 2023. Human test authors are named by
+TestGen-LLM might also have benefited from the fact that this was         the product component on which they worked. The TestGen-
+a test-a-thon, and therefore, there was a greater-than-usual focus        LLM tool landed in sixth place overall, demonstrating its
+on testing and the context in which the tests were being deployed.        human-competitive added value.
+How the TestGen-LLM diffs were constructed for the Novem-
+ber Instagram Test-a-thon: We constructed the diff summaries
+and test plans and submitted them manually, but used only infor-
+mation computed directly by TestGen-LLM. Where we included                   This is because TestGen-LLM is extending existing test classes,
+any text in the summary indicating our own interpretation of the          with additional test cases. It also allows the engineers to more easily
+results, this was contained in a blue-box “Note” to distinguish this      accept or reject the recommendations, per test case. As a result,
+text as human-generated and not machine-generated. In the sec-            TestGen-LLM’s number of test cases per diff is always one; a fact
+ond Instagram test-a-thon (see Section 3.4) we fully automated the        which makes it superficially appear to be more productive in terms
+construction of the content and claims made by TestGen-LLM in             of diffs. However, since the ranking was computed in terms of the
+diff comments and test plans.                                             number of test cases landed, the rank position of TestGen-LLM is
+                                                                          a fair reflection of its productivity compared to human engineers
+3.2.1 Outcomes from the first Instagram Test-a-thon. During the           during the test-a-thon.
+first test-a-thon, 36 engineers landed 105 unit test diffs, of which         Another apparently anomalous result from the table is the num-
+16 were generated by TestGen-LLM. In total, TestGen-LLM created           ber of lines covered by the 17 test cases generated by TestGen-LLM.
+17 diffs. One diff was abandoned because the test case did not            At first glance, it might appear that TestGen-LLM is able to cover
+include any assertion. 16 landed into production. The test case in        a great deal more than the human engineers. However, this result
+the rejected diff attempted to test a partially implemented function,     arose due to a single test case, which achieved 1,326 lines covered.
+for which the LLM code left a comment indicating that an assertion        This test case managed to ‘hit the jackpot’ in terms of unit test
+was to be added as a “TODO”. The test case did extend coverage            coverage for a single test case. Because TestGen-LLM is typically
+(simply by executing the previously unexecuted method-under-              adding to the existing coverage, and seeking to cover corner cases,
+test), but it was rejected by the engineer reviewing the diff because     the typical expected number of lines of code covered per test case is
+it failed to contain an assertion.                                        much lower. For example, 6 of the 17 test cases it generated covered
+    The largest coverage improvement was achieved by a TestGen-           only a single extra line. However, in all 17 cases, we manually veri-
+LLM diff that covered a method not previously covered, and thus           fied that the generated test did, indeed, cover at least one additional
+generated a lot of additional coverage, including:                        valid corner case, such as an early return and/or special processing
+      • 28 new files covered that were not previously covered.            for special values such as null and empty list. The median number
+      • 13 files which were previously partially covered, but for         of lines of code added by a TestGen-LLM test in the test-a-thon was
+        which the improved test class extended coverage                   2.5. This is a more realistic assessment of the expected additional
+      • 3 A/B testing gate keepers (for which generated A/B decision      line coverage from a single test generated by TestGen-LLM.
+        making code was additionally covered).
+    The smallest coverage improvement was produced by a diff that         3.3    Evaluation of LLMs and Prompts
+covered a single additional line (an early return) in a file that was     The outcome of the first November Instagram test-a-thon gave us
+already partially covered by the existing test classes.                   confidence that we had a usable tool in TestGen-LLM. In particular,
+    Anonymized results for top 10 performers among the 36 engi-           the manual verification that the tests added valid corner cases,
+neers at the the test-a-thon are shown in Table 1. As can be seen,        the fact that the test style was appreciated by engineers, and the
+TestGen-LLM landed in sixth place in rank order by number of tests        overall performance relative to human effort (see Table 1), provided
+generated. The table also reveals the way in which TestGen-LLM            the evidence that it was worth developing the tool further, and
+behaves differently to test engineers. Whereas test engineers will        deploying it more widely.
+tend to write a whole class of tests in a single diff, TestGen-LLM           However, before deploying more widely, we needed to choose
+submits each test as a separate diff.                                     suitable defaults for hyper parameters so that engineers could use
+FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil                                                                                   Alshawan and Harman, et al.
+
+
+                                                                                              find solutions when only the test class is provided (and not the
+                                                                                              class under test). Finally, statement_to_complete was included
+                                                                                              to investigate the alternative prompting style of making a statement
+                                                                                              that should be completed by the language model. This is inspired by
+                                                                                              the fact that language models are, inherently, predictive models for
+                                                                                              text completion. As such, it seems reasonable that such a prompt
+                                                                                              ought to have an advantage.
+                                                                                                 Using these four prompts and the two language models available,
+                                                                                              we obtained the following results over the 86 test classes: Using
+                                                                                              just LLM1, TestGen-LLM was able to find 13 tests (15% of files have
+                                                                                              at least one new test). Three of the four prompts added unique
+                                                                                              value to the overall search: extend_coverage added 2 unique tests,
+                                                                                              while corner_cases and extend_test each added one unique
+                                                                                              test. Although it did succeed in finding test cases, the prompt
+                                                                                              statement_to_complete failed to add any unique test cases, and
+                                                                                              therefore made no unique individual contribution when using the
+Figure 2: Sankey diagram showing the filtration process out-
+                                                                                              LLM.
+comes (as percentages of all test cases) from the Experimental
+                                                                                                 Using just LLM2, TestGen-LLM was able to find 16 tests (19%
+Study on Instagram components for Reels and Stories prod-
+                                                                                              of files have at least one new test). All four prompts added unique
+ucts, using the four prompt strategies from Table 2 and the
+                                                                                              value to the overall search: extend_coverage added 5 unique tests,
+two language models, LLM1 and LLM2.
+                                                                                              while statement_to_complete and extend_test each added 2
+                                                                                              unique tests. corner_cases added 1 unique test.
+the tool out-of-the-box without having to consider choices of set-                               We also found that generated test cases were most likely to build,
+tings. To tackle this need we switched TestGen-LLM from deploy-                               pass and extend coverage, with LLM temperature zero. However, the
+ment mode to evaluation mode.                                                                 effect size was low compared to the nearest next-best temperatures
+   We undertook experiments to determine the the most favorable                               of 0.2 and 0.5; all had approximately 4% success over all test cases
+parameters among different temperatures, language models avail-                               suggested4 . We therefore set the default temperature to zero.
+able, and prompts. We conducted experiments on two products for                                  Based on these results, it was decided to deploy TestGen-LLM for
+Instagram, Reels and Stories, to determine the differential perfor-                           subsequent test-a-thons with default temperature zero, default LLM
+mance of the two different language models (LLM1 and LLM2), and                               set to LLM2 and default prompt extend_coverage. However, users
+also to investigate the unique contribution of each of four prompt-                           were free to deploy using other settings when applying the TestGen-
+ing strategies. This produced results over 86 Kotlin components                               LLM tool. In particular, for subsequent Instagram and Facebook
+with existing human-written test classes (31 for Stories and 55 for                           test-a-thons, the tool offered the option to perform a temperature
+Reels) as follows:                                                                            sweep over all temperature settings (from 0.0 to 1.0 in steps of 0.1),
+    (1) 75% of test classes had at least one new test case that builds                        the option to select a particular prompt and the option to select
+        correctly.                                                                            a particular LLM. The tool also offered an ‘LLM ensemble’ that
+    (2) 57% of test classes had at least one test case that builds cor-                       combines results from both then-available LLMs.
+        rectly and passes reliably.
+    (3) 25% of test classes had at least one test case that builds cor-                       3.4      Deployment in TestGen-LLM-only
+        rectly, passes and increases line coverage compared to all                                     Instagram Test-a-thon December 2023
+        other test classes that share the same build target.                                  During the period 18th to the 20th of December 2023, the (now fur-
+   These results are depicted2 in the Sankey diagram [39] in Figure 2.                        ther improved) TestGen-LLM tool was run on the same directories
+It was particularly striking that, although 57% of test classes have a                        that were updated in the November test-a-thon. We chose these
+test that builds correctly and passes reliably, only 25% of classes had                       because they have been the target of recent human development so
+a test that builds reliably, passes non-flakily and adds additional                           they presented a challenge: to improve further on the combination
+line coverage3 .                                                                              of recent human and previous TestGen-LLM test effort.
+   The prompts used are set out in Table 2. We wanted to ex-                                     Although there was no human intervention in the generation
+periment with a variety of different prompting strategies. The                                of the diffs by TestGen-LLM, the recommendations were first con-
+prompt extend_coverage is the canonical example, which gives                                  sidered by two of authors before being passed on to engineers.
+maximal information and clear direction to the language model.                                Engineers were also pre-warned that they may be receiving test
+corner_cases was included specifically to focus on corner cases,                              cases generated by TestGen-LLM, although there was no other pre-
+while extend_test was included to investigate the potential to                                training involved other than providing the context that the diffs
+2 This image was created from the data using the freely-available tool SankeyMatic
+(https://sankeymatic.com/build/).
+3 Unfortunately, although Jacoco is theoretically capable of collecting branch coverage,      4 For a given attempt to extend a test class, there can be many attempts to generate a
+this is not available at the scale of testing required by Meta, so we currently rely solely   test case, so the success rate per test case is typically considerably lower than that per
+on line coverage.                                                                             test class.
+Automated Unit Test Improvement using Large Language Models at Meta                       FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil
+
+
+ Prompt                 Prompt
+ name                   Template
+ extend_test            Here is a Kotlin unit test class: {existing_test_class}. Write an extended version of the test class that includes
+                        additional tests to cover some extra corner cases.
+ extend_coverage        Here is a Kotlin unit test class and the class that it tests: {existing_test_class} {class_under_test}. Write an
+                        extended version of the test class that includes additional unit tests that will increase the test coverage of the
+                        class under test.
+ corner_cases           Here is a Kotlin unit test class and the class that it tests: {existing_test_class} {class_under_test}. Write an
+                        extended version of the test class that includes additional unit tests that will cover corner cases missed by the
+                        original and will increase the test coverage of the class under test.
+ statement_to_complete Here is a Kotlin class under test {class_under_test} This class under test can be tested with this Kotlin unit test
+                        class {existing_test_class}. Here is an extended version of the unit test class that includes additional unit test
+                        cases that will cover methods, edge cases, corner cases, and other features of the class under test that were
+                        missed by the original unit test class:
+Table 2: The four primary prompts used in the deployment for the December 2023 Instagram and Facebook app test-a-thons
+
+
+
+they would be receiving were generated by an MVP TestGen-LLM                            Platform   Successful  Total Success
+deployment.                                                                                             trials trials     rate
+   This deployment was entirely automated, with TestGen-LLM                           Facebook            490  8,996      0.05
+now running automatically on these directories without human                          Instagram           831 23,535      0.04
+intervention. TestGen-LLM automatically generated 42 diffs that             Table 3: Results for the two different platforms. The tech-
+were submitted for review. Of the 42 diffs:                                 nology was initially developed by the Instagram Product
+     • 36 were accepted by the engineer reviewing them.                     Performance Organisation within Meta, hence its greater
+     • 4 were rejected and/or abandoned.                                    number of overall trials. The highest success rate for the
+     • 2 were withdrawn.                                                    Facebook platform may arise from the fact that there are 10x
+                                                                            more examples of human–written test cases for Facebook
+   The 2 withdrawn diffs each added coverage, but we recognized             compared to Instagram.
+that the files covered were unimportant. The reasons for the four
+rejected diffs were:
+    (1) Generating tests for trivial methods under test (a getter
+        method).
+                                                                            Facebook app test-a-thons. All deployment data collection took
+    (2) Failing to follow the ‘single responsibility per test case’ prin-
+                                                                            place between 29th Oct 2023 - 29th Dec 2023, during which period
+        ciple (2 rejected for this reason).
+                                                                            TestGen–LLM was deployed (and redeployed) through three differ-
+    (3) Failing to include an assertion in the test case.
+                                                                            ent test-a-thons, with evolution an improvement in between each
+3.4.1 Deployment at the Facebook App Test-a-thon December 2023.             iteration.
+In this deployment, we had sufficient confidence to automatically               In total, over the three test-a-thons, 196 test classes were suc-
+submit recommendations from TestGen-LLM to engineers. There                 cessfully improved, while the TestGen-LLM tool was applied to a
+was no engineer pre-training process, no specific test-a-thon ex-           total of 1,979 test classes. TestGen-LLM was therefore able to auto-
+pectations, and no additional context provided to the engineers.            matically improve approximately 10% of the test classes to which
+This gave us a realistic assessment of the engineers’ response to           it was applied. Over all, 73% of TestGen-LLM test improvements
+LLM-generated test recommendations provided ‘out of the box’.               were accepted by developers. This is an encouraging result for an
+Overall, over 50% of the diffs submitted were accepted by devel-            automated code improvement recommender system. For example,
+opers, a figure which rises to almost 70% of those which received           it compares favorably with previous attempts to deploy automated
+a review by developers. Specifically, of the 280 diffs generated by         repair at Meta (where 50% of recommended fix improvements were
+TestGen-LLM:                                                                accepted and landed into production [31]).
+                                                                                Table 3 shows the overall success rate, per test case generation
+     • 144 were accepted by the engineer reviewing them.
+                                                                            trial, over the two platforms: Facebook and Instagram. In this table,
+     • 64 were rejected and/or abandoned.
+                                                                            a trial is an attempt to generate a new test case. A trial is only
+     • 61 did not receive a review.
+                                                                            considered successful if the generated test case builds, passes, and
+     • 11 were withdrawn.
+                                                                            increases coverage over all existing test cases. As can be seen, the
+                                                                            success rate is similar for both platforms, although slightly higher
+4    QUANTITATIVE RESULTS FROM                                              for Facebook than for Instagram. We believe that this difference
+     DEPLOYMENT                                                             may be due to the difference in available training data. There is
+This section reports the overall results from the fully freestand-          approximately one order of magnitude more human-written Kotlin
+ing deployment at the November and December Instagram and                   test code for Facebook then there is for Instagram.
+FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil                                                 Alshawan and Harman, et al.
+
+
+             Temperature Successful   Total Success                                    LLM    Successful   Total Success
+                              trials  trials     rate                                              trials  trials    rate
+                   0.9           50   1,580      0.03                                LLM1            163   3,173     0.05
+                   0.8           18     703      0.03                                LLM2          1,157 28,654      0.04
+                   0.7           12     552      0.02                    Table 5: Results for the two different LLMs. After initial ex-
+                   0.6             7    536      0.01                    ecution LLM2 was chosen as the default, hence its greater
+                   0.5             4    500      0.01                    number of overall trials.
+                   0.4           16     334      0.05
+                   0.3             5    324      0.02
+                   0.2             3    505      0.01
+                                                                                Platform   LLM      Successful   Total Success
+                   0.1             4    552      0.01
+                                                                                           used          trials  trials    rate
+                   0.0        1,215 30,483       0.04
+                                                                               Facebook LLM1                47     719     0.07
+Table 4: Results for different temperature settings. After ini-                Instagram LLM1              116   2,454     0.05
+tial experimentation, zero was chosen as the default, hence                    Facebook LLM2               443   8,146     0.05
+its far greater number of overall trials.                                      Instagram LLM2              714 20,508      0.03
+                                                                         Table 6: Results for the two different platforms and LLMs.
+
+
+   Table 4 shows the performance over both language models and
+all four prompts for different temperature settings. A ‘successful’      which enjoys a larger number of existing Kotlin human-written
+trial is one in which a test case is generated that passes all filters   tests, compared to Instagram.
+(successfully builds, passes reliably, and adds additional coverage
+over all existing tests, including previous LLM-generated tests).        5   QUALITATIVE OBSERVATIONS FROM
+Since the default temperature setting was 0.0, this received by              DEPLOYMENT
+far the greatest number of trials (30,483) during the test-a-thons.
+However, as can be seen, other temperature settings were used in         In this section we present observations and lessons learned from
+the deployment, since engineers applying the tool had the ability        deployment of a more qualitative nature. These will form the most
+to select different temperatures.                                        immediate future work in the technical development of current
+   It is interesting to note that good results were obtained for a       TestGen-LLM deployment, while Section 7 presents higher-level
+temperature of 0.4. It might be tempting to speculate that these         directions for future work and open research problems on which
+results should occasion a change in the default temperature setting.     we would be interested in collaborating with and/or learning from
+However, care is required in interpreting such results. In particular,   the wider research community.
+the results are based on very different sample sizes. Furthermore,          Source code analysis and manipulation have always been, and
+due to these results being obtained from deployment mode not             will likely always remain important in Software Engineering [16].
+experimental mode, there are unavoidable confounding factors.            Previous work has successfully used hybrids of static analysis and
+   The primary comfounding factor is that tests are generated and        language models, in which both applications of static analysis and
+deployed incrementally in production (as stacks of diffs), accumulat-    applications of language models benefited [3, 24, 27, 36]. Many of
+ing coverage as they are deployed. Therefore, it becomes incremen-       our observations further underscore the potential of static analysis,
+tally harder to increase coverage over additional production trails.     and highlight the opportunities for combining static analysis with
+Experimental mode is a kind of ‘dry run’ in which no tests are ac-       language model inference. In particular, we envisage the following
+tually added and therefore additional coverage is always measured        four avenues for static analyses to improve LLM inference:
+with respect to the same baseline.                                       1. LLM ‘self-plagiarism’: Since an LLM is, at heart, a probabilistic
+   Coverage growth is inherently logarithmic (over the number of         inference engine, it can be expected that it may produce the same
+test cases generated). Therefore, as more coverage is achieved, it       (or similar) responses for the same prompt over multiple samples.
+becomes incrementally harder to achieve further improvements             We observed that both LLM1 and LLM2 often generated almost
+from the diminishing number of remaining coverage improvement            identical tests for the same prompt; different in name only. This
+opportunities. Therefore, any configuration setting (such as temper-     may also be a byproduct of the default temperature setting (zero),
+ature) that receives a larger share of overall production deployment     which is the most deterministic.
+trials is at a disadvantage compared to those that receive a smaller        Anecdotally, it seemed that tests generated were either almost
+share.                                                                   verbatim copies of others previously generated, or very different.
+   Finally, we report the results for the two different language         They were never just ‘somewhat different’ on a ‘sliding scale’ of
+models used in the test-a-thons, overall (Table 5) and per platform      syntactic and semantic difference; the similarity between generated
+(Table 6). Since LLM2 was the default model, it received a far greater   tests was ‘all or nothing’.
+number of trials and therefore care is required and interpreting the        Perhaps the nature of the conditional probability sampling makes
+slight differences in performance between the models. These results      this behavior highly likely, and thus expected. In later, more mature,
+do, nevertheless, provide further confirmation of the finding that       versions of TestGen-LLM we doubled down on this observation
+performance overall is slightly better for the Facebook platform,        and included an extra filter to remove previously seen test cases.
+Automated Unit Test Improvement using Large Language Models at Meta                       FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil
+
+
+The observation that similarity between generated tests was ‘all            problem of extending existing test classes, nor reporting results on
+or nothing’ greatly simplified this filter, because it simply needed        the provision of measurable assurances for both the improvement
+to check for syntactic equality of test bodies. Analyses that detect        and the absence of regressions. The primary technical novelty of
+semantically similar code, such as Type 2 and Type 3 clones [45]            the present paper is to introduce this test extension application, as a
+may also be helpful here.                                                   specific example of Assured LLMSE [6], while the main contribution
+                                                                            is the experience report describing its development and deployment
+2. Nuanced coverage reporting: It can happen that TestGen-LLM
+                                                                            at Meta, where it has been applied to Facebook and Instagram. We
+obtains valuable additional coverage, but not necessarily solely for
+                                                                            believe this is the first instance of industrial deployment of Assured
+the class under test. It would be easy to automate the process of
+                                                                            LLMSE.
+identifying this case. Sometimes this could be very valuable, because
+                                                                                Results vary quite widely in the literature for coverage achieved
+it may test parts of the code that are hard to reach in other ways.
+                                                                            by LLM-based test generation. For example, Siddiq et al. [44] re-
+Alternatively, where the class under test has little coverage and
+                                                                            ported that by generating tests from scratch (rather than seeking to
+most of the coverage improvement concerns other units, it may be
+                                                                            improve on existing tests) it is possible to achieve 80% coverage on
+a sign of inadequate mocking.
+                                                                            the small examples in the ‘HumanEval’ data set using CodeX [32].
+   TestGen-LLM includes a filter for test flakiness. This tends to re-
+                                                                                However, they also report that generation from scratch achieved
+duce any concerns about inadequate mocking. Nevertheless, further
+                                                                            no more than 2% coverage on the EvoSuite SF110 data set [13].
+automated static analysis and post processing can be applied, based
+                                                                            Naturally, one might expect that the coverage achievable would
+on a more nuanced analysis of the coverage achieved. As the most
+                                                                            depend partly on the size of the system, since larger systems have
+immediate next step, we plan to flag the issue to code reviewers,
+                                                                            more scope for complex interactions, and deeply nested code that is
+so that they are more aware of situations in which generated tests
+                                                                            harder to cover. Schafer et al. [43] also report high statement level
+may be playing the role more of integration tests.
+                                                                            coverage (70%), but also for relatively smaller systems (25 packages,
+3. Highlighting test need: Sometimes the generated tests included           ranging in size from 25 lines of code to 3,100 lines of code). This
+a "TODO" (e.g., to write the assertion; see, for example, Section 3.2.1).   indicates the importance of studying and reporting experience
+We did not land these tests into production. However, in some cases,        from deployment on large complex industrial software systems, as
+they indicated considerable potential coverage wins. In one case,           a complement to results on such smaller systems, benchmarks and
+a series of such tests were generated for the class under test, each        open source software.
+of which covered a non-trivial function in the class under test that            Notwithstanding the high degree of variability for coverage re-
+was not previously covered.                                                 ported in the present literature, our empirical findings are broadly
+   Although these test cases did not include any assertions, they           consistent with previous results reported on larger open source
+could nevertheless add value simply by covering these functions             systems. We found that approximately approximately 57% of Kotlin
+and using the so-called ‘implicit oracle’ [7] (that the code should         test cases generated are executable (with 25% improving coverage).
+not raise an exception). Furthermore, such cases might be useful as         This compares relatively favorably with recently reported results.
+hints to human test writers, and may also create the initial template       For example Nie et al. [37] report 29% of tests generated using
+for such a follow-up human-written test. After all, the task ‘add           TeCo are executable, while Yuan et al. [51] report approximately
+a suitable assertion to this generated test’ involves considerably          one third Chat-GPT-generated tests are executable with suitable
+less human effort than the task ‘write a brand new test case from           prompt engineering. However, the language model technologies
+scratch’.                                                                   used, the training set, fine tuning another characteristics play a
+                                                                            crucial role [12].
+4. Re-prompting: Sometimes, newly-generated tests covered a                     TestGen-LLM embeds the language model within a wider soft-
+subset of the lines of the method under test, that had not previously       ware engineering process that filters candidates, in order to provide
+been covered at all. This could be a situation where TestGen-LLM            the assurances that guard against hallucination, and otherwise
+should automatically recognize and re-prompt the LLM to try and             sub-optimal results, that might accrue from the unfettered appli-
+achieve further coverage for this method. If it can: fine. If not,          cation of language models without such filtering. In this regard,
+TestGen-LLM should flag this situation to the engineer. The human           TestGen-LLM is a hybrid approach combining traditional software
+engineer will likely more easily fill in the gaps, now they have a          engineering and software testing with language models as an engine
+starting test template to work from.                                        for code generation. Previous authors have also considered hybrid
+                                                                            forms of LLM applications in testing, for example, hybridizing with
+6    RELATED WORK                                                           Search Based Software Testing (SBST) [26], Mutation Testing [35]
+Software test generation is one of the most widely-studied top-             and Fuzzing [21].
+ics within the more general area of what might be termed ‘Large                 A wide variety of LLMs have been used in previous work on
+Language Model-based Software Engineering’ (LLMSE) [12]. Wang               problems relating to software testing, including BART, CodeBert,
+et al. [48] presented a literature review of 102 papers on testing,         ChatGPT, CodeX, CodeT5, and T5 [12, 48]. Meta released public
+debugging and repair, while Fan et al. [12] present a general survey,       versions of LLaMA and CodeLlama, including source code, in Feb-
+across all software engineering applications, including software            ruary and August 2023 respectively. Llama is a general purpose
+testing.                                                                    LLM with a variety of model sizes ranging from 7 billion to 65
+   Although both surveys confirm the prevalence of LLM-based                billion parameters [46]. CodeLlama is a model more specifically
+test generation in the literature, no previous paper has tackled the        trained on software and has model sizes 7B, 13B, and 34B (and, as of
+FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil                                                 Alshawan and Harman, et al.
+
+
+29th Jan 2024, 70Bn) [41]. These two freely available LLMs, LLaMA       2. Application–aware probability distribution resolution
+and CodeLlama, have also been used in previous work on testing             Language models ultimately produce a conditional probability
+topics by other researchers [34, 49]. Although the results presented    distribution. This is typically ‘resolved’ to a single answer using a
+here are based on TestGen-LLM using two internal LLMs built by          search algorithm over the distribution, for which the ‘temperature’
+Meta, the Assured LLMSE design is LLM-agnostic and allows for           parameter is often used to control for variability of outcomes over
+an arbitrary number of LLMs to each contribute test cases to the        repeated trials. Loosely speaking, the temperature determines how
+extended test class.                                                    ‘creative’ or ‘exploratory’ the overall process becomes. Most of the
+   TestGen-LLM’s approach to test improvement draws inspiration         existing work on LLMSE has used default temperature settings [12].
+from previous research on Genetic Improvement[40] and automated         More research is required to define application-specific techniques
+repair [15]. Genetic Improvement treats existing software code as       for transforming the LLM probability distribution into code [6].
+‘genetic material’ to be mutated and recombined to improve ex-          3. LLMs are dedicated followers of fashion: LLMs are ‘fashion
+isting code according to measurable improvement criteria. Many          followers’ that mimic existing test writing styles, adopting (and
+approaches to automated repair adopt a generate-and-test approach,      often very faithfully replicating) the mode of expression prevalent
+in which multiple candidate solutions are generated using a cheap       in the test class itself and, more generally, in the code-base on
+generation technology, and subsequently filtered and discarded ac-      which they have been trained. This is a natural consequence of
+cording to evaluation criteria. Like automated repair, TestGen-LLM      the probabilistic nature of the language model. Often this ‘fashion
+uses a generate-and-test approach; filtering out those candidates       following’ is a very desirable characteristic. Feedback from our
+that do not meet well-defined semantic criteria, such as passing        engineers was very positive regarding the way in which TestGen-
+reliably. Like genetic improvement, TestGen-LLM treats code as          LLM tests followed the style of the existing test class. For example,
+genetic material to be mixed and matched.                               different components use different assertion styles (standard JUnit
+   However, unlike Genetic Improvement, TestGen-LLM uses an             style and also bespoke assertion styles, written by engineers as
+‘ensemble’ of language models and configurations, rather than ge-       utilities specifically for the component under test).
+netic programming. By contrast, in its original formulation [25],          TestGen-LLM tests follow these styles faithfully. In particular,
+Genetic Improvement envisaged Genetic Programming as the core           where there was a bespoke style, TestGen-LLM tests use the corre-
+technology for creating candidate code variations. Much of the work     sponding utilities. Furthermore, the generated tests also followed
+on automated program repair has also used similar computational         existing naming conventions, commenting styles, and overall test
+search techniques [15]. However, the advent of LLMs provides us         structure. It would be highly challenging to define algorithms for
+with an additional route to achieve the same goal. Essentially, our     replicating these bespoke styles using a more rule-based approach,
+approach can be thought of as a form of Search Based Software           but using an LLM, this useful behaviour simply comes naturally.
+Engineering (SBSE)[17, 18], in which the search is over a set of           Nevertheless, fashion following also means that the language
+candidate test class improvements, which are evaluated using a          model can pick up deprecated coding habits where these remain
+generate-and-test search process, and for which the core technol-       prevalent in the code on which the model is trained. Since training
+ogy for generation is based on language models.                         is a periodic and computationally demanding exercise, we cannot
+                                                                        simply retrain every time we wish to deprecate a particular style. In
+7    FUTURE WORK AND OPEN PROBLEMS                                      future work we will further augment TestGen-LLM using prompt
+There are many avenues for future work and open problems con-           engineering and additional linter-based filters, and static analysis
+cerning automated test improvement using Assured LLMSE. In this         post processing to address coding style.
+section we outline three such open problems.
+1. Assessing improvement: The measurement of improvement                8   CONCLUSIONS
+is clearly a key factor in any Assured LLMSE [6]. We have taken         This paper introduced TestGen-LLM which has been used to land
+the simple approach of measuring line coverage as a proxy for im-       test cases in production at Meta. The paper described the evolution
+provement, but it is merely an expedient proxy for ‘improvement’.       of TestGen-LLM from proof of concept, through minimal viable
+   When we use TestGen-LLM in its experimental mode (free from          product, to deployed test support tool. The primary TestGen-LLM
+the confounding factors inherent in deployment), we found that          characteristic of interest is the way in which TestGen-LLM guards
+the success rate per test case was 25% (See Section 3.3). However,      against LLM hallucination: it submits, for human review, only test
+line coverage is a stringent requirement for success. Were we to        cases that it can guarantee improve on the existing code base. We
+relax the requirement to require only that test cases build and pass,   believe this is the first report of Assured Large Language Model
+then the success rate rises to 57%.                                     Software Engineering deployed at scale in industry.
+   Future work will therefore consider other test improvement cri-
+teria. Mutation coverage [23] would likely be the best performing       Acknowledgements: We wish to thank the many AI and developer
+criterion. This is because strong mutation coverage has been em-        infrastructure teams at Meta for their work on the LLMs, build, test and
+pirically demonstrated to outperform other forms of coverage [9].       continuous integration systems, without which TestGen-LLM would not
+However, it is challenging to deploy such computationally demand-       be possible. We also want to thank the Instagram and Facebook platform
+ing techniques at the scale we would require [8].                       organizations, and leadership for their support, and the many Meta engi-
+                                                                        neers who reviewed the code produced by TestGen-LLM, providing valuable
+                                                                        feedback and insights on its development, deployment and evolution.
+Automated Unit Test Improvement using Large Language Models at Meta                                          FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil
+
+
+REFERENCES                                                                                 [24] Matthew Jin, Syed Shahriar, Michele Tufano, Xin Shi, Shuai Lu, Neel Sundaresan,
+ [1] Adomavicius and Tuzhilin. 2005. Toward the Next Generation of Recommender                  and Alexey Svyatkovskiy. 2023. Inferfix: End-to-end program repair with LLMs.
+     Systems: A Survey of the State-of-the-Art and Possible Extensions. IEEE Trans-             arXiv preprint arXiv:2303.07263 (2023).
+     actions on Knowledge and Data Engineering 17 (2005).                                  [25] William B. Langdon and Mark Harman. 2015. Optimising Existing Software with
+ [2] John Ahlgren, Maria Eugenia Berezin, Kinga Bojarczuk, Elena Dulskyte, Inna                 Genetic Programming. IEEE Transactions on Evolutionary Computation (TEVC)
+     Dvortsova, Johann George, Natalija Gucevska, Mark Harman, Maria Lomeli, Erik               19, 1 (Feb 2015), 118–135.
+     Meijer, Silvia Sapora, and Justin Spahr-Summers. 2021. Testing Web Enabled            [26] Caroline Lemieux, Jeevana Priya Inala, Shuvendu K Lahiri, and Siddhartha Sen.
+     Simulation at Scale Using Metamorphic Testing. In International Conference on              2023. CODAMOSA: Escaping Coverage Plateaus in Test Generation with Pre-
+     Software Engineering (ICSE) Software Engineering in Practice (SEIP) track. Virtual.        trained Large Language Models. (2023).
+ [3] Toufique Ahmed, Kunal Suresh Pai, Premkumar Devanbu, and Earl T. Barr.                [27] Haonan Li, Yu Hao, Yizhuo Zhai, and Zhiyun Qian. 2023. Assisting static analysis
+     2023. Improving Few-Shot Prompts with Relevant Static Analysis Products.                   with large language models: A ChatGPT experiment. In Proceedings of the 31st
+     arXiv:2304.06815.                                                                          ACM Joint European Software Engineering Conference and Symposium on the
+ [4] Nadia Alshahwan, Xinbo Gao, Mark Harman, Yue Jia, Ke Mao, Alexander Mols,                  Foundations of Software Engineering. 2107–2111.
+     Taijin Tei, and Ilya Zorin. 2018. Deploying Search Based Software Engineering         [28] Qingzhou Luo, Farah Hariri, Lamyaa Eloussi, and Darko Marinov. 2014. An
+     with Sapienz at Facebook (keynote paper). In 10𝑡ℎ International Symposium                  empirical analysis of flaky tests. In 22𝑛𝑑 International Symposium on Foundations
+     on Search Based Software Engineering (SSBSE 2018). Montpellier, France, 3–45.              of Software Engineering (FSE 2014), Shing-Chi Cheung, Alessandro Orso, and
+     Springer LNCS 11036.                                                                       Margaret-Anne Storey (Eds.). ACM, Hong Kong, China, 643–653.
+ [5] Nadia Alshahwan, Mark Harman, and Alexandru Marginean. 2023. Software                 [29] Wei Ma, Shangqing Liu, Wenhan Wang, Qiang Hu, Ye Liu, Cen Zhang, Liming
+     Testing Research Challenges: An Industrial Perspective. In 2023 IEEE Conference            Nie, and Yang Liu. 2023. The Scope of ChatGPT in Software Engineering: A
+     on Software Testing, Verification and Validation (ICST 2023). IEEE, 1–10.                  Thorough Investigation. arXiv:2305.12138.
+ [6] Nadia Alshahwan, Mark Harman, Alexandru Marginean, Shubho Sengupta, and               [30] Stephen MacNeil, Andrew Tran, Arto Hellas, Joanne Kim, Sami Sarsa, Paul
+     Eddy Wang. 2024. Assured LLM-Based Software Engineering (keynote paper).                   Denny, Seth Bernstein, and Juho Leinonen. 2023. Experiences from Using Code
+                                                                                                Explanations Generated by Large Language Models in a Web Software De-
+     In 2𝑛𝑑 . ICSE workshop on Interoperability and Robustness of Neural Software
+                                                                                                velopment E-Book. In Proceedings of the 54th ACM Technical Symposium on
+     Engineering (InteNSE) (Lisbon, Portugal). To appear.
+                                                                                                Computer Science Education V. 1. ACM, Toronto ON Canada, 931–937. https:
+ [7] Earl T. Barr, Mark Harman, Phil McMinn, Muzammil Shahbaz, and Shin Yoo.
+                                                                                                //doi.org/10.1145/3545945.3569785
+     2015. The Oracle Problem in Software Testing: A Survey. IEEE Transactions on
+                                                                                           [31] Alexandru Marginean, Johannes Bader, Satish Chandra, Mark Harman, Yue Jia,
+     Software Engineering 41, 5 (May 2015), 507–525.
+                                                                                                Ke Mao, Alexander Mols, and Andrew Scott. 2019. SapFix: Automated End-to-
+ [8] Moritz Beller, Chu-Pan Wong, Johannes Bader, Andrew Scott, Mateusz Machalica,
+                                                                                                End Repair at Scale. In International Conference on Software Engineering (ICSE)
+     Satish Chandra, and Erik Meijer. 2021. What it would take to use mutation testing
+                                                                                                Software Engineering in Practice (SEIP) track. Montreal, Canada.
+     in industry—a study at Facebook. In 2021 IEEE/ACM 43rd International Conference
+                                                                                           [32] Mark Chen et al. 2021. Evaluating Large Language Models Trained on Code.
+     on Software Engineering: Software Engineering in Practice (ICSE-SEIP). IEEE, 268–
+                                                                                                arXiv:2107.03374.
+     277.
+                                                                                           [33] Laura Meckler and Pranshu Verma. 2022. Teachers are on alert for inevitable
+ [9] Thierry Titcheu Chekam, Mike Papadakis, Yves Le Traon, and Mark Harman.
+                                                                                                cheating after release of ChatGPT. The Washington post (December 2022).
+     2017. An empirical study on mutation, statement and branch coverage fault
+                                                                                           [34] Seungjun Moon, Yongho Song, Hyungjoo Chae, Dongjin Kang, Taeyoon Kwon,
+     revelation that avoids the unreliable clean program assumption. In Proceedings
+                                                                                                Kai Tzu-iunn Ong, Seung-won Hwang, and Jinyoung Yeo. 2023. Coffee: Boost
+     of the 39th International Conference on Software Engineering, ICSE 2017, Buenos
+                                                                                                Your Code LLMs by Fixing Bugs with Feedback. arXiv preprint arXiv:2311.07215
+     Aires, Argentina, May 20-28, 2017. 597–608.
+                                                                                                (2023).
+[10] Maxime Cordy, Renaud Rwemalika, Adriano Franci, Mike Papadakis, and Mark
+                                                                                           [35] Arghavan Moradi Dakhel, Amin Nikanjam, Vahid Majdinasab, Foutse Khomh,
+     Harman. 2022. FlakiMe: Laboratory-Controlled Test Flakiness Impact Assessment.
+                                                                                                and Michel C Desmarais. 2023. Effective Test Generation Using Pre-trained Large
+     In 44th IEEE/ACM 44th International Conference on Software Engineering, ICSE
+                                                                                                Language Models and Mutation Testing. arXiv e-prints (2023), arXiv–2308.
+     2022, Pittsburgh, PA, USA, May 25-27, 2022. ACM, 982–994. https://doi.org/10.
+                                                                                           [36] Ruba Mutasim, Gabriel Synnaeve, David Pichardie, and Baptiste Rozière. 2023.
+     1145/3510003.3510194
+                                                                                                Leveraging Static Analysis for Bug Repair. arXiv:2304.10379 [cs.SE]
+[11] Xibin Dong, Zhiwen Yu, Wenming Cao, Yifan Shi, and Qianli Ma. 2020. A survey
+                                                                                           [37] Pengyu Nie, Rahul Banerjee, Junyi Jessy Li, Raymond J. Mooney, and Milos
+     on ensemble learning. Frontiers of Computer Science 14 (2020), 241–258.
+                                                                                                Gligoric. 2023. Learning Deep Semantics for Test Completion. arXiv:2302.10166.
+[12] Angela Fan, Beliz Gokkaya, Mitya Lyubarskiy, Mark Harman, Shubho Sengupta,
+                                                                                           [38] David Noever and Kevin Williams. 2023. Chatbots As Fluent Polyglots: Revisiting
+     Shin Yoo, and Jie Zhang. 2023. Large Language Models for Software Engineering:
+                                                                                                Breakthrough Code Snippets. arXiv:2301.03373.
+     Survey and Open Problems. In ICSE Future of Software Engineering (FoSE 2023).
+                                                                                           [39] Ethan Otto, Eva Culakova, Sixu Meng, Zhihong Zhang, Huiwen Xu, Supriya
+     To Appear.
+                                                                                                Mohile, and Marie A Flannery. 2022. Overview of Sankey flow diagrams: focusing
+[13] Gordon Fraser and Andrea Arcuri. 2014. A large-scale evaluation of automated
+                                                                                                on symptom trajectories in older adults with advanced cancer. Journal of geriatric
+     unit test generation using evosuite. ACM Transactions on Software Engineering
+                                                                                                oncology 13, 5 (2022), 742–746.
+     and Methodology (TOSEM) 24, 2 (2014), 1–42.
+                                                                                           [40] Justyna Petke, Saemundur O. Haraldsson, Mark Harman, William B. Langdon,
+[14] Claire Le Goues, Stephanie Forrest, and Westley Weimer. 2013. Current Chal-
+                                                                                                David R. White, and John R. Woodward. 2018. Genetic Improvement of Software:
+     lenges in Automatic Software Repair. Software Quality Journal 21, 3 (2013),
+                                                                                                a Comprehensive Survey. IEEE Transactions on Evolutionary Computation 22, 3
+     421–443.
+                                                                                                (June 2018), 415–432. https://doi.org/doi:10.1109/TEVC.2017.2693219
+[15] Claire Le Goues, Michael Pradel, and Abhik Roychoudhury. 2019. Automated
+                                                                                           [41] Baptiste Rozière, Jonas Gehring, Fabian Gloeckle, Sten Sootla, Itai Gat, Xi-
+     program repair. Commun. ACM 62, 12 (2019), 56–65.
+                                                                                                aoqing Ellen Tan, Yossi Adi, Jingyu Liu, Tal Remez, Jérémy Rapin, Artyom
+[16] Mark Harman. 2010. Why Source Code Analysis and Manipulation Will Always
+                                                                                                Kozhevnikov, Ivan Evtimov, Joanna Bitton, Manish Bhatt, Cristian Canton Ferrer,
+     Be Important (Keynote Paper). In 10𝑡ℎ IEEE International Working Conference on             Aaron Grattafiori, Wenhan Xiong, Alexandre Défossez, Jade Copet, Faisal Azhar,
+     Source Code Analysis and Manipulation. Timisoara, Romania.                                 Hugo Touvron, Louis Martin, Nicolas Usunier, Thomas Scialom, and Gabriel Syn-
+[17] Mark Harman and Bryan F. Jones. 2001. Search Based Software Engineering.                   naeve. 2023. Code Llama: Open Foundation Models for Code. arXiv:2308.12950.
+     Information and Software Technology 43, 14 (Dec. 2001), 833–839.                      [42] Sami Sarsa, Paul Denny, Arto Hellas, and Juho Leinonen. 2022. Automatic Gen-
+[18] Mark Harman, Afshin Mansouri, and Yuanyuan Zhang. 2012. Search Based                       eration of Programming Exercises and Code Explanations Using Large Language
+     Software Engineering: Trends, Techniques and Applications. Comput. Surveys                 Models. In Proceedings of the 2022 ACM Conference on International Computing
+     45, 1 (November 2012), 11:1–11:61.                                                         Education Research V.1. ACM, Lugano and Virtual Event Switzerland, 27–43.
+[19] Mark Harman and Peter O’Hearn. 2018. From Start-ups to Scale-ups: Opportu-                 https://doi.org/10.1145/3501385.3543957
+     nities and Open Problems for Static and Dynamic Program Analysis (keynote             [43] Max Schäfer, Sarah Nadi, Aryaz Eghbali, and Frank Tip. 2023. Adaptive Test
+     paper). In 18𝑡ℎ IEEE International Working Conference on Source Code Analysis              Generation Using a Large Language Model. arXiv:2302.06527.
+     and Manipulation (SCAM 2018). Madrid, Spain, 1–23.                                    [44] Mohammed Latif Siddiq, Joanna C. S. Santos, Ridwanul Hasan Tanvir, Noshin
+[20] Will Douglas Heaven. 2023. ChatGPT is going to change education, not destroy               Ulfat, Fahmid Al Rifat, and Vinicius Carvalho Lopes. 2023. Exploring the Effec-
+     it. MIT Technology review (April 2023).                                                    tiveness of Large Language Models in Generating Unit Tests. arXiv:2305.00418.
+[21] Jie Hu, Qian Zhang, and Heng Yin. 2023. Augmenting Greybox Fuzzing with               [45] Jeffrey Svajlenko and Chanchal K Roy. 2020. A Survey on the Evaluation of
+     Generative AI. arXiv:2306.06782.                                                           Clone Detection Performance and Benchmarking. arXiv preprint arXiv:2006.15682
+[22] Kai Huang, Zhengzi Xu, Su Yang, Hongyu Sun, Xuejun Li, Zheng Yan, and                      (2020).
+     Yuqing Zhang. 2023. A Survey on Automated Program Repair Techniques.                  [46] Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne
+     arXiv:2303.18184 [cs.SE]                                                                   Lachaux, Timothée Lacroix, Baptiste Rozière, Naman Goyal, Eric Hambro,
+[23] Yue Jia and Mark Harman. 2011. An Analysis and Survey of the Development of
+     Mutation Testing. IEEE Transactions on Software Engineering 37, 5 (September–
+     October 2011), 649 – 678.
+FSE ’24, Mon 15 - Fri 19 July 2024, Porto de Galinhas, Brazil, Brazil                                                                              Alshawan and Harman, et al.
+
+
+     Faisal Azhar, Aurelien Rodriguez, Armand Joulin, Edouard Grave, and Guil-            [49] Chunqiu Steven Xia, Matteo Paltenghi, Jia Le Tian, Michael Pradel, and Lingming
+     laume Lample. 2023. LLaMA: Open and Efficient Foundation Language Models.                 Zhang. 2023. Universal Fuzzing via Large Language Models. arXiv preprint
+     arXiv:2302.13971.                                                                         arXiv:2308.04748 (2023).
+[47] Simon Urli, Zhongxing Yu, Lionel Seinturier, and Martin Monperrus. 2018. How         [50] Shin Yoo and Mark Harman. 2012. Regression Testing Minimisation, Selection and
+     to Design a Program Repair Bot? Insights from the Repairnator Project. In 40th            Prioritisation: A Survey. Journal of Software Testing, Verification and Reliability
+     International Conference on Software Engineering, Software Engineering in Practice        22, 2 (2012), 67–120.
+     track (ICSE 2018 SEIP track). 1–10.                                                  [51] Zhiqiang Yuan, Yiling Lou, Mingwei Liu, Shiji Ding, Kaixin Wang, Yixuan Chen,
+[48] Junjie Wang, Yuchao Huang, Chunyang Chen, Zhe Liu, Song Wang, and Qing                    and Xin Peng. 2023. No More Manual Tests? Evaluating and Improving ChatGPT
+     Wang. 2023. Software Testing with Large Language Model: Survey, Landscape,                for Unit Test Generation. arXiv:2305.04207.
+     and Vision. arXiv:2307.07221.
+

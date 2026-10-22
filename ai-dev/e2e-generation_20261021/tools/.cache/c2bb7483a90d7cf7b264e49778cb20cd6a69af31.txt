@@ -1,0 +1,862 @@
+__HTTP 200__
+                                              An Empirical Analysis of UI-based Flaky Tests
+                                                           Alan Romano1 , Zihe Song2 , Sampath Grandhi2 , Wei Yang2 , and Weihang Wang1
+                                                                           1
+                                                                               University at Buffalo, SUNY 2 University of Texas at Dallas
+
+
+                                           Abstract—Flaky tests have gained attention from the research        UI or the layer between the UI and the test/application code.
+                                        community in recent years and with good reason. These tests lead       Moreover, the execution speed of the UI test in continuous
+                                        to wasted time and resources, and they reduce the reliability of       integration environments is slow, and this difference in execu-
+                                        the test suites and build systems they affect. However, most of the
+                                        existing work on flaky tests focus exclusively on traditional unit     tion speed makes detecting and reproducing flaky tests more
+                                        tests. This work ignores UI tests that have larger input spaces        difficult. Therefore, researching flaky UI tests can help web
+                                        and more diverse running conditions than traditional unit tests.       and mobile UI developers by providing insights on effective
+
+
+
+
+arXiv:2103.02669v1 [cs.SE] 3 Mar 2021
+                                        In addition, UI tests tend to be more complex and resource-            detection and prevention methods.
+                                        heavy, making them unsuited for detection techniques involving
+                                        rerunning test suites multiple times.                                     To further investigate flaky UI tests, we collect and analyze
+                                           In this paper, we perform a study on flaky UI tests. We analyze     235 real-world flaky UI test examples found in popular web
+                                        235 flaky UI test samples found in 62 projects from both web and       and Android mobile projects. For each flaky test example, we
+                                        Android environments. We identify the common underlying root           inspect commit descriptions, issue reports, reported causes,
+                                        causes of flakiness in the UI tests, the strategies used to manifest
+                                        the flaky behavior, and the fixing strategies used to remedy flaky     and changed code. We focus on the following questions and
+                                        UI tests. The findings made in this work can provide a foundation      summarize our findings and implications in Table I.
+                                        for the development of detection and prevention techniques for            RQ1: What are the typical root causes behind flaky
+                                        flakiness arising in UI tests.
+                                                                                                               UI tests? We examine the collected flaky UI test samples to
+                                                               I. I NTRODUCTION                                determine the underlying causes of flaky behavior. We group
+                                           Software testing is a significant part of software devel-           similar root causes together into 4 main categories: Async Wait,
+                                        opment. Most developers write test suites to repeatedly test           Environment, Test Runner API Issues, and Test Script Logic
+                                        various indicators of functioning software. If a test fails,           Issues.
+                                        developers will analyze the corresponding test to debug and fix           RQ2: What conditions do flaky UI tests manifest in
+                                        the software. However, not all testing results are fully reliable.     and how are they reproduced? In order to understand how
+                                        Sometimes the test may show flakiness, and a test showing this         users report intermittent behaviors, we investigate the common
+                                        behavior is denoted as a flaky test.                                   strategies used to manifest the flaky UI test samples. The data
+                                           Flaky tests refer to tests with unstable test results. That is,     reveals 5 strategies used to reproduce and report flaky UI
+                                        the same test suite sometimes passes and sometimes fails under         test behavior: Specify Problematic Platform, Reorder/Prune
+                                        the exact same software code and testing code. The existence           Test Suite, Reset Configuration Between Tests, Provide Code
+                                        of flaky tests destroys the deterministic relationship between         Snippet, and Force Environment Conditions.
+                                        test results and code quality. Once a flaky test appears, it may         RQ3: How are these flaky UI tests typically fixed? We
+                                        lead to tons of efforts wasted in debugging the failed test,           identify the bug fix applied to each collected flaky UI test
+                                        which leads to delays in software release cycle and reduced            sample and group similar ones together. We find 4 main cate-
+                                        developer productivity [1].                                            gories for bug fixing strategies: Delay, Dependency, Refactor
+                                           In the past few years, researchers have increased efforts to        Test, and Disable Features.
+                                        address this problem [2]–[4]. However, the existing research
+                                                                                                                 We investigate the impacts that these UI-specific features
+                                        on flaky tests mostly focuses on unit tests. Compared with tra-
+                                                                                                               have on flakiness, and we find several distinctions. Based
+                                        ditional unit testing, the execution environment and automation
+                                                                                                               on the investigation of above research questions, the main
+                                        process of UI testing are significantly different: First, many of
+                                                                                                               contributions of this study are:
+                                        the events in these tests, such as handling user input, making
+                                        operating system (or browser) API calls, and downloading                 1) Our study provides guidance for developers to create
+                                        and rendering multiple resources (such as images and scripts)               reliable and stable UI test suites, which can reduce the
+                                        required by the interface, are highly asynchronous in nature.               occurrence of flaky UI tests.
+                                        This means that user events and various other tasks will be              2) Our study summarizes the commonly-used manifestation
+                                        triggered in a non-deterministic order.                                     and fix strategies of flaky UI tests to help developers
+                                           Second, compared to traditional unit testing, flaky UI tests             easily reproduce and fix flaky tests, allowing them to
+                                        are more difficult to detect and reproduce. This is because it              avoid wasted development resources.
+                                        is difficult to cover all use-case scenarios by simulating user          3) Our study motivates future work for automated detection
+                                        events to automate UI testing. UI tests introduce new sources               and fixing techniques of UI-based flaky tests.
+                                        of flakiness, either from the layer between the user and the
+                                                   Table I: Summary of Findings and Implications
+     Findings                                                                    Implications
+     Of the observed flaky tests collected, 105 tests of the 235 (45.1%)         This group represents a significant portion of the dataset collected and highlights
+ 1
+     dataset are caused by an Async Wait issue.                                  the need to take this root cause into consideration when designing UI tests.
+                                                                                 The web presents an environment with less stable timing and scheduling
+     Async Wait issues are more prevalent in web projects rather than mobile
+ 2                                                                               compared with a mobile environment, so more care must be taken when
+     projects (W 52.0 % vs M 32.5%).
+                                                                                 network or resource loads are used within web UI tests.
+                                                                                 It may be caused by Android fragmentation problem. So the Android
+     Platform issues are happening more frequent on mobile projects rather
+ 3                                                                               developers should pay more attention to the environment configuration
+     than web projects (W 10.5 % vs M 21.7%).
+                                                                                 when choosing the test model.
+                                                                                 This difference can be explained by the number of additional platform conditions that
+     Layout difference (cross-platform) root causes are found more in web        web applications can be exposed compared with the conditions found in
+ 4
+     flaky test than in mobile flaky tests (W 5.3 % vs M 1.2%).                  mobile environment, such as different window sizes, different browser
+                                                                                 rendering strategies, etc...
+     Besides removing flaky test, the most common fixing strategies are
+     refactoring logic implementations (46.0%) and fixing delays (39.3%).
+                                                                                 Refactoring logic implementations and fixing delays should be the first-
+ 5   Among them, refactoring logic implementations can solve most issues
+                                                                                 considered strategies for developers when fixing bugs.
+     caused by wrong test script logic, and fixing delay strategy can solve
+     most timing issues.
+     Dependency fixes are more common in mobile projects than web                This trend can be caused by the Android fragmentation problem. Android developers
+ 6
+     projects (W 1.3% vs M 21.4%).                                               should pay more attention to this problem when designing test suites.
+     Delay fixes are more common in web projects than mobile projects            This phenomenon is related to the most common test framework in Android
+ 7
+     (W 32.2% vs M 17.9%).                                                       testing, Espresso, which recommends disabling animations during tests.
+
+
+
+  Table II: Summary of Commit Info from UI Frameworks                                are used with the GitHub Search API [5] to identify 7,037
+                                           Flaky Keyword          UI Keyword
+                                                                                     distinct repositories pertaining to these topics. From this set of
+UI Topic      Projects      Commits                                                  repositories, we download all of the commits for these projects
+                                                 Filtering           Filtering
+web                999        772,901                2,553                 210       giving a total of 2,613,420 commits to search. Next, we follow
+angular            998        407,434                  222                  19       a procedure similar to the one used in Luo et al. [2] and search
+vue                998        344,526                   52                   1
+react              997      1,110,993                  603                  30       the commit messages for the patterns ‘flak*’ and ‘intermit*’
+svg                995        135,563                   24                   1       and the word ‘test’ to find commits marked as flaky. This step
+bootstrap          995         98,264                  112                   0       reduces the number of commits to 3,516. In order to confirm
+d3                 980        106,160                   82                   1       which of these commits were flaky UI tests, manual inspection
+emberjs            629          3,961                    1                   0
+Total            7,590      2,979,802                3,649                 262       was performed on the commits in the list. In order to expedite
+Distinct         7,037      2,613,420                3,516                 254       the process, another keyword search is performed using the
+                                                                                     keywords ‘ui’, ‘gui’, ‘visual’, ‘window’, ‘button’, ‘display’,
+                                                                                     ‘click’, and ’animation’ to prioritize the commits most likely to
+                           II. BACKGROUND                                            refer to flaky UI tests. This final search prioritizes 254 commit
+A. Impacts of Flaky UI Tests                                                         messages to search, but the full 3,516 are searched to increase
+                                                                                     the chance of identifying flaky UI test commits. After manual
+   1) Individual Test Failures: The simplest impact that flaky
+                                                                                     inspection and removing duplicate commits, the number of
+test can have on test suites is that the individual test run will
+                                                                                     verified flaky tests is 152. Table II shows the summary of
+fail. This flaky behavior leads to a minimal amount of time
+                                                                                     commit information.
+and resources wasted by attempting to retry the single test.
+                                                                                        2) Android: Compared with web development, Android
+   2) Build Failures: Flaky tests that are part of continuous
+                                                                                     developers are not as consistent with their choice of UI frame-
+integration systems can lead to intermittent build failures.
+                                                                                     work. Therefore, to find flaky UI tests on the Android platform,
+Flaky tests in this stage lead to wasted time trying to identify
+                                                                                     we use the GitHub Archive [6] to perform a massive search on
+the underlying cause of the build failure only to find out that
+                                                                                     all commits and issue reports on GitHub instead of focusing
+the failure was not caused by a regression in the code.
+                                                                                     on repositories using popular UI framework. Specifically, We
+   3) CI Test Timeouts: Some flaky behaviors do not cause
+                                                                                     limit our search to the list of closed issues, since the flaky
+the tests to fail outright. Instead, they cause hangups in the CI
+                                                                                     tests in closed issues are more likely to be fixed than the
+system that lead to timeouts. These hangups waste time as the
+                                                                                     tests in open issues. We search with the keywords ‘flak*’,
+system waits for a process that never finishes, causing the CI
+                                                                                     ‘intermit*’, and ‘test*’, which is similar to the patterns used
+system to wait until a specified timeout is met.
+                                                                                     in web searching. In order to ensure the issues we find are flaky
+                         III. M ETHODOLOGY                                           UI tests on the Android platform, we also add constraints like
+A. Sample Collection                                                                 ‘android’, ‘ui’, ‘espresso’, ‘screen’, etc.
+   1) Web: In order to collect samples of flaky UI tests, we
+                                                                                     B. Portion of Flaky UI Tests to Other Tests
+retrieve commit samples from GitHub repositories. First, we
+obtain a list of the repositories leveraging popular web UI                            We find that flaky UI tests collected in our methodology
+frameworks using the topic keywords ‘react’, ‘angular’, ‘vue’,                       make up a small portion of all tests available in these
+‘emberjs’, ‘d3’, ‘svg’, ‘web’, and ’bootstrap’. These keywords                       repositories. This small portion can be explained by several
+ Table III: Top 10 Projects Containing the Most Flaky Tests                            IV. C AUSE OF F LAKINESS
+                              Inspected                                 We investigate the collected flaky tests to determine the root
+Project                                   Flaky Tests       LOC
+                              Commits                                cause of the flaky behavior. We manually inspect the related
+Waterfox                            937           23    3,949,098    commits and issues of the test in order to locate the code
+qutebrowser                         124            4       45,313
+influxdb                             81           12      124,591    or condition that caused the flakiness. We base our root cause
+angular                              69            2      135,253    categories on those defined by Luo et al. [2]. We extend the set
+plotly.js                            37           24      760,504    of categories to include new categories specific to UI flakiness
+material-components-web              26            5       78,972    (“Animation Timing Issue”, “DOM Selector Issue”, etc...). The
+components                           21            5       34,715
+oppia                                20            2      132,284    categorization results are summarized in Table IV.
+wix-style-react                      15           11       19,830
+streamlabs-obs                       13            1      179,184        Table IV: Summary of Root Cause Categories Found
+material-components-android         358            9       11,682
+Focus-android                        24            8       30,952    Root Cause    Root Cause
+                                                                                                                       Web   Mobile   Total
+RxBinding                            21            6        8,787    Categories    Subcategories
+Xamarin.Forms                       140            5       46,609    Async Wait    Network Resource Loading             15        4     19
+FirebaseUI-Android                   34            4        4,386                  Resource Rendering                   47       14     61
+Fenix                                20            4       155,50                  Animation Timing Issue               17        9     26
+Detox                                38            3        2,254    Environment   Platform Issue                       16       18     34
+Components                           14            3       34,715                  Layout Difference                     9        1     10
+Mapbox-navigation-android             4            2        6,201    Test Runner   DOM Selector Issue                   13        3     16
+Sunflower                             3            1          354    API Issue     Incorrect Test Runner Interaction    10       14     24
+                                                                     Test Script   Unordered Collections                 5        0      5
+                                                                     Logic Issue   Time                                  1        0      1
+                                                                                   Incorrect Resource Load Order        11       11     22
+reasons. Based on GH Archive [6], the number of open issues                        Test Order Dependency                 6        6     12
+                                                                                   Randomness                            2        3      5
+(over 70,000) containing potential flaky UI tests outnumbers                       Total                               152       83    235
+those in closed issues (over 30,000). Open issues cannot
+be included in our study; however, this large number of
+open issues possibly containing flaky UI tests highlights the        A. Categorization
+significance of UI flakiness. Besides, there are flaky UI tests         After manual inspection of the flaky UI tests, we identify
+not captured through the keywords. One example is in the             four categories that the root causes of flakiness in these tests
+material-components-web repository [2]. While our                    can fall under: (1) Timing Issue, (2) Platform Issue, (3) Test
+dataset is not exhaustive, we believe the results can provide a      Runner API Issue, and (4) Test Script Logic Issue. We describe
+basis for future work to build on.                                   the categories and provide examples for each below.
+                                                                        1) Async Wait: We have found the root cause for a sig-
+C. Sample Inspection                                                 nificant portion (45%) of the flaky tests analyzed arise from
+   After collecting these commits and issues of flaky tests re-      issues with async wait mechanisms. The common cause of
+ports from GitHub, we manually inspect the collected samples         such issues is that the tests do not properly schedule fetching
+to identify the information relevant to our research questions.      and performing actions on program objects or UI elements,
+In particular, we analyze the collected flaky tests by first         causing issues with attempting to interact with elements that
+inspecting the commits in the web projects and the issue             have not been loaded completely. The program objects or UI
+reports in the Android projects for the following traits: the root   elements can come from network requests, the browser render-
+cause of the flakiness, how the flakiness is manifested, how the     ing pipeline, or graphics pipeline. This improper ordering of
+flakiness was fixed, the test affected, the testing environment,     events results in an invalid action and causes an exception to
+and the lines of code of the fix. For the commits, we inspect        be thrown. Among these async wait issues, we identified three
+the commit message, changed code, and linked issues. For             three subcategories that group similar root causes together.
+the issue reports, we inspect the developer comments and the               a) Network Resource Loading: Flaky tests in this cat-
+linked commits. When available, we also inspect the execution        egory attempt to manipulate data or other resources before
+logs from the CI. Table III shows the information of projects        they are fully loaded. Attempting to manipulate nonexistent
+containing flaky tests. Through inspection, we obtained the          data causes exceptions in the test. An example is seen in
+sample set of 235 flaky tests, of which 152 were from web            the ring-ui [7] web component library repository. This
+repositories and 83 were from Android repositories.                  library provides custom-branded reusable web components to
+                                                                     build a consistent theme across web pages. In this project,
+D. Dataset Composition                                               some components being tested utilize images that are fetched
+  Our dataset consists of a diverse set of flaky UI test             through network requests; however, depending on the network
+samples. The languages of the flaky UI tests analyzed are            conditions, the images may fail to load on time or fail to load
+JavaScript (63.8%), TypeScript (20.4%), HTML (8.6%), and             altogether. The code snippet in Figure 1 shows how the url
+others (7.2%) for the web projects and Java (48.2%), Kotlin          variable defined in Line 1 is URL for an image network call
+(21.7%), and others (30.1%) for the Android projects.                to an external web server. The image is an avatar used by
+the tag component on Line 8 to display on the page. When
+the server call occasionally fails to respond in time due to a
+heavy network load, the visual test will intermittently fail as
+the rendered tag component will be missing the image.
+
+ 1   const url =
+     ,→  `${hubConFigureserverUri}/api/rest/avatar/
+     ,→  default?username=Jet%20Brains`;
+ 2
+ 3   class TagDemo extends React.Component {
+ 4   render() {
+ 5     return (                                                      (a) The test for updating a label first creates a new label through
+ 6       <div>                                                       the UI. In this case, the backend had not finished processing the
+ 7         <Tag>Simple</Tag>                                         new label, so the network call to fetch all labels returns an empty
+ 8         <Tag avatar={url} readOnly={false}>
+ 9           With avatar
+                                                                     response.
+10         </Tag>                                                      1 it('can update a label', () => {
+11       </div>                                                        2     ...
+12     );                                                              3     const newLabelName = 'attribut ()'
+13   }}                                                                4     const newLabelDescription = "..."
+                                                                       5
+                                                                       6     // create label
+ Figure 1: ring-ui Network Resource Loading Example.                   7     cy.get<Organization>('@org').then(({id}) => {
+                                                                       8        cy.createLabel(oldLabelName, id, {
+                                                                       9           description: oldLabelDescription,
+   Another example is found in the influxdb [8] project.             10         })
+This project provides a client side platform meant for storing,      11      })
+querying, and visualizing time series data. Figure 2 shows a         12
+                                                                     13      // verify name, descr, color
+flaky test for the label UI components. The test checks that         14      cy.getByTestID('label-card')
+labels update properly by first creating a new label and then        15         .should('have.length', 1)
+attempting to modify the label’s name and description through        16      cy.getByTestID('label-card')
+                                                                     17         .contains(oldLabelName)
+the UI. Figure 2a presents the view of the test suite being run      18         .should('be.visible')
+on the left with the UI view on the right. Figure 2b shows           19      ...
+the code snippet of the test corresponding to the screenshot.        20      // modify
+                                                                     21      cy.getByTestID('label-card')
+Lines 6-11 create the label to be used in the test. Lines 13-17      22         .contains(oldLabelName).click()
+perform assertions on the labels retrieved through a network         23 }
+call. However, due to the execution timing, the label is not
+yet created in the backend store. The network call returns an                (b) influxdb ”Update Label” test code snippet.
+empty response which causes the assertion on Line 15 to fail.        Figure 2: influxdb Network Resource Loading Example.
+
+      b) Resource Rendering: Flaky tests in this category             1    const modifiedDateSortButton =
+attempt to perform an action on a UI component before it                   ,→  getModifiedDateSortButton();
+is fully rendered. This attempt to interact with the missing          2    await
+                                                                           ,→  waitUntilDisplayed(modifiedDateSortButton);
+component leads to visual differences detected by screenshot          3    await modifiedDateSortButton.click();
+tests, or exceptions thrown by attempting to access elements
+that have not fully loaded yet. An example of this is seen in the    Figure 3: generator-jhipster Resource Rendering Ex-
+generator-jhipster [9] project. This project provides a              ample.
+platform to generate modern web application with Java. In this
+project, a test script attempts to click on a button and wait for    does not finish executing in 100 ms timeout. This conflicts
+the button to be displayed instead of the button being clickable.    with the next request for verifying the order of calls.
+Normally, these descriptions refer to the same event, but the
+modal overlay shown in the UI can block the target button             1    verifyNoMoreInteractions(listener);
+from being clickable. The faulty code snippet is shown in             2    verify(listener, timeout(100))
+Figure 3. The waitUntilDisplayable function on Line                   3            .onRequestFinished(higherPriorityReq);
+                                                                      4    verify(listener, timeout(10))
+2 pauses the execution until the button is displayed on the           5            .onRequestFinished(lowerPriorityReq);
+page. The test can fail intermittently if another element is still
+above the button when Line 3 is reached, such as an element                 Figure 4: Volley Resource Loading Example.
+acting as a background shade in a confirmation modal.
+   This issue also appeared on the Android test, in the Volley            c) Animation Timing Issue: Flaky tests relying on an-
+[10] project, the code snippet in Figure 4 leads to flaky            imations are sensitive to timing differences in the running
+behavior because of a short timeout. The listener occasionally       environment and may be heavily optimized to skip animation
+events. The sensitivity to scheduling in animations can lead         retail-ui project [15]. This project contains a set of
+to issues where assertions on the events are used to test for        reusable components targeted at retail sites. The screenshot
+animation progress.                                                  test for its dropdown component fails because different default
+   An example of this type of issue is seen in the plotly.js         window sizes across different browsers causes the dropdown
+project [11]. This project provides visualization components         box to be cut off in some browsers.
+such as bar graphs, line plots, and more for use in web                 3) Test Runner API Issue: Another root cause of flakiness
+pages. In the transition tests, the developers find that they        we found involved an issue when interacting with the APIs
+intermittently fail due to an underlying race condition between      provided by the testing framework that caused it to func-
+the call to transition the axes and the call to transition the bar   tion incorrectly. Flaky tests with this root cause either use
+graphs. Depending on which transition is called first, assertions    the provided APIs incorrectly, or the flaky tests manage to
+made on the layout of the graph may fail as the bar graph            expose an underlying issue in the provided API that causes
+elements are in different positions than expected. In Figure 5,      the functionality to differ from what was expected. We also
+screenshots from a code snippet provided to reproduce the            identify two subcategories among the flaky tests observed.
+different states of the animation are shown. In Figure 5a,                 a) Incorrect Test Runner Interaction: UI tests use APIs
+we see that graph starts with the first bar is on value 3, the       provided by the test runner to interact with UI elements, but
+second bar is on value 4, and the third bar is on value 5.           these APIs can hit unexpected behaviors that cause incorrect
+Figure 5b shows the frame immediately after the “react @             behavior. For example, in the Android project FirefoxLite
+step 1” button is clicked, changing the values of the bars to 3,     [16], flakiness appeared because the testing model registered
+6, and 5 respectively. In this figure, the background lines of       the click action by Espresso as a long click. Figure 6 shows
+the axes have been shifted in order to represent the new scale,      the UI layout after performing the click action incorrectly.
+but the bars scale incorrectly to the new axes values. Finally,      A testing site should have opened by clicking “Sample Top
+Figure 5c, the bars transition to their correct new values on        Site” button. However, the “Remove” menu popped up instead
+the new axes. Since the bars are not in the expected positions       because of the long click action on “Sample Top Site” button.
+during the transition test, the assertions made fail.                This behavior difference caused the test to fail.
+   Another example is seen in the RXBinding                                b) DOM Selector Issue: Flaky tests interacting with
+[12] project for Android’s UI widgets. In the                        DOM elements are intermittently unable to select the correct
+RxSwipeRefreshLayoutTest, which is used to test the                  element due to differences in browser implementations or stale
+swipe refresh gesture, the call to stop the refresh animation        elements blocking focus. An example of the flakiness arising
+could happen anytime between the swipe release and the               from an incorrect DOM element selection is found in the
+actual refresh animation. The behavior is flaky because the          react-datepicker project [17]. This project provides a
+swipe animation timing used in the recorder is unable to             reusable date picker component for the React library. The code
+catch up to the listener.                                            under the test incorrectly sets two elements on the page to
+   2) Environment: Some flaky tests manifest due to differ-          auto-focus on, causing a jump on the page that results in a
+ences in the underlying platform used to run the tests. The          visual flicker.
+platform can include the browser used for web projects and              4) Test Script Logic Issue: In some flaky tests, flakiness
+the version of Android, iOS, etc... used for mobile projects.        arose due to incorrect logic within the test scripts. The flaky
+We found that these issues can also be further divided into          tests may have failed to clean data left by previous tests, made
+two subcategories.                                                   incorrect assertions during the test, loaded resources in an
+      a) Platform Issue: These flaky tests suffer from an            incorrect order, or incorrectly used a random data generator
+underlying issue in one particular platform that causes results      to create incompatible data. We find that tests in this category
+obtained or actions performed to differ between consecutive          fall under one of four subcategories.
+runs within that same platform. In the ring-ui project [13],               a) Incorrect Resource Load Order: Flaky tests in
+the screenshot tests for a drop-down component fail due to a         this category load resources after the calls that load
+rendering artifact bug present on Internet Explorer. This bug        the tests, causing the tested resources to be unavail-
+causes a slight variation around the drop-down border in the         able when the test is run. For example, in the project
+screenshots taken that cause the tests to fail when compared.        mapbox-navigation-android [18], the test crashed
+These tests pass when run on other browsers.                         with an exception, because they duplicated a resource load
+   One example on Android is about Androidx navigation               call and then initialized a navigation activity.
+tool [14]. For some versions of Android, Espresso has flaky                b) Time: Flaky tests can fail when performing a com-
+behavior when performing a click action on the navigated             parison using a timestamp that may have changed from when
+page because sometimes it cannot close the navigation drawer         it is created depending on the execution speed of the test.
+before the click action. However, on other versions of Android,      An example is found in the react-jsonschema-form
+this test always passed.                                             project [19]. The project generates forms in React code by
+      b) Layout Difference: Flaky tests can fail when the            specifying the fields in JSON. In this project, a test on its date
+layout is different than what is expected due to differences         picker widget intermittently fails due to a strict comparison
+in the browser environment. An example is found in the               of time. Figure 7a shows a screenshot of a test failure
+                 (a) Starting State                (b) Background Axes Transition                    (c) Bars Transition
+
+
+
+
+Figure 5: An animation timing issue in the plotly.js project. (a) presents the initial state of a bar graph using the library.
+The bars start at values 3, 4, and 5, respectively. (b) The value of the bars are changed to 3, 6, and 5, respectively. The
+background axes change scale, but the bars are scaled incorrectly. (c) The bars then adjust to the correct scale.
+
+
+
+
+                                                                    (a) CI system failure in react-jsonschema-form project when
+                                                                    strictly comparing two date-time values. The values only differ by a
+Figure 6: FirefoxLite Incorrect Test Runner Interaction             marginal amount due to the time when the test is executed, but since
+Example.                                                            the comparison is strict, the test will fail intermittently depending on
+                                                                    when it is run.
+                                                                      1 it("should set current date when pressing the
+                                                                          ,→  Now button", () => {
+within a CI system resulting from a strict comparison issue.         2     const { node, onChange } =
+Figure 7b presents the faulty code snippet of the flaky test that          ,→  createFormComponent({
+                                                                     3       schema: {
+intermittently fails in the CI system. Depending on when the         4         type: "string",
+test is run and how quickly the statements in the test execute,      5         format: "date-time",
+the date-time value retrieved on Line 11 with the date-time          6       },
+                                                                     7       uiSchema,
+value generated in Line 12 can differ by a small amount,             8     });
+causing the assertion on Line 13 to fail.                            9
+                                                                    10     Simulate.click(node.selector("a.btn-now"));
+     c) Test Order Dependency: Flaky tests in this category         11     const formValue =
+can interfere with or be influenced by surrounding tests in the            ,→  onChange.lastCall.args[0].formData;
+                                                                    12     const expected =
+test suit. This interference can be done through shared data               ,→  toDateString(parseDateString(new
+stores that are not cleaned well between test runs. As a result,           ,→  Date().toJSON(), true));
+the data stores may contain values from previous tests and          13     expect(comp.state.formData).eql(expected);
+                                                                    14    });
+produce incorrect values as a result. One example of this is
+appeared in Android project RESTMock [20]. When trying              (b) react-jsonschema-form Strict Comparison Code snippet.
+to reset the server between tests, the test would sometimes
+return an exception, because there would be requests from the       Figure 7: react-jsonschema-form Strict Comparison
+previous test still running as Android shares some processes        Check Example.
+between tests.
+                                                                    B. Results
+      d) Randomness: Tests can use random data generation,
+but these tests may intermittently fail for certain values of the      From these samples, we were able to find characteristics
+data generated. An example of this type of failure is found in      that are particular to flaky UI tests. The most predominant root
+the nomad project [21], which provides a platform to deploy         cause for these flaky UI tests involved improper handling of
+and manage containers. In this project, they find that tests        asynchronous waiting mechanisms, such as the mechanisms
+utilizing the job factory component to generate fake tasks can      used when loading resources. These resources can include
+intermittently fail when a job given a name or URL with spaces      network resources as well as elements that have not yet
+is created. This causes encoding issues later on in the tests.      been loaded in the page. This behavior resulted in erratic
+Since spaces are not valid in these fields, the spaces generated    results in the tests, such as attempting to click buttons that
+by the random string generator are edge cases that should have      had not yet opened. Many of these issues were resolved
+been handled.                                                       by refactoring the code to include delays when handling a
+potentially flaky call. We found that the root cause of the flaky   up. Instead, the screen appeared as shown in Figure 8a. Users
+behavior could present a challenge to find and properly fix,        would need to add an additional backspace key press to show
+with some issues spanning over months to fix. In addition, the      the placeholder text.
+flaky nature led some of these issue reports to be closed and
+reopened in another report as many as five times. Other root
+causes included platform-specific behavior, layout differences,
+test order dependencies, and randomness. Platform-specific
+behavior produces flaky results for different runs in the same
+platform. Layout differences behavior causes flaky results
+due to inconsistencies across different platforms. Flakiness
+resulting from test order dependencies is caused by improper
+cleanup of data after runs of previous tests. UI tests involving
+random data generation can fail intermittently because of the                      (a)                            (b)
+characteristics of the data generated.                              Figure 8: Gutenberg-mobile Specify Problematic Plat-
+                      V. M ANIFESTATION                             form issue Example.
+   Reproducing flaky tests is a challenging task due to their
+inherit non-deterministic behavior. If developers provide de-       B. Reorder/Prune Test Suite
+tails on how the flaky behavior was initially encountered and
+                                                                       Flakiness arising from test-order dependencies can be man-
+subsequently reproduced, this information provides possible
+                                                                    ifested by running the tests without the full test suite. This
+strategies to apply to similar cases. We explore the strategies
+                                                                    includes running tests by themselves, running tests in a dif-
+used by developers to manifest the underlying flaky behavior
+                                                                    ferent order, and changing the state between test runs in order
+and construct categories for similar manifestations actions
+                                                                    to show the flaky behavior. An example of this manifestation
+taken. These strategies are important when reporting the flaky
+                                                                    strategy is seen in the influxdb project [24]. In this project,
+test as they are inherently non-deterministic in nature, so it is
+                                                                    the flaky behavior surrounding table sorting is manifested by
+challenging to reproduce them compared with regular bugs.
+                                                                    running the tests in the test suite independently. In some cases,
+Our categories are summarized in Table V.
+                                                                    trying to reset the environment configuration between tests
+          Table V: Summary of Manifestation Categories              can also lead to flakiness. In the project RESTMock [20],
+                                                                    the developers tried to reduce flakiness by resetting the server
+  Manifestation Category               Web     Mobile    Total      configuration between tests. However, the test became more
+  Unspecified                           101        40      141      unstable because some Android processes were shared among
+  Specify Problematic Platform           21        17       38      these tests, and the forced reset caused concurrency conflicts.
+  Reorder/Prune Test Suite                9         3       12      C. Provide Code Snippet
+  Reset Configuration Between Tests       2         7        9
+                                                                       Among the bug reports we observed, we find that some
+  Provide Code Snippet                   14         6       20      reports include code snippets. The code snippets extract a
+  Force Environment Conditions            5        10       15      portion of the flaky test into an enclosed sample to make
+  Total                                 152        83      235      reproducing the flaky behavior more reliable. An example of
+                                                                    this strategy is used in the project plotly.js project [25].
+                                                                    This projects provides data visualization components for use
+A. Specify Problematic Platform                                     in web pages. In this project, a test for a treemap component
+   Some tests are reported to only manifest on a specific           contains a flaky image load. In order to manifest this more
+platform. In this case, the author of the report specifies the      reliably, the reporter created a publicly-accessible code snippet
+problematic platform version to reproduce the flaky behavior.       that runs the component with the flaky loading behavior.
+An example of this type of manifestation is found in the
+waterfox project [22]. This project is a web browser based          D. Force Environment Conditions
+on Firefox. In this project, an issue involving animation timing       Flakiness that displays only when run on a specific platform
+only manifests on MacOSX platforms. The report provides             or under certain environment settings can be manifested by
+details on which file to run on this particular platform in         forcibly setting these conditions, such as environment variables
+order to reliably manifest the flaky behavior seen in the           or browser window size, during the test run. An example of
+animation test. Another example in an Android project is            this can be found in the react-datepicker project [26].
+from gutenberg-mobile [23]. This project is the mobile              This project provides a reusable datepicker component for use
+version for Gutenberg Editor. Figure 8 shows the bug that           in React apps. A test for the calendar component has flaky
+only appeared on the Google Pixel device with Android 10.           behavior when run on the first two days of a new month. This
+When deleting the last character, the placeholder text should       behavior is manifested by setting the time used in the test to
+reveal as shown in Figure 8b; however, the text does not pop        be one of these affected dates. Another example on Android
+is a click function in Espresso [27]. If we run an Espresso test           1   const browser = await
+which calls openActionBarOverflowOrOptionsMenu                                 ,→  webdriver(context.appPort, '/hmr/about')
+                                                                           2   const text = await
+on a slow device, a long-click action will be accidentally                     ,→  browser.elementByCss('p').text()
+performed. This bug can be manifested by a short long-click                3   expect(text).toBe('This is the about page.')
+timeout.                                                                   4   const aboutPage = new File(join(__dirname,
+                                                                               ,→  '../', 'pages', 'hmr', 'about.js'))
+                                                                           5   aboutPage.replace('export default', 'export
+                       VI. F IXING S TRATEGY                                   ,→  default "not-a-page"\nexport const fn = ')
+                                                                           6   - await waitFor(3000)
+   In this section, we examine the fixes of the flaky tests.               7   + await waitFor(10000))
+                                                                           8   expect(await
+We identify common fixing patterns and group them into                         ,→  browser.elementByCss('body').text())
+categories. Through comparative analysis of root causes and                9   .toMatch(/The default export is not a React
+fixing strategies, we find that most async wait issues are fixed               ,→  Component/)
+by increasing delay or fixing the await mechanism used. The
+                                                                                   Figure 9: next-js Increase Delay Example.
+issues caused by the environments such as platform issues
+and layout differences normally could not be solved. The
+developers prefer to fix these tests by using a workaround
+or changing the library version. Table VI summarizes the cat-                2) Fix Waiting Mechanism: In order to fix flaky behavior,
+egories and distribution of fixing strategies and are described           some tests fix the mechanisms used to wait on an asyn-
+in the following paragraphs.                                              chronous call. This ensures that the call would finish before
+                                                                          moving forward in the test script. An example is seen in
+        Table VI: Summary of Fixing Categories Found                      the gestalt project [29]. This project contains a set of
+                                                                          reusable components used on the Pinterest website. This test
+Categories         Subcategories                   Web   Mobile   Total   is run using a headless browser, and it is accessed through
+                   Add/Increase Delay               14       7      21    the page variable. In Figure 10, lines 2-10 emit an event
+Delay
+                   Fix Await Mechanism              35       8      43    on the page to trigger the action being tested. Line 12 is
+                   Fix API Access                    1      11      12    supposed to pause the script execution for 200 milliseconds
+Dependency
+                   Change Library Version            1       6       7
+                                                                          in order for the page to complete the action from the event
+Refactor Test      Refactor Logic Implementation    49      26      75
+Disable Features   Disable Animations                1       3       4
+                                                                          handler. However, the function page.waitFor returns an
+Remove Test        Remove Test                      51      22      73    asynchronous JavaScript promise, so it requires the await
+                                                                          keyword in order to allow the promise to resolve before the
+                   Total                           152      83     235
+                                                                          lines after the call are run. The issue is fixed by adding the
+                                                                          await keyword where needed.
+
+A. Delay
+                                                                           1   it('removes all items', async () => {
+   1) Add or Increase Delay: In order to reduce the chance of              2    await page.evaluate(() => {
+                                                                           3     window.dispatchEvent(
+encountering flaky behavior, some tests will add or increase               4       new CustomEvent('set-masonry-items', {
+the delay between actions that involve fetching or loading.                5         detail: {
+This prevents the rest of the test script from executing until             6           items: [],
+                                                                           7         },
+the delay is up, giving the asynchronous call additional time              8       })
+to complete before moving on. An example of this fix is                    9     );
+used in the next.js project [28]. This project is used to                 10    });
+                                                                          11
+generate complete web applications with React as the frontend             12   -    page.waitFor(200);
+framework. The patch increases the delays used in multiple                13   +    await page.waitFor(200);
+steps as shown in Figure 9. In the figure, Line 1 loads a new             14
+                                                                          15    const newItems = await
+browser instance and navigates to the “about” page. Lines 2                     ,→  page.$$(selectors.gridItem);
+and 3 get the text on the page and assert that it is equal to             16    assert.ok(!newItems || newItems.length === 0);
+the expected value. Lines 4 and 5 manipulate the about page’s             17   });
+component file on the filesystem to make it invalid for use.
+Line 6 was the delay used before of 3 seconds. If the test is                      Figure 10: Gestalt Fix Waiting Example.
+run during a heavy load on the CI, the operation in Line 5
+may take longer than 3 seconds, so the fix is to update the                  Another example in an Android project is from project
+wait to 10 seconds shown in Line 7. Finally, Line 9 makes the             RXBinding [12]. The developers avoided flakiness in this
+assertion that the updated text on the page shown matched the             refresh layout test by manually removing the callbacks of
+expected error message. While this does not fix the root cause            stopRefreshing and adding it back after 300 ms delay, if
+directly, this code patch does decrease the chance of running             the motion ACTION_UP has been caught. The code snippet
+into a timing issue during testing.                                       is shown in Figure 11.
+ 1     + swipeRefreshLayout                                         1   - device.pressRecentApps();
+ 2     +   .setId(R.id.swipe_refresh_layout);                       2   - UiObject recentApp =
+ 3     + swipeRefreshLayout.setOnTouchListener(new                      ,→  device.findObject(selector
+       ,→  View.OnTouchListener() {                                     ,→  .descriptionContains(appName));
+ 4     +   @Override public boolean onTouch(View v,                 3   - recentApp.click();
+       ,→  MotionEvent event) {                                     4
+ 5     +       if                                                   5   + final Activity activity =
+       ,→  (MotionEventCompat.getActionMasked(event)                    ,→  ActivityTestRule.getActivity();
+       ,→  == MotionEvent.ACTION_UP) {                              6   + final Context appContext =
+ 6     +                                                                ,→  activity.getApplicationContext();
+       ,→  handler.removeCallbacks(stopRefreshing);                 7   + final Intent intent = new Intent(appContext,
+ 7     +           handler.postDelayed(stopRefreshing,                  ,→  activity.getClass());
+       ,→  300);                                                    8   + intent.setFlags(Intent
+                                                                        ,→  .FLAG_ACTIVITY_SINGLE_TOP);
+                                                                    9   + launchActivitySync(intent);
+ Figure 11: RxBinding Fix Waiting Mechanism Example.
+                                                                          Figure 13: Detox Fix Incorrect API Example.
+B. External Dependency
+   1) Fix Incorrect API Access: Some tests resolved the flak-      sometimes the recent-apps view shows the full activity name
+iness by fixing the usage of an incorrect API function. After      (e.g. com.wix.detox.MainActivity), instead of app name (e.g.
+switching this function, the test script behaved as expected. An   Detox), which causes flakiness. To fix this bug, developer
+example is shown in the material-ui project [30], which            removed the UIAUtomator API and created new instances for
+provides reusable web components implementing the Material         each launch request. Figure 13 shows the code snippet of this
+design system. An API function from the testing library            fixing process.
+used to access DOM element children is incorrect. The code            2) Change Library Version: Some tests changed the version
+snippet in Figure 12 shows how the incorrect API function is       of a dependency used in the test as the developers found that
+fixed by calling the proper getPopperChildren function             the new version introduced the flaky behavior.
+instead of attempting to get the element’s children directly.
+The correct function adds additional selection criteria in order   C. Refactor Test Checks
+to work within the template code generated by the third-party         1) Refactor Logic Implementation: Some tests made
+popper.js [31] framework.                                          changes to the logic used when performing checks in order
+                                                                   to improve the intended purpose of the test while removing
+ 1     - assert.strictEqual(                                       the flakiness observed in the test. An example is found in the
+ 2     - wrapper.find(Popper)                                      react-jsonschema-form project [19]. In the repository,
+ 3     - .childAt(0)
+ 4     - .hasClass(classes.tooltip),                               a check between consecutive timestamps is given an additional
+ 5     - true                                                      error margin to handle the case of slow execution. Figure 14
+ 6     - );                                                        shows the code snippet changing the exact date-time compar-
+ 7
+ 8     + function getPopperChildren(wrapper) {                     ison in Line 3 to the comparsion with an error margin of 5
+ 9     + return new ShallowWrapper(                                seconds in Line 8.
+10     +   wrapper
+11     +    .find(Popper)
+                                                                    1   - const expected = toDateString(
+12     +    .props()
+                                                                    2       parseDateString(new Date().toJSON(),
+13     +    .children({ popperProps: { style: {} },
+                                                                            ,→  true));
+       ,→  restProps: {} }),
+                                                                    3   - expect(comp.state.formData).eql(expected);
+14     +   null
+                                                                    4   + // Test that the two DATETIMEs are within 5
+15     + );
+                                                                        ,→  seconds of each other.
+16     + }
+                                                                    5   + const now = new Date().getTime();
+17                                                                  6   + const timeDiff = now - new
+18     + const popperChildren =
+                                                                        ,→  Date(comp.state.formData)
+       ,→  getPopperChildren(wrapper);
+                                                                    7       .getTime();
+19     + assert.strictEqual(
+                                                                    8   + expect(timeDiff).to.be.at.most(5000);
+20     + popperChildren.childAt(0)
+21     + .hasClass(classes.tooltip),
+22     + true);                                                    Figure 14: react-jsonschema-form Refactor Logic Im-
+                                                                   plementation Example.
+     Figure 12: material-ui Fix Incorrect API Example.
+
+   Another example on the Android platform is found in the         D. Disable Features During Testing
+Detox project [32]. The action to launch an application              1) Disable Animations: In order to remove flakiness caused
+in an existing instance, which has launched an app during          by animation timing, some test completely disabled animations
+initialization, can lead to flaky behavior. Launching an app       during their run. This change removed the concern of ensuring
+dynamically in UIAutomator is performed by moving to the           an animation had completely finished before proceeding with
+recent-apps view and then selecting the app name. However,         the rest of the script. An example of this is seen in the the
+wix-style-react project where code is added to disable
+                                                                                                                                  Disable
+CSS animations when the test suite is run [33]. Figure 15                                      Animation Timing Issue
+                                                                                                Resource Rendering
+                                                                                                                                 Animations
+                                                                        Async Wait
+shows the disableCSSAnimation function defined on                                            Network Resource Loading
+                                                                                                                                 Add Delay
+Lines 1-15 CSS rules disabling all transitions and animations.
+Line 21 adds a call to this function before all tests in the test       Test Script
+                                                                                           Incorrect Resource Load Order
+                                                                                              Test Order Dependency               Fix Await
+                                                                        Logic Issue                                              Mechanism
+suite are run.                                                                                       Other types
+
+
+                                                                                                                               Refactor Logic
+ 1   + export const disableCSSAnimation = () => {                     Test Runner API            DOM Selector Issue
+
+                                                                           Issue
+ 2   + const css = '* {' +                                                                 Incorrect Test Runner Interaction
+ 3   + '-webkit-transition-duration: 0s !important;'                                                                           Fix API Access
+     ,→  +                                                                                          Platform Issue
+ 4   + 'transition-duration: 0s !important;' +                         Environment                                             Change Library
+                                                                                                  Layout Difference               Version
+ 5   + '-webkit-animation-duration: 0s !important;'
+     ,→  +
+                                                                                      Root Causes                              Fixing Strategies
+ 6   + 'animation-duration: 0s !important;' +
+ 7   + '}',                                                         Figure 16: Relationship Between Root Causes and Fixing
+ 8   + head = document.head ||
+ 9   +                                                              Strategies.
+     ,→  document.getElementsByTagName('head')[0],
+10   + style = document.createElement('style');
+11
+12   + style.type = 'text/css';                                     between manifestation strategies and root causes. However,
+13   + style.appendChild(document.createNode(css));                 we find that no strong correlations between these two groups
+14   + head.appendChild(style);                                     exist in the dataset. Similarly, we could not identify strong
+15   + };
+16   ...                                                            correlations between manifestation strategy and fixing strategy.
+17   beforeAll(() => {                                              This leaves the question of detection strategies for flaky UI
+18     browser.get(storyUrl);                                       tests left open for future work to address. Our results do
+19   + browser.executeScript(disableCSSAnimation);
+20   });                                                            support relationships between root causes and fixing strategies.
+                                                                    If the root cause of a flaky UI test is known, the relationships
+Figure 15: wix-style-react Disable Animations Exam-                 we draw in Figure 16 can be used to select an appropriate
+ple.                                                                fixing strategy.
+                                                                       Preliminary design ideas can be made for some of the fixing
+                                                                    strategies we identify in Section VI. For the Add/Increase
+E. Removing Tests From Test Suite                                   Delay fixing strategy, a possible automated implementation
+   1) Remove Tests: In order to fix the test suite runs, some       could identify statements that perform the timing delay and
+projects choose to remove these tests from the suite. This fix      increase the amount of time specified. If there is no delaying
+removes the flakiness in the test suite attributed to the flaky     statement, then a delay can be after asynchronous function
+test being removed but reduces the code coverage.                   calls are performed. Granular details such as the amount of
+   2) Mark Tests as Flaky: Some tests are not entirely re-          time to add in the delay or reliably identifying asynchronous
+moved from the test suite. Instead, they are marked as being        function calls requires further analysis on the collected sam-
+flaky which means that if the test fails, the entire test suite     ples. Using the relationships found in Figure 16, this approach
+does not fail. This allows the test suite to be isolated from       can be used to fix issues caused by Resource Rendering
+the effects of the flaky test without completely removing the       (22.4%) and Animation Timing Issue (15.4%). For the Fix
+coverage it provides.                                               Await Mechanism fixing strategy, an approach for automatic
+   3) Blacklist Tests: In order to conditionally prevent some       repair would be to identify statements that implement asyn-
+tests from running, tests are added to a blacklist. The test in     chronous wait mechanisms incorrectly. The details for this
+these blacklists can be skipped from test runs by setting the       approach would be dependent on the language of the project
+appropriate options for when the blacklist should be used.          and would require further analysis of the collected samples.
+                                                                    This approach for an automated implementation of the Fix
+           VII. D ISCUSSION AND I MPLICATIONS                       Await Mechanism can be used to fix Incorrect Resource Load
+   We investigate our collected flaky UI tests to identify          Order (52.4%), Animation Timing Issue (38.5%), Resource
+relationships between the root causes, manifestation strategies,    Rendering (20.7%), and DOM Selector Issue (18.8%). The
+and fixing strategies defined in Sections IV, V, and VI,            Disable Animations fix can be implemented by configuring
+respectively.                                                       the test environment to disable animations globally when
+   Through our inspection, we can identify relationships be-        setting up. This approach can be used to fix issues caused by
+tween the underlying root causes in issues and how the issue        Animation Timing Issue (7.7%), Resource Rendering (1.7%),
+was fixed. These relationships are presented in Figure 16.          and DOM Selector Issue (6.25%). The Change Library Version
+   The goal of our study on flaky UI tests is to gain insights      fixing strategy could be automated by methodically switching
+for designing automated flaky UI test detection and fixing          different versions of the dependencies used in the project. This
+approaches, so we analyze our dataset to identify correlations      approach could be used to address issues caused by Animation
+Timing Issue (7.7%) and Test Runner API Issue (6.25%).              al. (2019) [50] survey 21 professional developers from Mozilla
+                                                                    to learn about the perceptions that developers have on the
+                VIII. T HREATS TO VALIDITY                          impacts that flaky tests cause during development. Dong et al.
+   The results of our study are subject to several threats,         (2020) [51] inspect 28 popular Android apps and 245 identified
+including the representativeness of the projects inspected, the     flaky tests to develop their FlakeShovel technique that controls
+correctness of the methodology used, and the generalizability       and manipulates thread execution. Lam et al. (2020) [52] study
+of our observations.                                                the lifecycle of flaky tests in large-scale projects at Microsoft
+   Regarding the representativeness of the projects in our          by focusing on the timing between flakiness reappearance, the
+dataset, we focused on the most popular repositories associated     runtime of the tests, and the time to fix the flakiness.
+with popular frameworks on web and Android. We restrict             Detecting and Fixing Flaky Tests. Bell et al. (2018) [3]
+the repositories to focus on repositories that impact real          developed the technique DeFlaker to detect flaky tests by
+applications as opposed repositories under heavy development.       monitoring the coverage of code changes in the executing
+For mobile projects, we searched through GitHub database            build with the location that triggered the test failure. Flaky
+with strict and clear condition settings to ensure that the         tests were those that failed without executing any of the new
+samples we obtain are targeted and representative.                  code changes. Lam et al. (2019) [4] develop the framework
+   In respect to the correctness of the methodology used, we        RootFinder to identify flaky tests and their root causes through
+collect all available commits on GitHub from the repositories       dynamic analysis. The tool iDFlakies can detect flaky tests
+related to popular web UI frameworks. We also leveraged the         and classify the tests into order-dependent and non-order-
+GitHub Archive repository to find all issues related to Android     dependent categories [53]. Shi et al. (2019) [54] develop
+UI frameworks. We filter out irrelevant commits and issues          the tool iFixFlakies to detect and automatically fix order-
+using keywords and then manually inspect the remaining              dependent tests by using code from other tests within a test
+commits and issues in order to verify the relevance to flaky        suite to suggest a patch. Terragni et al. (2020) [55] proposed
+UI tests. Each sample was inspected by at least two people in       a technique to run flaky tests in multiple containers with
+order to achieve consensus on the data collected.                   different environments simultaneously.
+   Regarding the generalizability of the implications made, we
+selected flaky test samples from actual projects used in the                                 X. C ONCLUSIONS
+wild. In addition, the samples do include large-scale industrial       This paper performs a study on flakiness arising in UI tests
+projects, such as the Angular framework itself. We limit            in both web and mobile projects. We investigated 235 flaky
+numeric implications only to the dataset collected, and focus       tests collected from 25 web and 37 mobile popular GitHub
+on qualitative implications made on the features of the test        repositories. The flaky test samples are analyzed to identify
+samples.                                                            the typical root causes of the flaky behavior, the manifestation
+                                                                    strategies used to report and reproduce the flakiness, and the
+                    IX. R ELATED W ORK
+                                                                    common fixing strategies applied to these tests to reduce the
+Empirical Studies on Software Defects. There have been              flaky behavior. Through our analysis, we present findings on
+several prior studies analyzing the fault-related characteristics   the prevalence of certain root causes, the differences that
+of software systems [34]–[45]. For example, in Lu et al. [36]       root causes appear between web and mobile platforms, and
+an empirical study was conducted on concurrency bugs. In            the differences in the rates of fixing strategies applied. We
+Sahoo et al. [37], bugs in server software were studied, and        believe our analysis can provide guidance towards develop-
+in Chou et al. [35], operating system errors were investigated.     ing effective detection and prevention techniques specifically
+Studying Flaky Tests. Flaky tests have gained interest among        geared towards flaky UI tests. We make our dataset available
+the academic community. These tests were first looked at in         at https://ui-flaky-test.github.io/.
+2014 by Luo et al. [2]. In this study, 201 commits from
+51 open-source Java projects were manually inspected and                                XI. ACKNOWLEDGMENTS
+categorized into 11 categories. Later, Zhang et al. (2014) [46]        We thank the anonymous reviewers for their constructive
+performed studied flaky tests specifically caused by test order     comments. This research was partially supported by NSF
+dependencies. In 2015, Goa et al. [47] conducted a study            2047980 and Facebook Testing and Verification Research
+that concluded that reproducing flaky tests can be difficult.       Award (2019). Any opinions, findings, and conclusions in this
+Thorve et al. (2018) [48] studied 29 Android projects with          paper are those of the authors only and do not necessarily
+77 commits related to flakiness. They found three new cat-          reflect the views of our sponsors.
+egories differing from the ones identified in earlier studies:
+Dependency, Program Logic, and UI. Lam et al. (2019) [4]                                         R EFERENCES
+examine the presence of flaky test in large-scale industrial         [1] J. Micco, “The state of continuous integration testing@ google,” 2017.
+projects and find that flaky test cause a significant impact         [2] Q. Luo, F. Hariri, L. Eloussi, and D. Marinov, “An empirical analysis
+on build failure rates. Morán et al. (2019) [49] develop the            of flaky tests,” in Proceedings of the 22nd ACM SIGSOFT International
+                                                                         Symposium on Foundations of Software Engineering, ser. FSE 2014.
+FlakcLoc technique to find flaky tests in web applications by            New York, NY, USA: Association for Computing Machinery, 2014, p.
+executing them under different environment conditions. Eck et            643–653. [Online]. Available: https://doi.org/10.1145/2635868.2635920
+ [3] J. Bell, O. Legunsen, M. Hilton, L. Eloussi, T. Yung, and D. Marinov,                  [30] “[test]      fix      flaky       popper.js    test,”     2020.      [On-
+     “Deflaker: Automatically detecting flaky tests,” in 2018 IEEE/ACM 40th                      line].     Available:      https://github.com/mui-org/material-ui/commit/
+     International Conference on Software Engineering (ICSE). IEEE, 2018,                        9d1c2f0ab014c76ddc042dea58a6a9384fc108f4
+     pp. 433–444.                                                                           [31] popperjs, “Tooltip & popover positioning engine,” 2020. [Online].
+ [4] W. Lam, P. Godefroid, S. Nath, A. Santhiar, and S. Thummalapenta,                           Available: https://github.com/popperjs/popper-core
+     “Root causing flaky tests in a large-scale industrial setting,” in Proceed-            [32] d4vidi, “Fix consecutive app-launches issue,” 2019. [On-
+     ings of the 28th ACM SIGSOFT International Symposium on Software                            line].    Available:     https://github.com/wix/Detox/pull/1690/commits/
+     Testing and Analysis, 2019, pp. 101–111.                                                    c982798e8904b8384e4966f4ed20700b66921b399
+ [5] “Search,” 2020. [Online]. Available: https://docs.github.com/en/rest/                  [33] “skip     flaky     visual     eyes     test  (#3306),”    2020.     [On-
+     reference/search                                                                            line].     Available:      https://github.com/wix/wix-style-react/commit/
+ [6] Github, “Github archive.” [Online]. Available: https://archiveprogram.                      ddebb9fc31f3aaea7b80dea034c3baa256ec2b74
+     github.com/                                                                            [34] R. Chillarege, W. . Kao, and R. G. Condit, “Defect type and its impact on
+ [7] “chore: use base64 uri decoded avatar to avoid flaky ui tests if image,”                    the growth curve (software development),” in [1991 Proceedings] 13th
+     2020. [Online]. Available: https://github.com/JetBrains/ring-ui/commit/                     International Conference on Software Engineering, 1991, pp. 246–255.
+     f7bc28af06433ff22e898aacd2b3e8f0534defda                                               [35] A. Chou, J. Yang, B. Chelf, S. Hallem, and D. Engler, “An empirical
+ [8] “fix(e2e):        fix        race          conditions,”          2019.        [On-          study of operating systems errors,” Operating Systems Review (ACM),
+     line].      Available:       https://github.com/influxdata/influxdb/commit/                 vol. 35, 09 2001.
+     4f5ff962d69a84f7a6970b02f9e79b09dbad21fe                                               [36] S. Lu, S. Park, E. Seo, and Y. Zhou, “Learning from mistakes: a
+ [9] pascalgrimaud,         “react:      Fix       intermittent       e2e     failures,”         comprehensive study on real world concurrency bug characteristics,”
+     https://github.com/jhipster/generator-jhipster/commit/                                      in ASPLOS, 2008.
+     2865e441e4b09335f88f3839ee9147f8b8b9c05e, 2019.
+                                                                                            [37] S. K. Sahoo, J. Criswell, and V. Adve, “An empirical study of reported
+[10] sphill99 and S. Phillips, “google/volley,” 2017.
+                                                                                                 bugs in server software with implications for automated bug diagnosis,”
+[11] alexcjohnson, “one more flaky test suite,” https://github.com/plotly/
+                                                                                                 in Proceedings of the 32nd ACM/IEEE International Conference on
+     plotly.js/commit/a2fc07a187c4d26bf2f1bcb3e2aa806b75ad24fc, 2018.
+                                                                                                 Software Engineering - Volume 1, ser. ICSE ’10. New York, NY, USA:
+[12] nojunpark,        “Fix         rxswipedismissbehavior             flaky       test,”        Association for Computing Machinery, 2010, p. 485–494. [Online].
+     https://github.com/JakeWharton/RxBinding/commit/                                            Available: https://doi.org/10.1145/1806799.1806870
+     affa7a4f58e5becec4ad8b49d30f525d6ad4c2a6, 2016.
+                                                                                            [38] M. Sullivan and R. Chillarege, “A comparison of software defects in
+[13] princed,              “Concurrent                 modification              excep-
+                                                                                                 database management systems and operating systems,” in [1992] Digest
+     tion,”                          https://github.com/JetBrains/ring-ui/commit/
+                                                                                                 of Papers. FTCS-22: The Twenty-Second International Symposium on
+     5d9f96d6ffa3a3c99722047677d5a545c02bdd80, 2017.
+                                                                                                 Fault-Tolerant Computing, 1992, pp. 475–484.
+[14] chklow, “Espresso is not waiting for drawer to close,” 2019. [Online].
+     Available: https://github.com/android/testing-samples/issues/289                       [39] F. Thung, S. Wang, D. Lo, and L. Jiang, “An empirical study of bugs in
+                                                                                                 machine learning systems,” in 2012 IEEE 23rd International Symposium
+[15] “test(dropdowncontainer): fix flaky screenshot test,” 2019.
+                                                                                                 on Software Reliability Engineering, 2012, pp. 271–280.
+     [Online]. Available: https://github.com/skbkontur/retail-ui/commit/
+     a006fdf0e0e65d5fde07134c6909870666e7947f                                               [40] Z. Yin, D. Yuan, Y. Zhou, S. Pasupathy, and L. Bairavasundaram, “How
+[16] cnevinc, “[ui test intermittent],” 2018. [Online]. Available: https:                        do fixes become bugs?” in Proceedings of the 19th ACM SIGSOFT
+     //github.com/mozilla-tw/FirefoxLite/issues/2549                                             Symposium and the 13th European Conference on Foundations of
+[17] Hacker0x01, “Remove second autofocus example,” 2018.                                        Software Engineering, ser. ESEC/FSE ’11. New York, NY, USA:
+     [Online]. Available: https://github.com/Hacker0x01/react-datepicker/                        Association for Computing Machinery, 2011, p. 26–36. [Online].
+     pull/1390/commits/8fc31964251944be79f2e8699b79e5f39080272f                                  Available: https://doi.org/10.1145/2025113.2025121
+[18] Guardiola31337, “Flaky navigationvieworientationtest,” https://github.                 [41] Z. Yin, X. Ma, J. Zheng, Y. Zhou, L. N. Bairavasundaram, and
+     com/mapbox/mapbox-navigation-android/issues/1209, 2018.                                     S. Pasupathy, “An empirical study on configuration errors in commercial
+[19] “merge          pull         request           #167           from        mozilla-          and open source systems,” in Proceedings of the Twenty-Third ACM
+     services/162-fix-intermittent-da,”            2020.         [Online].       Avail-          Symposium on Operating Systems Principles, ser. SOSP ’11. New
+     able:        https://github.com/rjsf-team/react-jsonschema-form/commit/                     York, NY, USA: Association for Computing Machinery, 2011, p.
+     2318786b38ead5eddc7c0e3146825f19013e0beb                                                    159–172. [Online]. Available: https://doi.org/10.1145/2043556.2043572
+[20] Sloy, “Concurrent modification exception,” 2019. [Online]. Available:                  [42] Y. Zhang, Y. Chen, S.-C. Cheung, Y. Xiong, and L. Zhang, “An
+     https://github.com/andrzejchm/RESTMock/issues/103                                           empirical study on tensorflow program bugs,” in Proceedings of the
+[21] “Ui:       Fix      a      couple         flaky       tests,”      2018.      [On-          27th ACM SIGSOFT International Symposium on Software Testing
+     line]. Available: https://github.com/hashicorp/nomad/pull/4167/commits/                     and Analysis, ser. ISSTA 2018. New York, NY, USA: Association
+     69251628f7a3f03ce603abfea5c8f48b4804c39e                                                    for Computing Machinery, 2018, p. 129–140. [Online]. Available:
+[22] MrAlex94, “Bug 1504929 - start animations once after a mozreftestin-                        https://doi.org/10.1145/3213846.3213866
+     validate,” 2018. [Online]. Available: https://github.com/MrAlex94/                     [43] J. Aranda and G. Venolia, “The secret life of bugs: Going past the errors
+     Waterfox/commit/23793e3a2172787eca440889a8c4ec3cc6069862                                    and omissions in software repositories,” in 2009 IEEE 31st International
+[23] mchowning, “Deleting heading block content requires extra backspace                         Conference on Software Engineering, 2009, pp. 298–308.
+     to show placeholder,” 2020. [Online]. Available: https://github.com/                   [44] Weining Gu, Z. Kalbarczyk, Ravishankar, K. Iyer, and Zhenyu Yang,
+     wordpress-mobile/gutenberg-mobile/issues/1663                                               “Characterization of linux kernel behavior under errors,” in 2003 In-
+[24] influxdata, “fix(ui): front end sorting for numeric values now being                        ternational Conference on Dependable Systems and Networks, 2003.
+     handled,” 2019. [Online]. Available: https://github.com/influxdata/                         Proceedings., 2003, pp. 459–468.
+     influxdb/commit/bba04e20b44dd0f8fd049d80f270424eb266533f                               [45] C. Sun, V. Le, Q. Zhang, and Z. Su, “Toward understanding compiler
+[25] etpinard, “add treemap coffee to list of flaky image tests,”                                bugs in gcc and llvm,” in Proceedings of the 25th International
+     2020. [Online]. Available: https://github.com/plotly/plotly.js/commit/                      Symposium on Software Testing and Analysis, ser. ISSTA 2016. New
+     66156054cb08b90bc50219ff9a2baeebb674c580                                                    York, NY, USA: Association for Computing Machinery, 2016, p.
+[26] aij,      “Fix       flaky        failing        test,”       2017.      [Online].          294–305. [Online]. Available: https://doi.org/10.1145/2931037.2931074
+     Available:       https://github.com/Hacker0x01/react-datepicker/commit/                [46] S. Zhang, D. Jalali, J. Wuttke, K. Muşlu, W. Lam, M. D. Ernst, and
+     db64f070d72ff0705239f613bd5bba9602d3742f                                                    D. Notkin, “Empirically revisiting the test independence assumption,”
+[27] “Espresso,” 2020. [Online]. Available: https://developer.android.com/                       in Proceedings of the 2014 International Symposium on Software
+     training/testing/espresso                                                                   Testing and Analysis, ser. ISSTA 2014. New York, NY, USA:
+[28] vercel,      “introduce         dynamic(()         =¿       import()),”      2020.          Association for Computing Machinery, 2014, p. 385–396. [Online].
+     [Online].        Available:         https://github.com/vercel/next.js/commit/               Available: https://doi.org/10.1145/2610384.2610404
+     42736c061ad0e5610522de2517c928b2b8af0ed4                                               [47] Z. Gao, Y. Liang, M. B. Cohen, A. M. Memon, and Z. Wang, “Making
+[29] pinterest, “masonry: masonryinfinite for infinite fetching (#307),”                         system user interactive tests repeatable: When and what should we
+     2020. [Online]. Available: https://github.com/pinterest/gestalt/commit/                     control?” in 2015 IEEE/ACM 37th IEEE International Conference on
+     f6c683b66b2d8b0ec87db283418459e87160a21f                                                    Software Engineering, vol. 1, 2015, pp. 55–65.
+[48] S. Thorve, C. Sreshtha, and N. Meng, “An empirical study of flaky tests
+     in android apps,” in 2018 IEEE International Conference on Software
+     Maintenance and Evolution (ICSME), 2018, pp. 534–538.
+[49] J. Morán, C. Augusto Alonso, A. Bertolino, C. de la Riva, and J. Tuya,
+     “Debugging flaky tests on web applications,” 01 2019, pp. 454–461.
+[50] M. Eck, F. Palomba, M. Castelluccio, and A. Bacchelli, “Understanding
+     flaky tests: The developer’s perspective,” in Proceedings of the 2019 27th
+     ACM Joint Meeting on European Software Engineering Conference
+     and Symposium on the Foundations of Software Engineering,
+     ser. ESEC/FSE 2019. New York, NY, USA: Association for
+     Computing Machinery, 2019, p. 830–840. [Online]. Available: https:
+     //doi.org/10.1145/3338906.3338945
+[51] Z. Dong, A. Tiwari, X. L. Yu, and A. Roychoudhury, “Concurrency-
+     related flaky test detection in android apps,” 2020.
+[52] W. Lam, K. Muşlu, H. Sajnani, and S. Thummalapenta, “A study
+     on the lifecycle of flaky tests,” in Proceedings of the ACM/IEEE
+     42nd International Conference on Software Engineering, ser. ICSE ’20.
+     New York, NY, USA: Association for Computing Machinery, 2020,
+     p. 1471–1482. [Online]. Available: https://doi.org/10.1145/3377811.
+     3381749
+[53] W. Lam, R. Oei, A. Shi, D. Marinov, and T. Xie, “iDFlakies: A
+     Framework for Detecting and Partially Classifying Flaky Tests,” in 2019
+     12th IEEE Conference on Software Testing, Validation and Verification
+     (ICST), Apr. 2019, pp. 312–322, iSSN: 2159-4848.
+[54] A. Shi, W. Lam, R. Oei, T. Xie, and D. Marinov, “ifixflakies:
+     A framework for automatically fixing order-dependent flaky tests,”
+     in Proceedings of the 2019 27th ACM Joint Meeting on European
+     Software Engineering Conference and Symposium on the Foundations
+     of Software Engineering, ser. ESEC/FSE 2019. New York, NY, USA:
+     Association for Computing Machinery, 2019, p. 545–555. [Online].
+     Available: https://doi.org/10.1145/3338906.3338925
+[55] F. F. Valerio Terragni, Pasquale Salza, “A container-based infrastructure
+     for fuzzy-driven root causing of flaky tests,” 2020.
+

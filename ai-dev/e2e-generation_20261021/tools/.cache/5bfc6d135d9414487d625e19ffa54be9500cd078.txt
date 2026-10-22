@@ -1,0 +1,858 @@
+__HTTP 200__
+
+
+
+
+  
+
+ 
+ 
+
+
+
+
+   
+     
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+
+   
+
+   
+
+     
+     
+     
+     
+   
+
+  
+
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+   [1.34.1] MaestroDriverStartupException$IOSDriverTimeoutException · Issue #1585 · mobile-dev-inc/Maestro · GitHub 
+
+
+
+   
+   
+   
+   
+
+    
+   
+
+
+   
+
+
+     
+
+
+   
+  
+
+   
+   
+
+     
+
+ 
+
+
+
+
+
+   
+
+  
+
+
+
+
+     
+
+  
+
+     
+
+    
+
+       
+
+       
+
+     
+     
+     
+
+       
+   
+  
+
+
+
+
+       
+
+
+
+         
+
+
+   
+   
+   
+   
+
+   
+
+       
+   
+
+   
+  
+
+
+
+       
+
+
+     
+   
+
+
+   
+
+
+   
+
+   
+   
+
+   
+   
+   
+
+ 
+ 
+
+
+   
+
+   
+
+   
+     
+       
+      
+
+     
+       Skip to content 
+
+       
+     
+       
+       
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+
+
+
+      
+
+           
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+          
+
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge APPLICATION SECURITY GitHub Advanced Security Find and fix vulnerabilities Code security Secure your code as you build Secret protection Stop leaks before they start EXPLORE Why GitHub Documentation Blog Changelog Marketplace View all features Solutions BY COMPANY SIZE Enterprises Small and medium teams Startups Nonprofits BY USE CASE App Modernization DevSecOps DevOps CI/CD View all use cases BY INDUSTRY Healthcare Financial services Manufacturing Government View all industries View all solutions Resources EXPLORE BY TOPIC AI Software Development DevOps Security View all topics EXPLORE BY TYPE Customer stories Events & webinars Ebooks & reports Business insights GitHub Skills SUPPORT & SERVICES Documentation Customer support Community forum Trust center Partners View all resources Open Source COMMUNITY GitHub Sponsors Fund open source developers PROGRAMS Security Lab Maintainer Community GitHub Stars Archive Program REPOSITORIES Topics Trending Collections Enterprise ENTERPRISE SOLUTIONS Enterprise platform AI-powered developer platform AVAILABLE ADD-ONS GitHub Advanced Security Enterprise-grade security features Copilot for Business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Pricing Search / Sign in Sign up Appearance settings 
+ 
+
+
+
+       
+  
+         
+         You signed in with another tab or window.  Reload  to refresh your session. 
+         You signed out in another tab or window.  Reload  to refresh your session. 
+         You switched accounts on another tab or window.  Reload  to refresh your session. 
+
+        
+ Dismiss alert 
+
+
+  
+ 
+     
+
+   
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+   
+    
+ 
+   
+     
+       
+     
+     
+      
+       {{ message }} 
+
+     
+   
+ 
+   
+ 
+
+
+    
+
+
+
+
+
+
+   
+         
+     
+      
+      
+    
+
+
+    
+
+
+
+
+
+
+
+
+  
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   mobile-dev-inc Maestro Repository navigation Code Issues 337  ( 337 ) Pull requests 121  ( 121 ) Discussions Actions Security and quality Insights More  items 
+ 
+
+
+  
+
+
+
+ 
+     
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+  
+
+
+ 
+  
+   
+   [1.34.1] MaestroDriverStartupException$IOSDriverTimeoutException   #1585 New issue Copy link New issue Copy link Closed Bug Closed [1.34.1] MaestroDriverStartupException$IOSDriverTimeoutException #1585 Bug Copy link Labels maestro cli Related to the command-line Maestro tool Related to the command-line Maestro tool platform: ios Testing iOS apps is affected Testing iOS apps is affected waiting for customer response More information is needed from the customer before we can progress on the issue More information is needed from the customer before we can progress on the issue Description nicolas-acl opened  on Nov 10, 2023 Issue body actions Describe the bug 
+The issue occurs when running a Flow. 
+ To Reproduce 
+Steps to reproduce the behavior : 
+ 
+ Start the simulator 
+ Run  maestro test ./flows  // (flows is a folder with all my .yml) 
+ The Flow fails at Maestro iOS driver did not start up in time. 
+ 
+ Expected behavior 
+The error is not occurs 
+ Screenshots 
+maestro.MaestroDriverStartupException$IOSDriverTimeoutException: Maestro iOS driver did not start up in time 
+at maestro.drivers.IOSDriver.awaitLaunch(IOSDriver.kt:476) 
+at maestro.drivers.IOSDriver.open(IOSDriver.kt:65) 
+at maestro.Maestro$Companion.ios(Maestro.kt:585) 
+at maestro.cli.session.MaestroSessionManager.createIOS(MaestroSessionManager.kt:309) 
+at maestro.cli.session.MaestroSessionManager.createMaestro(MaestroSessionManager.kt:154) 
+at maestro.cli.session.MaestroSessionManager.access$createMaestro(MaestroSessionManager.kt:49) 
+at maestro.cli.session.MaestroSessionManager$newSession$session$1.invoke(MaestroSessionManager.kt:82) 
+at maestro.cli.session.MaestroSessionManager$newSession$session$1.invoke(MaestroSessionManager.kt:81) 
+at maestro.cli.db.KeyValueStore.withExclusiveLock(KeyValueStore.kt:37) 
+at maestro.cli.session.SessionStore.withExclusiveLock(SessionStore.kt:74) 
+at maestro.cli.session.MaestroSessionManager.newSession(MaestroSessionManager.kt:81) 
+at maestro.cli.session.MaestroSessionManager.newSession$default(MaestroSessionManager.kt:58) 
+at maestro.cli.command.TestCommand.call(TestCommand.kt:136) 
+at maestro.cli.command.TestCommand.call(TestCommand.kt:46) 
+at picocli.CommandLine.executeUserObject(CommandLine.java:1933) 
+at picocli.CommandLine.access$1200(CommandLine.java:145) 
+at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2332) 
+at picocli.CommandLine$RunLast.handle(CommandLine.java:2326) 
+at picocli.CommandLine$RunLast.handle(CommandLine.java:2291) 
+at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2159) 
+at maestro.cli.DisableAnsiMixin$Companion.executionStrategy(DisableAnsiMixin.kt:22) 
+at picocli.CommandLine.execute(CommandLine.java:2058) 
+at maestro.cli.AppKt.main(App.kt:117) 
+ Environment information (please complete the following information): 
+ 
+ Maestro version 1.34.1 
+ Platform: iOS 17.0.1 
+ Framework: React Native 
+ Device model and OS version: iPhone14 
+ Simulator 
+ Host Mac M1 Pro 
+ Mac OS Sonoma 14.1 (23B74) 
+ 
+ Additional context 
+ After many attempts, it freezes the simulator. Reactions are currently unavailable Activity Next nicolas-acl added  bug   on Nov 10, 2023 julienqueffelec   commented   on   Nov 17, 2023   julienqueffelec on Nov 17, 2023   ·   Hidden as   off-topic show comment More actions danielbyondd   commented   on   Nov 17, 2023   danielbyondd on Nov 17, 2023   ·   Hidden as   off-topic show comment More actions fabiobhz   commented   on   Nov 20, 2023   fabiobhz on Nov 20, 2023   ·   Hidden as   off-topic show comment More actions nicolas-acl   commented   on   Nov 20, 2023   nicolas-acl on Nov 20, 2023   ·   Hidden as   off-topic Author show comment More actions yuseiatlas   commented   on   Nov 22, 2023   yuseiatlas on Nov 22, 2023 Last edited by  yuseiatlas More actions I faced the same problem when running Maestro on CI. It went away when I increased the driver's timeout from 15s to 60s. The following is from the Maestro docs on how to do this:  https://maestro.mobile.dev/advanced/configuring-maestro-driver-timeout 
+ export MAESTRO_DRIVER_STARTUP_TIMEOUT=60000 # setting 60 seconds
+maestro test file.yaml
+ nicolas-acl   commented   on   Nov 23, 2023   nicolas-acl on Nov 23, 2023 Author More actions 
+ I faced the same problem when running Maestro on CI. It went away when I increased the driver's timeout from 15s to 60s. The following is from the Maestro docs on how to do this:  https://maestro.mobile.dev/advanced/configuring-maestro-driver-timeout 
+ export MAESTRO_DRIVER_STARTUP_TIMEOUT=60000 # setting 60 seconds
+maestro test file.yaml
+ 
+ 
+ Thanks, but I already try that too. It doesn't change, same error :  maestro.MaestroDriverStartupException$IOSDriverTimeoutException: Maestro iOS driver did not start up in time 👍 React with 👍 5 Reacted by  Danijel Huis, Petr Brantalík, André Pedersen, mathiasinthegit and Jeremy Green aherrick   commented   on   Dec 20, 2023   aherrick on Dec 20, 2023   ·   Hidden as   off-topic show comment More actions jacobsapps   commented   on   Jan 5, 2024   jacobsapps on Jan 5, 2024 More actions I'm having this exact issue. For reference, I'm trying to run maestro from crontab using the .zsh profile and ~/.maestro/bin/maestro 
+ Works fine when run manually but that doesn't exactly help our automation shishangx   commented   on   Jan 9, 2024   shishangx on Jan 9, 2024   ·   Hidden as   off-topic Last edited by  shishangx show comment More actions DavidREntwistle   commented   on   Jan 10, 2024   DavidREntwistle on Jan 10, 2024   ·   Hidden as   off-topic Last edited by  DavidREntwistle show comment More actions pawrob   commented   on   Jan 24, 2024   pawrob on Jan 24, 2024   ·   Hidden as   off-topic show comment More actions FelixLisczyk   commented   on   Feb 19, 2024   FelixLisczyk on Feb 19, 2024   ·   Hidden as   off-topic Last edited by  FelixLisczyk show comment More actions DanilloVidal   commented   on   Feb 22, 2024   DanilloVidal on Feb 22, 2024   ·   Hidden as   off-topic Last edited by  DanilloVidal show comment More actions maodd   commented   on   Mar 7, 2024   maodd on Mar 7, 2024   ·   Hidden as   off-topic show comment More actions 43  remaining  items Load more Fishbowler added  waiting for customer response More information is needed from the customer before we can progress on the issue More information is needed from the customer before we can progress on the issue   on Feb 23, 2026 linear   commented   on   Feb 23, 2026   linear Bot on Feb 23, 2026   – with   Linear More actions 
+ MAE-396 satya164   commented   on   Feb 23, 2026   satya164 on Feb 23, 2026 More actions Even with low performance, isn't it strange that it fails even after an hour? I have also tried rerunning the flows and found that it never works after it threw this error the first time. It feels like there is something else that failed. Fishbowler   commented   on   Feb 23, 2026   Fishbowler on Feb 23, 2026 Contributor More actions @satya164  You don't mention anything about your run environment. If it's GitHub, then rerunning occurs on a different machine, so prior activity is irrelevant. If self-hosted, have you applied any of the aforementioned solutions for managing self-hosted infra problems? satya164   commented   on   Feb 23, 2026   satya164 on Feb 23, 2026 More actions @Fishbowler 
+ 
+ If it's GitHub, then rerunning occurs on a different machine 
+ 
+ GitHub Actions on  macos-latest . I'm just rerunning the maestro command, not the workflow. Generally, it works, but many times I have gotten the timeout error, which persists even after rerunning the command multiple times. nabilfreeman   commented   on   Feb 23, 2026   nabilfreeman on Feb 23, 2026 Last edited by  nabilfreeman More actions I get these timeouts on a 128GB ram M4 Max MacBook Pro. Happened on both Sequoia and Tahoe. I don’t think the hardware is the problem. It seems to be some sort of ip address / localhost quirk. 
+ Edit: might be helpful, I mitigated this by adding guidance to AGENTS.md to nuke simulator, kill any maestro processes on the system, and launch again which usually fixes it. This is not helpful for CI, but I use maestro for agentic feedback loop which works perfectly fine. Fishbowler   commented   on   Feb 23, 2026   Fishbowler on Feb 23, 2026 Contributor More actions @nabilfreeman  Any idea how I can recreate the problem? 
+ @satya164  The regular cloud version, I assume? How are you just rerunning a single command? 
+ Without some way to point at a reproducible set of steps, we're a bit stuck on any way to progress. If we set aside resource or network constraints, if there's a software problem it occurs under a minority circumstance (else lots more folks would encounter it). Could be Java or Xcode versions, or other combinations of factors... satya164   commented   on   Feb 25, 2026   satya164 on Feb 25, 2026 Last edited by  satya164 More actions @Fishbowler 
+ 
+ The regular cloud version, I assume? How are you just rerunning a single command? 
+ 
+ I was just re-running the maestro command by checking the exit code to see if it failed. I have removed it since then. 
+ 
+ Without some way to point at a reproducible set of steps 
+ 
+ Here is a run that failed recently:  https://github.com/react-navigation/react-navigation/actions/runs/22419798967/job/64914577799?pr=12978 
+ Workflow file:  https://github.com/react-navigation/react-navigation/blob/cb52483f8b3054c1ae0ff8add3f7eca5ae155c36/.github/workflows/e2e-ios.yml 
+ 
+ Log (pruned coz of GH limits, same lines at the end repeated) 
+ 23:19:15.009 [ INFO] maestro.cli.report.TestDebugReporter.logSystemInfo: Debug output path: /Users/runner/work/react-navigation/react-navigation/example/maestro-debug-output
+23:19:15.011 [ INFO] MAESTRO.logSystemInfo: ---- System Info ----
+23:19:15.019 [ INFO] MAESTRO.logSystemInfo: Maestro Version: 2.1.0
+23:19:15.108 [ INFO] MAESTRO.logSystemInfo: CI: github
+23:19:15.108 [ INFO] MAESTRO.logSystemInfo: OS Name: Mac OS X
+23:19:15.110 [ INFO] MAESTRO.logSystemInfo: OS Version: 15.7.4
+23:19:15.110 [ INFO] MAESTRO.logSystemInfo: Architecture: aarch64
+23:19:15.114 [ INFO] MAESTRO.logSystemInfo: Java Version: 17
+23:19:15.371 [DEBUG] io.micrometer.common.util.internal.logging.InternalLoggerFactory.newDefaultFactory: Using SLF4J as the default logging framework
+23:19:15.479 [ INFO] MAESTRO.logSystemInfo: Xcode Version: 26.3
+23:19:15.515 [ INFO] MAESTRO.logSystemInfo: Flutter Version: Undefined
+23:19:15.547 [ INFO] MAESTRO.logSystemInfo: Flutter Channel: Undefined
+23:19:15.547 [ INFO] MAESTRO.logSystemInfo: ---------------------
+23:19:16.539 [ INFO] maestro.orchestra.workspace.WorkspaceExecutionPlanner.plan: Created execution plan: ExecutionPlan(flowsToRun=[/Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/tab-view-scrollable-tab-bar.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-header-customization.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-prevent-remove.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-transparent-modal.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/screen-layout.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/tab-view-custom-tab-bar.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/drawer-master-detail.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/navigator-layout.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/bottom-tabs-full-history.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack-header-customization.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/bottom-tabs-preload-flow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack-preload-flow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/auth-flow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-card-modal.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/bottom-tabs-dynamic.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-bottom-tabs-custom-tab-bar.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/bottom-tabs.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/static-config-screen.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack-prevent-remove.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/components-link.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack-card-modal.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/material-top-tabs.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-float-screen-header.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/tab-view-coverflow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-basic.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-preload-flow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-modal.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/libraries-drawer-layout.yml], sequence=FlowSequence(flows=[], continueOnFailure=null), workspaceConfig=WorkspaceConfig(flows=null, includeTags=null, excludeTags=null, executionOrder=null, baselineBranch=null, notifications=null, disableRetries=false, platform=PlatformConfiguration(android=AndroidConfiguration(disableAnimations=false), ios=IOSConfiguration(disableAnimations=false, snapshotKeyHonorModalViews=null)), testOutputDir=null))
+23:19:31.927 [ INFO] maestro.cli.command.TestCommand.runShardSuite: [shard 1] Selected device B38715C4-2E95-49D7-A969-A9343CA986CC using port 7001 with execution plan ExecutionPlan(flowsToRun=[/Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/tab-view-scrollable-tab-bar.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-header-customization.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-prevent-remove.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-transparent-modal.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/screen-layout.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/tab-view-custom-tab-bar.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/drawer-master-detail.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/navigator-layout.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/bottom-tabs-full-history.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack-header-customization.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/bottom-tabs-preload-flow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack-preload-flow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/auth-flow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-card-modal.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/bottom-tabs-dynamic.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-bottom-tabs-custom-tab-bar.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/bottom-tabs.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/static-config-screen.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack-prevent-remove.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/components-link.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/native-stack-card-modal.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/material-top-tabs.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-float-screen-header.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/tab-view-coverflow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-basic.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-preload-flow.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/stack-modal.yml, /Users/runner/work/react-navigation/react-navigation/example/e2e/maestro/libraries-drawer-layout.yml], sequence=FlowSequence(flows=[], continueOnFailure=null), workspaceConfig=WorkspaceConfig(flows=null, includeTags=null, excludeTags=null, executionOrder=null, baselineBranch=null, notifications=null, disableRetries=false, platform=PlatformConfiguration(android=AndroidConfiguration(disableAnimations=false), ios=IOSConfiguration(disableAnimations=false, snapshotKeyHonorModalViews=null)), testOutputDir=null))
+23:19:32.549 [TRACE] ios.xctest.XCTestIOSDevice.open: Opening a connection
+23:19:32.550 [TRACE] xcuitest.XCTestDriverClient.restartXCTestRunner: Restarting XCTest Runner (uninstalling, installing and starting)
+23:19:32.550 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Start] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC
+23:19:32.555 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Failed] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC, exception: java.net.ConnectException: Failed to connect to /127.0.0.1:7001
+23:19:32.555 [TRACE] xcuitest.XCTestDriverClient.restartXCTestRunner: XCTest Runner uninstalled, will install and start it
+23:19:32.556 [ INFO] xcuitest.installer.LocalXCTestInstaller.start$lambda$3: start()
+23:19:32.556 [ INFO] xcuitest.installer.LocalXCTestInstaller.start$lambda$3: [Start] Install XCUITest runner on B38715C4-2E95-49D7-A969-A9343CA986CC
+23:19:32.556 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Start] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC
+23:19:32.557 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Failed] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC, exception: java.net.ConnectException: Failed to connect to /127.0.0.1:7001
+23:19:32.557 [ INFO] xcuitest.installer.IOSBuildProductsExtractor.extract: [Start] Writing build products
+23:19:32.650 [ INFO] xcuitest.installer.IOSBuildProductsExtractor.extract: [Done] Writing build products
+23:19:32.650 [ INFO] xcuitest.installer.IOSBuildProductsExtractor.extract: [Start] Writing maestro-driver-iosUITests-Runner app
+23:19:33.001 [ INFO] xcuitest.installer.IOSBuildProductsExtractor.extract: [Done] Writing maestro-driver-iosUITests-Runner app
+23:19:33.001 [ INFO] xcuitest.installer.IOSBuildProductsExtractor.extract: [Start] Writing maestro-driver-ios app
+23:19:33.022 [ INFO] xcuitest.installer.IOSBuildProductsExtractor.extract: [Done] Writing maestro-driver-ios app
+23:19:33.024 [ INFO] xcuitest.installer.LocalXCTestInstaller.startXCTestRunner: Installing driver with xcodebuild
+23:19:33.026 [ INFO] xcuitest.installer.LocalXCTestInstaller.startXCTestRunner: [Start] Running XcUITest with `xcodebuild test-without-building` with 7001 and config: IOSDriverConfig(prebuiltRunner=false, sourceDirectory=driver-iPhoneSimulator, context=CLI, snapshotKeyHonorModalViews=null)
+23:19:33.030 [ INFO] util.CommandLineUtils.runCommand: Running command line operation: [xcodebuild, test-without-building, -xctestrun, /var/folders/q_/pk8v8g4n3qq2gcnsvqjc3sd40000gn/T/B38715C4-2E95-49D7-A969-A9343CA986CC1326789373490449912/maestro-driver-ios-config.xctestrun, -destination, id=B38715C4-2E95-49D7-A969-A9343CA986CC, -derivedDataPath, /var/folders/q_/pk8v8g4n3qq2gcnsvqjc3sd40000gn/T/maestro_xctestrunner_xcodebuild_output6983526970491082748] with {TEST_RUNNER_PORT=7001}
+23:19:33.063 [ INFO] xcuitest.installer.LocalXCTestInstaller.startXCTestRunner: [Done] Running XcUITest with `xcodebuild test-without-building`
+23:19:33.063 [ INFO] xcuitest.installer.LocalXCTestInstaller.start$lambda$3: [Done] Install XCUITest runner on B38715C4-2E95-49D7-A969-A9343CA986CC
+23:19:33.064 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Start] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC
+23:19:33.065 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Failed] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC, exception: java.net.ConnectException: Failed to connect to /127.0.0.1:7001
+23:19:33.707 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Start] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC
+23:19:33.709 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Failed] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC, exception: java.net.ConnectException: Failed to connect to /127.0.0.1:7001
+23:19:34.229 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Start] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC
+23:19:34.234 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Failed] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC, exception: java.net.ConnectException: Failed to connect to /127.0.0.1:7001
+23:19:34.889 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Start] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC
+23:19:34.893 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Failed] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC, exception: java.net.ConnectException: Failed to connect to /127.0.0.1:7001
+23:19:35.533 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Start] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC
+23:19:35.535 [ INFO] xcuitest.installer.LocalXCTestInstaller.xcTestDriverStatusCheck: [Failed] Perform XCUITest driver status check on B38715C4-2E95-49D7-A969-A9343CA986CC, exception: java.net.ConnectException: Failed to connect to /127.0.0.1:7001
+ 
+ 
+ But ofc it's not reproducible since it doesn't consistently happen 100% of the time. Fishbowler   commented   on   Feb 26, 2026   Fishbowler on Feb 26, 2026 Contributor More actions @satya164  I'm trying to trace the steps to Maestro running, ended up in a Typescript file, and started parsing probable parameter values in my head, then thought... wouldn't it be easier if this script printed the parsed command that's about to run, without asking someone to rerun the job in debug mode? 
+ react-navigation/react-navigation#12991 Fishbowler   commented   on   Feb 27, 2026   Fishbowler on Feb 27, 2026 Contributor More actions To others in this thread: In the PR linked above, whilst we initially saw instability in GitHub Actions with macOS 15 and Maestro 2.1.0, we didn't observe the same using macOS 26 and Maestro 2.2.0. satya164   commented   on   Feb 27, 2026   satya164 on Feb 27, 2026 More actions FYI I just got the error again on main branch  https://github.com/react-navigation/react-navigation/actions/runs/22505635383/job/65203418347 github-actions   commented   on   Mar 9, 2026   github-actions Bot on Mar 9, 2026   – with   GitHub Actions More actions Without additional information, we can't resolve this issue. We're therefore reluctantly going to close it. 
+ Feel free to open a new issue with all the required information provided, including a  minimal, reproducible sample . When creating a new issue, please make sure to diligently fill out the issue template. 
+ Thank you for your contribution to our open-source community! github-actions closed this  as  completed on Mar 9, 2026 github-actions   commented   on   Mar 16, 2026   github-actions Bot on Mar 16, 2026   – with   GitHub Actions More actions This issue has been automatically locked since there has not been any recent activity after it was closed. If you are still experiencing a similar problem, please file a new issue. Make sure to follow the template and provide all the information necessary to reproduce the issue. 
+Thank you for helping keep us our issue tracker clean! github-actions locked  as resolved  and limited conversation to collaborators  on Mar 16, 2026 Sign up for free   to join this conversation on GitHub.   Already have an account?   Sign in to comment Metadata Metadata Assignees No one assigned Labels maestro cli Related to the command-line Maestro tool Related to the command-line Maestro tool platform: ios Testing iOS apps is affected Testing iOS apps is affected waiting for customer response More information is needed from the customer before we can progress on the issue More information is needed from the customer before we can progress on the issue Type Bug Projects No projects Milestone No milestone Relationships None yet Development No branches or pull requests Issue actions Open in GitHub Copilot app 
+ 
+ 
+
+
+
+
+   
+
+ 
+
+     
+   
+
+   
+
+           
+   Footer 
+
+  
+
+
+   
+     
+       
+         
+ 
+       
+        © 2026 GitHub, Inc.
+       
+     
+
+     
+       Footer navigation 
+
+       
+
+
+           
+             Terms 
+           
+
+           
+             Privacy 
+           
+
+
+             
+               Security 
+             
+
+             
+               Status 
+             
+
+           
+             Community 
+           
+
+           
+             Docs 
+           
+
+           
+             Contact 
+           
+
+          
+ 
+   
+     
+      Manage cookies
+     
+   
+ 
+
+   
+     
+       
+        Do not share my personal information
+       
+     
+   
+
+       
+     
+   
+ 
+
+
+
+     
+
+
+
+
+   
+     
+     
+       
+     
+    You can’t perform that action at this time.
+   
+
+     
+   
+     
+     
+       
+         
+       
+       
+     
+   
+ 
+
+     
+   
+   
+ 
+
+     
+   
+     
+       
+       
+     
+   
+ 
+ 
+   
+     
+       
+       
+     
+   
+ 
+
+
+
+
+     
+     
+     
+   
+ 
+

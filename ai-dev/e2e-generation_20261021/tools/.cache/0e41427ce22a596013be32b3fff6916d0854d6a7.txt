@@ -1,0 +1,782 @@
+__HTTP 200__
+                                         Towards Automated Page Object Generation for Web
+                                               Testing using Large Language Models
+                                                                    Betül Karagöz1 , Filippo Ricca2 , Matteo Biagiola3 , Andrea Stocco1,4
+                                                           1
+                                                            Technical University of Munich, Munich, Germany, betul.karagoez, andrea.stocco@tum.de
+                                                                      2
+                                                                        Università degli Studi di Genova, Genova, Italy, filippo.ricca@unige.it
+                                                         3
+                                                           University of St. Gallen and USI, St. Gallen / Lugano, Switzerland, matteo.biagiola@unisg.ch
+                                                                               4
+                                                                                 fortiss GmbH, Munich, Germany, stocco@fortiss.org
+
+
+                                            Abstract—Page Objects (POs) are a widely adopted design            and allows for more robust scripts: if the GUI changes, only the
+                                         pattern for improving the maintainability and scalability of          corresponding PO needs to be updated. Moreover, POs can be
+
+
+
+
+arXiv:2602.19294v1 [cs.SE] 22 Feb 2026
+                                         automated end-to-end web tests. However, creating and maintain-       reused across test suites, further improving maintainability [8].
+                                         ing POs is still largely a manual, labor-intensive activity, while
+                                         automated solutions have seen limited practical adoption. In this     Despite these advantages, building and maintaining POs is
+                                         context, the potential of Large Language Models (LLMs) for            labor-intensive, which hinders their widespread adoption.
+                                         these tasks has remained largely unexplored. This paper presents         To reduce this manual effort, prior research explored auto-
+                                         an empirical study on the feasibility of using LLMs, specifically     mated PO generation [9], [10], [11], [12], [13]. While effective,
+                                         GPT-4o and DeepSeek Coder, to automatically generate POs for          these approaches do not use recent advances in Large Language
+                                         web testing. We evaluate the generated artifacts on an existing
+                                         benchmark of five web applications for which manually written         Models (LLMs) in code generation and information processing,
+                                         POs are available (the ground truth), focusing on accuracy (i.e.,     which are increasingly being integrated into software engi-
+                                         the proportion of ground truth elements correctly identified) and     neering workflows to automate coding tasks. Unlike existing
+                                         element recognition rate (i.e., the proportion of ground truth        structural or clustering-based PO generators [9], [10], [11], [12],
+                                         elements correctly identified or marked for modification). Our        which rely on static DOM parsing or handcrafted rules [14],
+                                         results show that LLMs can generate syntactically correct and
+                                         functionally useful POs with accuracy values ranging from 32.6%       this work explores the use of LLMs as generalizable PO
+                                         to 54.0% and element recognition rate exceeding 70% in most           synthesizers that can interpret markup, infer semantics, and
+                                         cases. Our study contributes the first systematic evaluation of       produce executable Selenium code.
+                                         LLMs strengths and open challenges for automated PO generation,          This paper investigates specifically the effectiveness of GPT-
+                                         and provides directions for further research on integrating LLMs      4o and DeepSeek Coder to automate PO generation, selected for
+                                         into practical testing workflows.
+                                                                                                               their complementary design goals and public accessibility. GPT-
+                                                                  I. I NTRODUCTION                             4o  represents a general-purpose, instruction-tuned multimodal
+                                                                                                               model optimized for reasoning and code synthesis across
+                                             In modern software development, end-to-end (E2E) web diverse programming contexts, while DeepSeek Coder is a
+                                         testing is critical for ensuring the reliability of web applications. specialized model explicitly trained on large-scale code corpora
+                                         It validates complete user workflows by simulating real with strong emphasis on software engineering tasks. Together,
+                                         interactions through the browser, from logging in to completing they provide a balanced evaluation of both generalist and
+                                         complex tasks. Unlike unit or integration testing, which focus domain-specialized LLMs.
+                                         on isolated components, E2E web testing exercises the entire             We study how LLMs interpret HTML structures, infer
+                                         system in a production-like environment [1], [2].                     relationships between pages, and translate them into functional
+                                             Web automation frameworks such as Selenium [3], Cy- POs with syntactically correct and semantically meaningful
+                                         press [4], and Playwright [5] have been developed to fa- methods. Using a benchmark of five web applications with
+                                         cilitate automated interactions between test scripts and web manually written POs as ground truth, we evaluate the generated
+                                         applications. These tools offer mechanisms to identify web artifacts in terms of accuracy and element recognition rate.
+                                         elements and perform actions, such as clicking buttons and               Our results show that both models can generate valid and
+                                         filling out forms, to enable automated test execution. However, reusable POs, with accuracy ranging from 32.6% to 54.0%
+                                         maintaining these tests remains a significant challenge: even and element recognition rate exceeding 70% in most cases.
+                                         minor modifications to the page layout, element identifiers, or While DeepSeek achieved slightly higher average accuracy
+                                         navigation flow can cause tests to fail, resulting in fragile and and element recognition rate, differences with GPT-4o were
+                                         costly maintenance efforts [1], [6], [7].                             not statistically significant. Both models consistently produced
+                                             The Page Object (PO) design pattern is a common solution syntactically valid Java classes, but struggled with navigation
+                                         to improve test maintainability. By encapsulating web elements methods and return types, where missing or incorrect definitions
+                                         and their interactions in dedicated classes, the PO model were the most frequent source of errors. Conversely, LLMs
+                                         decouples the test logic from the underlying GUI structure. This often generated extra elements and methods beyond the ground
+                                         abstraction simplifies test management, reduces duplication, truth, some of which could potentially enrich test suites.
+This paper makes the following contributions:                          1    @Test
+                                                                       2    public void testLogin(){
+  • The first systematic empirical evidence on the effectiveness       3        WebDriver driver = new FirefoxDriver();
+     of LLMs for PO generation. Our empirical study evaluates          4        driver.get("localhost/Bludit/index.php");
+                                                                       5        driver.findElement(By
+     the effectiveness of state-of-the-art LLMs (GPT-4o and            6            .xpath("//*[@id=`LoginForm']/input[1]"))
+     DeepSeek Coder) in generating POs on a benchmark of               7            .sendKeys("admin");
+                                                                       8        driver.findElement(By
+     five web applications.                                            9            .xpath("//*[@id=`LoginForm']/input[2]"))
+  • A replication package including the experimental library           10           .sendKeys("secret");
+                                                                       11       driver.findElement(By
+     and dataset to support open research [15].                        12           .xpath("//input[@value=`Login']"))
+                                                                       13           .click();
+                                                                       14       AssertThat(driver
+                      II. BACKGROUND                                   15           .findElement(By.id("loggedUser"))
+                                                                       16           .getText(), is("admin"));
+   Figure 1 shows our running example, i.e., an exceprt of the         17       driver.quit();
+                                                                       18   }
+Bludit web application (v. 2.3.4). We consider a scenario
+in which a user inserts username and password in the
+login form (Figure 1 (a)); if these credentials are correct, the       Listing 1: An example of a programmable automated test case.
+username (in our example “admin”) is displayed on the top
+right corner of the homepage (Figure 1 (b)).
+                                                                       assert whether the program behaves correctly (e.g., by means
+                                                                       of JUnit or TestNG assertions).
+                                                                          Listing 1 displays a programmable version of a test case
+                                                                       for the login functionality, created using Selenium WebDriver.
+                                                                       In Line 3, an instance of WebDriver is created to control the
+                                                                       Firefox browser. In Line 4, the executable test case instruments
+                                                                       WebDriver to navigate to the URL of the target web application.
+                                                                       Lines 5–10 fill in the username and password input boxes with
+                                                                       the administrator credentials, and Lines 11–13 submit the form.
+                                                                       Lines 14–16 verifies, by means of an assertion, the presence of
+                                                                       an HTML element containing the username in the home page,
+                                                                       and asserts that it equals the string “admin”. Finally, Line 17
+                                                                       shuts down the WebDriver instance and closes the browser.
+                                                                          The implementation of advanced programmable test cases
+                                                                       may require development skills comparable to those required
+                        (a) Login page.                                for the development of production code. However, all of the
+                                                                       benefits of modular programming can be brought to the creation
+                                                                       of test suites, such as parametric and conditional execution,
+                                                                       reuse of common functionalities across test cases (e.g., applying
+                                                                       design patterns), and robust mechanisms for referencing the
+                                                                       HTML elements in a web page [6].
+                                                                       B. Page Objects
+                                                                          In web test automation, the “Page Object” design pattern [16]
+                                                                       has emerged as the leading pattern for enhancing test case
+                                                                       maintenance, reducing code duplication and lowering the
+                                                                       coupling between test cases and web applications [10]. Page
+                                                                       objects apply naturally to the programmable approach to web
+                        (b) Home page.                                 testing, because they are object-oriented classes that serve as
+                                                                       interfaces to the web pages of the application under test. Test
+                Fig. 1: Bludit web application.                        cases use the methods of the page object class whenever they
+                                                                       need to interact with an HTML element of the GUI, which
+                                                                       allows them to do anything that an end user can see and do
+A. Programmable Web Application Testing Tools                          on a page. A direct benefit of this is that test cases do not
+   With programmable web application testing tools, testers            need to be modified if the application underneath undergoes
+develop executable test cases using a high-level programming           structural changes [2], i.e., changes involving only the web
+language such as Java, Python, or Ruby. The tool APIs                  page layout/structure. On the other hand, test cases still require
+provide ways to interface with the browser; thus, test cases           maintenance in the presence of logical changes [2], i.e., those
+are composed of commands that either control the browser               involving a web application’s functionality. There is empirical
+or provide input data, set the values of GUI components, and           evidence of the benefits associated with the adoption of the
+
+
+
+                                                                   2
+public
+ 1      class IndexPage{                                                    1   @Test
+ 2   private WebDriver driver;                                              2   public void testLogin(){
+ 3   @FindBy(name="user")                                                   3       IndexPage ip = new IndexPage(driver);
+ 4   private WebElement username;                                           4       HomePage hp = ip.login("admin", "secret");
+ 5   @FindBy(name="pass")                                                   5       assertEquals(hp.getLoggedUser(), "admin");
+ 6   private WebElement password;                                           6   }
+ 7   @FindBy(id="submitLogin")
+ 8   private WebElement login;
+ 9
+10   public IndexPage(WebDriver driver){                                    Listing 4: Page object-based programmable automated test case
+11       this.driver = driver;                                              (Selenium WebDriver)
+12       PageFactory.initElements(driver, this);
+13   }
+14
+15   public HomePage login(String usr, String pwd){
+16       username.sendKeys(usr);
+                                                                               Listing 4 shows a version of the login test case originally
+17       password.sendKeys(pwd);                                            presented in Listing 1, modified to use the page objects of
+18       login.click();
+19       return new HomePage(driver);                                       Listing 2 and Listing 3. The code has become more readable
+20   }                                                                      because the test case steps now correspond more directly to the
+                                                                            steps of the test case specification (e.g., open the index page,
+Listing 2: Java page object for the Login page in Figure 1 (a).             log in to the application, and assert that the user is logged in).
+                                                                            C. Benefits of Using Page Objects
+public
+ 1      class HomePage{                                                          The main advantage of using the Page Object (PO) pattern
+ 2   private WebDriver driver;
+ 3   @FindBy(id="loggedUser")                                                 is that changes to the user interface (UI) only require updates
+ 4   private WebElement loggedUser;                                           within the page object itself, not in the test scripts [19]. All UI
+ 5
+ 6     public HomePage(WebDriver driver){                                     locators and page-specific actions are centralized in a dedicated
+ 7           this.driver = driver;                                            page class, making maintenance easier when the UI evolves [8].
+ 8           PageFactory.initElements(driver, this);
+ 9     }                                                                         Another benefit is reusability. The same page objects can be
+10
+11     public String getLoggedUser(){
+                                                                              used  across multiple test cases. For example, a login operation
+12           return loggedUser.getText();                                     (valid or invalid) can serve as a reusable action across various
+13     }
+                                                                              tests. This reduces code duplication and promotes a more
+                                                                              modular, maintainable codebase.
+Listing 3: Java page object for the Home page of Figure 1 (b).                   The PO pattern also provides encapsulation and abstraction.
+                                                                              Test scripts interact only with high-level methods, without
+                                                                              needing to manage low-level UI details like locators [8]. This
+Page Object pattern in the maintenance of test suites for web makes it easier to expand the test suite as new pages or
+applications, in both industry [17] and academia [18], [8].                   features are added to the application under test (AUT), requiring
+    Listing 2 and Listing 3 present simplified page objects for minimal changes to existing tests. Additionally, POs enhance
+Bludit. The classes are written in Java and implemented readability and clarity by exposing user actions through clearly
+within the Selenium WebDriver framework. Each HTML named methods [20]. This makes the tests easier to understand
+element becomes a WebElement class instance1 , properly and maintain. Finally, debugging is simplified, as failures are
+named and with a @FindBy annotation containing the locator. isolated within the relevant page objects
+The page objects expose web page functionalities as methods;
+for simplicity, we limit the example to the methods of interest D. Challenges in Using Page Objects
+to our sample login test case. IndexPage contains a method                       While POs offer clear benefits, such as decoupling, reduced
+to perform the login, which wraps the calls to the various                    code  duplication, and easier test maintenance, Leotta et al. [19]
+HTML elements in a single shareable unit (we assume the                       emphasize     that creating POs for a web application is a nontrivial
+scenario in which credentials are correct, and that the result                task.  It  requires   significant development effort, particularly
+of the login operation is a page modeled with the HomePage                    during    the  early   stages of testing when POs must be built
+page object). The constructors of the page objects of Listing 2               from   scratch.    Although    the advantages of adopting the PO
+and Listing 3 contain calls to a support library named Page                   pattern  are  well-documented,     it remains uncertain whether these
+Factory (Line 12 and Line 8, respectively). The Page Factory                  benefits   always    justify the  upfront  investment, especially for
+instantiates the HTML elements of the page object and pre-                    smaller-scale     automation    projects  where  POs may introduce
+populates them based on the annotations (e.g., Lines 3, 5                     unnecessary      complexity.    Conversely,   in  large and dynamic
+and 7 of Listing 2). In the HomePage page object, the                         applications,    maintaining     a growing   set of  page objects can
+getLoggedUser() method (Lines 11–13 of Listing 3)                             become     a burden,    as highlighted   by Stocco  et al. [11].
+retrieves the textual content associated with the HTML element
+                                                                                                        III. S TUDY DESIGN
+having id equal to “loggedUser”.
+                                                                                 This section describes the definition, the design, and the
+   1 https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/ settings of the experiment we conducted in a structured way,
+WebElement.html                                                               following the guidelines by Wohlin et al. [21].
+
+
+
+                                                                        3
+A. Goal and Research Questions                                               TABLE I: Statistics of the Benchmark Applications.
+                                                                          Application    Source LoC   Test LoC   #Test Cases/POs   Version
+   The goal of this study is to evaluate the effectiveness of
+Large Language Models in generating Page Objects (POs) for                Bludit            ∼12,000      ∼500               ∼50      3.13.1
+                                                                          ExpressCart        ∼8,500      ∼300               ∼40        1.19
+web testing, with a focus on their correctness and completeness,          Kanboard          ∼25,000     ∼3,000             ∼120      1.2.15
+and to compare these results against manually written POs,                MediaWiki        ∼150,000    ∼10,000             ∼300      1.40.0
+                                                                          PrestaShop       ∼220,000    ∼15,000             ∼400     1.7.8.5
+which serve as the ground truth. Our evaluation includes the
+following three research questions:
+RQ1 (Accuracy): How effective are Large Language Models
+                                                                        C. Benchmark Setup
+in generating Page Objects with high accuracy?
+RQ2 (Element Recognition Rate): To what extent are Large                   The BEWT benchmark includes POs, Docker containers for
+Language Models able to recognize ground-truth elements when            running web applications, and test scripts. However, it does not
+generating Page Objects?                                                provide the HTML content, which is the primary input required
+RQ3 (Issue categories): In which specific categories of issues          for prompting LLMs. To gather the necessary HTML for the
+do Large Language Models struggle the most when generating              screens, we ran the applications locally using the provided
+Page Objects?                                                           Docker containers, navigated to the relevant pages, and saved
+                                                                        the corresponding HTML files. These raw HTML files, however,
+   The first research question investigates the overall accuracy
+                                                                        often contain excessive or redundant data, such as scripts and
+of LLMs in generating POs, i.e., their ability to produce correct
+                                                                        embedded resources, that could easily overload the context
+elements that match the ground truth. The second research
+                                                                        for LLMs [29], [30]. To address this issue, we implemented a
+question focuses on the element recognition rate, measuring to
+                                                                        pre-processing step to truncate and clean the HTML content
+what extent LLMs are able to identify and reproduce existing
+                                                                        before feeding it into the model. This approach was informed
+elements in the target application. The third research question
+                                                                        by the findings of Huq et al. [29], which showed that feeding
+analyzes the types of issues that arise in LLM-generated POs,
+                                                                        raw HTML files to LLMs often leads to hallucinations and
+with the goal of understanding where these models most
+                                                                        failure to follow instructions. Specifically, the study found that
+frequently fail.
+                                                                        applying an effective truncation strategy could improve model
+                                                                        performance by up to 11%.
+B. Objects of the Study
+                                                                  D. Selection of Large Language Models
+   In our study, we evaluate LLM-generated POs by compar-
+ing them with manually created POs. For this reason, the             We selected GPT-4o [31] and DeepSeek Coder [32]
+Applications Under Test (AUTs) must already have manually         (DeepSeek,    hereafter) for our experiment on automated PO
+written POs available. To ensure consistency and reliability,     generation  due   to their state-of-the-art performance and strong
+we used the BEWT benchmark of web applications [22], which        specialization   in code-related tasks. Initially, our goal was to
+provides developer-written POs, Docker containers to run the      rely on smaller,   open-source   models for accessibility and lower
+applications, and associated test cases. From this benchmark,     resource   demands,    but preliminary   tests showed they lacked
+we selected five applications from different categories, allowing sufficient accuracy.  Larger  open-source   models performed better
+us to assess LLMs performance across diverse scenarios,           but exceeded   our  computational   capacity.  Therefore, we focused
+detailed in Table I and described next.                           on  high-performing    models   available  via  external APIs, which
+   Bludit (v. 3.13.1) is lightweight content management           allowed  us to  evaluate  advanced   capabilities without the burden
+system (CMS) that allows users to create and manage websites.     of running   large  models   locally.
+It does not require a database, but instead it relies on flat
+files [23]. Its simplicity and fast performance makes it a E. Large Language Model Setup
+useful test application for evaluating LLMs in content-oriented      1) Hyperparameters: LLMs contain various hyperparame-
+applications. ExpressCart (v. 1.19) is an open-source e- ters that change the way they behave, which ends up affecting
+commerce application built with Node.js. It includes main the output quality. Among these, there is the temperature
+features like listing products, shopping cart functionality, and parameter, which controls the creativity of the output. Higher
+checkout processes [24]. Kanboard (v. 1.2.15) is a project values (closer to 1) generate more diverse responses, while
+management tool which uses the Kanban methodology to help lower values (closer to 0) produce more consistent and
+users visualize tasks, manage workflows, and track project deterministic results. Since the task requires consistency rather
+progress [25]. MediaWiki (v. 1.40.0) is a collaborative wiki than creativity, we set the temperature to 0.1 in all experiments,
+platform best known for powering Wikipedia [26]. It supports mitigating the impact of randomness in the results [33].
+structured content, revision history, and user permissions [27].     Another important hyperparameter is max tokens, which
+PrestaShop (v. 1.7.8.5) is an open source e-commerce defines the maximum number of tokens that can be generated
+platform that provides a set of functionalities for managing in a single interaction by the LLM. Since our task requires a
+online stores. These functions include product management, complex output, we chose to use the default value (i.e., 16,384
+order processing and customer interactions [28].                  for GPT-4o and 2,048 for DeepSeek Coder).
+
+
+
+                                                                    4
+   2) Prompt Strategies: Previous studies show that prompts                 3. You must use **only generic, structural
+are crucial in guiding LLM performance [34]. Clear, well-                   field names**, based on structure
+structured prompts define the task and lead to good results,                or position:
+                                                                                - Examples: `firstButton`,
+while vague prompts cause confusion and off-target outputs.                 `mainInputField`, `headerLabel`, `secondaryLink`
+   In our approach, we assume that no existing test suites or                   - You must **not** use domain-specific
+pre-defined POs are available for the selected AUT. This leads              terms like "product", "cart", "price", etc.
+                                                                            4. If multiple similar elements are present
+us to adopt a zero-shot prompting approach, which does not
+                                                                            (like multiple buttons or links), you should
+rely on prior examples or predefined structures. Instead, it                use **ordinal names**: `firstButton`,
+allows the model to generate POs and test cases based solely                secondButton`, etc.
+on the provided requirements or task description. This approach             (optional unless needed for clarity).
+enables us to evaluate an LLM’s ability to create correct POs               5. You must use **camelCase** for all field and
+                                                                            method names.
+without any prior knowledge of the AUT. It also serves as a
+                                                                            6. Create interaction methods that:
+means to assess the model’s capabilities in real-world scenarios,               - Perform actions like clicking, typing, or
+where no setup or input from existing resources is available.               retrieving text.
+Being the first study of this kind, we adopted a zero-shot setup                - If clicking an element clearly leads to
+to establish a reproducible lower bound of model capability,                another page
+                                                                                (e.g., a link, a save button after form
+isolating intrinsic LLM reasoning from external aids such as
+                                                                            submission), **the method must return the
+few-shot examples or retrieval.                                             appropriate POM class** (assume it already
+   Listing 1 shows the prompt structure we used to specify                  exists).
+the rules for generating POs together with the corresponding                        - Example: after clicking a save
+                                                                            button, return new ProjectSummaryPage(driver);`
+HTML content for the page. The LLM is expected to generate
+                                                                                - If the action does not cause page
+a PO in Java, adhering to a specific structure outlined in the              navigation (typing into inputs, basic clicks),
+prompt. This includes using appropriate naming conventions,                 the method must return `void` or the
+setting up the constructor, and creating WebElements for                    appropriate text (`String`) if retrieving
+each input field, button, and link on the page. The generated PO            values.
+                                                                            7. You must add a constructor with:
+must also import necessary libraries from Selenium and JUnit,
+                                                                                `PageFactory.initElements(driver, this);`
+which we use in this work. Additionally, it should include                  8. You must not generate any other classes
+methods for navigation (e.g., clicking buttons or links) and                unless explicitly instructed.
+interactions (e.g., entering text).                                         9. You must only use information available in
+                                                                            the provided HTML, do not assume additional
+   During our experiments, we noticed that some requirements
+                                                                            logic or elements
+were not implemented, even though they were clearly stated
+in the prompt. Upon further analysis, we found that using               ### Error Message Handling Rules:
+more assertive language—specifically imperative statements                  - If the HTML contains elements indicating
+like “must”, increased the likelihood of those requirements                 errors, validation messages,
+                                                                            or warnings (e.g., classes or IDs like `error`,
+being correctly implemented. Consequently, we refined the
+                                                                            `form-errors`,
+prompt by using “must” statements to clearly highlight critical             `validation-error`, `alert-danger`):
+instructions, improving model compliance.                                       - You must create a `WebElement` field for
+                                                                            each error message.
+You are generating a Selenium Page Object Model                                 - You must create a method named
+    (POM) class in Java for a web application.                              `getErrorMessage()` that returns the
+                                                                                visible error text (`element.getText()`).
+### File Naming Rules:                                                          - If multiple error messages exist, you
+- The Java class must be named **exactly**:                                 must create methods like
+    {class_name}                                                            `getFirstErrorMessage()`,
+    - This name must be used:                                               `getSecondErrorMessage()`, etc., or
+        - As the Java **filename**                                          alternatively return a list of error texts if
+    (`{class_name}.java`) **(must match exactly)**                          appropriate.
+        - As the Java **class name** (`public class
+    {class_name}`) **(must match exactly)**                             ### HTML Content:
+        - Do not infer or modify the class name                             {html_content}
+    based on page content                                                       """
+
+### Generation Instructions:                                                     Listing 1: Page Object Generation Prompt.
+    1. You must define all key elements (inputs,
+    buttons, links, text fields, etc.) as
+    `WebElement` fields using `@FindBy`annotations.                     F. Evaluation Setup
+    2. At the top of the class, you must include
+    this field:                                                           In the evaluation phase of our study, we manually compared
+        `public WebDriver driver;`                                      the ground-truth POs provided in the benchmark with the
+
+
+
+                                                                    5
+              TABLE II: Detailed classification of Page Object review using GPT-4o and DeepSeek, for all apps.
+ App                                    Correct                  To Modify                        Missing                     Extra
+                           Elem   Get     Act     Nav   Elem   Get       Act   Nav   Elem   Get     Act     Nav   Elem   Get      Act   Nav
+ Bludit - GPT-4o            46     3       0       1     0      0        26    24     12     15      5       7    106        23    47   22
+ Bludit - Deepseek          48     9       0       3     0      1        23    19     10      8      7      11    110        51    46   26
+ Kanboard - GPT-4o          46     2       1       6     4      3        20    15     19     19      3       5    178        16    70   91
+ Kanboard - Deepseek        48     10      2       4     7      3        17    20     14     11      5       2    253        44    82   95
+ MediaWiki - GPT-4o         30     2       2       0     3      0        22    11      8      7      6       7     88         6    44   30
+ MediaWiki - Deepseek       28      3      0       1     2      0        23     4     11      6      7      13    142        15    86   14
+ PrestaShop - GPT-4o        73     5       0       3     4      0         4    25     30     14      9      11    212         6   145   74
+ PrestaShop - Deepseek      69      8      1       1     4      0         3    23     34     11      9      15    235        26   178   36
+ ExpressCart - GPT-4o       20     1       2       2     0      3         6    11      2      1      0       2     69         9    41   13
+ ExpressCart - DeepSeek     21      3      2       1     0      0         8    12      1      0      0       2     77        19    39   9
+ Total                     429     46      10     22     24     10    152      164   141     92      51     75    1470   215      778   410
+                 Abbreviations: Elem = Web Elements; Get = Getter Methods; Act = Action Methods; Nav = Navigation Methods.
+
+
+
+outputs generated by both GPT4-o and DeepSeek across five             The task was performed by the first author and validated
+different applications. For each generated POs, we manually through discussions with the other authors to resolve disagree-
+compared the WebElement objects (e.g., username and pass- ments in ambiguous cases. No method was left unassigned.
+word WebElement) and corresponding methods (e.g., login
+method) against the ground truth. In order to ensure consistency G. Metrics and Analysis for Evaluation
+and clarity in our analysis, we categorized each identified           To evaluate the performance of LLMs in automating PO
+element and method into four main groups, namely correct, to creation, we used the following metrics. For RQ1 , we computed
+modify, missing, and extra, following prior work [12].             the accuracy metric is used to measure the percentage of
+Correct. Web elements are classified as correct if they use methods that are classified as “Correct”. In particular, accuracy
+the appropriate element type and if their assigned name is is defined as follows:
+meaningful and matches, or closely aligns with, the ground
+truth. For methods, we require the method name to be accurate,                            No. of Correct Methods
+                                                                           Accuracy =                               × 100
+the implementation to align with the intended behavior, and                              Total Number of Methods
+the return type to match the one defined in the ground-truth         The corresponding metric for web elements is defined
+version, to be classified in this category.                        analogously. For RQ2 , this metric measures the proportion
+To modify. If an element is present but does not fully follow the of ground truth elements that are successfully classified as
+naming conventions or structural guidelines given in the prompt, “Correct” or “To modify”. This will give us an idea of how
+it is categorized as an element which requires modification by much of the ground truth LLMs are able to accurately process
+a developer. These elements are partially correct, and can still and identify for potential change:
+be used in the POs with manual adjustments. An important
+part of this classification was identifying specific shortcomings,
+which helped us detect recurring patterns in how the LLM Elem Rec. Rate = Total Correct + Requires Mod. Elems ×100
+misinterpreted or failed to capture the complete structure of                                      Total Elements
+certain elements. If the element marked for modification is           The corresponding metric for methods is defined analogously.
+not a method, we check its naming and type to determine in For RQ3 , we broke down the results of the “To Modify” cate-
+which part adjustments are needed. However, if the element is gory into specific subcategories. These subcategories represent
+a method, we perform a more detailed analysis based on the specific types of issues where the LLM output does not match
+requested fix.                                                     the ground-truth POs. For each subcategory me measure:
+Missing. Elements are classified as missing if they are com-
+pletely absent from the generated output. This applies to both
+                                                                                          No. of Elements in Subcategory
+web elements and methods that exist in the ground truth but Subcategory % =                                                  ×100
+                                                                                       Total Number of Elements to Modify
+are not generated by the LLM;
+Extra. Elements are categorized as extra if they appear in the        The task was performed by the first author and validated
+LLM-generated POs but have no corresponding match in the through discussions with the other authors with prior experience
+ground-truth POs. Since manually created POs may not always in web testing to resolve disagreements in ambiguous cases,
+be complete or fully representative of the page’s functionality, following the qualitative analysis protocol of Wohlin et al. [21].
+extra elements generated by LLMs reflect the model’s ability No case was left unassigned. The corresponding metrics for
+to generate more comprehensive POs, potentially capturing web elements/methods are defined analogously to those used for
+additional functionality that may have been missed in the methods/web elements. This triangulation is aimed at mitigating
+manually created ones.                                             subjectivity in class assignments.
+
+
+
+                                                                     6
+                                                                         TABLE III: Breakdown of “To Modify” Subcategories.
+                                                                      LLM        Miss. Ret.   Wrong Ret.   SamePg Ret.   Wrong Nm.   Miss. Im.
+                                                                      GPT-4o        54            14           74           33          2
+                                                                      DeepSeek      54            12           67           28          8
+                                                                      Abbreviations: Miss. Ret. = Missing Return Type; Wrong Ret. = Wrong
+                                                                      Return Type; SamePg Ret. = Same Page Return Type; Wrong Nm. = Wrong
+                                                                      Name; Miss. Im. = Missing Implementation.
+
+
+
+                                                                      refinement. Here, we consider both Correct and To Modify
+                                                                      instances as successful recognitions.
+                                                                         The element recognition rate (Figure 3) ranging from 61.2%
+                                                                      to 94%, indicates that, even when LLMs do not produce fully
+                                                                      correct implementations, they are generally capable of identify-
+         Fig. 2: Accuracy of GPT-4o and DeepSeek.                     ing the presence and role of page components. DeepSeek
+                                                                      again demonstrates slightly higher recognition capabilities,
+                                                                      particularly in complex applications such as Kanboard and
+                        IV. R ESULTS                                  MediaWiki, where structural depth poses additional challenges.
+                                                                      However, both models frequently introduce Extra elements,
+A. RQ1 (Accuracy)
+                                                                      suggesting a tendency to overgenerate or infer functionality
+   Table II provides an overview of how accurately each LLM           beyond the ground truth.
+generated POs compared to the ground truth. We focus here
+on elements classified as Correct, which reflect full alignment        RQ2 (Element Recognition Rate): LLMs reliably detect
+in type, naming, and behavioural semantics.                            most relevant page elements, with element recognition
+   Across all applications, the majority of correctly generated        rates between 61.2% and 94%. DeepSeek shows a modest
+items were WebElements (429 in total), indicating that LLMs            advantage in recognising method-level components.
+are fairly reliable in detecting static page components. In
+contrast, methods, particularly Action and Navigation methods,        C. RQ3 (Issue categories)
+were identified less accurately, confirming that behavioural
+elements remain challenging due to their dependency on                   Table III shows the total number of instances across all
+application flow [35]. Between the two models, DeepSeek               applications for issues that occurred in the “To modify”
+showed marginally better performance than GPT-4o, especially          category. Our analysis revealed the following five categories:
+in correctly generating Getter methods. However, neither model           • Missing return type: The method lacks an explicitly
+exceeded an overall accuracy threshold sufficient for full                  defined return type;
+automation without developer intervention.                               • Wrong return type: The method includes a return type,
+   Figure 2 presents the overall accuracy comparison across all             but it does not match the expected one;
+applications for both LLMs. In three of the five applications,           • Missing return type (returns same page): The method
+Bludit, KanBoard and ExpressCart, DeepSeek outperformed                     returns void, but according to the ground truth, it should
+GPT-4o and achieved higher accuracy scores. On the other hand,              have returned the same PO to support chaining in test
+GPT-4o performed slightly better than DeepSeek in MediaWiki                 cases [36];
+and PrestaShop applications. On our data, the results suggest            • Wrong naming: The method name does not match the
+that DeepSeek performs slightly better in terms of accuracy for             naming rules or does not reflect its intended functionality;
+PO creation. The lowest results were achieved in the MediaWiki           • Wrong implementation: The method logic is incorrect or
+application with accuracy values of 34.7% and 32.6% for GPT-                differs from the expected behavior defined in the ground
+4o and DeepSeek, respectively. On the other hand, the highest               truth;
+accuracy values were obtained in the ExpressCart application             • Missing implementation: The method signature is defined
+with 50% in GPT-4o and 54% in DeepSeek.                                     but the actual implementation is left empty, which makes
+                                                                            the method non-functional.
+ RQ1 (Accuracy): LLMs can generate syntactically valid                   It can be seen that the largest proportion of these issues were
+ and partially functional POs, achieving accuracy between             related to missing same page return type in both LLMs, with
+ 32.7% and 54.0%. DeepSeek slightly outperforms GPT-4o                74 out of 181 instances in GPT-4o, and 67 out of 169 instances
+ in method-level correctness.                                         in DeepSeek, with corresponding percentages of 40.9% and
+                                                                      39.6% respectively. Both LLMs had the same number of
+B. RQ2 (Element Recognition Rate)                                     completely missing return type issues with 54 instances each.
+  For RQ2 , we analyse the extent to which LLMs correctly             GPT-4o showed slightly more incorrect return types (14) and
+detect relevant elements, regardless of whether they require          a higher number of naming issues (33 vs. 28) compared to
+
+
+
+                                                                  7
+                                                                          1) Internal Validity: Since the evaluation involved manual
+                                                                       comparison of POs, we relied on a dataset of manually
+                                                                       implemented ones that had been previously developed by
+                                                                       other researchers and made publicly available. We consider
+                                                                       these implementations reliable and used them the ground truth
+                                                                       to assess the LLM’s accuracy. However, this still introduces
+                                                                       a potential validity threat, as the reference implementations
+                                                                       may contain omissions or inaccuracies that could affect the
+                                                                       reliability of our assessment and, consequently, the validity
+                                                                       of our findings. Moreover, the manual validation process
+                                                                       introduces a subjective component. The manual classification
+                                                                       of LLM-generated outputs introduces subjectivity, as evaluators
+                                                                       may interpret naming conventions differently. To mitigate this,
+                                                                       multiple authors reviewed and discussed ambiguous cases until
+Fig. 3: Element Recognition Rate of GPT-4o and DeepSeek.               consensus was reached. All evaluators have substantial prior
+                                                                       experience with PO design and implementation, which reduced
+                                                                       the risk of systematic bias. Since the readability of POs is not
+DeepSeek (12), indicating a slightly higher tendency towards           an objective of this study, disagreements related to naming
+semantic inconsistencies in method identification. Finally,            conventions do not affect our findings and are therefore not
+DeepSeek showed a higher number of missing implementations             considered problematic.
+(8 compared to GPT-4o’s 2), suggesting that it occasionally               Since the ground-truth POs represent one of multiple possible
+omits parts of the expected method logic.                              valid designs, structurally different yet functionally correct
+   Figure 3 shows the overall element recognition rate com-            generations may be classified as deviations. We mitigated this
+parison across all applications for both LLMs. Similar to the          by reviewing extra elements manually; several were found
+accuracy results, DeepSeek outperformed GPT-4o by achieving            to implement valid, complementary interactions. Hence, our
+higher element recognition rate values in three out of five            reported accuracy figures should be interpreted as a conservative
+applications (Bludit, KanBoard and ExpressCart). In contrast,          lower bound.
+GPT-4o performed slightly better than DeepSeek on MediaWiki               Another potential threat to validity is data leakage from the
+and PrestaShop. In particular, the element recognition rate            pre-training of LLMs. Since LLMs are trained on extensive
+achieved for ExpressCart was significantly higher than for the         public data, some code structures or PO patterns used in
+other applications. In this particular application, DeepSeek           our study may already exist in their training corpus. In such
+achieved 94% element recognition Rate while GPT-4o reached             cases, models might reproduce patterns they have seen before
+90%. They performed both significantly better than the average         rather than generate novel solutions, potentially leading to an
+element recognition Rate which was reported to be 73.4%                overestimation of their actual ability to automate PO generation
+across all applications. GPT-4o and DeepSeek showed the                in unseen applications. As the exact training data are unknown,
+lowest performance in PrestaShop, with element recognition             this remains a potential threat to our study’s validity.
+rate values of 64% and 61.2% respectively. On the other                   2) External Validity: The experiments were conducted using
+hand, GPT-4o and DeepSeek performed best in ExpressCart                only two LLMs due to local processing limitations constraints
+application, reaching 90% and 94% element recognition rate.            and the inability of smaller open-source models to complete
+   It is important to emphasize that all POs produced by both          the task. Consequently, our study focused on GPT-4o and
+LLMs exhibit proper class naming conventions, syntactically            DeepSeek, accessed via their APIs. While both are state-of-the-
+correct Java code with all necessary imports, and correctly            art models, their performance may not represent all existing
+defined constructors.                                                  LLMs, whose results can vary based on training data and
+                                                                       architecture. Therefore, other models might outperform them.
+ RQ3 (Issue categories): The main difficulties arise in                   The performance of LLMs in automating PO creation
+ identifying method return types, with most errors due to              strongly depends on the provided prompt. We observed that
+ missing return types (often defaulting to void) or methods            both keyword choice and input structure significantly affected
+ that should return the same PO to enable chaining; the two            the output. Although we explored several configurations to
+ LLMs behave similarly in this respect.                                optimize results, many other prompting strategies remain
+                                                                       untested. These unexplored alternatives could yield better
+                                                                       performance, making the limited set of prompts evaluated
+D. Threats to Validity
+                                                                       a potential threat to the validity of our work.
+   Although the experiments yielded promising results, it is              3) Conclusion Validity: Conclusion validity may be affected
+important to review potential threats to validity in order to          by the small number of LLMs and applications tested. The
+correctly interpret the findings. These threats are discussed in       observed differences between GPT-4o and DeepSeek might
+the section below.                                                     be influenced by model-specific biases or the characteristics
+
+
+
+                                                                   8
+of the selected benchmarks rather than general trends. As a                 Although DeepSeek tended to generate a larger number of
+result, while the findings provide valuable insights into LLM            extra elements compared to GPT-4o, it is not yet clear whether
+performance on PO generation, they should be interpreted as              these additions are truly beneficial for testing. In this study,
+indicative rather than conclusive. When we began the study, we           we manually examined the extra methods by reviewing each
+expected LLMs to struggle particularly with determining the              PO individually. Many of them appeared to be reasonable and
+correct return type. Unlike simple element classification, this          aligned with the basic functionality of the pages. However, to
+requires understanding an element’s role within the application          properly assess their practical value, more comprehensive test
+flow, especially for navigational components that trigger page           suites would be required, built upon POs that extend beyond
+transitions. With only a single HTML file as input, the model            core functionality to capture a broader range of behaviors
+must infer the correct target PO without access to the broader           and interactions. The contribution of these extra elements
+context, such as routing logic or related POs. A central                 to functional coverage and fault detection remains an open
+question in our evaluation is whether LLMs can generalize                question and should be investigated in future work.
+these relationships from isolated HTML snapshots. In large               Open Challenges in Structural Reasoning and Navigation
+applications, it is not feasible to include the full codebase in a       Inference. Both models exhibited similar challenges, partic-
+single prompt due to context limitations, making it essential            ularly in correctly inferring the return types of navigation
+to assess how well LLMs perform under partial access to the              methods. This suggests that relying solely on static HTML
+web app. Understanding these limitations is key to judging               and task instructions within a zero-shot prompting setup limits
+their scalability and practical use, but is left for future work.        the models’ ability to infer inter-object relationships. Without
+                                                                         access to dynamic behaviors, such as user flows or page
+                        V. D ISCUSSION                                   transitions, LLMs struggle to distinguish actions that lead
+   The results obtained from our empirical study on the effec-           to new pages from those that remain within the same view.
+tiveness of LLMs in automating page object (PO) generation               As a result, incorrect assumptions about method return types
+indicate that ChatGPT-4o and DeepSeek perform comparably                 frequently caused inconsistencies between the generated POs
+well. Both models achieved similar levels of accuracy and                and the ground truth.
+element recognition rates in the generated POs. Our study                   This limitation is especially evident in the naming of return
+establishes an initial benchmark for automated PO generation             types for navigational methods. In some cases LLMs were not
+with LLMs. While accuracy remains moderate, the consis-                  able to identify that the method should navigate to another page,
+tency of syntactic correctness and high element recognition              and instead they generated those methods with void return
+demonstrate tangible progress toward replacing template-based            types. In some other cases, they recognized that a navigational
+approaches with semantic generation. The following section               action exists and attempt to redirect to another PO class. To
+discusses these findings, along with their implications.                 be able to accurately define these methods, they must infer
+Comparison of General-Purpose and Code-Oriented LLMs.                    the target PO class name solely based on cues from the given
+By employing GPT-4o and DeepSeek in five distinct applica-               HTML file, such as link text or attribute values. If the provided
+tions, it can be concluded that LLMs are capable of generating           HTML contains vague or non-descriptive link names, the model
+effective POs. In most cases, the generated POs successfully             can be misled, resulting in incorrect or overly generic class
+captured the majority of GUI elements necessary for testing              names that do not correspond to the actual ones. Even in
+the application’s functionality, with Element Recognition Rate           cases where LLMs managed to produce contextually close
+values frequently exceeding 70%.                                         and reasonable naming, there were cases in which the LLM
+   In majority of the cases DeepSeek showed better perfor-               failed to exactly match the expected class name. This most
+mance in both accuracy and element recognition comparisons.              likely occurs due to subtle naming conventions or nuances that
+However, usually there was not a large difference between                LLMs could not infer without awareness of the broader web
+two LLMs. Across all applications, DeepSeek demonstrated a               app context.
+tendency to produce more extensive POs than GPT-4o, incor-                  On the other hand, in cases where the LLMs successfully
+porating a greater number of elements and methods. Another               generated entirely correct navigational methods, the links within
+characteristic observed in DeepSeek was to generate some                 the HTML files were typically named almost identically to
+methods only with the signature but without implementation,              the target PO class names. This suggests that such naming
+which also seemed different than GPT-4o.                                 consistency served as the primary cue the models relied upon
+   It is important to point out that, in this research we employed       to infer the correct PO naming. Consequently, the structure
+DeepSeek Coder [37], which is a variant of the DeepSeek                  and semantics of the HTML input files play a crucial role
+model. This model has been fine-tuned and optimized for                  in determining model performance. Despite these shared
+software development and code generation tasks. Thus, using it           shortcomings, each LLM exhibited distinct coding behaviors
+likely contributed to its stronger performance in both accuracy          and stylistic variations in PO generation. These differences
+and Element Recognition Rate. Consequently, the choice of this           are likely attributable to disparities in their underlying training
+particular model may have strengthened DeepSeek’s tendency               data, architectural biases, and prompt interpretation strategies.
+to produce more comprehensive POs compared to the more                   Overall, our findings highlight the limitations of zero-shot
+general-purpose LLM GPT-4o.                                              prompting; more sophisticated prompting techniques, such as
+
+
+
+                                                                     9
+chain-of-thought reasoning or few-shot examples, may signifi-       Subsequently, Leotta et al. [43] further investigated the
+cantly influence outcomes and warrant further investigation in impact of applying the PO pattern on the maintainability
+future work.                                                     of automated test suites. Their empirical results show that
+Impact of Input Size and Context Limitations. The compar- encapsulating GUI interaction logic within PO classes reduces
+ison between prompted HTML files and the completeness of overall maintenance effort by decoupling test scripts from
+the generated POs shows that lengthy HTML pages, even if structural changes in the application. This study reinforces the
+not structurally complex, often challenge LLMs in capturing practical value of the PO pattern and underlines the importance
+the full contextual relationships needed for complete page of adopting structured design principles in test automation.
+representations. For instance, in pages containing sidebars or      More recently, the same authors conducted controlled
+menus with many similar links, the models frequently generated experiments [8] to compare test suites developed with and
+only a subset of elements, omitting others and thus lowering without the PO pattern. Their analysis considered both the
+overall PO accuracy.                                             initial design effort and the long-term benefits associated with
+   This behavior can be attributed to several factors. First, POs. The results show that, although introducing POs entails
+when the combined size of the prompt and output nears the a significant upfront cost, a clear break-even point emerges as
+model’s context window limit, generation may be truncated the test suite scales: when the suite grows to approximately ten
+before all elements are produced—particularly for long pages times its original size, the use of POs becomes substantially
+with repetitive structures. Second, transformer-based models more advantageous in terms of maintainability and robustness.
+naturally avoid excessive repetition, often generating a few Overall, these studies highlight that while POs require greater
+representative instances of recurring patterns rather than initial effort, they provide considerable benefits in scalability
+reproducing every occurrence explicitly.                         and maintainability for large and evolving test suites.
+   Additionally, the phrasing of the prompt and the imposed         To the best of our knowledge, only two studies have ad-
+generation constraints likely influenced these outcomes. If dressed the automatic generation of POs. The first, Apogen [10],
+the instructions did not explicitly require exhaustive element automates PO creation by combining dynamic crawling, clus-
+coverage or the token budget was insufficient, the model tering, and static analysis. It reverse-engineers the application
+may have prioritized conveying the overall structure over under test, groups similar pages, builds a state-based model, and
+full completeness. This behavior highlights the importance converts it into Java Page Objects following the Selenium Page
+of our preprocessing step, where HTML files were cleaned by Factory pattern. Unlike approaches that generate only class
+removing headers and scripts, enabling the model to focus on skeletons, Apogen produces complete POs with WebElement
+relevant content and reducing premature truncation.              instances and methods for navigation and form submission, but
+   Across the five applications from different domains, we does not employ LLMs. The second work [44] introduces a
+found no consistent correlation between application type and prototype for automatically generating POs and PO-based test
+the accuracy or element recognition rate achieved by the suites through feedback-directed random testing. It decouples
+LLMs. This indicates that structural complexity, repetition, test code from web pages by generating POs and was evaluated
+and prompt design had greater impact on performance than on seven real-world applications, achieving code coverage be-
+domain characteristics. A larger and more domain-balanced tween 23.3% and 90.8% while revealing numerous HTML and
+dataset would be needed to confirm this observation. Future runtime errors. Despite their promise, existing approaches [10],
+work should also explore iterative or conversational refinement, [44] remain research prototypes that often require manual
+allowing the LLM to incrementally adjust generated POs based correction of generated abstractions. In contrast, this work is
+on developer feedback.                                           the first to explore the use of LLMs for PO generation, aiming
+                                                                 to improve automation and quality while reducing the need for
+                      VI. R ELATED WORK                          human intervention.
+   Several works in the literature, including recent ones based
+on LLMs, have explored various aspects of web testing                       VII. C ONCLUSIONS AND F UTURE W ORK
+automation [38], [39], [35], [40], [41], [42]. However, when        This paper investigates the potential of LLMs to automate
+it comes to POs, most studies primarily focus on assessing Page Object (PO) creation, an essential yet time-consuming
+their effectiveness or maintainability [8], [43], while only a task in web testing. By comparing LLM-generated POs with
+very limited number of approaches have explicitly addressed manually developed ones across multiple applications, we
+the problem of automatically generating them [10], [44].         assessed their accuracy and element recognition rate against
+   The empirical study conducted by Leotta et al. [18] indicates a curated ground truth. Our findings show that models such
+that test suites developed using a programmable approach (i.e., as GPT-4o and DeepSeek Coder can substantially reduce the
+Selenium WebDriver) require higher initial development effort manual effort required for PO development, though challenges
+but results in lower maintenance effort compared to those persist in handling return types, navigation methods, and extra-
+created with a capture-and-replay approach (i.e., Selenium neous element generation. Notably, some of these additional
+IDE). This outcome can be largely attributed to the adoption of methods may enhance GUI coverage, indicating that LLMs
+the PO design pattern, which effectively decouples test logic can capture meaningful patterns overlooked in manual design
+from application logic.                                          and potentially support test suite augmentation.
+
+
+
+                                                               10
+   Future work will explore enhanced prompting strategies that                      [20] M. Neelapu, “Enhancing test automation with an advanced page object
+explicitly encode page relationships, evaluate additional open-                          model for scalable and maintainable web applications,” International
+                                                                                         Journal of Leading Research Publication (IJLRP), vol. 5, no. 11, 2024.
+source models, extend this baseline study with few-shot and                         [21] C. Wohlin, P. Runeson, M. Höst, M. Ohlsson, B. Regnell, and A. Wesslén,
+chain-of-thought prompting to assess contextual improvements,                            Experimentation in Software Engineering - An Introduction. Kluwer
+and using visual information [13], [7] and multi-modal LLMs.                             Academic Publishers, 2000.
+                                                                                    [22] D. Olianas, M. Leotta, and F. Ricca, “BEWT: A Benchmark for End-
+In addition, we plan to involve practitioners in user studies                            to-End Web Testing,” in Proceedings of the 51st Euromicro Conference
+to provide more realistic insights into code quality [45], [46],                         Series on Software Engineering and Advanced Applications (SEAA 2025),
+[47], the usability of LLM-generated artifacts [48], the required                        Lecture Notes in Computer Science, Springer, Sept. 2025.
+                                                                                    [23] B. Team, “Bludit — flat-file cms.” https://www.bludit.com, 2024. Version
+effort for adjustments [8], and their actual impact on coverage                          3.13.1.
+and productivity.                                                                   [24] M. Vautin, “Expresscart: A node.js shopping cart.” https://github.com/
+                                                                                         mrvautin/expressCart, 2024. Version 1.19.
+                              R EFERENCES                                           [25] F. Guillot, “Kanboard: Project management software.” https://github.com/
+ [1] F. Ricca, M. Leotta, and A. Stocco, “Three Open Problems in the Context             kanboard/kanboard, 2024. Version 1.2.15.
+     of E2E Web Testing and a Vision: NEONATE,” Advances in Computers,              [26] Wikipedia contributors, “Wikipedia, The Free Encyclopedia.” https://
+     vol. 113, jan 2019.                                                                 www.wikipedia.org/, 2025. Accessed: 2025-05-27.
+ [2] M. Leotta, D. Clerissi, F. Ricca, and P. Tonella, “Approaches and tools        [27] W. Foundation, “Mediawiki.” https://www.mediawiki.org/wiki/
+     for automated end-to-end web testing,” Advances in Computers, vol. 101,             MediaWiki, 2024. Version 1.40.0.
+     2016.                                                                          [28] P. Contributors, “Prestashop: Open source e-commerce solution.” https:
+ [3] Selenium Project, “Selenium.” https://www.selenium.dev/, 2025. Ac-                  //www.prestashop-project.org/, 2024. Version 1.7.8.5.
+     cessed: 2025-05-21.                                                            [29] F. Huq, J. P. Bigham, and N. Martelaro, “"what’s important here?":
+ [4] Cypress.io, “Cypress.” https://www.cypress.io/, 2025. Accessed: 2025-               Opportunities and challenges of using llms in retrieving information
+     05-21.                                                                              from web interfaces.” https://arxiv.org/abs/2312.06147, 2023. Accepted
+ [5] Microsoft, “Playwright.” https://playwright.dev/, 2020. Accessed: 2025-             at NeurIPS 2023 Workshop on Robustness of Zero/Few-Shot Learning
+     05-21.                                                                              in Foundation Models (R0-FoMo).
+ [6] M. Leotta, A. Stocco, F. Ricca, and P. Tonella, “ROBULA+: An algorithm         [30] N. F. Liu, K. Lin, J. Hewitt, A. Paranjape, M. Bevilacqua, F. Petroni, and
+     for generating robust XPath locators for web testing,” Journal of Software:         P. Liang, “Lost in the middle: How language models use long contexts,”
+     Evolution and Process, vol. 28, no. 3, 2016.                                        Trans. Assoc. Comput. Linguistics, vol. 12, 2024.
+ [7] A. Stocco, R. Yandrapally, and A. Mesbah, “Visual web test repair,”            [31] OpenAI,       “Gpt-4o      system      card.”   https://openai.com/index/
+     in Proceedings of the 26th ACM Joint European Software Engineering                  gpt-4o-system-card/, 2024. Accessed: 2025-05-25.
+     Conference and Symposium on the Foundations of Software Engineering,           [32] DeepSeek-AI, “Deepseek llm: Scaling open-source language models with
+     ESEC/FSE 2018, ACM, nov 2018.                                                       longtermism,” arXiv preprint arXiv:2401.02954, 2024.
+ [8] M. Leotta, M. Biagiola, F. Ricca, M. Ceccato, and P. Tonella, “A family of
+                                                                                    [33] S. Ouyang, J. M. Zhang, M. Harman, and M. Wang, “An empirical
+     experiments to assess the impact of page object pattern in web test suite
+                                                                                         study of the non-determinism of chatgpt in code generation,” ACM Trans.
+     development,” in Proceedings of the 13th IEEE International Conference
+                                                                                         Softw. Eng. Methodol., vol. 34, no. 2, 2025.
+     on Software Testing, Verification and Validation (ICST), IEEE, 2020.
+ [9] B. Yu, L. Ma, and C. Zhang, “Incremental web application testing using         [34] T. B. Brown, B. Mann, N. Ryder, M. Subbiah, J. Kaplan, P. Dhariwal,
+     page object,” in 2015 Third IEEE Workshop on Hot Topics in Web                      A. Neelakantan, P. Shyam, G. Sastry, A. Askell, S. Agarwal, A. Herbert-
+     Systems and Technologies (HotWeb), 2015.                                            Voss, G. Krueger, T. Henighan, R. Child, A. Ramesh, D. M. Ziegler,
+                                                                                         J. Wu, C. Winter, C. Hesse, M. Chen, E. Sigler, M. Litwin, S. Gray,
+[10] A. Stocco, M. Leotta, F. Ricca, and P. Tonella, “APOGEN: Automatic
+     page object generator for web testing,” Software Quality Journal, vol. 25,          B. Chess, J. Clark, C. Berner, S. McCandlish, A. Radford, I. Sutskever,
+     no. 3, 2016.                                                                        and D. Amodei, “Language models are few-shot learners,” in Advances
+[11] A. Stocco, M. Leotta, F. Ricca, and P. Tonella, “Clustering-aided                   in Neural Information Processing Systems 33: Annual Conference on
+     page object generation for web testing,” in Proceedings of the 16th                 Neural Information Processing Systems 2020, NeurIPS 2020, December
+     International Conference on Web Engineering (ICWE 2016), vol. 9671                  6-12, 2020, virtual (H. Larochelle, M. Ranzato, R. Hadsell, M. Balcan,
+     of Lecture Notes in Computer Science, Springer, 2016.                               and H. Lin, eds.), 2020.
+[12] A. Stocco, M. Leotta, F. Ricca, and P. Tonella, “Why creating web page         [35] M. Biagiola, A. Stocco, F. Ricca, and P. Tonella, “Dependency-aware
+     objects manually if it can be done automatically?,” in Proceedings of               web test generation,” in Proceedings of the 13th IEEE International
+     the 10th IEEE/ACM International Workshop on Automation of Software                  Conference on Software Testing, Verification and Validation, ICST ’20,
+     Test (AST 2015), IEEE, 2015.                                                        IEEE, oct 2020.
+[13] M. Bajammal, A. Stocco, D. Mazinanian, and A. Mesbah, “A Survey                [36] M. Biagiola, F. Ricca, and P. Tonella, “Search based path and input
+     on the Use of Computer Vision to Improve Software Engineering Tasks,”               data generation for web application testing,” in Search Based Software
+     IEEE Transactions on Software Engineering, vol. 48, oct 2020.                       Engineering - 9th International Symposium, SSBSE 2017, Paderborn,
+[14] R. Yandrapally, A. Stocco, and A. Mesbah, “Near-duplicate detection                 Germany, September 9-11, 2017, Proceedings (T. Menzies and J. Petke,
+     in web app model inference,” in Proceedings of the 42nd International               eds.), vol. 10452 of Lecture Notes in Computer Science, Springer, 2017.
+     Conference on Software Engineering, ICSE ’20, ACM, jun 2020.                   [37] D. Guo, Q. Zhu, D. Yang, Z. Xie, K. Dong, W. Zhang, G. Chen, X. Bi,
+[15] “Replication         Package.”         https://github.com/ast-fortiss-tum/          Y. Wu, Y. K. Li, F. Luo, Y. Xiong, and W. Liang, “Deepseek-coder:
+     page-objects-generation-with-llms, 2026.                                            When the large language model meets programming – the rise of code
+[16] M. Fowler, “Pageobject.” http://martinfowler.com/bliki/PageObject.html,             intelligence,” 2024.
+     2013.                                                                          [38] T. Li, C. Cui, R. Huang, D. Towey, and L. Ma, “Large language models
+[17] M. Leotta, D. Clerissi, F. Ricca, and C. Spadaro, “Improving test suites            for automated web-form-test generation: An empirical study,” ACM Trans.
+     maintainability with the page object pattern: An industrial case study,”            Softw. Eng. Methodol., May 2025. Just Accepted.
+     in Proceedings of the 6th International Conference on Software Testing,        [39] Y. Sasazawa and Y. Sogawa, “Web page classification using llms for
+     Verification and Validation Workshops (ICSTW 2013), IEEE, 2013.                     crawling support,” 2025.
+[18] M. Leotta, D. Clerissi, F. Ricca, and P. Tonella, “Capture-replay vs.          [40] M. Biagiola, A. Stocco, F. Ricca, and P. Tonella, “Diversity-based web
+     programmable web testing: An empirical assessment during test case                  test generation,” in Proceedings of the 27th ACM Joint European Software
+     evolution,” in Proceedings of the 20th Working Conference on Reverse                Engineering Conference and Symposium on the Foundations of Software
+     Engineering (WCRE 2013), IEEE, 2013.                                                Engineering, ESEC/FSE 2019, ACM, aug 2019.
+[19] M. Leotta, B. Garcia, F. Ricca, and J. Whitehead, “Challenges of end-to-       [41] M. Biagiola, A. Stocco, A. Mesbah, F. Ricca, and P. Tonella, “Web test
+     end testing with selenium webdriver and how to face them: A survey,” in             dependency detection,” in Proceedings of the 27th ACM Joint European
+     Proceedings of the 16th IEEE Conference on Software Testing, Verification           Software Engineering Conference and Symposium on the Foundations of
+     and Validation (ICST), IEEE, 2023.                                                  Software Engineering, ESEC/FSE 2019, ACM, aug 2019.
+
+
+
+
+                                                                               11
+[42] K. Kanaththage, L. L. L. Starace, M. Biagiola, P. Tonella, and A. Stocco,
+     “Neural embeddings for web testing,” in Proceedings of the 19th IEEE
+     International Conference on Software Testing, Verification and Validation,
+     ICST ’26, p. 12 pages, IEEE, 2026.
+[43] M. Leotta, D. Clerissi, F. Ricca, and P. Tonella, “Improving test suites
+     maintainability with the page object pattern: An industrial case study,” in
+     Proceedings of the 31st Annual ACM Symposium on Applied Computing
+     (SAC), ACM, 2016.
+[44] B. Yu, L. Ma, and C. Zhang, “Incremental web application testing using
+     page object,” in 2015 Third IEEE Workshop on Hot Topics in Web
+     Systems and Technologies (HotWeb), 2015.
+[45] F. Ricca, A. Marchetto, and A. Stocco, “Ai-based test automation: A
+     grey literature analysis,” in Proceedings of the 14th IEEE International
+     Conference on Software Testing, Verification and Validation Workshops,
+     ICSTW 2021, Springer, 2021. [Best Presentation Award].
+[46] F. Ricca and A. Stocco, “Web test automation: Insights from the grey
+     literature,” in Proceedings of the 47th International Conference on
+     Current Trends in Theory and Practice of Computer Science, SOFSEM
+     2021, Springer, 2021. [Best Paper Nominee].
+[47] F. Ricca, A. Marchetto, and A. Stocco, “A retrospective analysis of
+     grey literature for ai-supported test automation,” in Proceedings of
+     the 16th International Conference on the Quality of Information and
+     Communications Technology, QUATIC 2023, Springer, 2023.
+[48] F. Ricca, A. Marchetto, and A. Stocco, “A multi-year grey literature
+     review on ai-assisted test automation,” Information and Software Tech-
+     nology, 2025.
+
+
+
+
+                                                                               12
+

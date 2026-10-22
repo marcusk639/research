@@ -1,0 +1,445 @@
+__HTTP 200__
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Features - testRigor Test Automation Tool 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+	
+ 
+
+ 
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+			 
+			 
+			 
+			
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+	 
+	 
+	 
+
+ 
+
+ 
+ 
+ 
+ 
+	
+ 
+	Explore partnership opportunities with testRigor    Learn More 
+ 
+
+ 
+	 
+		 
+			 
+				 
+			 
+
+			 
+				 
+				 Why testRigor? 
+ AI Testing 
+ 
+	 Autonomous Branch Validation 
+	 How to Generate Code that Works with Claude Code /goal Feature 
+	 AI In Software Testing 
+	 Generative AI in Software Testing 
+	 Prompt Engineering in Software Testing 
+	 AI Agents in Software Testing 
+	 AI Features Testing 
+	 AI-Based Self-Healing 
+	 What Everyone Gets Wrong About AI Code Generation 
+	 How Does It All Work? 
+ 
+ 
+ Features 
+ 
+	 Top Features 
+	 AI Features Testing 
+	 No Code / Codeless Testing 
+	 Web Testing 
+	 Mobile Testing 
+	 Desktop Testing 
+	 Mainframe Testing 
+	 Accessibility Testing 
+	 21 CFR Part 11 Compliance 
+ 
+ 
+ Resources 
+ 
+	 Documentation 
+	 Generative AI-Based Testing Certification 
+	 Integrations 
+	 Whitepaper 
+	 Test Automation Blueprint 
+	 Benefits 
+	 Blog 
+	 FAQ 
+	 Tutorials 
+	 Events 
+	 Become a Partner 
+	 View Recent Public Tests 
+	 Training 
+	 What Everyone Gets Wrong About AI Code Generation 
+ 
+ 
+ CRM / ERP Testing 
+ 
+	 Infor Testing 
+	 Microsoft Dynamics CRM Testing 
+	 Salesforce Testing 
+	 SAP ERP Testing 
+	 ServiceNow Testing 
+	 Workday Testing 
+ 
+ 
+ Case Studies 
+ Login 
+ Sign Up 
+ Request a Demo 
+ 
+ 			 
+		 
+
+	 
+		 
+
+							
+   
+     
+
+ testRigor  Features 
+
+ testRigor is a way to create tests using free flowing plain English, offering two main benefits: 
+ 
+ Anyone (even without coding skills) can build test automation 50 times faster than with Selenium using Generative AI. Inspirational video  here  and  Getting Started Guide here . 
+ Our customers spend 200 times less time on test maintenance than Selenium users, especially for a rapidly changing products. This is because tests are created from the end-user’s perspective, making the adaptation to new functionalities as easy as find and replace. 
+ 
+ The top features of testRigor are: 
+ 
+ Generate tests based on your own documented test cases using  Generative AI for Testing . Utilizes  parsed plain English  to enable anyone to correct/build/understand tests purely from an end-user’s point of view, reducing reliance on locators. Learn more in  this video . 
+ You can  Import test cases for execution from TestRail . 
+ Native desktop testing, see a demo video  here . 
+ Supports web testing on desktop and mobile across 3,000+ combination of browsers and devices on multiple operating systems, for instance, Internet Explorer on Windows and Safari on Mac and iOS. 
+ Facilitates  mobile testing , including testing on physical devices through our partners, as well as testing hybrid apps. 
+ Provides an easy method to test emails, with renderings to see how they function. Users can easily click buttons in the email and extract codes. See a  video  for demonstration. 
+ Supports 2FA login, including login via email,  text messages , and  Google Authenticator 
+ Allows  API testing  and offers  mocking of API calls 
+ Conducts data-driven testing with datasets support, including data from CSVs. View a  video  for details. 
+ Validates  downloaded files , including PDFs, CSVs, Microsoft Word, Microsoft Excel, and more. See an example  here. 
+ Allows DB access 
+ Handles texts in images  using OCR  and can identify buttons/texts through Machine-Learning-based  image  classification. 
+ Facilitates testing of Chrome Extensions. 
+ Allows to easily  generate unique test data  based on specified format or Regex 
+ Supports  typing  and  copy/pasting 
+ Enables easy interaction with  tables  and forms 
+ Manages  multiple tabs  easily 
+ Runs  multiple browsers and devices  simultaneously for different sessions 
+ Works with  geolocations , simulates “moving” the device 
+ Compares screen parts  based on ID/location with previous execution. Here’s an  example. 
+ Offers built-in  login support . View an  example  here. 
+ Creates a  PDF containing screenshots  of all pages on a website 
+ Executes JavaScript in the browser  under test 
+ Provides an ability to group your steps into functions ( Reusable Rules ) with arbitrary names 
+ Provides variable ( Stored Values ) support that can be overridden/passed by an API when triggering the test suite from CI. Supports multiple pre-defined variables such as “todayDayOfMonth”. 
+ Executes some sections  conditionally  or  until  a certain condition is met 
+ Enables the use of JavaScript on top of testRigor 
+ Provides  visual testing  capabilities 
+ Allows to  upload files  in different ways 
+ Allows to create files based on a template before uploading 
+ Allows to conduct  phone calls/phone call validations  and  SMS messages/SMS message validations 
+ Offers testing  audio playback and recording 
+ 
+ Allows to verify that the  video is playing,  for example: 
+ check that video "my_video" is playing 
+ 
+ Allows to access and work with  cookies/local storage/session storage/user agent 
+ Allows to have all possible steps, including browser steps, mobile app steps, API calls, text messages etc., within one test 
+ Allows recording of executed tests as videos 
+ Can monitor/schedule execution with PagerDuty integration. See a video  here 
+ Allows to post test results to any test case management system and to Slack, MS Teams, Emails, etc. 
+ Supports iframes/shadow DOMs/hybrid apps, etc., transparently. See a video  here 
+ Allows to generate tests based on how your users use your application in your production (Behavior-Driven Test Generation) 
+ Provides load test capability using the same end-to-end tests 
+ Carries out  accessibility testing . Watch a video  here. 
+ Integrates  with:
+ 
+ All test case management systems, including  TestRail ,  Zephyr ,  XRay , etc. 
+ Ticketing systems like  Jira , Pivotal Tracker, Azure DevOps, etc. 
+ All CI platforms, including Jenkins, CircleCI, Azure DevOps, etc. 
+ All infrastructure providers, including  LambdaTest , BrowserStack, SauceLabs, etc. 
+ PagerDuty 
+ 
+ 
+ 
+ 
+ And many, many more. New features are being released weekly. 
+ Sign up for testRigor or schedule a call with our sales team here: 
+ 
+ Start testRigor Free 
+ Request a Demo 
+ 
+ 
+ 
+ 
+   			
+		 
+	 
+
+ 
+		 
+			 
+				 
+					 
+						 
+					 
+					 
+						Automate tests with plain English using Generative AI. Reduce QA overhead, increase coverage, efficiency and scalability.
+					 
+					 
+						 
+							 
+						 
+						 
+							 
+						 
+						 
+							 
+						 
+						 
+							 
+						 
+						 
+							 
+						 
+						 
+							 
+						 
+						 
+							 
+						 
+						 
+							 
+						 
+					 
+					 
+						  Get Our Newsletter 
+						 We will send monthly testRigor updates on new features, upcoming events and links to recordings. 
+						 
+						
+						 
+							 Email* 
+							 Email* 
+							 Join 
+						 
+
+						 
+						 
+						
+					 
+				 
+				 
+				 
+					 
+						 
+							 Product 
+							 Pricing 
+							 Why testRigor 
+							 Features 
+							 Benefits 
+               Autonomous Branch Validation 
+							 How to Generate Code that Works with Claude Code /goal Feature 
+							 AI in Software Testing 
+							 Generative AI in Software Testing 
+							 Prompt Engineering in Software Testing 
+							 AI Agents in Software Testing 
+							 AI Features Testing 
+							 AI-Based Self-Healing 
+							 How Does It All Work? 
+               testRigor vs Playwright + Claude Code 
+							 Selenium Alternative 
+							 Appium Alternative 
+							 Cypress Alternative 
+							 Sign Up 
+							 Login 
+							 Public Tests 
+						 
+						 
+							 Company 
+							 About 
+							 Mission 
+							 Careers 
+							 Contact Us 
+							 Become Partner 
+							 Blog 
+							 Security 
+							 DevSecOps 
+							 Vulnerability Management 
+							 ISO/IEC 27001:2022 Certification 
+							 HIPAA Compliance 
+							 SOC 2 Type II Report on Controls 
+						 
+						 
+							 Resources & Learning 
+							 testRigor Certification: AI-driven Test Automation 
+							 FAQ 
+							 Documentation 
+							 Language Documentation 
+							 How-to Articles 
+							 Releases 
+							 Events 
+							 Software Testing 
+							 End-To-End Testing 
+							 Framework Testing 
+							 Mainframe Testing 
+							 ERP Testing 
+							 CRM Testing 
+							 Selenium self-healing 
+							 Common Sense in Test Automation 
+							 Command Line 
+							 How to Utilise testRigor’s MCP Server 
+							 Write, Run & Maintain testRigor Tests with Claude Code 
+							 ROI of Nocode Test Automation Calculator 
+							 Test Automation Blueprint 
+							 Training 
+						 
+					 
+				 
+			 
+			 
+				 
+					 
+						 Terms and conditions Privacy policy Cookie policy 
+						 Do Not Sell or Share My Personal Information Trust Center 
+					 
+					 
+   
+   
+   
+   
+ 
+					 
+						 © 2026 testRigor. All rights reserved. 
+					 
+				 
+			 
+		 
+
+		 
+
+	 
+ 
+
+ 
+ 
+ 
+
+ 
+
+   
+
+ 
+   On our website, we utilize cookies to ensure that your browsing experience is tailored to your preferences and needs. By clicking "Accept," you agree to the use of all cookies.  Learn more . 
+   Cookie settings   ACCEPT 
+ 
+ 
+   
+     
+       
+       Privacy Overview 
+       This site utilizes cookies to enhance your browsing experience. Among these, essential cookies are stored on your browser as they are necessary for ... 
+       Read more 
+     
+     
+       
+          Strictly Necessary Cookies Always Enabled 
+         Essential cookies are crucial for the proper functioning and security of the website. 
+       
+
+       
+          Non-Necessary Enabled  
+         Cookies that are not essential for the website's functionality but are employed to gather additional data. You can choose to opt out by using this toggle switch. These cookies gather data for analytics and performance tracking purposes. 
+       
+
+       SAVE & ACCEPT 
+     
+   
+ 
+
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 

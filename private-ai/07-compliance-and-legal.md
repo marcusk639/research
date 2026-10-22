@@ -93,6 +93,7 @@ The Master Services Agreement, SOW and Data Processing Addendum are drafted with
 | Models             | Model-origin disclosure and a swap clause                                               |
 | Term               | 12 months, auto-renewing, 5% annual escalator                                           |
 | Industrial payment | 50% on start, 50% on acceptance                                                         |
+| Setup payment      | 50% at signing, 50% at acceptance (decision, Oct 20, 2026)                              |
 
 ## Insurance
 

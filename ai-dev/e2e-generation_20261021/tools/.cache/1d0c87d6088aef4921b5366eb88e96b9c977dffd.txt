@@ -1,0 +1,2872 @@
+__HTTP 200__
+
+
+
+
+
+
+
+
+
+ 
+ 
+   
+     
+     
+     
+     
+    
+
+     
+     
+     
+     
+       
+      
+         
+       
+     
+       Use Firestore emulator locally  |  Firestore in Native mode  |  Google Cloud Documentation 
+
+ 
+   
+   
+  
+    
+    
+    
+    
+    
+     
+    
+     
+    
+    
+
+    
+  
+
+     
+   
+  
+     
+  
+  
+     
+      
+      Skip to main content
+     
+     
+       
+         
+
+ 
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+   
+     
+       
+         
+         
+        
+ 
+
+   
+  
+   
+    
+     
+    
+     
+   
+  
+ 
+
+
+
+ 
+         
+           
+            
+              
+              
+   
+
+     
+      
+        
+           
+  
+     
+    Documentation
+  
+     
+    
+       
+    
+  
+   
+     
+      
+         close 
+      
+      
+         
+          
+             
+              
+                 Get Started 
+              
+              
+              
+             
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Get Started with Google Cloud
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Product List
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Customer Care
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+                 Featured Products 
+              
+              
+              
+             
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Agent Platform
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Apigee API Management
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      BigQuery
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Compute Engine
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud CDN
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Run
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Storage
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud SQL
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Gemini Enterprise
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Google Kubernetes Engine
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Looker
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+                 Cross-product Tools 
+              
+              
+              
+             
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Access and resources management
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Costs and usage management
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Infrastructure as code
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      SDK, languages, frameworks, and tools
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+                 Technology Areas 
+              
+              
+              
+             
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      AI and ML
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Application development
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Application hosting
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Compute
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Data analytics and pipelines
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Databases
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Distributed, hybrid, and multicloud
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Industry solutions
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Migration
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Networking
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Observability and monitoring
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Security
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Storage
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+     
+
+   
+
+            
+            
+          
+ 
+   
+     
+       
+       
+         
+           
+            
+               
+            
+           
+           
+             / 
+           
+       
+     
+   
+   
+ 
+
+         
+
+        
+
+  
+
+  
+     
+  Console
+ 
+  
+
+  
+
+   
+
+  
+ 
+   
+    
+    
+     
+       English 
+     
+    
+     
+       Deutsch 
+     
+    
+     
+       Español 
+     
+    
+     
+       Español – América Latina 
+     
+    
+     
+       Français 
+     
+    
+     
+       Indonesia 
+     
+    
+     
+       Italiano 
+     
+    
+     
+       Português 
+     
+    
+     
+       Português – Brasil 
+     
+    
+     
+       עברית 
+     
+    
+     
+       中文 – 简体 
+     
+    
+     
+       中文 – 繁體 
+     
+    
+     
+       日本語 
+     
+    
+     
+       한국어 
+     
+    
+   
+ 
+
+
+
+
+        
+           
+            
+              
+               Sign in 
+            
+           
+        
+        
+        
+       
+     
+   
+
+
+
+   
+     
+      
+        
+           
+             
+              
+                
+                 
+                  
+                    
+  
+   
+    
+   
+  
+     
+      
+       
+      
+       
+     
+  
+   
+  
+   
+  
+
+                  
+                  
+                  
+                     
+  
+   
+    
+    
+    
+      
+        
+   
+    
+          Firestore in Native mode
+        
+   
+  
+      
+    
+   
+  
+ 
+                 
+                
+              
+              
+             
+            
+               
+  
+
+  
+   Start free 
+
+ 
+            
+           
+          
+        
+      
+      
+         
+          
+          
+            
+            
+   
+
+     
+      
+        
+           
+            
+     
+    Overview
+  
+     
+    
+  
+           
+        
+      
+        
+           
+            
+     
+    Guides
+  
+     
+    
+  
+           
+        
+      
+        
+           
+            
+     
+    Reference
+  
+     
+    
+  
+           
+        
+      
+        
+           
+            
+     
+    Samples
+  
+     
+    
+  
+           
+        
+      
+        
+           
+            
+     
+    Resources
+  
+     
+    
+  
+           
+        
+      
+     
+
+   
+
+          
+          
+         
+      
+     
+   
+
+ 
+
+
+
+  
+
+  
+ 
+         
+          
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+   
+   
+  
+   
+ 
+
+ 
+   
+     
+     
+     
+
+   
+  
+   
+    
+     
+    
+     
+   
+  
+ 
+
+
+ 
+   
+
+   
+     
+      
+         
+          
+             
+              
+  
+   
+  
+     
+      Documentation
+    
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+              
+                 
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Overview
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Guides
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Reference
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Samples
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Resources
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                 
+              
+             
+          
+          
+    
+    
+ 
+
+  
+   
+  
+     
+      Console
+    
+    
+  
+   
+  
+
+ 
+
+  
+          
+         
+      
+     
+    
+       
+        
+          
+           
+             
+         Discover 
+       
+
+   Product overview 
+
+   Editions overview 
+
+   Client library overview 
+
+   
+         Get started 
+       
+
+   Use a server client library 
+
+   Use a mobile or web client library 
+
+   
+         Create and manage 
+       
+
+   Create and manage databases 
+
+   Storage size calculations 
+
+   
+         Design 
+       
+
+   
+       
+         Design a data model 
+       Data model overview Structure data Supported data types 
+
+   
+       
+         Enterprise edition indexes 
+       Enterprise edition index overview Manage Enterprise edition indexes 
+
+   
+       
+         Standard edition indexes 
+       Standard edition index overview Manage standard edition indexes 
+
+   
+         Develop 
+       
+
+   
+       
+         Add data 
+       Add and update data with Core operations (all editions) Transactions and batched writes Data contention in transactions Support frequent counters on documents 
+
+   
+       
+         Query data 
+       Query interfaces overview 
+       
+         Query with Pipeline operations (Enterprise edition) 
+       Get data with Pipeline operations Perform joins with subqueries 
+       
+         Optimize query execution in Enterprise edition 
+       Identify queries to optimize Analyze query execution with Query Explain Query Explain report reference Optimize query execution 
+       
+         Query with Core operations (All editions) 
+       Get data Get real-time updates Order and limit data Query and filter data Query with range & inequality filters on multiple fields 
+       
+         Optimize Standard edition queries 
+       Optimize queries with multiple range & inequality filters Identify queries to optimize Analyze query execution with Query Explain Query Explain report reference Work with aggregation queries Paginate data with query cursors Summarize data with aggregation queries Enable offline data 
+
+   Use text search (Enterprise edition) 
+
+   Use geospatial queries (Enterprise edition) 
+
+   Modify data with Pipeline operations (Enterprise edition) 
+
+   
+       
+         Delete data 
+       Delete documents and fields Manage data retention with TTL policies 
+
+   
+       
+         Scale your apps 
+       
+       
+         Enterprise edition 
+       Understand reads and writes at scale 
+       
+         Standard edition 
+       Understand reads and writes at scale Understand real-time queries at scale Best practices for designing an app Shard documents for timestamp indexing 
+
+   Develop generative AI features 
+
+   Use the Firestore remote MCP server 
+
+   Best practices for securing agent interactions with MCP 
+
+   Use Firestore with agents 
+
+   Use Firestore emulator 
+
+   
+       
+         Manage Firestore with the console 
+       Use Firestore Studio for Standard edition 
+
+   Search with vector embeddings 
+
+   Firestore REST API 
+
+   Build a recommendation app 
+
+   Build LLM-powered applications using LangChain 
+
+   
+         Secure and control access 
+       
+
+   
+       
+         Secure your database 
+       Secure data for server clients Configure VPC Service Controls Create and manage tags Configure data locality with regional endpoints 
+
+   
+       
+         Secure data for mobile and web clients 
+       Get started with security rules Structure security rules Write conditions for security rules Security Rules for Pipeline operations (Enterprise edition) Securely querying data Control access per field Fix insecure rules Test security rules Secure data access for users and groups 
+
+   Server-side encryption 
+
+   
+       
+         Secure data with customer-managed encryption keys (CMEK) 
+       About CMEK Use CMEK 
+
+   Manage resources using custom constraints 
+
+   
+         Process data 
+       
+
+   
+       
+         Create event-driven architectures with Eventarc 
+       Overview Extend Firestore with Cloud Run functions 
+
+   Integrate with BigQuery 
+
+   Process data in bulk with Dataflow 
+
+   Delete data with a callable Cloud Function 
+
+   Use Firestore connector for Workflows 
+
+   Build presence in apps with Cloud Functions 
+
+   Extending Firestore with Cloud Functions (1st gen) 
+
+   Perform geo queries using Geohashes 
+
+   Bulk delete data 
+
+   
+         Disaster recovery 
+       
+
+   Plan disaster recovery 
+
+   
+       
+         Back up and restore data 
+       Create a backup schedule and restore data Perform an in-place restore 
+
+   
+       
+         Use point-in-time recovery (PITR) 
+       Overview Work with PITR 
+
+   
+         Migrate 
+       
+
+   Migrate from Standard edition to Enterprise edition 
+
+   
+         Import and export 
+       
+
+   Overview 
+
+   Schedule data exports 
+
+   Move data between projects 
+
+   
+         Monitor and troubleshoot 
+       
+
+   Monitor usage 
+
+   Analyze usage insights 
+
+   
+       
+         Monitor performance with Cloud Monitoring metrics 
+       Overview Use the Cloud Monitoring dashboard 
+
+   
+       
+         Use client-side traces 
+       Monitor performance with client-side traces Trace span attributes and events 
+
+   Audit logging 
+
+   
+       
+         Analyze usage patterns with Key Visualizer (Standard edition) 
+       Overview Use Key Visualizer Explore heatmaps Heatmap pattern for document keys Heatmap pattern for index keys 
+
+   View Knowledge Catalog insights 
+
+   
+       
+         Troubleshoot 
+       Unlink App Engine from Firestore Resolve latency issues Understand error codes 
+
+   
+         Recommendations 
+       
+
+   Reliability recommender 
+
+   Firestore Security Rules recommender 
+           
+        
+        
+          
+    
+      
+       
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Get Started
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Get Started with Google Cloud
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Product List
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Customer Care
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Featured Products
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Agent Platform
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Apigee API Management
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      BigQuery
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Compute Engine
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud CDN
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Run
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Storage
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud SQL
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Gemini Enterprise
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Google Kubernetes Engine
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Looker
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Cross-product Tools
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Access and resources management
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Costs and usage management
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Infrastructure as code
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      SDK, languages, frameworks, and tools
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Technology Areas
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      AI and ML
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Application development
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Application hosting
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Compute
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Data analytics and pipelines
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Databases
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Distributed, hybrid, and multicloud
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Industry solutions
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Migration
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Networking
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Observability and monitoring
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Security
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Storage
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+        
+        
+          
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+        
+       
+    
+   
+ 
+          
+         
+      
+       
+         
+           
+             
+                
+                 
+                 
+                 
+             
+           
+           
+            
+              
+
+
+
+
+
+
+
+
+
+
+ 
+  
+  
+  
+  
+  
+
+   
+    
+    
+     
+  
+   
+    
+    
+    
+      
+        
+   
+    
+          Home
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Documentation
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Databases
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Firestore in Native mode
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Guides
+        
+   
+  
+      
+    
+   
+  
+ 
+    
+      
+     
+     
+  
+    
+   
+  
+     
+
+   
+  
+    
+    Send feedback
+  
+   
+ 
+   
+
+    
+    
+       
+    
+
+     
+      
+      Stay organized with collections
+     
+     
+      
+      Save and categorize content based on your preferences.
+     
+   
+     
+  
+    
+  
+
+   
+   
+  
+    
+   
+
+  
+    
+    
+    
+     Use Firestore emulator locally 
+    
+
+ The  Google Cloud CLI  provides a local, in-memory emulator for
+Firestore that you can use to test your application. You can use the
+emulator with all Firestore client libraries. You should use
+the emulator only for local testing. 
+
+ Do not use the emulator for production deployments. Because the emulator stores
+data only in memory, it will not persist data across runs. 
+ Tip:  The instructions on this page show you how to run the
+Firestore emulator using the gcloud CLI. The same
+Firestore emulator is also available through the
+ Firebase Local Emulator Suite .
+The emulator suite bundles several emulators and helps you test these services together. To access the Firestore emulator through the emulator
+suite, see
+ Introduction to Firebase Local Emulator Suite .  
+ Install the emulator 
+ Note:  The Firestore emulator will be updated to require Java 21
+in the upcoming Google Cloud CLI release 528.0.0. Upgrade to Java 21 or later
+to continue using the latest version of the emulator. 
+ To install the Firestore emulator, install and update the 
+gcloud CLI: 
+
+ 
+ Install the gcloud CLI . 
+ Update your gcloud CLI installation to get the latest
+features: 
+ gcloud components update
+ 
+ 
+
+ Run the emulator 
+
+ 
+ Run the following command to start the emulator: 
+ gcloud emulators firestore start
+ 
+ The emulator prints the host and port number where it is running. 
+
+ By default, the emulator attempts to use  127.0.0.1:8080 . To bind the
+emulator to a specific host and port, use the optional  --host-port  flag,
+replacing  HOST  and  PORT : 
+ gcloud emulators firestore start --host-port= HOST : PORT 
+ 
+ Type  Control + C  to stop the emulator. The emulator may also be stopped
+with a POST to  /shutdown . For example: 
+ curl -d ''  HOST : PORT /shutdown
+ 
+ 
+
+ Starting emulator in specific edition 
+
+ To start up the emulator in Enterprise edition, use the optional  --edition 
+  flag. The valid values are  standard  and  enterprise . By default, the
+  emulator starts up in Standard Edition if the flag is not provided. 
+     gcloud emulators firestore start --edition=enterprise
+ 
+ Connect to the emulator 
+
+ How you connect to the emulator depends on the type of client library, server
+client library, or mobile/web SDK. 
+
+ Server client libraries 
+
+ To connect a Firestore server client
+library (C#, Go, Java, Node.js, PHP, Python, and Ruby),
+set the  FIRESTORE_EMULATOR_HOST  environment variable. When this environment
+variable is set, the server client libraries automatically connect to the emulator. 
+ export   FIRESTORE_EMULATOR_HOST = " HOST : PORT " 
+ 
+ Android, Apple platforms, and Web SDKs 
+
+ The following examples demonstrate how to connect the
+Android, Apple platforms, and Web SDKs to the Firestore
+emulator: 
+
+ 
+   
+     Android 
+ // 10.0.2.2 is the special IP address to connect to the 'localhost' of 
+ // the host computer from an Android emulator. 
+ FirebaseFirestore   firestore   =   FirebaseFirestore . getInstance (); 
+ firestore . useEmulator ( "10.0.2.2" ,   8080 ); 
+
+ FirebaseFirestoreSettings   settings   =   new   FirebaseFirestoreSettings . Builder () 
+          . setPersistenceEnabled ( false ) 
+          . build (); 
+ firestore . setFirestoreSettings ( settings ); EmulatorSuite . java 
+   
+   
+     Swift 
+ let   settings   =   Firestore . firestore (). settings 
+ settings . host   =   "127.0.0.1:8080" 
+ settings . cacheSettings   =   MemoryCacheSettings () 
+ settings . isSSLEnabled   =   false 
+ Firestore . firestore (). settings   =   settings ViewController . swift 
+   
+
+
+
+
+
+
+
+
+
+ 
+     Web version 9 
+ import   {   getFirestore ,   connectFirestoreEmulator   }   from   "firebase/firestore" ; 
+
+ // firebaseApps previously initialized using initializeApp() 
+ const   db   =   getFirestore (); 
+ connectFirestoreEmulator ( db ,   '127.0.0.1' ,   8080 ); fs_emulator_connect . js 
+   
+   
+     Web version 8 
+     
+       Learn
+        more  about the tree-shakeable modular Web API and
+        its advantages over the namespaced API. 
+ // Firebase previously initialized using firebase.initializeApp(). 
+ var   db   =   firebase . firestore (); 
+ if   ( location . hostname   ===   "localhost" )   { 
+    db . useEmulator ( "127.0.0.1" ,   8080 ); 
+ } emulator - suite . js 
+   
+
+
+
+ 
+
+ The Firestore in Native Mode emulator clears database contents when shut down. Since
+the offline cache of the Firestore SDK is not automatically cleared, you may
+want to disable local persistence in your emulator configuration to avoid
+discrepancies between the emulated database and local caches; in the Web SDK,
+persistence is disabled by default. 
+
+ Clear emulator data 
+
+ The Firestore emulator includes a REST endpoint for deleting all
+the data currently in the emulator. You can use this endpoint to clear data
+between tests without shutting down the emulator. 
+
+ To delete all data in the emulator, perform an HTTP  DELETE  operation against
+the following endpoint, replacing  HOST  and  PORT  with the
+host and port you selected and replacing  PROJECT_ID  with your
+own project ID: 
+ http:// HOST : PORT /emulator/v1/projects/ PROJECT_ID /databases/(default)/documents
+ 
+ Adjust the host and port if the emulator does not use  127.0.0.1:8080 .
+Your code should await REST confirmation that the deletion finished or failed. 
+
+ You can perform this operation from the shell using  curl : 
+ $   curl   -v   -X   DELETE   "http:// HOST : PORT /emulator/v1/projects/ PROJECT_ID /databases/(default)/documents" 
+ 
+ How the Firestore emulator differs from production 
+
+ The Firestore emulator attempts to faithfully replicate the
+behavior of the production service with some notable limitations. 
+
+ Transactions 
+
+ The emulator doesn't attempt to mimic the transaction behavior that's seen in
+production. It uses a simple locking approach and doesn't attempt to mirror
+the various concurrency modes offered in the production environment. 
+
+ When you're testing features that involve multiple concurrent writes to one
+document, the emulator might be slow to complete write requests. It might take
+up to 30 seconds for the emulator to release the locks. If you need to adjust
+the test timeout intervals, then do so. 
+
+ The emulator doesn't also attempt to mimic all of the
+ production limits , such as
+timeouts & size limits, which involve transactions. If you test features that
+depend on these production limits, then we recommend that you use a production
+environment instead of an emulator. 
+
+ Indexes 
+
+ The emulator does not track composite indexes and will instead execute any
+valid query. Make sure to test your app against a real Firestore
+instance to determine which indexes you require. 
+
+ Text search isn't supported 
+
+ The emulator doesn't support the  search(...)  stage. 
+
+ Limits 
+
+ The emulator does not enforce all limits enforced in production. For example,
+the emulator may allow transactions that would be rejected as too large by the
+production service. Make sure you are familiar with the
+ documented limits  and that you design your app to
+proactively avoid them. 
+
+
+  
+  
+
+  
+     
+  
+
+  
+ 
+
+  
+    
+    
+      
+     
+     
+  
+       
+          
+
+   
+  
+    
+    Send feedback
+  
+   
+ 
+       
+    
+    
+  
+
+   
+
+
+ 
+   Except as otherwise noted, the content of this page is licensed under the  Creative Commons Attribution 4.0 License , and code samples are licensed under the  Apache 2.0 License . For details, see the  Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates. 
+   Last updated 2026-10-21 UTC. 
+ 
+
+
+ 
+ 
+
+
+  
+ 
+  
+    
+    
+     
+       
+
+   
+  
+    Need to tell us more?
+  
+   
+ 
+     
+  
+  
+     
+      [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Hard to understand","hardToUnderstand","thumb-down"],["Incorrect information or sample code","incorrectInformationOrSampleCode","thumb-down"],["Missing the information/samples I need","missingTheInformationSamplesINeed","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2026-10-21 UTC."],[],[]]
+     
+  
+ 
+            
+           
+         
+         
+          
+            
+          
+         
+         
+          
+            
+ 
+  
+   
+    
+     
+     Products and pricing 
+       
+        
+         
+          
+           
+            
+          
+            See all products
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Google Cloud pricing
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Google Cloud Marketplace
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            Contact sales
+          
+           
+          
+          
+         
+        
+       
+     
+    
+     
+     Support 
+       
+        
+         
+          
+           
+            
+          
+            Community forums
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Support
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Release Notes
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            System status
+          
+           
+          
+          
+         
+        
+       
+     
+    
+     
+     Resources 
+       
+        
+         
+          
+           
+            
+          
+            GitHub
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Getting Started with Google Cloud
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Code samples
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Cloud Architecture Center
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Training and Certification
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            Builders Hub
+          
+           
+          
+          
+         
+        
+       
+     
+    
+     
+     Engage 
+       
+        
+         
+          
+           
+            
+          
+            Blog
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Events
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            X (Twitter)
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Google Cloud on YouTube
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            Google Cloud Tech on YouTube
+          
+           
+          
+          
+         
+        
+       
+     
+    
+   
+  
+ 
+          
+         
+         
+          
+            
+
+ 
+  
+  
+   
+     
+       
+        
+         
+        
+         
+       
+     
+     
+      
+       
+         
+          Android
+         
+       
+      
+       
+         
+          Chrome
+         
+       
+      
+       
+         
+          Firebase
+         
+       
+      
+       
+         
+          Google AI
+         
+       
+      
+     
+   
+  
+
+  
+   
+    
+     
+      
+       
+        
+        
+         
+          About Google
+         
+        
+       
+      
+       
+        
+        
+         
+          Privacy
+         
+        
+       
+      
+       
+        
+        
+         
+          Site terms
+         
+        
+       
+      
+       
+        
+        
+         
+          Google Cloud terms
+         
+        
+       
+      
+       
+        
+        
+         
+          Manage cookies
+         
+        
+       
+      
+       
+        
+        
+         
+          Our third decade of climate action: join us
+         
+        
+       
+      
+       
+        
+         Sign up for the Google Cloud newsletter 
+        
+        
+         
+          Subscribe
+         
+        
+       
+      
+     
+    
+    
+ 
+   
+    
+    
+     
+       English 
+     
+    
+     
+       Deutsch 
+     
+    
+     
+       Español 
+     
+    
+     
+       Español – América Latina 
+     
+    
+     
+       Français 
+     
+    
+     
+       Indonesia 
+     
+    
+     
+       Italiano 
+     
+    
+     
+       Português 
+     
+    
+     
+       Português – Brasil 
+     
+    
+     
+       עברית 
+     
+    
+     
+       中文 – 简体 
+     
+    
+     
+       中文 – 繁體 
+     
+    
+     
+       日本語 
+     
+    
+     
+       한국어 
+     
+    
+   
+ 
+
+   
+ 
+          
+         
+         
+          
+         
+        
+       
+       
+     
+     
+     
+     
+     
+      
+         
+ 
+      
+     
+    
+       
+    
+    
+    
+    
+ 
+
+
+
+
+  
+     
+  
+
+    
+ 
+
+     
+   

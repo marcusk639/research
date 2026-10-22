@@ -1,0 +1,855 @@
+__HTTP 200__
+
+
+
+
+  
+
+ 
+ 
+
+
+
+
+   
+     
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+
+   
+
+   
+
+     
+     
+     
+     
+   
+
+  
+
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+   iOS: transient AX failure while snapshotting status bars tears down the driver; every remaining flow fails with DeviceUnreachableException · Issue #3538 · mobile-dev-inc/Maestro · GitHub 
+
+
+
+   
+   
+   
+   
+
+    
+   
+
+
+   
+
+
+     
+
+
+   
+  
+
+   
+   
+
+     
+
+ 
+
+
+
+
+
+   
+
+  
+
+
+
+
+     
+
+  
+
+     
+
+    
+
+       
+
+       
+
+     
+     
+     
+
+       
+   
+  
+
+
+
+
+       
+
+
+
+         
+
+
+   
+   
+   
+   
+
+   
+
+       
+   
+
+   
+  
+
+
+
+       
+
+
+     
+   
+
+
+   
+
+
+   
+
+   
+   
+
+   
+   
+   
+
+ 
+ 
+
+
+   
+
+   
+
+   
+     
+       
+      
+
+     
+       Skip to content 
+
+       
+     
+       
+       
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+
+
+
+      
+
+           
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+          
+
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge APPLICATION SECURITY GitHub Advanced Security Find and fix vulnerabilities Code security Secure your code as you build Secret protection Stop leaks before they start EXPLORE Why GitHub Documentation Blog Changelog Marketplace View all features Solutions BY COMPANY SIZE Enterprises Small and medium teams Startups Nonprofits BY USE CASE App Modernization DevSecOps DevOps CI/CD View all use cases BY INDUSTRY Healthcare Financial services Manufacturing Government View all industries View all solutions Resources EXPLORE BY TOPIC AI Software Development DevOps Security View all topics EXPLORE BY TYPE Customer stories Events & webinars Ebooks & reports Business insights GitHub Skills SUPPORT & SERVICES Documentation Customer support Community forum Trust center Partners View all resources Open Source COMMUNITY GitHub Sponsors Fund open source developers PROGRAMS Security Lab Maintainer Community GitHub Stars Archive Program REPOSITORIES Topics Trending Collections Enterprise ENTERPRISE SOLUTIONS Enterprise platform AI-powered developer platform AVAILABLE ADD-ONS GitHub Advanced Security Enterprise-grade security features Copilot for Business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Pricing Search / Sign in Sign up Appearance settings 
+ 
+
+
+
+       
+  
+         
+         You signed in with another tab or window.  Reload  to refresh your session. 
+         You signed out in another tab or window.  Reload  to refresh your session. 
+         You switched accounts on another tab or window.  Reload  to refresh your session. 
+
+        
+ Dismiss alert 
+
+
+  
+ 
+     
+
+   
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+   
+    
+ 
+   
+     
+       
+     
+     
+      
+       {{ message }} 
+
+     
+   
+ 
+   
+ 
+
+
+    
+
+
+
+
+
+
+   
+         
+     
+      
+      
+    
+
+
+    
+
+
+
+
+
+
+
+
+  
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   mobile-dev-inc Maestro Repository navigation Code Issues 337  ( 337 ) Pull requests 121  ( 121 ) Discussions Actions Security and quality Insights More  items 
+ 
+
+
+  
+
+
+
+ 
+     
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+  
+
+
+ 
+  
+   
+   iOS: transient AX failure while snapshotting status bars tears down the driver; every remaining flow fails with DeviceUnreachableException   #3538 New issue Copy link New issue Copy link Open Bug Open iOS: transient AX failure while snapshotting status bars tears down the driver; every remaining flow fails with DeviceUnreachableException #3538 Bug Copy link Labels platform: ios Testing iOS apps is affected Testing iOS apps is affected Description dkajiwara opened  on Aug 27, 2026 Issue body actions Is there an existing issue for this? 
+ 
+  I have searched the existing issues and didn't find mine. 
+ 
+ Closest matches — all describe the same  symptom  (driver becomes unreachable mid-suite and every remaining flow fails) but were closed for lack of logs, and none identify the failing call:  #3368 ,  #3318 ,  #3254 . This report pins the exact line, with driver-side logs from three independent occurrences. 
+ Steps to reproduce 
+ The trigger is a race, so it cannot be reproduced on demand from a flow — but it reproduces statistically on any input-heavy suite: 
+ 
+ Run a large suite (ours: 37 flows, mostly form-filling, so the keyboard is created/torn down constantly) as a single  maestro test  invocation on an iOS simulator. 
+ Repeat nightly. We hit the crash 4 times in one week (driver uptime at the moment of death: 1218s / 2187s / 4128s — a race, not a leak or timeout). 
+ 
+ The  mechanism  can be reproduced deterministically in an XCUITest probe: resolve  springboard.statusBars  elements, terminate the process that owns a remote element in that tree, touch the cached elements again. The failure is recorded as a test failure that  try?  cannot absorb, and execution unwinds at the failing call (verified with step-by-step logging; the line after the failing call never runs — even with  continueAfterFailure = true , and even inside a non-strict  XCTExpectFailure , which only flips the verdict while execution still unwinds). 
+ Actual results 
+ ViewHierarchyHandler.fullStatusBars()  reaches XCUITest through  statusBars.firstMatch.exists  and  statusBars.allElementsBoundByIndex . Neither throws when AX resolution breaks mid-walk ( kAXErrorInvalidUIElement ): they record an XCTest failure instead. That failure unwinds  testHttpServer , the HTTP server dies with it, and  every remaining flow of the run fails in 2–6s with  maestro.DeviceUnreachableException  (29–33 flows lost per occurrence in our runs). 
+ The status bar tree is fetched from SpringBoard on  every  viewHierarchy request, and it reaches SpringBoard-hosted remote windows — notably  UIRemoteKeyboardWindow , owned by the InputUI process — so input-heavy suites race with keyboard teardown constantly. In two of our three occurrences with surviving artifacts, the pid named in the AX error resolves to InputUI ( com.apple.UIKit.KeyboardManagement.hosted.peer ). 
+ Expected results 
+ A transient failure to snapshot the status bar (decoration in the hierarchy response) should at worst drop the status bar from that one response — not take down the driver and the rest of the suite. 
+ About app 
+ Any app with keyboard-heavy flows. Not app-specific: the fatal walk happens in SpringBoard's tree, not the app's. 
+ About environment 
+ 
+ Self-hosted macOS runner (Apple Silicon), Xcode 26.5 (17F42) 
+ iPhone 17 simulator, iOS 26.5 
+ 
+ Logs 
+ All three occurrences with surviving artifacts share the same final lines (xctest runner log): 
+ [ViewHierarchyHandler] Fetch status bar hierarchy - start
+t = 2186.81s Checking existence of `StatusBar (First Match)`
+t = 2186.82s Get all elements bound by index for: Descendants matching type StatusBar
+<unknown>:0: error: -[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer] : Failed to resolve query: Failed to resolve remote element AX element pid: 93132, elementOrHash.elementID: 7918309524003510254.9999. (Underlying Error: Error kAXErrorInvalidUIElement getting snapshot for element <AXUIElementRef 0x101ecda10> {pid=93132} ...)
+t = 2187.18s Tear Down
+Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' failed (2187.177 seconds).
+ 
+ simulator log at the same instant: 
+ testmanagerd: [com.apple.dt.xctest:Default] Turning off automation
+Child process terminated with signal 15: Terminated
+ 
+ Each occurrence recorded  exactly one  XCTest failure in the whole session — the first one is already fatal. 
+ Maestro version 
+ 2.8.0 (the affected code is unchanged on current  main ) 
+ How did you install Maestro? 
+ install script / Homebrew 
+ Anything else? 
+ 
+ fix(ios): recover from transient kAXErrorInvalidUIElement  #3430  routed  kAXErrorInvalidUIElement  through the recovery path for the  app  snapshot ( getHierarchyWithFallback ), but  fullStatusBars  was left on the non-throwing APIs — this issue is the same error class escaping through the path  fix(ios): recover from transient kAXErrorInvalidUIElement  #3430  didn't cover. 
+ Two findings measured while investigating, for whoever fixes this:
+ 
+ Wrapping the calls in a non-strict  XCTExpectFailure  does  not  help — the verdict flips but execution still unwinds at the failing call. 
+ snapshot()  is the only call here that surfaces this failure as a catchable Swift error (the pattern  Fix connection failures due to failing driver tests while auto granting permissions  #2974  used for permission buttons), but a failed resolution costs  ~2s  ("Fetch status bar hierarchy" duration: 0.055s stock vs 2.14s when a failing probe runs per request; whole-suite flow times go 2–3x), so a snapshot-only enumeration needs to avoid paying that on every request. 
+ 
+ 
+ Longer term, per  iOS driver XCUITest port unreachable on flow #2+ in directory batch mode (2.6.0 / iPhone 17 Pro / iOS 26.5)  #3318 's analysis: the driver's whole lifetime living inside one test method means  any  recorded failure anywhere in a handler is suite-fatal; a driver restart between flows in  TestSuiteInteractor  would bound the blast radius regardless of which call fails. Happy to discuss that separately. 
+ Reactions are currently unavailable Activity linear-code   commented   on   Aug 27, 2026   linear-code Bot on Aug 27, 2026   – with   Linear Code More actions 
+ MAE-549 Fishbowler   commented   on   Aug 27, 2026   Fishbowler on Aug 27, 2026 Contributor More actions We're reworking the driver mechanism  right now  and expect to be done in some small number of weeks. The new mechanism is unlikely to be subject to this class of failure. 🎉 React with 🎉 1 Reacted by  Daiki Kajiwara Fishbowler added the Bug issue type  on Aug 27, 2026 Fishbowler added  platform: ios Testing iOS apps is affected Testing iOS apps is affected   on Aug 27, 2026 MuadDib   commented   on   Sep 10, 2026   MuadDib on Sep 10, 2026 More actions We are seeing exactly this on our side, so adding some data in case it is useful. 
+ Maestro 2.8.0, iOS 26.5 simulator, Xcode 26.6, self hosted mac runner. Our suite is 39 flows and 
+each one is already a separate  maestro test  invocation (the per flow loop suggested in  #3254  and 
+ #3318 ), and we still hit it. 
+ The bit that I think is new is the control. In one run  kAXErrorInvalidUIElement  shows up in 
+ 9 of the 39 flows, and 8 of those passed . What separates them is which AX call fails: 
+ 
+ the 8 that survived log  Ignoring failure to get hierarchy for remote element in process 36633 (Error getting main window kAXErrorInvalidUIElement) ... XCTest catches that one and falls back 
+ the one that died was re-resolving a cached element instead:  Failed to resolve query: Failed to resolve remote element AX element pid: 36633, elementOrHash.elementID: 4974066944818829535.9999 (Underlying Error: kAXErrorInvalidUIElement getting snapshot for element) ... no fallback for 
+that one, so it lands as a failure on  testHttpServer  and the server goes with it 
+ 
+ So the AX race is not rare at all. It is common and mostly harmless, and only the cached element 
+variant is fatal. 
+ Second thing, and this one surprised me...  pid 36633 is identical in all 9 flows , from flow 3 
+to flow 35 of a 25 minute run. Our app is relaunched with clearState every flow so its pid changes 
+each time, and 36633 is lower than both the app and the runner so it started before either. That 
+is SpringBoard. Which means the hierarchy that mutates mid snapshot is the status bar itself and 
+not the app... the clock ticking is enough to do it.  #3430  frames the race around rapid app UI 
+updates in React Native, and that is probably a real trigger too, but our app is native and idle 
+at that point, so I think there are two ways into the same failure. 
+ On rate, 1 of 39 is 2.6%, and across 22 suite runs since late August we measure around 1.5% per 
+driver launch. Close enough to be the same thing. 
+ One more signature in case it helps others recognise it. After the test case fails, xcodebuild 
+then spends about 27 seconds failing to write its result bundle: 
+ IDETesting: Failed to construct test run summaries and write them to the result bundle:
+fileSystemFailure(reason: "mkstemp: No such file or directory")
+** TEST EXECUTE FAILED **
+ 
+ ...because  close()  has already removed the temp derivedDataPath underneath it. We measure the 
+xcodebuild teardown at every flow boundary and it is 0s on 37 of 39 boundaries, 1s on one, and 27s 
+on the flow that died. So a boundary that suddenly takes tens of seconds is a reasonable tell that 
+this is what happened. 
+ I have the full runner logs for the failing flow and for the 8 that recovered. Can you please let 
+me know if attaching them is useful, happy to do that. 
+ Also, is the  fullStatusBars  path in scope for the driver rework you mentioned? Trying to work out 
+whether to wait for it or put a bounded retry in on our side in the meantime. lsoares   commented   on   Oct 1, 2026   lsoares on Oct 1, 2026 Last edited by  lsoares More actions note : this report was generated by Claude based on real crashes. 
+ 
+ Same failure on  Maestro 2.11.0 , iPhone simulator, iOS 26.5, self-hosted Apple Silicon runner. Two occurrences today, both identical to the trace above: 
+ [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t = 437.72s Checking existence of `StatusBar (First Match)`
+    t = 437.73s Get all elements bound by index for: Descendants matching type StatusBar
+error: -[maestro_driver_iosUITests testHttpServer] : Failed to resolve query: Failed to resolve remote element AX element pid: 22465 … kAXErrorInvalidUIElement
+Restarting after unexpected exit, crash, or test timeout
+ 
+ In both runs the pid in the AX error is  InputUI , matching the keyboard-teardown theory. Both happened on a visibility check while something was dismissing: once on an  assertNotVisible  right after a confirmation disappeared, once on a  runFlow when: visible:  right after tapping a button that closes a bottom sheet. The flow in progress fails with  DeviceUnreachableException  and the next one fails in 2–3s while the driver restarts. Across ~115 jobs before our upgrade to 2.11.0 we saw none; on 2.11.0 we hit 2 in ~33 jobs. A small sample, but it may be more likely on 2.11.0. AntoC-dev added 2 commits that reference this issue  on Oct 14, 2026 fix(ci): rerun failed iOS flows after the Maestro driver dies ... d3f9336 fix(ci): rerun failed iOS flows after the Maestro driver dies ... 31aea28 ivan-moego   commented   on   Oct 16, 2026   ivan-moego on Oct 16, 2026 Last edited by  ivan-moego More actions Adding another occurrence on  Maestro CLI 2.11.0 , including an older simulator runtime than the reports above: 
+ 
+ GitHub-hosted  macos-26-arm64 , macOS 26.6.2 
+ Xcode 26.3, iPhone 17 Pro simulator,  iOS 26.2 
+ One simulator per runner; sequential page subflows inside one  maestro test  invocation 
+ 
+ The driver failed after about 428 seconds, while restoring the home screen between subflows. Sanitized runner excerpt: 
+ [ViewHierarchyHandler] Fetch status bar hierarchy - start
+t = 427.87s Checking existence of `StatusBar (First Match)`
+t = 427.89s Get all elements bound by index for: Descendants matching type StatusBar
+error: -[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer] : Failed to resolve query: Failed to resolve remote element AX element pid: 27632 ... (Underlying Error: Error kAXErrorInvalidUIElement getting snapshot ...)
+t = 428.01s Tear Down
+error: -[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer] : Nesting the use of control flow interruptions (exceptions) is not permitted. (NSInternalInconsistencyException)
+Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' failed (428.027 seconds).
+ 
+ Simulator logs identify PID 27632 as  com.apple.InputUI . The CLI then reports  DeviceUnreachableException  / localhost connection refused. We do not have a deterministic reproducer or evidence that driver uptime itself causes this. 
+ Is there an update on the driver rework mentioned above, or a PR/pre-release targeting the  fullStatusBars  path that we could validate? 
+ Local lifecycle follow-up (Maestro 2.11.0, Xcode 26.6, iOS 26.2; tested separately with Java 17 and 21): 
+ 
+ With  --no-reinstall-driver  alone (Java 17), two consecutive CLI invocations selected different ports and started different runner PIDs. 
+ With  --driver-host-port 7001 --no-reinstall-driver  from the first invocation onward, both flows passed with the same port and runner PID. The second invocation logged  UI Test runner already running, returning . The old runner was still responding with HTTP 200 on  /status  before the second invocation. 
+ 
+ This corrects our earlier inference that an occupied fixed port would necessarily be rejected. On this machine, the installed Maestro  isPortAvailable(7001)  returned true while that runner was listening on  127.0.0.1:7001 ; a separate Java probe could bind the wildcard address with  reuseAddress=true , while binding the exact loopback address failed. 
+ These probes validate reuse of a healthy driver, not recovery from the fatal status-bar AX failure above. Is fixed-port reuse the recommended lifecycle while the driver rework is pending? 
+ CI follow-up (2026-10-16): with Maestro 2.11.0 / Java 21 / Xcode 26.3 / iOS 26.2, all 213 page flows completed successfully across four GitHub-hosted macOS arm64 runners, one Simulator per runner. We kept 20-page batches and used the same fixed port from the first CLI invocation onward: 
+ maestro --device  " $UDID "  --driver-host-port 7001  test  --no-reinstall-driver flow.yml 
+ There were no skipped cases or repeated case invocations. All four workers used port 7001 on their separate hosts; devices sharing a host must use distinct ports. Two pre-case Home recoveries were recorded, so this was not a recovery-free run. The application bundle and page-error classification also changed, so this is not a controlled before/after stability comparison. 
+ This adds CI evidence that the parameter combination works for healthy-driver lifecycle reuse, without a port-in-use failure. It does  not  establish a fix or recovery strategy for the fatal status-bar AX race in this issue. We would still appreciate guidance on whether this reuse configuration is supported/recommended while the driver rework is pending. AntoC-dev added 3 commits that reference this issue  on Oct 17, 2026 fix(ci): rerun failed iOS flows after the Maestro driver dies ... 5efe9e3 fix(e2e): root-cause fixes for flaky E2E flows ( #600 ) ( #611 ) ... 8c3a60e chore(release): 2.53.8 [skip ci] ... c41fe12 arun279   commented   on   Oct 18, 2026   arun279 on Oct 18, 2026 More actions I hit this on 2.10.0 (iOS 26.4 simulator, Xcode 26.6, GitHub  macos-26  runners). Under CPU load, an XCTest call into the simulator's UI services times out ( Failed to get screenshot: Timed out while requesting screenshot. , or  Timed out while fetching attributes 'XC_kAXXCAttributeSystemAppApplication' ). XCTest records it as an issue,  testHttpServer  ends, and the restarted runner executes 0 tests, so Maestro reports  Transport unreachable while processing deviceInfo . 
+ Overriding  record(_:)  in  maestro_driver_iosUITests  to log the issue without calling  super  keeps the server alive. WebDriverAgent's  FBFailureProofTestCase  does the same. I check it in CI by sending SIGSTOP to the simulator's  backboardd  mid-run. The stalled request returns  500 {"code":"internal","errorMessage":"Failed to get screenshot: Timed out while requesting screenshot."}  and the runner keeps serving later requests. Patch:  https://github.com/arun279/cue/blob/ca84a837c2806f5997c3a103c3209e288f7ef44c/patches/maestro-runner/0001-keep-serving-after-xctest-issues.patch Upsilon-Iridani   commented   on   Oct 20, 2026   Upsilon-Iridani on Oct 20, 2026 More actions I seem to have the same problem. 🤔 Sign up for free   to join this conversation on GitHub.   Already have an account?   Sign in to comment Metadata Metadata Assignees No one assigned Labels platform: ios Testing iOS apps is affected Testing iOS apps is affected Type Bug Projects No projects Milestone No milestone Relationships None yet Development No branches or pull requests Issue actions Open in GitHub Copilot app 
+ 
+ 
+
+
+
+
+   
+
+ 
+
+     
+   
+
+   
+
+           
+   Footer 
+
+  
+
+
+   
+     
+       
+         
+ 
+       
+        © 2026 GitHub, Inc.
+       
+     
+
+     
+       Footer navigation 
+
+       
+
+
+           
+             Terms 
+           
+
+           
+             Privacy 
+           
+
+
+             
+               Security 
+             
+
+             
+               Status 
+             
+
+           
+             Community 
+           
+
+           
+             Docs 
+           
+
+           
+             Contact 
+           
+
+          
+ 
+   
+     
+      Manage cookies
+     
+   
+ 
+
+   
+     
+       
+        Do not share my personal information
+       
+     
+   
+
+       
+     
+   
+ 
+
+
+
+     
+
+
+
+
+   
+     
+     
+       
+     
+    You can’t perform that action at this time.
+   
+
+     
+   
+     
+     
+       
+         
+       
+       
+     
+   
+ 
+
+     
+   
+   
+ 
+
+     
+   
+     
+       
+       
+     
+   
+ 
+ 
+   
+     
+       
+       
+     
+   
+ 
+
+
+
+
+     
+     
+     
+   
+ 
+

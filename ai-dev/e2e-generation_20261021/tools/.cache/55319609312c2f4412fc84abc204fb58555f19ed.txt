@@ -1,0 +1,917 @@
+__HTTP 200__
+
+
+
+
+  
+
+ 
+ 
+
+
+
+
+   
+     
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+
+   
+
+   
+
+     
+     
+     
+     
+   
+
+  
+
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+   Future of Angular E2E & Plans for Protractor · Issue #5502 · angular/protractor · GitHub 
+
+
+
+   
+   
+   
+   
+
+    
+   
+
+
+   
+
+
+     
+
+
+   
+  
+
+   
+   
+
+     
+
+ 
+
+
+
+
+
+   
+
+  
+
+
+
+
+     
+
+  
+
+     
+
+    
+
+       
+
+       
+
+     
+     
+     
+
+       
+   
+  
+
+
+
+
+       
+
+
+
+         
+
+
+   
+   
+   
+   
+
+   
+
+       
+   
+
+   
+  
+
+
+
+       
+
+
+     
+   
+
+
+   
+
+
+   
+
+   
+   
+
+   
+   
+   
+
+ 
+ 
+
+
+   
+
+   
+
+   
+     
+       
+      
+
+     
+       Skip to content 
+
+       
+     
+       
+       
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+
+
+
+      
+
+           
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+          
+
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge APPLICATION SECURITY GitHub Advanced Security Find and fix vulnerabilities Code security Secure your code as you build Secret protection Stop leaks before they start EXPLORE Why GitHub Documentation Blog Changelog Marketplace View all features Solutions BY COMPANY SIZE Enterprises Small and medium teams Startups Nonprofits BY USE CASE App Modernization DevSecOps DevOps CI/CD View all use cases BY INDUSTRY Healthcare Financial services Manufacturing Government View all industries View all solutions Resources EXPLORE BY TOPIC AI Software Development DevOps Security View all topics EXPLORE BY TYPE Customer stories Events & webinars Ebooks & reports Business insights GitHub Skills SUPPORT & SERVICES Documentation Customer support Community forum Trust center Partners View all resources Open Source COMMUNITY GitHub Sponsors Fund open source developers PROGRAMS Security Lab Maintainer Community GitHub Stars Archive Program REPOSITORIES Topics Trending Collections Enterprise ENTERPRISE SOLUTIONS Enterprise platform AI-powered developer platform AVAILABLE ADD-ONS GitHub Advanced Security Enterprise-grade security features Copilot for Business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Pricing Search / Sign in Sign up Appearance settings 
+ 
+
+
+
+       
+  
+         
+         You signed in with another tab or window.  Reload  to refresh your session. 
+         You signed out in another tab or window.  Reload  to refresh your session. 
+         You switched accounts on another tab or window.  Reload  to refresh your session. 
+
+        
+ Dismiss alert 
+
+
+  
+ 
+     
+
+   
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+   
+    
+ 
+   
+     
+       
+     
+     
+      
+       {{ message }} 
+
+     
+   
+ 
+   
+ 
+
+
+    
+
+
+
+
+
+
+   
+         
+     
+      
+      
+    
+
+
+    
+
+
+
+         
+    This repository was archived by the owner on Jul 29, 2024. It is now read-only.
+   
+
+
+
+
+
+
+  
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   angular protractor Repository navigation Code Issues 620  ( 620 ) Pull requests 64  ( 64 ) Actions Projects Wiki Security and quality Insights More  items 
+ 
+
+
+  
+
+
+
+ 
+     
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+       
+    This repository was archived by the owner on Jul 29, 2024. It is now read-only.
+   
+
+
+  
+
+
+ 
+  
+   
+   Future of Angular E2E & Plans for Protractor   #5502 Copy link Copy link Closed Closed Future of Angular E2E & Plans for Protractor #5502 Copy link Description kyliau opened  on Apr 5, 2021 Issue body actions TLDR 
+ The Angular team plans to end development of Protractor at the end of 2022 (in conjunction with Angular v15). 
+ Why? 
+ Protractor was created in  2013  when WebDriver APIs were not yet a  standard  and end-to-end (e2e) tests were hard to write due to lack of support for  async  /  await . To solve this problem, Protractor wraps  selenium-webdriver  and abstracted asynchronous operations from developers with the use of  Control Flow . 
+ Since then, the JavaScript standard and ecosystem advanced considerably, providing modern syntax and much better development tools. Nonetheless, Protractor is not able to leverage such technology without forcing users to rewrite their tests. Meanwhile, robust alternatives have emerged in the web testing space. Developers will see more benefits from adopting a more modern testing tool than from updating to a breaking version of Protractor which does not provide additional functionality or developer ergonomic improvements. 
+ We would like to hear from the community on 
+ 
+ the deprecation timeline 
+ what we can do to provide reliable integration with third-party solutions 
+ how users can transition by following migration guidelines 
+ additional concerns that would ensure a smooth transition 
+ 
+ This RFC will close on Friday April 16, 2021. 
+ 
+ State of Protractor 
+ The Angular team created Protractor in  2013  when WebDriver APIs were not yet a  standard  and end-to-end (e2e) tests were challenging to set up. The proliferation of callback patterns in JavaScript back then made asynchronous operations difficult to write and manage. 
+ Protractor, echoing the approach taken by the underlying  selenium-webdriver , solved this problem by managing promises via  Control Flow . Control Flow makes asynchronous calls appear synchronous, thereby avoids the use of Promises entirely. 
+ This strategy worked well for some time, but as the JavaScript standards and toolings evolve, Protractor regressed. Starting from ES2017,  async  /  await  makes handling Promises significantly easier because they no longer have to be chained. However,  async  /  await  is fundamentally incompatible with Control Flow, and support for Control Flow is  dropped  from  selenium-webdriver   v4.0  completely. Protractor, being dependent on  selenium-webdriver , is not able to upgrade to the new version without introducing a huge breaking change and forcing users to do a migration for all their tests. 
+ Besides dropping support for Control Flow, making Protractor compatible with ES2017 involves a significant amount of work to overhaul its implementation. Legacy dependencies such as jasminewd2 and Q promise library ought to be removed, which will bring about further breaking changes. 
+ Since Protractor was initially designed to support AngularJS, many of its features like locators and mock modules are specific to AngularJS. These features only work in AngularJS and not Angular. They will no longer be relevant once development on AngularJS ceases by  December 31, 2021 . 
+ Removing Control Flow and dropping AngularJS-specific features would make Protractor essentially just a wrapper around selenium-webdriver that provides no additional functionality. 
+ Current Landscape for Web Testing 
+ Many testing solutions have appeared since the creation of Protractor, and they offer better stability and much improved support for features like cross-browsers testing. Some even eschew the WebDriver standards completely in favor of using the DevTools protocols directly. 
+ In order to understand the adoption trend of these alternatives in the Angular community, we conducted a survey on e2e testing in January 2021. We received close to 1000 responses and got a lot of feedback from the community. A clear signal that we received is that  there is no one-size-fits-all solution for all Angular projects  out there. Fewer than 20% of the respondents use Protractor in their project. Some users prioritize the cross-browsers support that the WebDriver standards guarantee, whereas other users prefer the stability and flexibility that DevTools protocol offers. A similar survey focused entirely on enterprise customers yielded comparable results. 
+ 
+ Moving Forward 
+ Deprecating Protractor is not a decision that is taken lightly by the team. Inside Google, we support thousands of projects and hundreds of thousands of test targets that depend on Protractor. After evaluating the costs and benefits of updating Protractor vs migration effort imposed on users, we conclude that the best strategy to set users up for success in the long term is to encourage migration to a more modern and framework-agnostic testing platform. The reasoning is as follows: 
+ Removing Control Flow from user code is a gigantic effort because it forces users to update all their tests. Google went through this effort, and it took a major infrastructure team half of their time in 2018. Even then, they could only migrate tests written in TypeScript due to the availability of more robust tooling for source code analysis and transformation. 
+ After going through such a massive endeavour, we realize the “new” Protractor is no better than other existing solutions. The only feature that differentiates Protractor from  selenium-webdriver  at this point is the ability to automatically wait for the application under test to become stable ( waitForAngular  feature in Protractor). 
+ Although  waitForAngular  is useful, it strongly couples the testing platform to the Angular framework. Some teams at Google have found that solutions that do not require knowledge of Angular can perform the tests equally well by using a robust retry strategy. We believe this is how e2e testing should be done going forward, and projects in Google are already converging towards a testing platform that is WebDriver compliant and framework agnostic. This allows our web test team to maintain a single solution for all web applications. 
+ Externally, there are many excellent alternatives available to the open source community, such as: 
+ 
+ Cypress 
+ PlayWright 
+ Puppeteer 
+ Selenium-webdriver 
+ TestCafe 
+ WebdriverIO 
+ 
+ (The list is sorted in alphabetical order and is non-exhaustive.) 
+ Deprecation 
+ The most important focus for the Angular team is to ensure a smooth transition for Protractor users. We have been engaging with different vendors to ensure 
+ 
+ there is sufficient documentation / tooling to help users migrate to other platforms 
+ third-party platforms integrate well with Angular CLI, so that CLI configurations are automatically handled by vendor-specific builders 
+ 
+ So far, the Angular team has reached out to the teams at Cypress and WebdriverIO to achieve the goals above. We will provide regular updates as more resources become available. If there is a particular platform that you’d like us to reach out to, please let us know in the comments below. 
+ Our proposed deprecation timeline is as follows: 
+ 
+ Angular version 12 (May 2021)
+ 
+ Announcement of deprecation 
+ Angular CLI will not include Protractor for new projects 
+ Show warning when  @angular-devkit/build-angular:protractor  is used 
+ Only PRs that address security issues and fixes for browser releases that break Protractor tests will be merged 
+ 
+ 
+ Angular version 15 (end of 2022)
+ 
+ End of development on Protractor 
+ 
+ 
+ August 2023 end of life of Protractor. For more information about the future of Protractor see our  blog post 
+ 
+ No decision is final until we assess all the feedback from this RFC. 
+ Extended LTS 
+ For users who require extended long-term support after the end of life of Protractor, we suggest reaching out to our external partners: 
+ 
+ flare.build 
+ herodevs 
+ 
+ If your team / company provides similar services, please let us know! 
+ FAQs 
+ 
+ What about  Component Harnesses ? 
+Angular CDK's component harnesses include a  ProtractorHarnessEnvironment  for using harnesses in Protractor. This environment will be deprecated and replaced with a new environment backed by  selenium-webdriver . The harness APIs themselves will be  unchanged . 
+ How will Angular CLI handle  ng e2e  for new projects starting from version 12? 
+The CLI will not include a default e2e builder for new projects, and users will decide which third-party builder to install. This is because picking an e2e platform really depends on the requirements of the project and there is no clear best fit for all Angular projects. 
+ In version 15, would all Protractor tests break? 
+The Protractor builder will continue to work until version 15. After that, we plan to remove the Protractor builder ( @angular-devkit/build-angular:protractor ), which means  ng e2e  will no longer run Protractor. However, we are open to revising the timeline based on user feedback. Please let us know in the comments below. 
+ Protractor is useful because it automatically waits for the application to become stable. How can I use that in other platforms? 
+Under the hood, Protractor uses  Testability  provided by  @angular/core  to check if the app is stable. This feature can be integrated into other platforms in a straightforward way. See the  example  for  selenium-webdriver . 
+ Which e2e framework is the lowest effort and cost to migrate to from Protractor? 
+In terms of APIs,  selenium-webdriver  is most similar to Protractor because it is used under the hood. If your tests still use Control Flow, you’ll have to remove it first by adding  async  /  await  to the Protractor calls. After that, you can replace the Protractor methods with those in  selenium-webdriver . Although they are not 1:1 replacements, they are very close. 
+ Where will e2e migration strategies be documented? 
+We are consolidating a list of migration strategies doc written by vendors and community members. See  Links  section below. 
+ What other packages will be deprecated along with Protractor at the end of 2022?
+ 
+ protractor-cookbook 
+ jasminewd 
+ webdriver-js-extender 
+ blocking-proxy 
+ webdriver-manager 
+ 
+ 
+ My team just did a migration to disable Control Flow. What are our options? 
+It is possible to create a thin wrapper around  selenium-webdriver  to provide APIs that are compatible with Protractor's. This is an idea that needs further exploration. Please let us know in the comments below if such tool is useful to you. 
+ 
+ Open questions 
+ 
+ Should the Angular team provide a different deprecation timeline? 
+ In addition to migration docs and CLI integration, how can the Angular team support Protractor users in the transition to other platforms? 
+ What are the alternatives to deprecating Protractor? 
+ 
+ Links 
+ This section is a work in progress. We will continue to consolidate more links and migration guides here. 
+ 
+ Migrating from Protractor to Cypress 
+ https://nx.dev/latest/angular/modern-angular/protractor-to-cypress 
+ Cypress official doc for Protractor users (placeholder link for now, will be live in the future) 
+ http://on.cypress.io/protractor-to-cypress 
+ Reactions are currently unavailable Activity Next kyliau pinned this issue  on Apr 5, 2021 kyliau changed the title   [-] Deprecation RFC [/-]   [+] Future of Angular E2E & Plans for Protractor [/+]   on Apr 5, 2021 pavankjadda   commented   on   Apr 5, 2021   pavankjadda on Apr 5, 2021 Last edited by  pavankjadda More actions Cypress is great alternative. I have been using it since few months, easy to configure and write tests. May be provide CLI option to add it to the new or existing project? 👎 React with 👎 2 Reacted by  GSasu and Boris Osipov ❤️ React with ❤️ 32 Reacted by  Amir Rustamzadeh, Younes Jaaidi, Vlad Dumbrava, Maina Wycliffe, Ryusei Kurata / 倉田隆成, Aniruddha Das, steeffeen, Alaa El-Din Ahmed, Dim Zh, Mickaël Olaria and 22 more mgechev   commented   on   Apr 5, 2021   mgechev on Apr 5, 2021 Member More actions @pavankjadda  we're working with the Cypress team to ensure smooth integration with the Angular CLI. 👍 React with 👍 45 Reacted by  Michael Prentice, Aniruddha Das, Kyle Cordes, Israel Guzman, Samarasimhareddy Kommireddy, Joseph Mutiga, steeffeen, Diego Bonura, Dim Zh, François Camus and 35 more 👎 React with 👎 1 Reacted by  GSasu 🎉 React with 🎉 47 Reacted by  Po Chen, Daniel Kimmich, Debmallya Bhattacharya, Amir Rustamzadeh, Keen, Ali Altun, Chihab Otmani, Kevin Old, Ned Redmond, Pavan Kumar Jadda and 37 more ❤️ React with ❤️ 11 Reacted by  tnicola, Jibin Philipose, Sampath Lokuge, Dominik Forster, Álvaro A. Quirós, Enterprise Software Architecture, Wil Marques, lucas.fraga, Trung Vo, Alaa El-Din Ahmed and 1 more 🚀 React with 🚀 10 Reacted by  Mark Goho, Suguru Inatomi, Aniruddha Das, Israel Guzman, Dim Zh, Enea Jahollari, Tim Schmidt, Enterprise Software Architecture, lucas.fraga and Lucas 👀 React with 👀 2 Reacted by  Enterprise Software Architecture and Wataru KASAHARA batbrain9392   commented   on   Apr 5, 2021   batbrain9392 on Apr 5, 2021 Last edited by  batbrain9392 More actions We have huge protractor e2e code @ Blueface Comcast. A good documentation for common migration use cases would be highly beneficial. 👍 React with 👍 9 Reacted by  Minko Gechev, Amir Rustamzadeh, Michael Prentice, Stanislav Kharchenko, Enterprise Software Architecture, Reuben Turk, Ross Moug, Orekhov Artemy and Adam Kwiatek 🎉 React with 🎉 1 Reacted by  Enterprise Software Architecture ❤️ React with ❤️ 4 Reacted by  Keen, Pankaj Parkar, Enea Jahollari and Enterprise Software Architecture 🚀 React with 🚀 1 Reacted by  Enterprise Software Architecture 👀 React with 👀 2 Reacted by  Enterprise Software Architecture and Craigory Coppola yjaaidi   commented   on   Apr 5, 2021   yjaaidi on Apr 5, 2021 More actions If you are looking for CDK Harness support on Cypress, here it is:  https://github.com/jscutlery/test-utils/tree/main/packages/cypress-harness 👍 React with 👍 11 Reacted by  Keen, Chihab Otmani, Minko Gechev, Michael Prentice, Eliran Eliassy, Enterprise Software Architecture, Wil Marques, Samuel Fernández, MikeM, Edouard Bozon and 1 more 🎉 React with 🎉 1 Reacted by  Enterprise Software Architecture ❤️ React with ❤️ 3 Reacted by  Enterprise Software Architecture, Samuel Fernández and Edouard Bozon 🚀 React with 🚀 1 Reacted by  Enterprise Software Architecture 👀 React with 👀 1 Reacted by  Enterprise Software Architecture amirrustam   commented   on   Apr 5, 2021   amirrustam on Apr 5, 2021 More actions Hi  @batbrain9392 . I'm Amir from the Cypress team. We're working on helpful migration guidance. To make this material better for you and rest of the community, I'd love to learn more about your project. 
+ If you're up for it, feel free to  email , or schedule a  chat . 👍 React with 👍 22 Reacted by  Keen, Vlad Dumbrava, Michael Prentice, Tom Ardern, Enea Jahollari, Siwat Kaolueng, Jibin Philipose, matt, Adnan Ebrahimi, Enterprise Software Architecture and 12 more 👎 React with 👎 1 Reacted by  GSasu 🎉 React with 🎉 2 Reacted by  Enterprise Software Architecture and Lucas ❤️ React with ❤️ 3 Reacted by  Enterprise Software Architecture, Arthur Moura Carvalho and Lucas 🚀 React with 🚀 2 Reacted by  Enterprise Software Architecture and Lucas 👀 React with 👀 1 Reacted by  Enterprise Software Architecture chihab   commented   on   Apr 5, 2021   chihab on Apr 5, 2021 Last edited by  chihab More actions I am quite convinced Cypress offers the best DX out there but no more opinion on  ng e2e  is definitely the best opinion. 👍 React with 👍 3 Reacted by  Amir Rustamzadeh, Reuben Turk and Sandeep Thukral 👎 React with 👎 1 Reacted by  GSasu jessesanders   commented   on   Apr 5, 2021   jessesanders on Apr 5, 2021 More actions I'm glad to see protractor going away and that there is a good plan on how to deprecate it. Selenium/Webdriver is based on technology almost 20 years old and is far too fragile for today's dynamic pages to fulfill the need for a reliable testing platform. Cypress offers a much more consistent and reliable testing platform where testing edge cases becomes almost trivial. 👍 React with 👍 2 Reacted by  Martin Oppitz and Lucas 👎 React with 👎 2 Reacted by  GSasu and Bojte Tamas ❤️ React with ❤️ 6 Reacted by  Amir Rustamzadeh, Oscar Valdes, Ferdinand Malcher, Enea Jahollari, Franck Delage and Lucas LanderBeeuwsaert   commented   on   Apr 5, 2021   LanderBeeuwsaert on Apr 5, 2021 More actions We are using both Cypress and Playwright and have found Playwright to be both easier to use and more robust. 
+Added benefits are amongst others ability to test Safari/webkit, less flaky tests and possibilities for conditional testing. 
+Can somebody else that is using both frameworks comment on the advantages they see in Cypress vs Playwright? 
+Are we missing something? 👍 React with 👍 7 Reacted by  Michael Prentice, Lonli-Lokli, Oliver Weiler, Sylvain Dumont, Vojtech Mašek, Basso and GSasu 👀 React with 👀 2 Reacted by  Wil Marques and bunchopunch vsravuri   commented   on   Apr 5, 2021   vsravuri on Apr 5, 2021 More actions @amirrustam 
+ Thanks for your assistance. I too have lot of code written in Protractor to migrate to Cypress. I will schedule a chat with you help you understand my requirement. 👍 React with 👍 3 Reacted by  Amir Rustamzadeh, Ryusei Kurata / 倉田隆成 and Stanislav Kharchenko zbagley   commented   on   Apr 5, 2021   zbagley on Apr 5, 2021 More actions Looking forward to the e2e upgrade, and have my fingers crossed the transition from Protractor will be fairly seamless. Are the any plans for a CLI update to provide a similar tool to  ng update  for e2e side of the transition? I know how rough updates were at the start, and really hoping the e2e update will be less painful that the early days and closer to how updates are now. 👍 React with 👍 1 Reacted by  Stanislav Kharchenko 👀 React with 👀 1 Reacted by  Ryusei Kurata / 倉田隆成 amirrustam   commented   on   Apr 5, 2021   amirrustam on Apr 5, 2021 More actions Hi  @LanderBeeuwsaert . Amir from Cypress team here. Playwright is also a fantastic tool (and team)! 
+ With regards to Safari, we've added WebKit support to the Cypress roadmap. 
+ Can you elaborate more on your mentioning of "more robust"? I can address any potential concerns for you and the community, and your feedback is always helpful and appreciated for improving the tool. 
+ If you're interested in deeper dive conversation on the topic, feel free to  email , or schedule a  chat . 🎉 React with 🎉 1 Reacted by  Wil Marques ❤️ React with ❤️ 1 Reacted by  Debmallya Bhattacharya amirrustam   commented   on   Apr 5, 2021   amirrustam on Apr 5, 2021 More actions Sure thing  @vsravuri , and I extend the same offer to everyone else here as well. 
+The Cypress team is here to help as much as we possibly can. 🎉 React with 🎉 1 Reacted by  Wil Marques cnishina   commented   on   Apr 5, 2021   cnishina on Apr 5, 2021 Last edited by  cnishina Contributor More actions As for # 8 on the FAQs: "It is possible to create a thin wrapper around selenium-webdriver to provide APIs that are compatible with Protractor's." 
+ I am working on this library. It still needs to go through internal open source approvals. 🤞 👍 React with 👍 17 Reacted by  Keen, Michael Prentice, Kyle Cordes, Adithya Sreyaj, Stanislav Kharchenko, Siwat Kaolueng, Ram Pasala, Diego Molina, Sri Harsha, Andy Schlei and 7 more ❤️ React with ❤️ 12 Reacted by  Keen, Michael Prentice, Kyle Cordes, lyubomiraleksiev, Jan Molak, Siwat Kaolueng, Stanislav Kharchenko, Diego Molina, Jon Wallsten, André de Sousa and 2 more 54  remaining  items Load more e-oz   commented   on   Apr 16, 2021   e-oz on Apr 16, 2021 Last edited by  e-oz More actions @csvan  I'm not saying to people what they "should" or "should not" do. As I understand, Ng team is asking for your opinion here, not for the instructions. csvan   commented   on   Apr 16, 2021   csvan on Apr 16, 2021 Last edited by  csvan More actions 
+ Ng team is asking for your opinion here, not for the instructions. 
+ 
+ It  is  my opinion. You reading it as an instruction is not my problem, especially when the context makes it obvious that was not the case. If you are not sure what people intended, you can always ask. GSasu   commented   on   Apr 16, 2021   GSasu on Apr 16, 2021 Last edited by  GSasu More actions 
+ @GSasu  the main driver of Cypress is usability. I can agree that the paywall is a problem, but gains in productivity are significant. It all depends on the problem you are trying to solve. We use Cypress for all our e2e needs (including live monitoring) and it works fantastic. It's not a perfect fit for everyone, but then again neither is WebdriverIO (which is also great). 
+ I don't agree that Cypress is a regression in terms of architecture though. It's not trying to be Selenium or even fit all the same use cases. 
+ 
+ The main driver of a test framework should be stability, reliability, reusability extendability, feature maturity, documentation and community, not usability.... that's something only FE engineers care about in a test tool. SDETs other QA engineers are usually capable of making any test tool "usable". I am happy that you are having a great time with Cypress, there are exceptions to all rules. 
+ You don't have to believe me or take my word on the architecture regression of Cypress (I'm not the holder of absolute truth nor the father of all knowledge), but take the steps I took and then come back with the feedback: 
+ 
+ pull down/fork the cypress repo and go through it 
+ next look through the deprecated documentation of Selenium 1 (not WebDriver) and compare Cypress feature with let's say Selenium IDE (And all it's add-ons) 
+ tell me what's different in there other than the language? 
+ 
+ If Cypress is so great, we might as well go back to Selenium IDE and accept being called "monkey testers" because all we do is "clicky clicky things" and we are not real engineers right? 
+ If we are so sure of Cypress and we as a community start accepting paying for features that other tools offer for free than I'ld rather pay for a real tool like let's say Ranorex than Cypress. Just a thought 🤔 alvipeo   commented   on   Apr 16, 2021   alvipeo on Apr 16, 2021 Last edited by  alvipeo More actions @LanderBeeuwsaert 
+ 
+ Maybe. Any level of abstraction implies some loss of control. 
+Alternative is to write everything in assembler. 
+ 
+ Genius! Go on, the whole thread is listening... csvan   commented   on   Apr 16, 2021   csvan on Apr 16, 2021 Last edited by  csvan More actions @GSasu 
+ Calm down, nobody (me included) is saying that Cypress is absolutely fantastic and the de-facto way to do e2e testing. It isn't. It  is , however, extremely good at the niche of e2e testing that it is focused on, and it provides a lot of value for those needing that niche. Other tools do the same things in their respective areas, and everybody should pick whatever helps them deliver value and build sustainable solutions. 
+ I haven't done the digging you have done regarding Cypress vs. Selenium architecture so I can't comment. Even if that is the case, it doesn't change the fact that Cypress is great at what it does, and that is what we need it for. 
+ 
+ If Cypress is so great, we might as well go back to Selenium IDE and accept being called "monkey testers" because all we do is "clicky clicky things" and we are not real engineers right? 
+ 
+ I don't understand how you are seeing it this way. Our testers  are  engineers and they  love  Cypress because it has increased their productivity tremendously. That's value delivered, and that's what we are after. I am really happy for anyone having the same results with another framework, and encourage them to stick with it. 👍 React with 👍 1 Reacted by  Bitcollage GSasu   commented   on   Apr 16, 2021   GSasu on Apr 16, 2021 Last edited by  GSasu More actions @csvan  I was and still am very calm, don't know what made you think I wasn't 🤔 . The example with the "monkey testers" is because historically speaking that's how we were described as in the past with Selenium 1. SO to me, anything that wants to reproduce this is just plain old bad. 
+In terms of the "de-facto" you haven't said it, but I don't think you know how large is the amount of engineers that come in and tell SDETs that they want Cypress because that's the industry standard. 
+ I don't and probably never will consider it a standard, it's far from it, but maybe we should all bold out the fact that it's not a standard maybe that way other engineers stop calling it that way. 
+ I wish other tools receive the same marketing that Cypress receives, I'm sure at that point Cypress would drown in it's own pot. csvan   commented   on   Apr 16, 2021   csvan on Apr 16, 2021 More actions @GSasu  I absolutely don't consider Cypress a standard (or think it should be) so no disagreement there :) 👍 React with 👍 1 Reacted by  GSasu luke-hill   commented   on   Apr 16, 2021   luke-hill on Apr 16, 2021 More actions I think from my perspective (Admittedly a weak one), of attempting to create a new JS framework from all the ones mentioned was that I came from a Ruby / scripting area (This was in a previous job, and I've since gone back to ruby). 
+ What I found when using Cypress and what others may consider the "leading standard", was it was very easy to setup as a novice JS user. But it also didn't let me do the things I wanted to as an Engineer with several years experience. Perhaps this was misconfiguration on my part, but Cypress felt very good and easy  if  you did things the way they told you. For example just some 1liners that I found almost impossible in Cypress were things like 
+ 
+ Store an element as a value (Not the text, but the web element itself). It wanted me to chain a function onto it. 
+ Create a scripted like test where I stored value 1, then I got value 2, then I did this. It likes you writing in a very heavy JS way with 5 method chains. 
+ Integrating with other plugins / trying to mix-n-match with things I like (I quite like the layout of cucumber, I like using external plugins like reporting e.t.c.) 
+ 
+ Compare that to my brief experience with wd.io, which whilst it wasn't as nice to setup, and I couldn't get working as well, was permitting for me to to code things and store things the way I wanted. I think Angular sat somewhere inbetween the two when I trialled it. 
+ So for me, given everyone is proclaiming pros and cons, I think the best thing angular can do is just  link to every migration guide it gets , but steers  100% clear  of saying this is the migration you should do. A few people have said this is good and a few have said this is bad. But when you trade on your name, when you leave your area, the name you pass on will be associated to you. 👍 React with 👍 3 Reacted by  Christopher Svanefalk, Andy Schlei and GSasu JMuhire   commented   on   Apr 16, 2021   JMuhire on Apr 16, 2021 More actions Go with cypress mdmintz   commented   on   Apr 16, 2021   mdmintz on Apr 16, 2021 More actions 👍 React with 👍 6 Reacted by  GSasu, Kushang Gajjar, Stanislav Kharchenko, Evgeniy OZ, Michael Prentice and Akkora gkushang   commented   on   Apr 17, 2021   gkushang on Apr 17, 2021 Last edited by  gkushang More actions Why not consider  CodeceptJS ?  https://codecept.io/ . It's a nice API with "I" syntax which supports any engines underneath: 
+ Supported Engines out of the box (most popular): 
+ 
+ WebdriverIO 
+ Playwright 
+ TestCafe 
+ Nightmare 
+ 
+ If anything changes in the future, just switch the engine underneath  without rewriting any tests  ❤️ 
+ More advantages:  Exclusive support for Shadow DOM elements for both WebdriverIO and Playwright. Just write a simple CSS locator without worrying about Shadow/WebComponent implementations 
+ I.click('any-shadow-element') // run against Webdriver.io and Playwright
+ 
+ ^^ We have implemented at Salesforce. For more info on ShadowDOM support, take a look at  SaleforceEngineeringBlog/WebdriverIO-ShadowDOM 👍 React with 👍 2 Reacted by  GSasu and Evgeniy OZ ❤️ React with ❤️ 1 Reacted by  GSasu 🚀 React with 🚀 1 Reacted by  GSasu kyliau   commented   on   Apr 20, 2021   kyliau on Apr 20, 2021 Contributor Author More actions Hey everyone! Thank you so much for all your feedback. We will review the comments thoroughly, and post an update here once we decide the next steps. We truly appreciate all the inputs! kyliau closed this  as  completed on Apr 20, 2021 angular locked  as resolved  and limited conversation to collaborators  on Apr 20, 2021 kyliau   commented   on   May 10, 2021   kyliau on May 10, 2021 Last edited by  mgechev Contributor Author More actions Hey everyone, thanks for all the great feedback, the Angular team really appreciates your comments. 
+ To summarize, a few high level takeaways from the RFC are: 
+ 
+ A lot of users are happy with their existing non-Protractor e2e setup 
+ Some users want freedom of choice, whereas some users want Angular to be more opinionated and provide a replacement for Protractor out of the box 
+ Some, especially enterprise users, would like to keep Protractor going, if possible (point no. 8 in the FAQ) 
+ 
+ For point (2), the stance of Angular is that we want to be opinionated when it comes to the core experience. This means sane defaults in new applications, fast serve/build, and advanced optimizations and best practices enabled out of the box. We strongly believe there are opportunities for the community / open source partners to chime in when it comes to peripheral infrastructure like e2e testing. Leveraging the power of the community will enable our team to scale better, and help us focus on the core features that make Angular unique. In light of this, we have decided not to include Protractor in new projects starting from version 12, and instead work with partners to integrate their solution with Angular CLI via schematic/builder to make sure the  ng e2e  command continues to work seamlessly. So far we have reached out and heard back from Cypress, TestCafe, and WebdriverIO. We will continue to expand our collaboration with other partners going forward (please reach out to us!). 
+ For point (3), we are exploring the possibility of a  shared ownership  of the project with other enterprise partners. This effort will keep Protractor going in the form of version 6 (no Control Flow, no legacy deps, no jasminewd). As many users have pointed out, Protractor without Control Flow is still very much useful on its own. Projects that have migrated away from Control Flow will benefit the most from such effort. If your team / company is interested in such collaboration, please get in touch with us at  devrel@angular.io . If we garner enough interest, we will work out a proposal with interested parties. 
+ Thank you everyone for taking the time to respond to this RFC! Sign up for free   to join this conversation on GitHub.   Already have an account?   Sign in to comment Metadata Metadata Assignees No one assigned Labels No labels No labels Type No type Projects No projects Milestone No milestone Relationships None yet Development No branches or pull requests Issue actions Open in GitHub Copilot app 
+ 
+ 
+
+
+
+
+   
+
+ 
+
+     
+   
+
+   
+
+           
+   Footer 
+
+  
+
+
+   
+     
+       
+         
+ 
+       
+        © 2026 GitHub, Inc.
+       
+     
+
+     
+       Footer navigation 
+
+       
+
+
+           
+             Terms 
+           
+
+           
+             Privacy 
+           
+
+
+             
+               Security 
+             
+
+             
+               Status 
+             
+
+           
+             Community 
+           
+
+           
+             Docs 
+           
+
+           
+             Contact 
+           
+
+          
+ 
+   
+     
+      Manage cookies
+     
+   
+ 
+
+   
+     
+       
+        Do not share my personal information
+       
+     
+   
+
+       
+     
+   
+ 
+
+
+
+     
+
+
+
+
+   
+     
+     
+       
+     
+    You can’t perform that action at this time.
+   
+
+     
+   
+     
+     
+       
+         
+       
+       
+     
+   
+ 
+
+     
+   
+   
+ 
+
+     
+   
+     
+       
+       
+     
+   
+ 
+ 
+   
+     
+       
+       
+     
+   
+ 
+
+
+
+
+     
+     
+     
+   
+ 
+

@@ -1,0 +1,84 @@
+__HTTP 200__
+
+ 
+   
+ 
+ Midscene.js — GUI Agent and E2E Testing Framework - Midscene.js - AI UI Automation and E2E Testing 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+   
+     Are you an LLM? View /llms.txt for optimized Markdown documentation, or /llms-full.txt for full documentation bundle. This page is also available as Markdown at /index.md Search K Versions Changelog Midscene.js v0.x Midscene.js v1.x English English 简体中文 Theme Languages English English 简体中文 Menu ON THIS PAGE Discover Midscene Introduction The basics Showcases Getting started Try the GUI Agent Create a test project Control any platform with Skills Models Model selection guide Use a model API Key Use a ChatGPT subscription Advanced configuration & debugging Platform integrations Platform overview Integrate with Playwright Integrate with Puppeteer Bridge to the desktop Chrome Android iOS HarmonyOS Desktop Midscene Test Framework overview Create and run test projects Configure test projects Develop custom Nodes Run in GitHub Actions Legacy YAML automation YAML script runner Workflow in YAML format Migrate to Midscene Test Reference GUI Agent API Advanced guides Provide application knowledge to a GUI Agent Process report files Write BDD scripts with Gherkin Integrate with any interface Cache AI plans & DOM locators Resources FAQ Changelog Awesome Midscene Data privacy Benchmark AndroidWorld benchmark MobileWorld benchmark AppControlBench benchmark # See interfaces like a human E2E testing in natural language   
+ Midscene.js provides a vision-based GUI Agent and a natural-language E2E testing framework for web, mobile, and desktop apps. 🔥 Latest news  Starting with v1.16, Midscene supports using Jev 1.4’s visual capabilities to drive E2E testing.  See what’s new 15k+ Github Stars MIT Fully open source #2 No.2 in Github trending # Describe steps and expectations in natural language Describe what a user wants to do and what they should see. Express the same intent in YAML or in your existing JavaScript tests. YAML · @midscene/test Vitest + JavaScript beforeEach:
+  - gotoUrl: https://your-shop.example
+
+cases:
+  - name: "Find headphones under $100"
+    steps:
+      - aiAct: "Search for headphones and filter the results to prices under $100"
+      - aiWaitFor: "The filtered search results are visible"
+      - aiAssert: "There are products in the search results, and each costs less than $100" import { test } from 'vitest';
+import { PlaywrightAgent } from '@midscene/web/playwright';
+
+// Model configuration, page setup, and cleanup omitted
+test("Find headphones under $100", async () => {
+  const agent = new PlaywrightAgent(page);
+  await agent.aiAct("Search for headphones and filter the results to prices under $100");
+  await agent.aiWaitFor("The filtered search results are visible");
+  await agent.aiAssert("There are products in the search results, and each costs less than $100");
+}, 180_000); # A GUI Agent built for testing Midscene’s GUI Agent brings visual actions and assertions to your existing Playwright, Puppeteer, or JavaScript tests. # See, act, and verify like a human E2E testing aims to verify complete workflows from the user’s perspective. Midscene uses vision to interact as a user would: observe the screen, find the target, act, and check what the user actually sees.  See real-world examples # One API, across platforms Visual localization does not depend on a particular UI rendering stack. Platform adapters provide screenshots and actions, bringing the same approach to web, mobile, and desktop interfaces, including HTML canvas. Platform Package Description Web @midscene/web Playwright · Puppeteer · Desktop Chrome Android @midscene/android Devices / emulators · ADB iOS @midscene/ios Devices / simulators · WebDriverAgent HarmonyOS @midscene/harmony HarmonyOS NEXT · HDC Desktop @midscene/computer macOS · Windows · Linux, with remote RDP Custom interfaces @midscene/core Connect through screenshots and actions # Model options and cost Multiple model options Choose from Doubao, DeepSeek, Qwen, GPT, Gemini, Kimi, and more to fit your tasks and budget. View model configuration  → Benchmark example · AppControlBench $0.59 / 60 tasks Total model API cost Benchmark example · AppControlBench $0.59 / 60 tasks Total model API cost Low model API cost In this AppControlBench run, Doubao Seed 2.1 Turbo passed 58 of 60 tasks at a total model API cost of $0.59. View benchmark report  → # Benchmarks 
+ AndroidWorld : Pass@1 of 93.1% and Pass@3 of 97.4%.  Read the benchmark report 
+ MobileWorld : Pass@1 of 78.6%, completing 92 of 117 tasks.  Read the benchmark report 
+ AppControlBench : Pass@1 of 96.7%, passing 58 of 60 tasks.  Read the benchmark report 
+ # A new E2E testing framework designed for natural language Midscene Test ( @midscene/test ) is a natural-language E2E testing framework designed for the AI era. It combines AI’s flexibility with the determinism of code in each test case: natural language expresses actions and expectations, while code handles business logic that requires precise control. Test flows have a clear, readable structure that both people and AI agents can understand, write, and maintain, allowing test intent and its underlying implementation to evolve independently.  Get started with Midscene Test # AI and business operations in one YAML file Each YAML step calls a Node: an AI operation, a platform operation, or a custom business operation. Compose these Nodes into test cases that people and AI agents can read, write, and review. 
+ AI AI operations APIs such as aiAct and aiAssert read the screen and follow natural-language instructions. Business Business operations Custom Nodes use TypeScript to prepare test data, check APIs, and clean up resources. cases/refund.yaml 1 beforeEach : 2    -  order.prepare :  { status: paid } Business 3    -  gotoUrl :  ${shopUrl}/orders/latest Business 4 5 cases : 6    -  name :  A paid order supports a full refund 7      steps : 8        -  aiAct :  Apply for a full refund and submit AI 9        -  aiAssert :  The page shows that the refund was submitted AI 10        -  order.checkRefund :  { status: refunding } Business 11 12 afterEach : 13    -  clearCookies :  {} Business # Test cases maintained by people and AI As your product evolves, your test project can grow a library of reusable business operations while keeping test intent clear in each case. People and AI agents can use the same capability reference to understand, write, and update cases, while the implementation of business operations is maintained independently. 
+ Midscene Test provides custom Nodes for these business capabilities and generates a Markdown Node Spec from the operations registered in the project, giving people and AI agents a shared reference for authoring test cases.  Explore custom Nodes 
+ nodes/order.ts defineNode({
+  name: 'order.prepare',
+  description: "Create a test order",
+  inputSchema: z.strictObject({
+    status: z.literal('paid'),
+  }),
+  async execute({ input }) {
+    await orders.create(input);
+  },
+}); midscene-node-spec.md ### order.prepare
+Create a test order
+- status: "paid" case.yaml steps:
+  - order.prepare:
+      status: paid # Who is using Midscene ByteDance Alibaba Ctrip Xiaomi Rome OS Volcengine Douyin TikTok Lark Soda Music Doubao # Next steps 
+ Understand the basics : Learn how the GUI Agent works and explore its core capabilities in  The Basics 
+ Try visual interaction : Follow the  quick start  to try natural-language actions and assertions 
+ Create a test project : Write and run YAML test cases with  Midscene Test 
+ To let AI coding agents operate your UI, explore  Midscene Skills . Edit this page Last Updated :  10/21/2026, 4:13:55 PM Next page The basics ON THIS PAGE Edit this page Copy Markdown Open in chat 
+     
+   
+ 

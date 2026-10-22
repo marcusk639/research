@@ -1,0 +1,865 @@
+__HTTP 200__
+                                                                   What do all these Buttons do?
+                                                        Statically Mining Android User Interfaces at Scale
+                                                  Konstantin Kuznetsov                                    Chen Fu                                    Song Gao
+                                                CISPA Helmholtz Center for                 State Key Laboratory of Computer            State Key Laboratory of Computer
+                                                   Information Security                   Science, Institute of Software, Chinese     Science, Institute of Software, Chinese
+                                              Saarbrücken, Saarland, Germany                       Academy of Sciences                         Academy of Sciences
+                                            konstantin.kuznetsov@cispa.saarland            University of Chinese Academy of            University of Chinese Academy of
+                                                                                                          Sciences                                    Sciences
+                                                                                                      Beijing, China                              Beijing, China
+
+
+
+
+arXiv:2105.03144v1 [cs.SE] 7 May 2021
+                                                                                                     fchen@ios.ac.cn                              gaos@ios.ac.cn
+
+                                                      David N. Jansen                                  Lijun Zhang                                Andreas Zeller
+                                             State Key Laboratory of Computer                  Institute of Software, Chinese              CISPA Helmholtz Center for
+                                            Science, Institute of Software, Chinese                 Academy of Sciences                       Information Security
+                                                     Academy of Sciences                               Beijing, China                    Saarbrücken, Saarland, Germany
+                                                        Beijing, China                               zhanglj@ios.ac.cn                        zeller@cispa.saarland
+                                                      dnjansen@ios.ac.cn
+                                        ABSTRACT                                                                   The advent of app stores opens an opportunity to mine millions
+                                        We introduce Frontmatter: a tool to automatically mine both             of apps for user interfaces and their properties. Apps can be an-
+                                        user interface models and behavior of Android apps at a large scale     alyzed dynamically by executing them. However, this approach
+                                        with high precision. Given an app, Frontmatter statically extracts      raises the test generation problem, namely to synthesize appropri-
+                                        all declared screens, the user interface elements, their textual and    ate interactions in order to reach and cover the entire user interface.
+                                        graphical features, as well as Android APIs invoked by interact-        Addressing this problem can be quite expensive. For instance, the
+                                        ing with them. Executed on tens of thousands of real-world apps,        developers of the Rico dataset [11] spent $19,200 for crowdsourcing
+                                        Frontmatter opens the door for comprehensive mining of mobile           user traces to analyze 9,7K applications. However, the executable
+                                        user interfaces, jumpstarting empirical research at a large scale,      code of apps is also available for static analysis. This opens the
+                                        addressing questions such as “How many travel apps require reg-         opportunity to analyze millions of apps for the way they interact
+                                        istration?”, “Which apps do not follow accessibility guidelines?”,      with users—and thus jumpstarting empirical research on user inter-
+                                        “Does the user interface correspond to the description?”, and many      faces at a large scale. Which apps require a password? How many
+                                        more. Frontmatter and the mined dataset are available under an          of these allow for simple password recovery? Which apps allow to
+                                        open-source license.                                                    contact the vendor, and how? Is the concept of a “shopping cart”
+                                                                                                                universally adopted? How do these things change over time?
+                                        KEYWORDS                                                                   Many of these questions could be answered by statically min-
+                                                                                                                ing app user interfaces. Alas, static analysis of apps and their user
+                                        App mining, user interfaces, Android, app stores, static analysis       interfaces is not exactly easy either. The challenges are manifold:
+
+                                        1    INTRODUCTION                                                           • A user interface analysis should be complete, that is, take the
+                                        When designing a user interface, a good practice is to follow the             entire user interface into account. Yet, parts of the user inter-
+                                        conventions as set by other user interfaces. But what are these               face may be constructed programmatically, which requires
+                                        conventions exactly? While there are myriads of different user                the analysis to identify (and interpret) the constructing code.
+                                        interfaces around us, automated empirical analysis of these UIs is a        • A user interface analysis should be precise, that is, properly
+                                        surprisingly difficult task.                                                  identify user interface elements, correctly associate them
+                                           The Web, for instance, sports billions of Web pages. Yet, those            with each other as well as related code locations. An impre-
+                                        Web sites that actually are accessible for empirical analysis only            cise analysis (say, simply extracting all fixed strings from an
+                                        form the “surface Web”, with the much larger “deep Web” requiring             executable and its resources) may retrieve all user interface
+                                        specific user inputs (such as passwords) to be accessible. To analyze         labels (among many other things), but will not be able to
+                                        all pages of a Web application, an automated analysis thus has                properly group and organize them.
+                                        to synthesize such inputs, which brings all the problems of test            • A user interface analysis should scale, that is, be applicable
+                                        generation. To automatically reach and explore millions of Web                to the large majority of apps as found in app stores. Scal-
+                                        applications, one would have to synthesize interactions for all of            ability is an issue because a precise and complete analysis
+                                        these, which is hard—and in many cases (passwords, internal web               typically takes time—possibly too much time for the analysis
+                                        pages) simply impossible.                                                     of hundreds of thousands of apps.
+                                                                    Konstantin Kuznetsov, Chen Fu, Song Gao, David N. Jansen, Lijun Zhang, and Andreas Zeller
+
+
+   In this paper, we present Frontmatter, a complete, precise, and             In this paper, we evaluate Frontmatter against Gator and
+scalable tool to extract user interface information from Android            Backstage showing that the above observations are not isolated,
+apps. Given an Android app, Frontmatter statically identifies all           but actually common—and while we cannot say that Frontmatter
+screens reachable within the app; for every such screen, it extracts        achieves 100% precision1 , our experiments confirm that it is suffi-
+the GUI hierarchy of UI elements on the screen, together with               ciently precise to allow for large scale analysis of user interfaces.
+their identifiers, types, user-facing values such as displayed text            What can one do with Frontmatter? We have applied Front-
+and icons, and Android APIs invoked while interacting with them.            matter on almost 250,000 apps from the AndroZoo database (Google
+This data is extracted from the app manifest and resource files (a          Play apps from 2018, 2019, and the first half of 2020) and were able
+description of all screens and their layout) as well as from the app        to extract user interface data of 70% of apps.
+code itself, in particular for dynamically defined content.                    The reason why a fraction of the apps from the dataset is con-
+   To make the analysis precise, we adapted the state-of-the-art            sidered has to do with their nature rather than to the faults of our
+static analysis technique by Späth et al. [25] to work on Android           tool: a lot of apps are games, cross-platform apps with their own UI
+apps. Thanks to its flow-, field-, and context-sensitivity, the Front-      builders, and apps with side code loading. Around half of the initial
+matter static analysis avoids unnecessary over-approximations:              dataset of 500K apps consists of games, based on Unity platform,
+each UI element is placed at the proper screen and matched with a           and cross-platform apps (e.g., created with Xamarin). As such, they
+correct label and a list of triggered API methods. Our implementa-          cannot be analyzed with common static analysis approaches, but
+tion also reduces the number of points-to queries needed to resolve         only explored dynamically and are therefore filtered out in our
+particular UI elements.                                                     study.
+   To accomplish completeness, we propose a lightweight procedure              This corpus allows us to answer all the questions listed above
+to augment the code so that the resulting call graph contains more          using simple database queries. For instance, the query about Login
+feasible edges, which are missing otherwise. At the same time,              functionality reveals that only 35% apps in our dataset that have a
+the respective inter-component control flow graph (ICFG) is kept            “login” label suggesting to reset the password. Frontmatter and
+concise, which contributes to scalability, as the alias and points-to       the extracted data set are available under open source licenses.
+analyses may be expensive on large ICFGs.                                      In summary, this paper makes the following contributions:
+   As an example of the data Frontmatter provides, consider                     (1) Context-sensitive reconstruction of user interface hi-
+the well-known VLC video player app. Figure 1 shows its video-                      erarchies. Frontmatter is designed from scratch to allow
+playing screen. For each UI element, we show an excerpt of the                      for flow-, field-, and context-sensitive extraction of user in-
+data extracted by Frontmatter. We see that there are three title                    terface data from Android apps. Frontmatter achieves this
+elements (title, battery, systime) at the top, a seek bar with time                 • by integrating the points-to analysis technique by Späth
+indicators and control buttons at the bottom. Most prominently                         et al. [25] to work with the Android framework; and
+located in the middle is the big player_overlay_info text label                     • through a lightweight procedure to construct the elaborate
+(showing Center in the screenshot), which displays various status                      call graph, preserving the context of callbacks.
+messages such as the current aspect of the video shown. Figure 1                (2) Associating UI elements and API calls. The resulting
+shows only a subset of the data extracted from the screen. VLC                      models contain not only UI hierarchies, but also API calls—
+has nine more screens, in total Frontmatter extracts 214 GUI                        reactions of UI elements to user interaction, facilitating the
+elements with 100 attached labels and 16 dialogs from the app.                      analysis of the app’s behavior.
+   Frontmatter is not the first tool to analyze Android apps; and
+                                                                                The remainder of the paper is organized as follows. After dis-
+it also is not the first to do so with a focus on user interfaces.
+                                                                             cussing the existing approaches (Section 2) and the background on
+Gator [28] and Backstage [3] take an app, statically analyze it,
+                                                                             Android, its apps, and their user interfaces (Section 3), we intro-
+and extract its user interface information, including the associa-
+                                                                             duce and discuss the analysis techniques of Frontmatter (Sec-
+tion of user interface elements and related code. However, as we
+                                                                             tion 4). In our evaluation (Section 5), we compare it to existing
+show in this paper, their underlying analysis is not always pre-
+                                                                             approaches [3, 28]. Section 7 concludes and presents perspectives
+cise enough to scale to real-world programs. In Figure 1, for in-
+                                                                             for future work.
+stance, Frontmatter identifies 16 possible labels for the central
+player_overlay_info UI element; these are aspect values such
+as "Center", "4:3", "16:9", or status values such as "Locked" or             2 RELATED WORK
+"Unlocked". Gator also identifies these 16 labels, which is good;            2.1 Static Analysis of Android Apps
+however, due to its context-insensitive nature it also reports six           Gator [28] is a popular program analysis toolkit for Android.
+more possible values: "/.nomedia", "+", ".", "..", "/..", and                Gator enables and supports static analysis of Android apps, notably
+"/". These six additional values all are file paths or parts thereof (a      in conjunction with user interaction. Gator uses static analysis to
+".nomedia" file in a folder indicates that this folder should not be         model and extract GUI-related Android objects, their flow through
+indexed by VLC), but never user-facing on a screen; hence, they are          the application, and their interactions with each other via the An-
+false positives. While Gator over-approximates on this label, Back-          droid abstractions. Its focus and main uses are classical domains
+stage under-approximates; applied to player_overlay_info, Back-              of static analysis, including static error checking, security analysis,
+stage identifies only one possible center label "4:3". Likewise, a
+dynamic execution might not be able to explore all possible labels,          1 Precisely determining the values a UI element can take is equivalent to the (undecid-
+though reporting only feasible ones.                                         able) halting problem; so as with any program analysis, we must live with imprecision.
+What do all these Buttons do?
+Statically Mining Android User Interfaces at Scale
+
+
+
+                   player overlay
+   "idVariable": "player  overlay title
+                                  title",
+                                                                                                  "idVariable": "player overlay systime
+                                                                                                                 player overlay systime",
+   "id": 2131099784,
+                                                                                                  "viewClass": "android.widget.TextView",
+   "viewClass": "android.widget.TextView",
+                                                                                                  "id": 2131099786,
+   "textAttributes":
+       "text":
+           "value": "",
+           "variable": "dynamic"                                                                  "idVariable": "player overlay battery
+                                                                                                                 player overlay battery",
+                                                                                                  "id": 2131099785,
+                   player overlay
+   "idVariable": "player  overlay info
+                                  info",                                                          "viewClass": "android.widget.TextView",
+   "id": 2131099782,
+   "viewClass": "android.widget.TextView",
+    "textAttributes":[                                                                                           player overlay
+                                                                                                  "idVariable": "player overlay seekbar
+                                                                                                                                seekbar",
+       "text":                                                                                    "id": 2131099794,
+           "value": "Center",                                                                     "viewClass": "android.widget.SeekBar",
+           "variable": "dynamic"
+       "text":
+           "value": "Volume",                                                                                     player overlay
+                                                                                                                         overlay adv
+                                                                                                                                 adv function
+                                                                                                                                     function",
+                                                                                                  "idVariable": "player
+           "variable": "dynamic"
+                                                                                                  "id": 2131099789,
+        ...
+                                                                                                  "viewClass": "android.widget.ImageButton",
+   ]
+                                                                                                  "otherAttributes":
+                                                                                                      "background":
+   "idVariable": "lock overlay button
+                  lock overlay button",                                                                   "value": "res/drawable/dots.png",
+   "id": 2131099799,                                                                                      "variable": "dots"
+   "viewClass": "android.widget.ImageButton",                                                     "listeners": [
+   "background":                                                                                     "void showAdvanceFunction(android.view.View)"
+       "value": "res/drawable/ic_lock.png",                                                       ]
+       "variable": "ic_lock"                                                                      "apis": [
+                                                                                                     "<android.app.Dialog: void show()>"
+                                                                                                  ]
+                   player overlay
+   "idVariable": "player  overlay time
+                                  time",
+   "id": 2131099796,
+   "viewClass": "android.widget.TextView",                                                        "idVariable": "player          length",
+                                                                                                                         overlay length
+                                                                                                                  player overlay
+   "textAttributes":                                                                              "id": 2131099797,
+       "text":                                                                                    "viewClass": "android.widget.TextView",
+           "value": "0:00",                                                                       "textAttributes":
+           "variable": "time_0"                                                                       "text":
+                                                                                                          "value": "0:00",
+                  player overlay
+   "idVariable": "player overlay backward
+                                 backward",                                                               "variable": "dynamic"
+   "id": 2131099800,
+   "viewClass": "android.widget.ImageButton",
+   "background":                                                                                                 player overlay
+                                                                                                  "idVariable": "player overlay size
+                                                                                                                                size",
+       "value": "res/drawable/ic_backward.xml",                                                   "id": 2131099795,
+       "variable": "ic_backward"                                                                  "viewClass": "android.widget.ImageButton",
+   ...
+
+
+
+
+                                Figure 1: UI element data extracted by Frontmatter from a VLC screen (excerpt)
+
+
+test generation, and debugging. This is in contrast to Frontmatter,      build an initial UI model. Moreover, they rely on FlowDroid to
+which was designed from the ground to extract precise UI models          build call graphs of all component’s entry points, whose limitations
+at scale.                                                                will be discussed later. GoalExplorer focuses on the reconstruction
+   Gator is able to extract static models of the user interface from     of screen transition graphs, while Frontmatter aims at screen
+an app [22]. While its analysis of callback methods to model window      content.
+transition graphs is context-sensitive, the reconstruction of window        GUIFetch [7] searches for apps that are as similar as possible to
+content is context-insensitive, which leads to some imprecision          the provided sketch of an app. It builds models of app’s screens
+mentioned in a couple of subsequent papers [27–29]. As we will           and screen transitions using a combination of static and dynamic
+show, Gator’s precision is not sufficient for extracting models with     analysis. In contrast to Frontmatter, though, GUIFetch requires
+accurate label assignment.                                               the app source code for its analysis.
+   The Backstage tool [3] is related to Frontmatter and Gator
+in that it also aims to analyze apps in conjunction with their user
+interface, associating user interface elements with handler and          2.2    Dynamic Exploration of Android UIs
+generator functions. As the name suggests, the aim of Backstage          On the Android platform, a number of tools exist to systematically
+is to identify what happens “behind the scenes”, i.e. which API          explore dynamic app behavior. Azim et al. [4] introduced Targeted
+calls are triggered when a user interface element is interacted with.    Exploration, a novel technique that leverages static taint analysis
+As we show in this work, however, Backstage frequently fails to          to facilitate fast yet effective exploration of Android app activities
+reconstruct a full UI hierarchy of an app, missing numerous UI           and Depth-first Exploration, a technique that does not use static
+elements and labels. This is in contrast to Frontmatter, set to          analysis, but instead performs a thorough GUI exploration which
+reconstruct the complete GUI model of an app.                            results in increased method coverage. Bhoraskar et al. [8] presented
+   GoalExplorer by Lai et al. [14] statically models UI screens and      Brahmatra, an app automation tool addressing the problem that
+screen transitions in order to guide the dynamic exploration of          third-party code is usually beyond the reach of traditional GUI
+an app. Although the authors do not cite Backstage, the analysis         testing tools. It uses static analysis to construct a page transition
+of the source code2 of the tool showed that it uses Backstage to         graph and discover execution paths to invoke third-party code, and
+                                                                         then performs binary rewriting to “jump start” them efficiently. In
+2 https://resess.github.io/PaperAppendices/GoalExplorer/                 contrast to these approaches, Frontmatter uses static analysis,
+                                                                   Konstantin Kuznetsov, Chen Fu, Song Gao, David N. Jansen, Lijun Zhang, and Andreas Zeller
+
+
+which avoids the problem of test generation having to cover all             with code mining, increased performance of web page segmenta-
+functionality.                                                              tion and allowed extraction of textual content without the “costly”
+                                                                            recognition stage.
+                                                                               Bakaev et al. [6] applied a vision-based machine learning ap-
+2.3    Android UI Datasets
+                                                                            proach and built a Web User Interface Visual Analyzer, using image
+As for Android UI analysis at scale, Shirazi et al. [23] collected          and text recognition to identify UI elements and labels. In contrast,
+400 apps from Google Play Store and analyzed the common design              Frontmatter can extract the type and labels of visual elements
+patterns of these apps. They estimated the complexity of each app           directly from the Android application.
+design by counting the numbers of activities, layout files, and im-
+ages and computed descriptive statistics such as the most frequent
+interface elements and the most common combinations of widgets.
+                                                                            2.6     Optimizing Android App analysis
+   Alharbi et al. [1] applied a data-mining approach to analyze             Besides Gator and Backstage, recent approaches have been sug-
+design pattern changes in Android apps. They tracked 24,436 apps            gested to further improve static analysis of Android apps. Mirzaei et
+and collected their versions. After extracting UI elements from             al. [18] employed static techniques to identify interaction between
+these apps, they conducted differential analyses regarding design           GUI widgets and significantly reduced the number of tests by avoid-
+pattern changes.                                                            ing the generation of tests for widgets that do not interact. Zhang
+   Deka et al. [11] created the Rico dataset dynamically mining apps        et al. [30] introduced a launch mode analysis for distinguishing
+and captured view hierarchies, screenshots, and user interactions           launched instances of an activity class based on the launch mode
+with help of crowdsourcing. The Rico dataset contains design data           specified and employed a launch-mode-aware context-sensitive
+from more than 9.7k Android apps spanning 27 categories. It ex-             activity transition analysis to track activity transitions context-
+poses visual, textual, structural, and interactive design properties        sensitively, together with an object-sensitive pointer analysis. Both
+of more than 72k unique UI screens. Based on the Rico dataset,              these optimizations could further improve the precision of Front-
+Micallef et al. [17] investigated whether smartphone apps use login         matter, as well.
+features, and what relationships exist between login features and
+apps popularity. Liu et al. [16] proposed an automatic approach             3     BACKGROUND
+for annotating mobile UI elements with both structural semantics           We now provide some background on the Android GUI, i.e. how UI
+such as buttons and functional semantics such as add or search, and        elements are declared and how they can be arranged in the layout.
+computed semantic annotations for the 72k unique UIs in the Rico              In the Android framework, a single screen containing several
+dataset. The ReDraw data set [19] is obtained via dynamic analysis,        graphical user interface (GUI) elements, such as buttons and text
+like Rico; it was successfully used to prototype GUIs for mobile           fields, referred to as widgets, is represented by an activity object.
+apps using machine learning techniques.                                    Each app typically contains multiple activities. The layout of the
+   Being purely dynamic, both the Rico and ReDraw data sets cap-           activity is usually declared in an XML file. This XML file describes
+ture any kind of GUI including dynamic content and are very                the hierarchical structure of the GUI.
+precise—for the executions that have been considered. However, by             All building blocks of Android GUI can be divided into two
+construction, their models cannot be complete; it is hard to cover         groups: views and layouts. View elements represent specific UI
+UI elements that are visible only under certain conditions; and            widgets like buttons, text fields, and images. They are terminal
+exploration of an app takes time. Also, neither records API usage.         nodes in a GUI tree. Layout elements serve as containers, which
+   In contrast to these approaches, Frontmatter is set to be applied       help to organize views in a particular manner, for instance within a
+automatically (i.e., without human intervention), statically (i.e.,        grid or as a scrollable list. Each XML node corresponds to a certain
+without executing the app) to the totality of Android app binaries.        Android class, either provided by the platform or implemented by
+                                                                           a developer. Thus, the Android framework uses layout files as a
+2.4    Mining Web User Interfaces                                          template to create UI objects at runtime.
+Frontmatter is not the first approach to mine UI data. For the Web            As an example of a layout file, consider Listing 1. This layout
+platform, Webzeitgeist [13] is a platform for large-scale design min-      contains a TextView widget which displays text to the user; an Im-
+ing comprising a repository of over 100k Web pages and 100 million         ageButton—a button with an icon; a ListView used to show a list
+design elements, capturing and combining the visual and structural         of other widgets; a fragment container, which will be substituted
+representations of web pages to compute design features that were          with a layout of SampleFragment during the runtime; and a Rela-
+used to power a number of data-driven design tools. Frontmatter            tiveLayout container, which is empty now, but can be utilized as an
+focuses on the Android domain instead, which allows to take the            inflation point for additional UI elements, instantiated in the code.
+entire application into account—in contrast to mining Web appli-              Each UI element usually has an identifier (such as @+id/info)
+cations, where the large majority of pages is inaccessible for the         that allows the code to refer to it to activate it or update its con-
+public.                                                                    tent. UI elements also may have text which typically comes as
+                                                                           a symbolic label (such as @string/info) that would be replaced
+                                                                           by a string according to the user’s language. Finally, UI elements
+2.5    Visual User Interface Mining                                        are tied to callbacks—functions that are invoked when the UI ele-
+A number of approaches analyze user interfaces visually, i.e. from         ment is activated. For the @+id/btn button, the onClick callback is
+screen shots and recordings. Pu et al. [21] combined visual analysis       xmlDefinedOnClick: This means that when the button is clicked,
+What do all these Buttons do?
+Statically Mining Android User Interfaces at Scale
+
+
+the method void xmlDefinedOnClick(View v) is invoked, with                                 Listing 2: onCreate method example
+v being that button.
+                                                                              1 class SampleActivity extends Activity {
+    All activities which are available in an application should be
+                                                                              2 @Override
+declared in the app’s manifest file. Android manages activity in-
+                                                                              3 void onCreate(Bundle bundle){
+stances by invoking specific callback methods that correspond to
+                                                                              4     this.setContentView(R.layout.sample);
+particular stages of their life cycle. When the system creates an
+                                                                              5     View info = getActivity().findViewById(R.id.info);
+activity, it invokes the corresponding OnCreate callback, which
+                                                                              6     info.setText("Info");
+should be implemented by the developer.
+                                                                              7     List<String> labels = helper.getLabels();
+    Listing 2 shows an example code of this method. It is used to
+                                                                              8     LinearLayout c = (LinearLayout)this.findViewById(R.id.container);
+define the layout for the activity’s user interface, create and ini-
+                                                                              9     LayoutInflater inflater = LayoutInflater.from(this);
+tialize additional widgets, and bind data to lists. By calling the
+                                                                             10     View container = inflater.inflate(R.layout.new_layout, c, true);
+setContentView(layoutFileId) method (Line 4) the system re-
+                                                                             11     EditText et = new EditText(this);
+trieves a UI hierarchy from the layout.xml file and instantiates
+                                                                             12     container.addView(et);
+necessary Java classes. Here, R.layout.sample is a unique integer
+                                                                             13     et.setOnLongClickListener(new View.OnLongClickListener(){
+identifier referring to layout.xml, generated by the compiler. Inter-
+                                                                             14        @Override
+nally, the setContentView method fetches a special LayoutInflator
+                                                                             15        public void onLongClick(View v) {
+object which takes care of transforming an XML template into a
+                                                                             16          v.setHint(labels.get(0));
+widget instance. This object is also widely used within the appli-
+                                                                             17        }
+cation code to manipulate layouts and their parts. In Line 10, the
+                                                                             18     }
+LayoutInflator inflates new_layout to the GUI hierarchy taking
+                                                                             19 }
+container as an attachment point. Depending on the signature, the
+                                                                             20 }
+LayoutInflator::inflate method can perform various actions.
+Normally, it returns the root View of the created hierarchy. If the
+third boolean attachToRoot parameter is provided and true, the
+                                                                             commonly implemented as anonymous classes, which may cap-
+inflater attaches new widgets to a container. Otherwise, the view
+                                                                             ture the outer variables (in our example, labels). We model callback
+remains dangling and can be manually attached via an addView call.
+                                                                             associations to capture the propagation of views and control flow.
+Calls to inflaters may occur in any place of the application code,
+where the context is available (either propagated through method
+calls or obtained via a system call). Thus, it is important to resolve                   Listing 3: ListAdapter handling example
+inflate invocations in the whole program code.                                1   class SampleActivity extends Activity {
+    A widget object provides a number of methods to manipulate its            2     void onCreate(Bundle bundle){
+properties and associate it with text, listeners, or add it to other wid-     3       ...
+get groups. A reference to an existent View can be obtained with the          4       List<String> items = db.getItems();
+findViewById call (Line 8). Besides using XML files, one can create           5       ListView l=(ListView)this.findViewById(R.id.list);
+particular widgets or the entire layout dynamically in the app code           6       l.setAdapter(new SearchAdapter(this, items, containerId));
+(like in Line 11). Usually, listeners of interaction events are tied to UI    7     }
+elements programmatically. For instance, in Line 13 the EditText              8   }
+object is additionally assigned an onLongClick callback by calling            9   class SampleAdapter extends ListAdapter {
+View.setOnLongClickListener(l) method. These listeners are                   10     @Override
+                                                                             11     public View getView(int position,
+                                                                             12                            View convertView, ViewGroup parent) {
+                                                                             13       if (convertView == null) {
+                                                                             14            convertView = LayoutInflater.from(context).
+          Listing 1: Sample layout.xml Activity layout                       15                inflate(R.layout.row_items, parent, false);
+ 1 <RelativeLayout>                                                          16       }
+ 2 <TextView android:id="@+id/info"                                          17       return convertView;
+ 3     android:text="@string/info"/>                                         18     }
+ 4 <ImageButton android:id="@+id/btn"                                        19   }
+ 5     android:src="@drawable/search_src"
+ 6     android:onClick="xmlDefinedOnClick"
+                                                                                There are Android objects which require special handling of
+ 7     android:contentDescription="@string/search"/>
+                                                                             their layouts. The most frequently used are:
+ 8 <ListView android:id="@+id/list"/>
+ 9 <fragment android:name="sample.SampleFragment"
+                                                                             AdapterView is a view that displays items loaded into an adapter
+10     android:id="@+id/fragment"/>
+                                                                                     from a data-source. For each item to show on a screen, the
+11 <RelativeLayout android:id="@+id/container">
+                                                                                     Android platform generates a sublayer with the getView
+12 </RelativeLayout>
+                                                                                     method, (Listing 3), which should be implemented for each
+                                                                                     adapter assigned to the view. Thus, the association of a
+                                                                       Konstantin Kuznetsov, Chen Fu, Song Gao, David N. Jansen, Lijun Zhang, and Andreas Zeller
+
+
+     view element and an adapter, established by setAdapter                     4.1     Constructing the Call Graph
+     call, (Line 6), and adapter layout generation (Line 12) should             Boomerang’s pointer analysis requires an inter-procedural control
+     be modeled correctly.                                                      flow graph based on a corresponding call graph. Rather than having
+Fragment is a portion of the user interface that can combine a                  a single entry-point method from which to start the call graph
+     single activity to build a multi-pane UI or reuse a module in              construction, Android apps combine a large set of entry callbacks,
+     multiple activities. There are two different ways to include a             invoked by the system. Hence, it is necessary to start the analysis
+     fragment into an activity: (1) Declare it in the layout file of            by producing a dummy main method, which models the invocation
+     the activity directly (see Line 9 in Listing 1 for an example);            of these callbacks.
+     (2) Dynamically attach the fragment in the code by means                      First, Frontmatter generates an entry point for the analyzed
+     of the FragmentManager class ( Line 14in Listing 4).                       app, suitable for call graph generation. Then it uses the entry point
+     As with adapters, the layout of the fragment is initialized in a           to build a control-flow graph, which is used to initialize a context-
+     special onCreateView callback method—its return statement                  sensitive points-to analysis. Finally, Frontmatter identifies points-
+     should reference a root view container object with an inflated             of-interest involved in GUI construction, and performs resolution
+     UI tree. Moreover, it can fetch the execution context and                  of all variables involved.
+     update other widgets (as in Line 4).                                          We utilize a customized main method generator from Flowdroid.
+                                                                                The generator aims to accurately model the life-cycle of Android
+                                                                                components and the execution order of related callbacks. However,
+                                                                                for our purposes, it still is incomplete. For instance, it only con-
+             Listing 4: Fragment handling example                               siders fragments defined in XML layout templates, thus missing
+ 1   class SampleFragment extends Fragment{                                     the ones attached dynamically in the code. Hence, the call graph,
+ 2     @Override                                                                generated then by Soot with the SPARK [15] constructor, lacks
+ 3     View onCreateView(LayoutInflater li, ViewGroup vg, Bundle b){            edges, rendering parts of the actually executable code effectively
+ 4       View info = getActivity().findViewById(R.id.info);                     unreachable. To obtain a higher recall along with proper handling
+ 5       info.setText("Fragment␣added");                                        of fragments, we implemented a number of extensions to enrich
+ 6       View view = li.inflate(R.layout.fragment, vg, false);                  the final call graph with additional edges.
+ 7       return view;                                                              The call graph assembly procedure encompasses four steps, dis-
+ 8     }                                                                        cussed in the following subsections.
+ 9   }
+10   class SampleActivity extends Activity {                                    4.1.1 Step One: Allocation Points of View Objects. The call graph
+11     @Override                                                                generated by the SPARK algorithm sometimes misses edges based
+12     void onCreate(Bundle bundle){                                            on the context of the invoking expression. It is a well known limi-
+13       ...                                                                    tation which happens because there is no object allocation point
+14       FragmentManager fm = this.getSupportFragmentManager();                 for SPARK to use as the starting point for its type propagation3 . In
+15       FragmentTransaction ft = fm.beginTransaction();                        order to get these missing edges, one may, for instance, employ the
+16       SampleFragment fragment = new SampleFragment();                        CHA [10] or RTA [5] call graph construction algorithms, but they
+17       ft.add(R.id.container, fragment);                                      are less precise.
+18       ft.commit();                                                              This issue of imprecision affects very common code statements.
+19     }                                                                        For instance, consider the statement
+20   }                                                                                    Button button = (Button)findViewById(id);
+                                                                                which fetches a UI widget by its id. Although the findViewById
+                                                                                method returns a View reference, it follows the proxy pattern
+   In summary, in order to construct a precise GUI model of an app,             and does not explicitly create and return an instance of the View
+one needs to correctly identify creation, inflation, and attachment             object. As SPARK cannot identify an object allocation point for
+of UI components (like activities, views, adapters, and fragments) by           this statement, all subsequent method calls on that object like
+determining the control and data flow through respective methods.               button.setText(text) are not expanded in the call graph, thus
+                                                                                having no outgoing edges. Hence, all overridden methods (common
+4    ANALYZING ANDROID USER INTERFACES                                          especially in custom widgets that extend the View class) become
+                                                                                unreachable and thus are excluded from the analysis.
+To properly resolve the several variables involved in assembling                   To overcome this problem, we patch the code with object instan-
+the GUI, one requires a highly precise pointer analysis. To this end,           tiation statements. At first, we search the code for findViewById
+Frontmatter implements a static analysis built on top of the SOOT               invocations. Next, we reassign a local variable which stores the re-
+framework [26], FlowDroid [2], and especially Boomerang [24, 25].               sult of this call by inserting a new expression statement afterwards.
+   Boomerang is a demand-driven, flow-, field-, and context-sensitive           Since this method has the signature View findViewById(int) in
+pointer analysis for Java programs. It computes not only the pos-               the Jimple representation4 —i.e. it returns an object of type View—it
+sible allocation sites of a given pointer (points-to information),
+but also all pointers that can point to those allocation sites (alias           3 E.g. Issues #439, #754 https://github.com/Sable/soot/issues/439
+
+information).                                                                   4 The intermediate code representation used by Soot
+What do all these Buttons do?
+Statically Mining Android User Interfaces at Scale
+
+
+is then usually cast to the correct type (e.g. Button). Where available,     All in all, we handle 185 Android callbacks (and listeners), of
+instead of insertion we substitute this cast statement with a new          which 75 are from various UI widgets.
+expression. For custom widgets we also insert their constructor
+invocation. Later on in our analysis, we distinguish this case from        4.1.4 Step Four: Adapter Callbacks. In Android, Adapter objects
+the standard object allocation.                                            provide a special kind of callbacks which should be handled espe-
+                                                                           cially. Adapters function as bridge between the data and special
+4.1.2 Step Two: Asynchronous Execution. The Android platform               AdapterView widgets, intended to show this data. They are respon-
+provides a couple of classes to perform background operations              sible for making a View for each item in the data set. Therefore,
+asynchronously and publish results on the UI thread. The most              we should also model construction of UI elements for at least one
+commonly utilized are AsyncTask and Handler.                               item, inflated into the AdapterView container. This View is com-
+   AsyncTask provides a simple method to handle background                 posed inside an Adapter::View getView(int position, View
+threads in order to update the UI without blocking it by time con-         convertView, ViewGroup parent) method, which should be im-
+suming operations. Methods of AsyncTask run the code in a sep-             plemented by the developer.
+arate thread and then may update the GUI with the results of the              To preserve the context, we inject the adapter’s getView calls
+execution. However, they will be not reachable from the dummy              right after statements with setAdapter method invocation. (see Line 6
+main method, since they are called from the main UI thread by the          in Listing 3). After that, all variables are correctly propagated
+system. We model this interaction by transforming asynchronous             through the callback.
+callback invocations into sequential method calls. To this end, we
+substitute the execute call, which activates the task, with four           4.1.5 Effect of these steps. All the above steps are performed not
+methods, carrying out the actual work: (1) onPreExecute(), which           on the call graph, but on the code right before call graph construction.
+is invoked on the UI thread right before the execution; (2) the            Hence, after these steps, we can let Soot build the call graph as
+main function doInBackground(Params...), invoked afterwards                usual, so that it automatically integrates these updates handling
+on the background thread; (3) invoked on the UI thread to dis-             all the peculiarities of method resolution. Finally, we construct
+play the progress onProgressUpdate(Progress...); and finally               an inter-component control flow graph that we use for variable
+(4) onPostExecute(Result), invoked on the UI thread after the              resolution in the next step. According to our preliminary study, the
+background computation finishes publishing the result.                     extended call graph contains 25% more edges on average than the
+   In the case of custom workers, a Handler allows communicating           one built originally by FlowDroid.
+back with the main UI thread from any other background thread.                There are also other approaches that address complexities of
+The message can be sent through the message queue by calling               callback transition in the Android framework, like EdgeMiner [9]
+the sendMessage(Message) method. When the system receives a                or Lithium [20]. While they produce comprehensive callback sum-
+Message for a UI thread, it invokes handleMessage, which should            maries, it may overcomplicate the call graph and significantly in-
+be overridden in the app’s code. To bind two threads, we identify          crease the analysis time without substantial recall growth. We may
+sendMessage statements and insert handleMessage calls afterwards.          consider them in the future work.
+
+4.1.3 Step Three: Widget Callbacks. During the construction of
+the dummy main method, FlowDroid tries to add invocations of all           4.2    Constructing the GUI Model
+callbacks recognized within an Android component (e.g., an activ-          From the call graph, we can now generate the GUI model. At first,
+ity). However, this approach has some limitations. First, listeners        we analyze methods reachable from activity callbacks to identify
+defined outside of activities (such as listeners assigned in custom        which layouts are associated with that activity.
+methods of the app’s classes) are not considered, thus missing some           For each point-of-interest to analyze, we create a set of back-
+executed code. More critical, though, is that the identified callbacks     ward search queries for Boomerang to resolve variable values. For
+are then invoked inside the dummy main method, so that most of             example, for this.setContentView(id) we search backwards in
+the parameters required in constructors of the callbacks’ objects          the ICFG for an allocation site of the id variable to identify which
+are set to null. Hence, FlowDroid does not allow to automatically          layout resource is retrieved here. Since we restrict this search with
+associate the call with the specific context, propagate values of par-     methods reachable from the activity, we do not need to additionally
+ticular variables, and bind them with external fields, which reduces       resolve the variable this. At the same time, it allows us to correctly
+both precision and recall of the analysis.                                 process methods of superclasses.
+   To improve callback integration, we patch the code by injecting            As we want to analyze an application, but not the Android plat-
+the corresponding callback invoke statements right after the par-          form, we updated Boomerang to skip platform calls. Each time the
+ticular listener is assigned. For instance, in Listing 2, Line 13 the      search process encounters a method invocation from Android, it
+EditText widget is attached a long click listener created in-place         jumps over it.
+as an anonymous class. The Jimple representation of this statement            As the next step, we proceed with the resolution of all frag-
+is et.setOnLongClickListener(r1), where the variable r1 refer-             ments used in the app. To this end, we analyze the onCreateView
+ences previously instantiated View.OnLongClickListener object.             method of each fragment and reconstruct the UI hierarchy gener-
+We insert r1.onLongClick(et) statement right after, so that the            ated there. We apply pointer analysis to the return statement of this
+onLongClick method receives a) a proper View object et and b) a            method which contains the reference to the root view of a layout.
+variable labels, captured from the outer class.                            Afterwards, Frontmatter identifies which fragments can be added
+                                                                    Konstantin Kuznetsov, Chen Fu, Song Gao, David N. Jansen, Lijun Zhang, and Andreas Zeller
+
+
+to a particular activity by tracking add and replace methods of a                         Listing 5: One listener for many buttons
+FragmentTransaction.
+                                                                             1 public void onClick(View v) {
+   In the same way, Frontmatter resolves adapters, starting from
+                                                                             2 Integer vid = v.getId()
+setAdapter point-of-interest and analyzing getView methods.
+                                                                             3 if (R.id.home_button == vid){
+   A View object can be either instantiated with the new-expression
+                                                                             4       resetState();
+statement, or come as a result of an inflation. For this reason, we
+                                                                             5       homeButtonClick(v);
+extended allocation site definitions of Boomerang to include not
+                                                                             6 } else if (R.id.next_button == vid){
+only ordinary basic type constants, final fields, and new-expression
+                                                                             7       nextButtonClick(v);
+statements, but also specific method invocations such as inflate
+                                                                             8 }
+of LayoutInflator. When Boomerang gives back a points-to sets
+                                                                             9}
+with a call, Frontmatter makes another query to determine prop-
+erties of inflated view.
+   We also adapted the Boomerang propagation of data-flow facts.
+                                                                             contains a view id constant or a variable initialized with getId or
+In order to minimize the number of queries per search, we combine
+                                                                             getItemId methods. The context-sensitivity of Boomerang and
+queries and force Boomerang to transfer facts through invocation
+                                                                             the call graph ensures that the list of collected APIs is correct.
+statements regardless of reference types. For instance, while perform-
+ing binding fragments to activities.Frontmatter begins the resolu-           4.3     Limitations
+tion with searching for FragmentTransaction::add(container,
+fragment) call sites (see Line 17 of Listing 4). At this point, we aim       Like any approach for software analysis, Frontmatter has inher-
+to identify both the fragment object, which will be added to an ac-          ent limitations. As a static analysis tool, it is fundamentally limited
+tivity, its container, and the target activity. Normally, we would take      by the halting problem; whether an app will ever show a particular
+this call site as a starting point and query Boomerang for an alloca-        behavior cannot be decided automatically in all generality, and this
+tion statement which was a FragmentManager::beginTransaction                 of course includes any GUI features. Frontmatter thus can over-
+invocation. Next, we would continue propagation with another                 approximate, reporting GUI features that are infeasible in actual
+query which should have returned a getSupportFragmentManager                 executions.
+statement and finally identified the context of that call. Instead, we           On the other hand, Frontmatter can also underapproximate,
+tell Boomerang to pass through the beginTransaction unit and                 notably when code is loaded or generated only when the app exe-
+assume that a data-flow fact is transparently transferred from the           cutes; such code is not available at static analysis time. This is the
+FragmentTransaction to the FragmentManager within one query                  case for apps that embed Web pages; the Web GUI elements can
+(although object types are incompatible).                                    neither be retrieved nor analyzed or reported by Frontmatter.
+   The same strategy applies to the resolution of strings. The up-               Finally, Frontmatter assumes that the app uses standard An-
+dated Boomerang consumes the toString method of a StringBuilder              droid user interface elements and concepts. If an app implements
+and automatically determines strings from StringBuilder.add(s)               its own user interface library, using only low-level Android input
+calls.                                                                       and output primitives, Frontmatter will not be able to identify
+   As Boomerang strives to find all allocations and aliases, its             or report user interface elements. This is frequently the case for
+execution time can be quite high. In order to be able to complete            games as well as for some cross-platform UI libraries; for the latter,
+the whole analysis (though, missing some resolutions) we had to              Frontmatter could be adapted to incorporate their concepts.
+set a timeout of 20 seconds for each query. (We plan to extend
+Boomerang to extract partial results.) Finally, Frontmatter ag-              5     EVALUATION
+gregates all findings and generates the full GUI model of the appli-        We now turn to the evaluation of Frontmatter, focusing on its
+cation.                                                                     precision and usefulness compared to the state of the art, as ex-
+   While constructing the GUI hierarchy, Frontmatter also ana-              emplified by Backstage and Gator. We proceed in four rounds,
+lyzes application behavior—the reaction of the Android framework            starting with a single app (VLC) in great detail, and continuing
+triggered in response to a user interaction with certain UI elements.       with growing numbers of apps in lesser detail, until we reach the
+To this end, Frontmatter collects all Android APIs which are                totality of apps in AndroZoo.
+called by a callback method attached to each UI element.
+   It is quite common for developers (for instance, for handling             5.1     Case Study: VLC Media Player
+options menus) to assign a single event listener to multiple UI              In order to determine if Frontmatter can correctly generate a
+elements, and make it call different methods depending on the id             GUI model of an app, we examined its performance in detail on a
+of the view that triggered the callback (Listing 5). Thus, to properly       sample application. As a test subject, we use the VLC media player
+analyze the behavior of a UI element, it is necessary not only to            app introduced in Section 1, which has been also used to evaluate
+correctly associate it with a callback, but also to accurately trace         Gator and Backstage.5 To obtain a ground truth, we downloaded
+the execution depending on the view ids involved. Otherwise, the             the source code of this application and thoroughly manually inves-
+analysis would over-approximate a lot. Therefore, Frontmatter                tigated the parts responsible for the composition of its UI layouts.
+accounts for the context and prunes infeasible edges. It walks along         5 We used the version of VLC v.0.0.11 included in the Gator replication package. The
+the call graph starting from the callback and takes only proper              current version 3.2.6 makes extensive use of fragments, which Frontmatter supports,
+edges, inspecting whether a condition of if and switch statements            but which cannot be analyzed by Gator.
+What do all these Buttons do?
+Statically Mining Android User Interfaces at Scale
+
+
+               Table 1: AndroidBench analysis results produced by: Frontmatter (F), Gator (G), and Backstage (B)
+
+
+  APK                 Activities:             Identified Views:              View containers              Views with id:           Widgets with texts     Labels per widget
+                   nonempty/empty         correct/incorrect/missing             /Widgets                   total/unique                /Labels
+
+                 (F)   (G)+ (B)   (F)      (G)        (B)        (F)     (G)       (B)     (F)     (G)     (B)     (F)     (G)       (B)   (F) (G)     (B)
+  BarcodeScanner 7/2   8/1 5/4    57/6/9   54/3/12    50/1/16    27/36   24/33     20/31   35/31   30/28   30/28   22/30   26/339    13/13 1.36 13.04 1.00
+  Beem           10/2 9/3 9/3     86/0/2   74/0/14    65/0/23    36/50   28/46     25/40   55/46   47/40   45/38   32/41   32/184    24/25 1.28 5.75   1.04
+  FBReader       15/12 22/5 11/16 –        –          –          86/112 92/112     37/48   155/98 165/99 49/46     59/91   49/336    15/15 1.54 6.86   1.00
+  K9             22/6 24/8 23/6 –          –          –          188/239 412/356   66/94   291/126 502/120 156/101 131/158 244/49860 74/79 1.21 204.34 1.07
+  KeePassDroid   12/3 14/6 0/15 –          –          –          28/103 131/268    0/0     175/88 323/105 0/0      85/95   199/558   0/0   1.12 2.80   –
+  Mileage        49/1 49/1 49/1 –          –          –          123/161 313/532   95/105 193/78 566/100 79/75     87/103 235/1477 41/41 1.18 6.29     1.00
+  MyTracks       12/19 2/29 12/19 –        –          –          70/123 7/7        39/40   137/87 8/8      40/40   96/153 2/2        25/31 1.59 1.00   1.24
+  NotePad        4/5   8/5 4/5    34/0/4   21/8/18    20/0/19    16/18   18/18     9/11    30/17   29/17   11/10   10/15   14/115    4/5   1.50 8.21   1.25
+  NPR            14/0 14/0 13/0 –          –          –          69/95   3412/5367 62/88   113/25 4126/58 110/25 31/31     1680/3764 24/24 1.00 2.24   1.00
+  OpenManager 8/0      8/0 8/0    147/0/0 132/0/15    132/0/15   47/100 47/85      47/85   74/59   62/59   62/59   45/57   55/360    38/43 1.27 6.55   1.13
+  OpenSudoku     7/3   7/3 7/3    25/0/96 121/0/0     25/0/96    11/14   31/90     11/14   19/13   72/24   19/13   7/8     61/86     7/8   1.14 1.41   1.14
+  SipDroid       3/8   3/9 3/8    75/0/0   75/57/0    31/0/44    35/40   43/89     15/16   60/54   89/53   59/54   6/11    43/8104   4/4   1.83 188.47 1.00
+  SuperGenpass 2/1     2/1 2/1    30/0/8   34/152/4   30/2/6     12/18   70/116    14/18   25/13   130/15 25/14    8/14    10/44     10/10 1.75 4.40   1.00
+  TippyTipper    4/1   5/1 4/1    117/2/2 117/2/2     119/0/0    50/69   56/83     50/69   36/36   48/36   36/36   55/58   70/80     54/57 1.05 1.14   1.06
+  VLC            9/1   9/4 9/4    240/4/27 190/166/77 101/12/166 77/167 109/247    43/70   161/106 270/65 160/106 76/122 86/1625     37/39 1.61 18.90 1.05
+  XBMC           19/2 17/5 17/4 –          –          –          400/195 661/493   144/157 321/147 925/177 258/123 86/97   352/13737 45/53 1.13 39.03 1.18
+   + In contrast to Frontmatter and Backstage, Gator also reports activities from dead code, which cannot be accessed by the user.
+     Gator could not finish the analysis of the Astrid app within 2 hours, while Frontmatter was unable to parse resource files of APV and ConnectBot. Therefore, we excluded
+     these apps from the evaluation.
+
+
+Additionally, we ran it in an emulator and recorded each screen state                                For VLC, Frontmatter constructs a GUI model of an app
+using the UIAutomatorViewer tool from the Android development                                                  with precise association of UI labels.
+toolkit.
+   Comparing Frontmatter and Gator against this ground truth,
+we made two central observations:                                                          5.2     GATOR/AndroidBench Dataset
+     • On VLC, both Gator and Frontmatter provide a good                                   In this section, we compare Frontmatter against two contenders,
+       approximation of the widget set, with Frontmatter                                   Gator and Backstage. For this comparison, we use the Android-
+       being more precise. Frontmatter identified the exact set                            Bench benchmark of 19 apps built by the Gator authors for the
+       of widgets from the ground truth, while Gator inserted 6                            assessment of their tool [22] and used in follow-up papers; the
+       copies of widgets in the wrong place of the hierarchy. Be-                          benchmark is also used to evaluate Backstage. As in the VLC
+       sides, it recognized a custom view object, but failed to cor-                       case study, we also determined the ground truth manually for all
+       rectly embed it into the hierarchy, again over-approximating                        applications in the data set.
+       with superfluous UI elements. Since Gator does not sup-                                We manually inspected applications in the same way as we
+       port fragments, it missed 7 fragments correctly retrieved by                        assessed VLC: we downloaded their source code and reconstructed
+       Frontmatter.                                                                        the ground truth. We also used UIautomator to confirm the layout
+     • Frontmatter is more precise than Gator as it comes                                  hierarchy and different properties of a UI element. To obtain ground
+       to precisely assigning textual labels to UI elements, an                            truth, for eight out of 16 apps, we fully analyzed the source code of
+       observation already discussed in Section 1. Both Frontmat-                          all activities To compare hierarchies, we associated each UI node
+       ter and Gator identified most of the labels used in the app.                        with its materialized path in the tree and then matched these paths.
+       Even though Gator additionally extracted few error mes-                                We ran all three tools on a machine with 64 cores and gave
+       sages, it suffered from the notable over-approximation and                          each of them 10GB of memory. We did not specifically restrict the
+       assigned the same set of labels (consisting of 9 elements                           execution time; still, Gator could not complete the analysis of
+       in one case, and of 18 in the other) to each encountered                            Astrid. Since we used the most recent version of Gator 3.8, its
+       TextView widget; among them three strings are code arti-                            results are different from those reported in [22].
+       facts and are not declared as UI labels. In contrast, Frontmat-                        Our results are summarized in Table 1. In the column ‘Identified
+       ter accurately assigned single labels to the corresponding                          Views: correct/incorrect/missing’ we report the results of our man-
+       views, as well as correctly identified 14 labels dynamically                        ual analysis: the number of correctly identified UIs, the number of
+       assigned to the player_overlay_info TextView.                                       incorrectly inserted Views, and the number of missed UI elements
+                                                                                           (in compared to the ground truth).
+   These two observations are not limited to VLC alone; as we will                            We also report the following statistics: the number of activities
+see, they apply again and again for Android apps.                                          with recognized/undetected layout; the number of UI elements
+                                                                                           among which we distinguish view containers (i.e. view groups) and
+                                                                        Konstantin Kuznetsov, Chen Fu, Song Gao, David N. Jansen, Lijun Zhang, and Andreas Zeller
+
+
+widgets; the total number of widgets with an id and the number                      Our previous observations also hold for this dataset: Gator
+of unique widgets; the number of widgets with at least one label                 retrieves more UI elements (see Table 2). However, Gator pro-
+and the total number of labels; the average number of captions per               duced two outliers (for the apps com.bibliocommons.mysapl and
+widget.                                                                          com.directworks.dualapps) with more than 70,000 elements in the
+   The observations we made for VLC generalize to this set. Front-               hierarchy. They account for almost half of the total number of de-
+matter correctly models the UI hierarchy, sometimes missing the                  tected elements. A brief manual examination showed that these
+content of custom widgets. It precisely associates widget labels, both           apps are unlikely to have so many widgets. Moreover, we counted
+of elements with one caption (i.e. buttons) and of text views that               UI elements that occur more than once inside a particular activity of
+store multiple strings, like status messages. Occasionally, Gator                an app (column Duplicated elements). Even though the Android sys-
+can find more strings, but almost always it overapproximates and                 tem does not prohibit widget reuse, certain views are rarely inflated
+assigns labels to every text widget, with the label-per-widget ratio             several times, for Gator the ratio of the total number of such ele-
+ranging from 1.18 in TippyTipper to enormous (and highly unre-                   ments to the unique ones is more than 40. Along with the extreme
+alistic) 202 in K9. (It is hard to conceive a text label that would              number of labels per widget (37.55), this evidence confirms that
+display more than 200 different strings encoded in the program                   Gator considerably overapproximates. In contrast, Frontmatter
+code.) Our analysis of the ground truth supports this observation.               detected fewer widgets, but with higher precision per label.
+Besides, Gator sometimes inserts a lot of duplicate views into the
+wrong place.                                                                     5.4     Mining at Scale
+   Moreover, labels returned by Gator can contain field and method               Finally, we apply Frontmatter on a large scale and construct a
+names, and even SQL queries. These strings are used internally in                database containing tens of thousands of UI models. To this end, we
+the code, rather than displayed to the user. Backstage in general                crawled AndroZoo for all latest versions of applications downloaded
+produces more narrow models, but in turn misses elements and text                from the Google Play Store in the first half of 2019. In total we got
+items, sometimes failing to bind an identified layout to an activity.            72,450 apks. We limit the running time for each app to 10 minutes.
+   For four applications, two tools produced almost the same hier-               Besides, we set a timeout for each Boomerang query to 20 seconds.
+archies with similar label sets. Frontmatter did not find status                    We expect that our analysis is not suitable for some applica-
+messages in the BarcodeScanner app that Gator detected. How-                     tions: games usually implement GUI via drawing on canvas, and
+ever, Gator assigned these strings incorrectly. For OpenSudoku,                  cross-platform apps are based on specific frameworks like Mono
+Frontmatter could not reconstruct the content of a custom wid-                   or Xamarin, which implement their own way of building an app
+get. On the other hand, Frontmatter was able to properly process                 extensively using reflection. For 37,991 applications Frontmatter
+the SipDroid and SuperGenpass apps, for which Gator produced                     reported non-empty results. The analysis of 7180 apps could not
+very overapproximated model. A manual investigation of the K9,                   finish in time. Other 538 applications crashed Soot with various
+NPR, and XBMC applications showed that while Frontmatter                         exceptions. The results of 26741 apks contain a list of activities
+underapproximated and missed widgets sporadically, Gator over-                   only. In these cases Frontmatter could not relate activities to
+approximated and duplicated a significant portion of elements sev-               appropriate layouts.
+eral times.                                                                         Most of the undetected associations are induced by limitations
+   Frontmatter offers precision at the cost of running time: it is               covered in Section 4.3. For instance, a lot of apps use special libraries
+significantly slower than Gator (on average 8x slower on Android-                to build the GUI, such as the Data Binding Library by Google or
+Bench).                                                                          Litho by Facebook, which provide custom UI binding procedures.
+                                                                                 Besides, the high level of precision can become a bottleneck. We
+  On AndroidBench, Frontmatter retrieves more correct UI widgets and             found that for complex applications Boomerang queries during
+       finds many fewer incorrect labels per widget than Gator.                  layout binding were too slow to meet the timeout. With increased
+                                                                                 running time Frontmatter is able to extract the model.
+
+5.3    AndroZoo Subset                                                            Applied on AndroZoo, Frontmatter extracts rich UI models for 70% of the
+To test our findings on an even larger set, we ran Frontmatter                                                  apps.
+and Gator on a random subset of 1,000 apps from the AndroZoo
+database. After removing Unity based games and apps created with
+with common cross-platform frameworks, the subset boiled down                    6     USE CASES
+to 518 apps. As in the previous experiment, we ran both tools on                We have aggregated all data collected in Section 5.4 in a SQLite
+a machine with 64 cores and gave each of them 10GB of memory,                   database, allowing us to easily query the GUI dataset.
+but we restricted the timeout to 10 minutes.                                       With simple SQL queries one can get insights into various GUI
+   Frontmatter produced models for 403/518 = 78% of all apps,                   features of the dataset. For instance, the query
+whereas Gator was successful for 385/518 = 74%. The unsuccessful
+cases produced timeouts, crashes, and empty models for both tools.                      SELECT DISTINCT pkg, version FROM app-widgets
+                                                                                                            WHERE (label LIKE '%fingerprint%')
+
+ On the AndroZoo subset, Frontmatter retrieves a much lower number of            lists apps which mention a fingerprint login in their interface. Our
+                   captions per widget than Gator.                               database contains 31 such applications.
+What do all these Buttons do?
+Statically Mining Android User Interfaces at Scale
+
+
+                                   Table 2: Analysis results of Frontmatter and Gator on extracted models
+
+                                      # Activities          # Elements      # Duplicated elements # Elements # Widgets with texts/ # Labels
+                                  with/without layout   (layouts/widgets)         / Unique        per activity Total # of labels  per widgets
+                      Frontmatter      1511/3313       44765 (21851/22914)       10223/1826          29.63       9332/10191           1.10
+                         Gator         1696/2331      262376 (75901/186475)     151093/3573         154.70      45807/1720173        37.55
+
+
+
+    Another related query                                                                 • Are there specific user interface patterns for specific
+                                                                                            features? Which are the features typically provided by prod-
+SELECT COUNT (DISTINCT pkgs from apps_with_login_view)
+WHERE (label like '%forget%password%')                                                      uct pages, by registration pages, by query pages? Many ap-
+    OR(label like '%forgot%password%')                                                      plications require passwords to login. Most of these would
+    OR(label like '%reset%password%')                                                       also offer to recover passwords, or to register as a new user.
+    OR(label like '%recover%password%')                                                     Are there apps which require login and which do not provide
+reveals that 45% of apps which have a login button also have a                              such features? Should they?
+means to request a lost or forgotten password.                                            • User interfaces and popularity. Would especially popular
+   One may be interested how many apps actively ask for (positive)                          apps sport user interface elements that others do not? What
+user ratings—706 apps ask to ‘rate us’ according to this query:                             is it in their user interfaces that makes popular apps special?
+                                                                                            Would “polished” interfaces manifest themselves, and how?
+SELECT COUNT(DISTINCT pkg)
+                                                                                          • Halls of fame, halls of shame. Just like patterns for good
+FROM appwidgets WHERE (label like '%rate us%')
+    OR (label like '%rate 5%')                                                              user interfaces, would there be anti-patterns, too? What are
+    OR (label like '%rate our%') OR (label like '%rate the app%')                           the most common mistakes to avoid, and can one detect
+    OR (label like '%rate this app%') OR (label like '%rate it%')                           them from the extracted data? What is the worst interface
+                                                                                            ever?
+   The dataset also contains information about the drawables used
+in apps, such as the color or an icon name:                                            To foster replication and extension of our research, Frontmat-
+                                                                                     ter and the mined user interface data are available under open
+        SELECT drawable, COUNT(drawable) AS v_o FROM pkgs
+                                                                                     source and open data licenses at
+             WHERE d.drawable_type like '%background%'
+             GROUP BY drawable ORDER BY v_o DESC                                                                 https://bit.ly/3knQHc9
+shows that the most frequently used background colors are white,
+black, and gray, which is not surprising.
+                                                                                     REFERENCES
+                                                                                      [1] Khalid Alharbi and Tom Yeh. 2015. Collect, Decompile, Extract, Stats, and Diff:
+   All these basic features can be combined for further refinement,                       Mining Design Pattern Changes in Android Apps. In Proceedings of the 17th
+and of course correlated with additional features obtained from app                       International Conference on Human-Computer Interaction with Mobile Devices and
+                                                                                          Services (Copenhagen, Denmark) (MobileHCI ’15). Association for Computing Ma-
+store analysis (“Rating requests are most prominent in app category                       chinery, New York, NY, USA, 515–524. https://doi.org/10.1145/2785830.2785892
+𝑋 ”) or program analysis (“Applications that have a label 𝑋 also use                  [2] Steven Arzt, Siegfried Rasthofer, Christian Fritz, Eric Bodden, Alexandre Bartel,
+API 𝑌 ”).                                                                                 Jacques Klein, Yves Le Traon, Damien Octeau, and Patrick McDaniel. 2014. Flow-
+                                                                                          Droid: Precise Context, Flow, Field, Object-sensitive and Lifecycle-aware Taint
+                                                                                          Analysis for Android Apps. Association for Computing Machinery, New York,
+7    CONCLUSION AND FUTURE WORK                                                           NY, USA, 259–269. https://doi.org/10.1145/2594291.2594299
+                                                                                      [3] V. Avdiienko, K. Kuznetsov, I. Rommelfanger, A. Rau, A. Gorla, and A. Zeller. 2017.
+We have introduced Frontmatter, a tool to automatically extract                           Detecting Behavior Anomalies in Graphical User Interfaces. In 2017 IEEE/ACM
+user interfaces of Android applications at a large scale with high                        39th International Conference on Software Engineering Companion (ICSE-C). 201–
+                                                                                          203. https://doi.org/10.1109/ICSE-C.2017.130
+precision. Given an app, Frontmatter statically extracts all acces-                   [4] Tanzirul Azim and Iulian Neamtiu. 2013. Targeted and depth-first exploration
+sible screens, the user interface elements, as well as their textual                      for systematic testing of Android apps. In Proceedings of the 2013 ACM SIGPLAN
+and graphical features, increasing precision over the state of the art.                   international conference on Object oriented programming systems languages &
+                                                                                          applications. 641–660.
+Executed on tens of thousands of real-world apps, Frontmatter                         [5] David F. Bacon and Peter F. Sweeney. 1996. Fast Static Analysis of C++ Virtual
+opens the door for comprehensive mining of mobile user interfaces,                        Function Calls, Lougie Anderson and James Coplien (Eds.). ACM, 324–341. https:
+jumpstarting empirical research at a large scale. Our own work will                       //doi.org/10.1145/236337.236371
+                                                                                      [6] Maxim Bakaev, Sebastian Heil, Vladimir Khvorostov, and Martin Gaedke. 2018.
+focus on deeper analysis of the mined Frontmatter data:                                   HCI Vision for automated analysis and mining of web user interfaces. In Interna-
+                                                                                          tional Conference on Web Engineering. Springer, 136–144.
+     • Do interface texts correspond to app descriptions? The                         [7] Farnaz Behrang, Steven P Reiss, and Alessandro Orso. 2018. GUIfetch: support-
+       set of user interface labels form linguistic concepts, as do the                   ing app design and development through GUI search. In Proceedings of the 5th
+       set of words in app descriptions [12]; comparing these might                       International Conference on Mobile Software Engineering and Systems. 236–246.
+                                                                                      [8] Ravi Bhoraskar, Seungyeop Han, Jinseong Jeon, Tanzirul Azim, Shuo Chen,
+       reveal mismatches between user interfaces and functionality.                       Jaeyeon Jung, Suman Nath, Rui Wang, and David Wetherall. 2014. Brahmastra:
+     • Which UI features are common for specific categories?                              Driving apps to test the security of third-party components. In 23rd {USENIX }
+                                                                                          Security Symposium ( {USENIX } Security 14). 1021–1036.
+       Which ones are uncommon? “Travel” apps would typi-                             [9] Yinzhi Cao, Yanick Fratantonio, Antonio Bianchi, Manuel Egele, Christopher
+       cally sport user interfaces to query locations, book rooms, or                     Kruegel, Giovanni Vigna, and Yan Chen. 2015. EdgeMiner: Automatically De-
+       book trips; for “Music” apps, we would expect interfaces to                        tecting Implicit Control Flow Transitions through the Android Framework.. In
+                                                                                          NDSS.
+       play, well, music. But would there be apps that sport unique                  [10] Jeffrey Dean, David Grove, and Craig Chambers. 1995. Optimization of Object-
+       features found nowhere else?                                                       Oriented Programs Using Static Class Hierarchy Analysis (Lecture Notes in
+                                                                                    Konstantin Kuznetsov, Chen Fu, Song Gao, David N. Jansen, Lijun Zhang, and Andreas Zeller
+
+
+     Computer Science), Walter G. Olthoff (Ed.), Vol. 952. Springer, 77–101. https:          [30] Yifei Zhang, Yulei Sui, and Jingling Xue. 2018. Launch-mode-aware context-
+     //doi.org/10.1007/3-540-49538-X                                                              sensitive activity transition analysis. In Proceedings of the 40th International
+[11] Biplab Deka, Zifeng Huang, Chad Franzen, Joshua Hibschman, Daniel Afergan,                   Conference on Software Engineering. 598–608.
+     Yang Li, Jeffrey Nichols, and Ranjitha Kumar. 2017. Rico: A Mobile App Dataset
+     for Building Data-Driven Design Applications. In Proceedings of the 30th Annual
+     ACM Symposium on User Interface Software and Technology (Québec City, QC,
+     Canada) (UIST ’17). Association for Computing Machinery, New York, NY, USA,
+     845–854. https://doi.org/10.1145/3126594.3126651
+[12] Alessandra Gorla, Ilaria Tavecchia, Florian Gross, and Andreas Zeller. 2014.
+     Checking App Behavior against App Descriptions. In Proceedings of the 36th
+     International Conference on Software Engineering (Hyderabad, India) (ICSE 2014).
+     Association for Computing Machinery, New York, NY, USA, 1025–1035. https:
+     //doi.org/10.1145/2568225.2568276
+[13] Ranjitha Kumar, Arvind Satyanarayan, Cesar Torres, Maxine Lim, Salman Ahmad,
+     Scott R Klemmer, and Jerry O Talton. 2013. Webzeitgeist: design mining the web.
+     In Proceedings of the SIGCHI Conference on Human Factors in Computing Systems.
+     ACM, 3083–3092.
+[14] Duling Lai and Julia Rubin. 2019. Goal-driven exploration for Android applica-
+     tions. In 2019 34th IEEE/ACM International Conference on Automated Software
+     Engineering (ASE). IEEE, 115–127.
+[15] Ondřej Lhoták and Laurie Hendren. 2003. Scaling Java points-to analysis using
+     SPARK. In International Conference on Compiler Construction. Springer, 153–169.
+[16] Thomas F. Liu, Mark Craft, Jason Situ, Ersin Yumer, Radomir Mech, and Ranjitha
+     Kumar. 2018. Learning Design Semantics for Mobile Apps. In The 31st Annual
+     ACM Symposium on User Interface Software and Technology (Berlin, Germany)
+     (UIST ’18). ACM, New York, NY, USA, 569–579. https://doi.org/10.1145/3242587.
+     3242650
+[17] Nicholas Micallef, Erwin Adi, and Gaurav Misra. 2018. Investigating Login
+     Features in Smartphone Apps. In Proceedings of the 2018 ACM International
+     Joint Conference and 2018 International Symposium on Pervasive and Ubiqui-
+     tous Computing and Wearable Computers (Singapore, Singapore) (UbiComp ’18).
+     Association for Computing Machinery, New York, NY, USA, 842–851. https:
+     //doi.org/10.1145/3267305.3274172
+[18] Nariman Mirzaei, Joshua Garcia, Hamid Bagheri, Alireza Sadeghi, and Sam Malek.
+     2016. Reducing combinatorics in GUI testing of Android applications. In 2016
+     IEEE/ACM 38th International Conference on Software Engineering (ICSE). IEEE,
+     559–570.
+[19] K. Moran, C. Bernal-Cárdenas, M. Curcio, R. Bonett, and D. Poshyvanyk. 2020.
+     Machine Learning-Based Prototyping of Graphical User Interfaces for Mobile
+     Apps. IEEE Transactions on Software Engineering 46, 2 (2020), 196–221. https:
+     //doi.org/10.1109/TSE.2018.2844788
+[20] Danilo Dominguez Perez and Wei Le. 2017. Generating predicate callback sum-
+     maries for the Android framework. In 2017 IEEE/ACM 4th International Conference
+     on Mobile Software Engineering and Systems (MOBILESoft). IEEE, 68–78.
+[21] Jiachen Pu, Jin Liu, and Jin Wang. 2017. A vision-based approach for deep web
+     form extraction. In Advanced Multimedia and Ubiquitous Engineering. Springer,
+     696–702.
+[22] Atanas Rountev and Dacong Yan. 2014. Static reference analysis for GUI objects
+     in Android software. In Proceedings of Annual IEEE/ACM International Symposium
+     on Code Generation and Optimization. 143–153.
+[23] Alireza Sahami Shirazi, Niels Henze, Albrecht Schmidt, Robin Goldberg, Benjamin
+     Schmidt, and Hansjörg Schmauder. 2013. Insights into Layout Patterns of Mobile
+     User Interfaces by an Automatic Analysis of Android Apps. In Proceedings of
+     the 5th ACM SIGCHI Symposium on Engineering Interactive Computing Systems
+     (London, United Kingdom) (EICS ’13). Association for Computing Machinery,
+     New York, NY, USA, 275–284. https://doi.org/10.1145/2494603.2480308
+[24] Johannes Späth, Karim Ali, and Eric Bodden. 2019. Context-, flow-, and field-
+     sensitive data-flow analysis using synchronized Pushdown systems. Proceedings
+     of the ACM on Programming Languages 3, POPL (2019), 1–29.
+[25] Johannes Späth, Lisa Nguyen Quang Do, Karim Ali, and Eric Bodden. 2016.
+     Boomerang: Demand-driven flow-and context-sensitive pointer analysis for Java.
+     In 30th European Conference on Object-Oriented Programming (ECOOP 2016).
+     Schloss Dagstuhl-Leibniz-Zentrum fuer Informatik.
+[26] Raja Vallée-Rai, Phong Co, Etienne Gagnon, Laurie Hendren, Patrick Lam, and
+     Vijay Sundaresan. 1999. Soot – a Java Bytecode Optimization Framework. In
+     Proceedings of the 1999 Conference of the Centre for Advanced Studies on Collab-
+     orative Research (Mississauga, Ontario, Canada) (CASCON ’99). IBM Press, 13–.
+     http://dl.acm.org/citation.cfm?id=781995.782008
+[27] Yan Wang, Hailong Zhang, and Atanas Rountev. 2016. On the unsoundness
+     of static analysis for Android GUIs. In Proceedings of the 5th ACM SIGPLAN
+     International Workshop on State Of the Art in Program Analysis. 18–23.
+[28] Shengqian Yang, Haowei Wu, Hailong Zhang, Yan Wang, Chandrasekar Swami-
+     nathan, Dacong Yan, and Atanas Rountev. 2018. Static window transition graphs
+     for Android. Automated Software Engineering 25, 4 (2018), 833–873.
+[29] Shengqian Yang, Dacong Yan, Haowei Wu, Yan Wang, and Atanas Rountev. 2015.
+     Static control-flow analysis of user-driven callbacks in Android applications. In
+     2015 IEEE/ACM 37th IEEE International Conference on Software Engineering, Vol. 1.
+     IEEE, 89–99.
+

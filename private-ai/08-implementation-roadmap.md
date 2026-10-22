@@ -6,6 +6,8 @@
 
 ## Plan on a page
 
+**Revised (Oct 20, 2026):** the 6-month, 9-month and 12-month gates were reset (decision). Client counts now count signed professional-firm contracts; MRR targets are $5K at month 6, $9K at month 9 and $14K at month 12. The table below is the original plan. See [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md#6-revised-gates-and-kill-criterion).
+
 | Horizon   | What done looks like                                                                                                                                                                                                            | Gate to the next phase                                                       |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | 90 days   | LLC, insurance and bank set up; SBA and equity applications filed; TWK pilot live on a client-owned appliance; install image and runbooks v1; compliance kit v1; first contractor compliance package sold; BOP and TWIC in hand | TWK staff use it weekly with measured time savings; one non-TWK invoice paid |
@@ -76,6 +78,13 @@ This plan closes the first plant PO in weeks 11–12. The industrial track targe
 
 ## Hiring
 
+**Revised (Oct 20, 2026):**
+
+- The first W-2 hire is now expected in months 15–24. MRR of about $20–25K is mandatory, plus 3 months of payroll in the bank, plus one of: measured founder overload, overlapping installs, or a contract needing a named P1 backup.
+- A contract engineer covers backup and installs before then.
+- The second hire is expected in months 28–32.
+- The table below is the original plan, kept for reference. See [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md#revised-hiring-plan).
+
 Both triggers must be true.
 
 | Hire                                | Triggers                                             | Target month | Base pay    | Loaded cost    | Takes over                                                |
@@ -92,9 +101,11 @@ Both triggers must be true.
 See [12-open-questions.md](12-open-questions.md#contradictions-found).
 
 - McNeese CS and engineering interns are the recruiting pipeline.
-- [To verify] Lake Charles salaries for a support engineer.
+- [To verify] Lake Charles salaries for a support engineer. BLS May 2023 data are in [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md#research-findings); May 2025 data are still to get.
 
 ### What the founder stops doing, in order
+
+**Revised (Oct 20, 2026):** installs and first-line support move to the first-hire date (about months 15–24). The 6-month and 12-month horizons above are also affected. See [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md#6-revised-gates-and-kill-criterion).
 
 1. Installs (months 9–12).
 2. First-line support (month 12).
@@ -127,16 +138,16 @@ He keeps sales, product and key accounts.
 
 ## Weekly metrics (Year 1 targets)
 
-| Metric                     | Target                                       |
-| -------------------------- | -------------------------------------------- |
-| Conversations              | 20 a month                                   |
-| Named buyers in pipeline   | 15 by month 6                                |
-| Proposals out / close rate | 4 a month / 25%                              |
-| MRR                        | $10K by month 6; $20K by month 12            |
-| Gross margin by line       | Subscription 70%, setup 55%, industrial 60%+ |
-| Support hours per client   | Under 6 a month                              |
-| Client concentration       | No client above 20% of revenue after Year 1  |
-| Evaluation score           | Never lower than the previous release        |
+| Metric                     | Target                                                                                                          |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Conversations              | 20 a month                                                                                                      |
+| Named buyers in pipeline   | 15 by month 6                                                                                                   |
+| Proposals out / close rate | 4 a month / 25%                                                                                                 |
+| MRR                        | $5K by month 6; $9K by month 9; $14K by month 12 (revised Oct 20; originally $10K by month 6, $20K by month 12) |
+| Gross margin by line       | Subscription 70%, setup 55%, industrial 60%+                                                                    |
+| Support hours per client   | Under 6 a month                                                                                                 |
+| Client concentration       | No client above 20% of revenue after Year 1                                                                     |
+| Evaluation score           | Never lower than the previous release                                                                           |
 
 **Industrial track weekly metrics:** conversations held, named buyers in pipeline, proposals out, dollars quoted, dollars invoiced, days on site.
 

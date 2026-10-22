@@ -1,0 +1,3601 @@
+__HTTP 200__
+
+
+
+
+
+  
+
+ 
+ 
+
+
+
+
+   
+     
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+
+   
+
+   
+
+     
+     
+     
+     
+   
+ 
+
+  
+
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+   Releases · mobile-dev-inc/Maestro · GitHub 
+
+
+
+   
+   
+   
+   
+
+    
+   
+
+
+   
+
+
+     
+
+
+   
+  
+
+   
+   
+
+     
+
+ 
+
+
+
+
+
+   
+
+  
+
+
+
+
+     
+
+  
+
+     
+
+    
+
+       
+
+       
+
+     
+     
+     
+
+       
+   
+  
+
+
+
+
+       
+
+
+
+         
+
+
+   
+   
+   
+   
+
+   
+
+       
+   
+   
+
+   
+  
+
+
+
+    
+
+     
+   
+
+
+   
+
+
+   
+
+   
+   
+
+   
+   
+   
+
+ 
+ 
+
+
+   
+
+   
+
+   
+     
+       
+      
+
+     
+       Skip to content 
+
+       
+     
+       
+       
+ 
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+
+
+
+      
+
+           
+ 
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+          
+
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge APPLICATION SECURITY GitHub Advanced Security Find and fix vulnerabilities Code security Secure your code as you build Secret protection Stop leaks before they start EXPLORE Why GitHub Documentation Blog Changelog Marketplace View all features Solutions BY COMPANY SIZE Enterprises Small and medium teams Startups Nonprofits BY USE CASE App Modernization DevSecOps DevOps CI/CD View all use cases BY INDUSTRY Healthcare Financial services Manufacturing Government View all industries View all solutions Resources EXPLORE BY TOPIC AI Software Development DevOps Security View all topics EXPLORE BY TYPE Customer stories Events & webinars Ebooks & reports Business insights GitHub Skills SUPPORT & SERVICES Documentation Customer support Community forum Trust center Partners View all resources Open Source COMMUNITY GitHub Sponsors Fund open source developers PROGRAMS Security Lab Maintainer Community GitHub Stars Archive Program REPOSITORIES Topics Trending Collections Enterprise ENTERPRISE SOLUTIONS Enterprise platform AI-powered developer platform AVAILABLE ADD-ONS GitHub Advanced Security Enterprise-grade security features Copilot for Business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Pricing Search / Sign in Sign up Appearance settings 
+ 
+
+
+
+       
+  
+         
+         You signed in with another tab or window.  Reload  to refresh your session. 
+         You signed out in another tab or window.  Reload  to refresh your session. 
+         You switched accounts on another tab or window.  Reload  to refresh your session. 
+
+        
+ Dismiss alert 
+
+
+  
+ 
+     
+
+   
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+   
+    
+ 
+   
+     
+       
+     
+     
+      
+       {{ message }} 
+
+     
+   
+ 
+   
+ 
+
+
+    
+
+
+
+
+
+
+   
+         
+     
+      
+  
+
+    
+    
+
+
+    
+
+
+
+
+
+
+
+
+  
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   mobile-dev-inc Maestro Repository navigation Code Issues 337  ( 337 ) Pull requests 121  ( 121 ) Discussions Actions Security and quality Insights More  items 
+ 
+
+
+  
+
+
+
+ 
+     
+    
+
+
+
+    
+      
+ Releases: mobile-dev-inc/Maestro 
+ 
+   
+   
+     
+   Releases 
+   Tags 
+ 
+
+
+     
+
+   
+     
+       
+       
+       
+    
+ 
+
+   
+ 
+   Releases · mobile-dev-inc/Maestro 
+ 
+     
+       
+   Release list 
+   
+     
+  
+   
+     
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.11.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.10.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.9.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.8.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.7.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.6.1
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.6.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.5.1
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.5.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          CLI 2.4.0
+       
+ 
+  
+ 
+
+    
+    
+
+       
+         Previous   Next 
+       
+ 
+
+ 
+   
+   
+        
+       
+         
+       
+     Jump to release 
+   
+     
+       
+     
+ 
+
+
+ 
+   
+    
+                  
+   
+     
+         
+    
+    
+     
+      
+         
+          CLI 2.11.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          CLI 2.10.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          CLI 2.9.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          CLI 2.8.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          CLI 2.7.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          CLI 2.6.1
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          CLI 2.6.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          CLI 2.5.1
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          CLI 2.5.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          CLI 2.4.0
+       
+ 
+  
+ 
+     
+ 
+
+
+ 
+      
+    
+ 
+     
+       Previous   Next 
+     
+ 
+
+
+       
+           
+     CLI 2.11.0 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.11.0 
+       
+         Latest 
+           
+              
+
+           
+       
+     
+
+     
+       Latest 
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        29 Sep 13:36
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.11.0
+               
+           
+         
+         
+           
+               c8c361b            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             3 
+    egoan82, Dovbnyak28, and weixiangjing-1993 reacted with thumbs up emoji 
+                🎉 
+             6 
+    dayanruben, salah353, rob4226, little-sparkleeesss, luisbytes, and licryle reacted with hooray emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   3 reactions 
+               
+               
+                 🎉 
+                   6 reactions 
+               
+           
+         
+       
+     
+      9 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     CLI 2.10.0 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.10.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        31 Aug 17:15
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.10.0
+               
+           
+         
+         
+           
+               14a4083            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             2 
+    rob4226 and sureshgube reacted with thumbs up emoji 
+                🚀 
+             3 
+    rob4226, bnkkssvd-alt, and sureshgube reacted with rocket emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   2 reactions 
+               
+               
+                 🚀 
+                   3 reactions 
+               
+           
+         
+       
+     
+      3 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     CLI 2.9.0 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.9.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        26 Aug 13:55
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.9.0
+               
+           
+         
+         
+           
+               f4fdeb7            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             3 
+    rob4226, little-sparkleeesss, and SergejBursow reacted with thumbs up emoji 
+                🎉 
+             4 
+    rob4226, luisbytes, tanvi789, and muingY reacted with hooray emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   3 reactions 
+               
+               
+                 🎉 
+                   4 reactions 
+               
+           
+         
+       
+     
+      6 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     CLI 2.8.0 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.8.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        31 Jul 12:04
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.8.0
+               
+           
+         
+         
+           
+               b637276            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             4 
+    little-sparkleeesss, rob4226, sur1v, and anaalo1982-beep reacted with thumbs up emoji 
+                🎉 
+             3 
+    PankovSerge, rob4226, and sur1v reacted with hooray emoji 
+                ❤️ 
+             2 
+    rob4226 and sur1v reacted with heart emoji 
+                🚀 
+             1 
+    sur1v reacted with rocket emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   4 reactions 
+               
+               
+                 🎉 
+                   3 reactions 
+               
+               
+                 ❤️ 
+                   2 reactions 
+               
+               
+                 🚀 
+                   1 reaction 
+               
+           
+         
+       
+     
+      5 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     CLI 2.7.0 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.7.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        20 Jul 16:51
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.7.0
+               
+           
+         
+         
+           
+               c465a74            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             6 
+    egoan82, little-sparkleeesss, pedrol2b, rob4226, sur1v, and ParaskP7 reacted with thumbs up emoji 
+                🎉 
+             1 
+    ParaskP7 reacted with hooray emoji 
+                🚀 
+             3 
+    rob4226, sur1v, and ParaskP7 reacted with rocket emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   6 reactions 
+               
+               
+                 🎉 
+                   1 reaction 
+               
+               
+                 🚀 
+                   3 reactions 
+               
+           
+         
+       
+     
+      6 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     CLI 2.6.1 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.6.1 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        12 Jun 11:49
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.6.1
+               
+           
+         
+         
+           
+               00f5167            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             7 
+    egoan82, rob4226, ParaskP7, little-sparkleeesss, tanvi789, ShihTingJustin, and sur1v reacted with thumbs up emoji 
+                🎉 
+             2 
+    ParaskP7 and sur1v reacted with hooray emoji 
+                🚀 
+             5 
+    egoan82, rob4226, ParaskP7, tanvi789, and sur1v reacted with rocket emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   7 reactions 
+               
+               
+                 🎉 
+                   2 reactions 
+               
+               
+                 🚀 
+                   5 reactions 
+               
+           
+         
+       
+     
+      7 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     CLI 2.6.0 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.6.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        21 May 12:47
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.6.0
+               
+           
+         
+         
+           
+               6213e61            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             6 
+    egoan82, petrichor-hl, pritibit, rob4226, ParaskP7, and sur1v reacted with thumbs up emoji 
+                🎉 
+             2 
+    ParaskP7 and sur1v reacted with hooray emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   6 reactions 
+               
+               
+                 🎉 
+                   2 reactions 
+               
+           
+         
+       
+     
+      6 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     CLI 2.5.1 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.5.1 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        30 Apr 10:09
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.5.1
+               
+           
+         
+         
+           
+               a4c7c95            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             4 
+    phewphewb, rob4226, ParaskP7, and sachini-swivel reacted with thumbs up emoji 
+                🎉 
+             6 
+    ParaskP7, dayanruben, RameshXT, Yun131518, tanvi789, and pritibit reacted with hooray emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   4 reactions 
+               
+               
+                 🎉 
+                   6 reactions 
+               
+           
+         
+       
+     
+      9 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     CLI 2.5.0 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.5.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        27 Apr 07:06
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.5.0
+               
+           
+         
+         
+           
+               34890c4            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             2 
+    rob4226 and ParaskP7 reacted with thumbs up emoji 
+                🎉 
+             2 
+    ParaskP7 and dayanruben reacted with hooray emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   2 reactions 
+               
+               
+                 🎉 
+                   2 reactions 
+               
+           
+         
+       
+     
+      3 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     CLI 2.4.0 
+
+     
+       
+   
+  
+          
+   
+     
+         CLI 2.4.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       service-account-mobile-dev 
+
+    released this
+
+       
+        02 Apr 22:29
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                cli-2.4.0
+               
+           
+         
+         
+           
+               8800807            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         See changelog in the CHANGELOG.md file 
+ 
+   
+         
+           
+     
+            
+       Assets 
+       4 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             4 
+    egoan82, petrichor-hl, ParaskP7, and rob4226 reacted with thumbs up emoji 
+                🎉 
+             2 
+    ParaskP7 and DiegoGuzPru reacted with hooray emoji 
+                🚀 
+             3 
+    egoan82, luisbytes, and ParaskP7 reacted with rocket emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   4 reactions 
+               
+               
+                 🎉 
+                   2 reactions 
+               
+               
+                 🚀 
+                   3 reactions 
+               
+           
+         
+       
+     
+      6 people reacted 
+ 
+           
+ 
+ 
+     
+   
+
+       
+     
+
+     
+   Previous   1   2   3   4   5   …   14   15   Next 
+ 
+
+ 
+   Previous   Next 
+ 
+
+ 
+
+ 
+
+
+   
+
+ 
+
+
+     
+   
+
+   
+
+           
+   Footer 
+
+  
+
+
+   
+     
+       
+         
+ 
+       
+        © 2026 GitHub, Inc.
+       
+     
+
+     
+       Footer navigation 
+
+       
+
+
+           
+             Terms 
+           
+
+           
+             Privacy 
+           
+
+
+             
+               Security 
+             
+
+             
+               Status 
+             
+
+           
+             Community 
+           
+
+           
+             Docs 
+           
+
+           
+             Contact 
+           
+
+          
+ 
+   
+     
+      Manage cookies
+     
+   
+ 
+
+   
+     
+       
+        Do not share my personal information
+       
+     
+   
+
+       
+     
+   
+ 
+
+
+
+     
+
+
+
+
+   
+     
+     
+       
+     
+    You can’t perform that action at this time.
+   
+
+     
+   
+     
+     
+       
+         
+       
+       
+     
+   
+ 
+
+     
+   
+   
+ 
+
+     
+   
+     
+       
+       
+     
+   
+ 
+ 
+   
+     
+       
+       
+     
+   
+ 
+
+
+
+
+     
+     
+     
+   
+ 
+

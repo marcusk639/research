@@ -1,0 +1,50 @@
+__HTTP 200__
+
+ 
+ 
+ 
+ 
+ Detox Intro | Ignite Cookbook for React Native 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ Skip to main content Search Recipes Ignite Boilerplate Infinite Red   
+                      Community
+                       
+                     
+                     
+                           
+                            Slack community
+                             
+                           
+                           
+                             Join a growing React Native community with 2,000 developers and counting. 
+                           
+                         
+                         
+                           
+                            Submit an idea
+                             
+                           
+                           
+                             Have an recipe idea for the cookbook? Contribute your ideas on GitHub! 
+                           
+                         
+                       Intro to Recipes Browse By Tag Infinite Red Recipes Accessiblity Font Sizes Extracting Apollo Client's Cache in Reactotron Authentication with Supabase CircleCI CD Setup - React Native Creating a Good Experience for Screen Readers Detox Intro Distributing Auth Token to APIs EAS Update Enforcing JS/TS Import Order Environment Variables Expo Router Generator for Component Tests Inline Expo Config Plugins PowerSync and Supabase for Local-First Data Management Maestro Setup Migrating from i18n-js to react-i18next Migrating to MMKV Choosing the right monorepo strategy for your project Patching/Building Android .aar From Source Prepping Ignite for EAS Build React Native Vision Camera Redux Remove MobX-State-Tree Requiring Hardware Features with Expo Sample YAML for CircleCi for Ignite SelectField using `react-native-bottom-sheet` Setting up a Yarn monorepo with Ignite Switch Between Expo Go and Expo CNG Theming Ignite with Emotion.js Theming Ignite with styled-components Theming Ignite with Unistyles TypeScript baseUrl Configuration Universal E2E Testing with Detox and Playwright Scrolling to a location that hasn't been rendered using FlatList or SectionList Updating Dependencies with Yarn Audit, Outdated and Upgrade Updating Ignite boilerplate with ignite-diff-purge Using Screen Readers Zustand Community Recipes Archive Infinite Red Recipes Detox Intro On this page Detox Intro Detox is a library for end-to-end testing of React Native apps. This wiki provides information on how to use Detox effectively. 
+ Installation ​ 
+ Detox's  documentation for installation . 
+ What's unique about Detox ​ 
+ Synchronization ​ 
+ One of the key features that makes Detox unique is that it synchronizes with app state, so it can know when to move to the next step of a test, instead of including manual sleep statements.  See the documentation for more info . 
+ But this does create new kinds of errors to be aware of. For example, if you see a Detox test hanging, that's an indication that Detox might not be detecting that the app went into the idle state so that the test can continue. To debug, check out  Detox's troubleshooting guide on sync issues . 
+ 🚸 Flaky Tests 
+ The RNR team interviewed Rotem Meidan, former lead of Detox, about Detox stability, in  React-Native Radio 189 . 
+ He wrote an article about that here:  Detox: Writing Stable Test Suites . Is this page still up to date? Did it work for you? Yes No Tags: Testing Intro Last updated  on  Jun 13, 2024  by  Jamon Holmgren Previous Creating a Good Experience for Screen Readers Next Distributing Auth Token to APIs Installation What's unique about Detox Community Slack Community React Native Radio React Native Newsletter Resources Submit a Recipe GitHub - Ignite Cookbook GitHub - Ignite Boilerplate RedShift Blog  Privacy Policy Infinite Red Website IR Docs Chain React Conf From the team at  Infinite Red   
+ 

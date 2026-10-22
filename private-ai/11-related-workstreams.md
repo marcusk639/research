@@ -42,7 +42,22 @@ TWK already has Microsoft 365 Copilot.
 - Client data is gated behind the WISP, a written §7216 position from counsel, consents, signed vendor terms and tested controls.
 - Success targets: 80% weekly adoption within 60 days; 15–25% fewer hours on 3 workflows.
 
-**Top contradiction to resolve.** This business plan assumes an on-prem appliance at TWK. The Glass design is Claude-based, in the cloud. A hybrid would put firm-only knowledge in the cloud and client data on-prem. The two TWK documents assume different architectures. See [12-open-questions.md](12-open-questions.md#pending-decisions).
+### Decision: hybrid deployment (Oct 20, 2026)
+
+**Decision:** TWK uses a hybrid. Firm-only knowledge goes to the cloud (the Glass design). Client data stays on-prem (the appliance). This resolves the conflict between the business plan (on-prem) and the Glass design (cloud).
+
+| Data class                                 | Examples                                                              | Where it runs                                                    |
+| ------------------------------------------ | --------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Firm-only knowledge, no client identifiers | HR and IT answers, SOPs, templates, onboarding, firm policies         | Glass: Claude (Team, then Enterprise) + "twk-context" MCP server |
+| Client data (§7216 / Safeguards scope)     | Returns, source documents, workpapers, notices, client correspondence | On-prem appliance at TWK                                         |
+
+Analysis of what follows from the decision (not stated in the source):
+
+- **It matches the CPA research staging.** Stage 1 (firm knowledge, no client identifiers) can run on Glass. Stage 2 (client documents, after consent) runs on the appliance. See [03](03-products-and-services.md#candidate-roadmap-from-rag-applications-for-a-mid-sized-cpa-firm).
+- **The ingestion design becomes the boundary control.** The path allowlist, detectors, quarantine and redaction decide what may go to the cloud side. Who has quarantine review authority is now a blocking question, not a nice-to-have.
+- **Karbon needs a ruling.** The Glass server reads the Karbon API and Practice Intelligence, which hold client names and work items. TODO: decide whether Karbon data counts as client data under this split. If it does, that connector moves on-prem or stays gated.
+- **The pitch needs one qualifier at TWK.** "Client data never goes to an outside AI provider" stays true. "No data goes to an outside AI provider" does not, because firm knowledge goes to Anthropic.
+- **Sequencing option.** Glass needs no hardware, so firm-knowledge value could start before the appliance arrives. The 90-day gate still calls for the appliance pilot. TODO: confirm whether the TWK pilot starts on Glass or on the appliance.
 
 **Long-term vision:** TWK as a sandbox, then resell to other CPA firms and serve Chris's small-business clients.
 

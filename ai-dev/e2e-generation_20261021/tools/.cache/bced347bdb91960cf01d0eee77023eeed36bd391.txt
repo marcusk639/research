@@ -1,0 +1,6 @@
+__HTTP 200__
+Introduction | Stryker Mutator 
+ Skip to main content 📣 Discover the  "Who's testing the tests? Mutation testing with StrykerJS"  talk on FOSDEM 2024. Stryker Mutator Blog For JavaScript For C# For Scala An example Playground Dashboard StrykerJS (JS & TS) Stryker.NET (C#) Stryker4s (Scala) Mutation Testing Elements Stryker Dashboard This website Search General Mutation Testing StrykerJS Introduction Getting started Usage Config file Configuration Disable mutants Incremental Parallel Workers Plugins Cucumber Runner Jasmine Runner Jest Runner Karma Runner Mocha Runner Tap Runner Vitest Runner TypeScript Checker Troubleshooting Guides Stryker.NET Stryker4s StrykerJS Introduction Introduction Welcome to the Stryker for JavaScript & Friends documentation.
+Stryker started as a pure JavaScript mutation testing framework, which is why it was referred to as  Stryker , but it has since been rebranded to  StrykerJS . 
+ Today, StrykerJS supports most JavaScript projects, including TypeScript, React, Angular, VueJS, Svelte, and NodeJS. 
+ Now: let's  getting started  with StrykerJS. Edit this page Previous Supported mutators Next Getting started Docs FAQ Community Slack Twitter More Blog GitHub Powered by  Info Support . Stryker is released under the Apache 2.0 license. Site by the  Stryker team . Logo by Selina van den Top.

@@ -1,0 +1,972 @@
+__HTTP 200__
+                                                  AutoDroid: LLM-powered Task Automation in
+                                                                   Android
+                                                      Hao Wen1 , Yuanchun Li1,2,† , Guohong Liu1 , Shanhui Zhao1,∗ , Tao Yu1,∗ ,
+                                                     Toby Jia-Jun Li3 , Shiqi Jiang4 , Yunhao Liu5 , Yaqin Zhang1 , Yunxin Liu1,2
+                                                                             1 Institute for AI Industry Research (AIR), Tsinghua University
+                                                                                          2 Shanghai Artificial Intelligence Laboratory
+                                                                 3 Department of Computer Science and Engineering, University of Notre Dame
+                                                                                                           4 Microsoft Research
+
+
+
+
+arXiv:2308.15272v4 [cs.AI] 9 Mar 2024
+                                                                5 Global Innovation Exchange & Department of Automation, Tsinghua University
+
+
+                                        ABSTRACT                                                                          demonstrated that AutoDroid is able to precisely generate
+                                        Mobile task automation is an attractive technique that aims                       actions with an accuracy of 90.9%, and complete tasks with
+                                        to enable voice-based hands-free user interaction with smart-                     a success rate of 71.3%, outperforming the GPT-4-powered
+                                        phones. However, existing approaches suffer from poor scala-                      baselines by 36.4% and 39.7%.
+                                        bility due to the limited language understanding ability and
+                                        the non-trivial manual efforts required from developers or end-                   CCS CONCEPTS
+                                        users. The recent advance of large language models (LLMs)                         • Human-centered computing → Ubiquitous and mobile
+                                        in language understanding and reasoning inspires us to re-                        computing; • Computing methodologies → Artificial intel-
+                                        think the problem from a model-centric perspective, where                         ligence.
+                                        task preparation, comprehension, and execution are handled
+                                        by a unified language model. In this work, we introduce Au-                       KEYWORDS
+                                        toDroid, a mobile task automation system capable of han-                          Task Automation, Large Language Models, App Analysis
+                                        dling arbitrary tasks on any Android application without man-
+                                        ual efforts. The key insight is to combine the commonsense                        ACM Reference Format:
+                                        knowledge of LLMs and domain-specific knowledge of apps                           Hao Wen1 , Yuanchun Li1,2,† , Guohong Liu1 , Shanhui Zhao1,∗ , Tao
+                                                                                                                          Yu1,∗ ,, Toby Jia-Jun Li3 , Shiqi Jiang4 , Yunhao Liu5 , Yaqin Zhang1 ,
+                                        through automated dynamic analysis. The main components
+                                                                                                                          Yunxin Liu1,2 . 2024. AutoDroid: LLM-powered Task Automation
+                                        include a functionality-aware UI representation method that                       in Android. In International Conference On Mobile Computing And
+                                        bridges the UI with the LLM, exploration-based memory                             Networking (ACM MobiCom ’24), September 30–October 4, 2024,
+                                        injection techniques that augment the app-specific domain                         Washington D.C., DC, USA. ACM, New York, NY, USA, 15 pages.
+                                        knowledge of LLM, and a multi-granularity query optimiza-                         https://doi.org/10.1145/3636534.3649379
+                                        tion module that reduces the cost of model inference. We
+                                        integrate AutoDroid with off-the-shelf LLMs including on-                         1    INTRODUCTION
+                                        line GPT-4/GPT-3.5 and on-device Vicuna, and evaluate its
+                                        performance on a new benchmark for memory-augmented                               Smartphone is one of the most sophisticated devices for indi-
+                                        Android task automation with 158 common tasks. The results                        viduals. With millions of mobile applications (apps for short)
+                                                                                                                          that have access to various embedded sensors and rich per-
+                                        † Corresponding author: Yuanchun Li (liyuanchun@air.tsinghua.edu.cn).             sonal data, smartphones can be used for a lot of daily tasks
+                                        * Shanhui Zhao and Tao Yu were student interns at Tsinghua University.            such as ordering food, managing social networks, sensing and
+                                                                                                                          tracking health conditions, etc. Therefore, how to intelligently
+                                        Permission to make digital or hard copies of part or all of this work for
+                                        personal or classroom use is granted without fee provided that copies are not     automate tasks on smartphones has become an attractive topic
+                                        made or distributed for profit or commercial advantage and that copies bear       for mobile developers and researchers, due to its potential
+                                        this notice and the full citation on the first page. Copyrights for third-party   to significantly improve user experience and enable helpful
+                                        components of this work must be honored. For all other uses, contact the          virtual personal assistants.
+                                        owner/author(s).                                                                     The major approaches to mobile task automation can be
+                                        ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC,
+                                        USA
+                                                                                                                          classified as developer-based, demonstration-based, and learning-
+                                        © 2024 Copyright held by the owner/author(s).                                     based techniques. Most existing commercial products (e.g. Siri,
+                                        ACM ISBN 979-8-4007-0489-5/24/09.                                                 Google Assistant, Cortana, etc.) take a developer-based ap-
+                                        https://doi.org/10.1145/3636534.3649379                                           proach, which requires significant development efforts to
+ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA                                                       Wen and Li et al.
+
+
+         Task: Remind me to do laundry on August 17                             UIs, it simply relies on prompt engineering and does not uti-
+                                                                                lize app-specific domain knowledge. AutoDroid combines the
+   LLM                                                                          capabilities of LLM and the app-specific knowledge through
+                                                                                dynamic app analysis, which enables it to handle arbitrary
+          Step 1: Click   Step 2: Input       Step 3: Click   Step 4: Task is
+                                                                                unseen tasks without manual efforts (illustrated in Figure 1).
+          ‘New event’     ‘laundry’ into      ‘Save’          completed         We identify three key problems to achieve this goal.
+                          the ‘Title’ field
+
+
+   Domain                                                                         (1) GUI Representation. The input and output of task
+  Knowledge                                                                           automators are graphical user interface (GUI) states and
+                                                                                      actions, unlike the natural language sentences LLMs
+Figure 1: An illustration of LLM-powered mobile task                                  can handle. To help LLMs better understand the GUI
+automation. The agent interacts with the smartphone GUI                               information and make precise interaction decisions, the
+to complete an arbitrary task, with the guidance of LLM                               GUI states and actions must be converted to text format
+and app domain knowledge.                                                             while incorporating rich structured information.
+                                                                                  (2) Knowledge Integration. Solving tasks with LLMs re-
+                                                                                      quires domain-specific knowledge about the applica-
+support a new task. For example, to enable an automated task                          tions. Unlike other tools studied in prior work (e.g. APIs)
+with Google Assistant, app developers need to identify the                            that LLMs can be easily configured to use, a smart-
+functionality which they want to trigger, configure and imple-                        phone app is usually a more complicated automata.
+ment the corresponding intent, and register the intent with the                       LLMs need to navigate between different states to fig-
+assistant. When executing a task, the assistant uses natural                          ure out how to complete the tasks.
+language understanding (NLU) modules to map the user com-                         (3) Cost Optimization. Querying LLMs is costly and compute-
+mand to the intent, extract the intent parameters, and invoke                         intensive, while completing a task with LLMs may in-
+the corresponding developer-defined function. Researchers                             volve many lengthy queries due to complexity of tasks
+have explored various methods to ease the development ef-                             and smartphone apps. Thus, it is desirable to optimize
+forts. However, these methods still suffer from poor scalabil-                        the efficiency of LLM queries to facilitate responsive
+ity, since they either require ad-hoc and/or large-scale human                        task automation experience.
+demonstrations of tasks (e.g. programming-by-demonstration
+approaches [2, 14, 15] and supervised learning approaches                          We introduce a mobile task automation framework, Auto-
+[3, 16, 35]) or require defining a clear reward for task com-                   Droid, to address the above problems. Overall, AutoDroid
+pletion (e.g. reinforcement learning approaches [10, 19, 39]).                  executes tasks by prompting the LLMs with an HTML-style
+Due to the lack of scalability, there are few automated tasks                   text representation of GUI and querying for action guidance.
+supported today, even in the most popular apps.                                 To augment the LLMs with app knowledge, AutoDroid ran-
+   Recently, the emergence of large language models (LLMs)                      domly explores the target apps and extracts UI transition
+like ChatGPT [28] and Claude [1] shows the promise in solv-                     graphs from them. By analyzing the UI states and transitions
+ing the scalability issue of task automation. Compared to                       with LLMs, AutoDroid can convert the raw information to
+traditional models, LLMs demonstrate unique abilities such                      task completion knowledge, which is then integrated into the
+as instruction following [36], step-by-step reasoning [44], and                 task automator by injecting foreseen functionalities into the
+zero-shot generalization [11]. Such abilities are enabled by                    prompts, matching relevant UI traces, or tuning the LLM pa-
+self-supervised learning on a huge corpus (more than 1.4                        rameters. The cost of querying LLMs is reduced by reducing
+trillion tokens [38]) followed by tuning with human feed-                       and simplifying the queries based on app knowledge.
+back. With these capabilities, researchers have managed to let                     To systematically study the performance and challenges of
+LLMs invoke tools automatically, such as search engines [27],                   LLM-powered task automation on Android, we build a bench-
+code interpreters [4], and third-party APIs [25, 30]. Similarly,                mark with 158 manually labeled tasks from 13 open-source
+using LLMs can potentially avoid the cumbersome manual                          common mobile apps (Calendar, Messenger, Contacts, etc.).
+efforts in mobile task automation. Meanwhile, connecting                        The source code and executable environments of the apps are
+LLMs to smartphones can further unleash the power of LLMs                       provided for obtaining auxiliary information and reproducing
+in personal domains.                                                            task executions. The tasks include frequently asked how-to
+   The goal of LLM-powered mobile task automation is to                         questions from the PixelHelp [16] dataset and common func-
+build an autonomous agent that can complete user-specified                      tionalities in the apps. For each task, we manually labeled
+tasks by interacting with the smartphone. Although existing                     the steps to complete the tasks, where each step is associated
+research [42] attempts to enable LLMs to understand mobile                      with both the GUI state and the GUI action. Our benchmark
+AutoDroid: LLM-powered Task Automation in Android          ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA
+
+
+evaluates the performance of LLM-powered task automation             achieve multi-step task automation by leveraging app-specific
+in terms of accuracy and cost.                                       knowledge. Furthermore, unlike most existing approaches
+   We evaluate the effectiveness of our AutoDroid approach           that require significant developer/user efforts [2] to enable
+on the benchmark with different types of LLMs, including             automated tasks, we aim to achieve unsupervised task au-
+state-of-the-art online LLM services (GPT-3.5 and GPT-4)             tomation, i.e. support the automation of arbitrary tasks on
+and open-source on-device LLMs (Vicuna). The results have            black-box apps (whose internal mechanisms are unknown)
+demonstrated that AutoDroid can complete unseen tasks with           without human effort. However, we assume that the apps
+a success rate of 71.3% with GPT-4, in which each action is          are available for automated analyses, e.g. exploring the states,
+selected with an accuracy of 90.9%. As compared with the             crawling the content, and analyzing the code. Such an assump-
+baselines powered by off-the-shelf LLMs, the task completion         tion is reasonable because the app packages are all available
+rates are improved by 36.4% to 39.7%, and the average cost           for download and static/dynamic app analysis techniques have
+of querying LLMs is reduced by 51.7%.                                been extensively studied before [21–24].
+   Our work makes the following technical contributions:
+                                                                     2.2    Large Language Models
+  (1) To the best of our knowledge, this is the first work on
+                                                                     Large language models (LLMs for short) mainly refer to the
+      enhancing mobile task automation by combining LLMs
+                                                                     Transformer-based [40] language models that contain billions
+      and app-specific knowledge. We build a benchmark for
+                                                                     of parameters and are trained on massive amounts of text data,
+      this problem.
+                                                                     such as ChatGPT [28], GPT-4 [29], PaLM [6], LLaMA [38],
+  (2) We introduce a novel UI representation method that con-
+                                                                     etc. These models exhibit capabilities that are not present in
+      nects smartphones with LLMs, a task synthesis method
+                                                                     smaller models, including mathematical reasoning [7], pro-
+      for augmenting LLMs with app knowledge, and various
+                                                                     gram synthesis [4], and multi-step reasoning [44]. Specifi-
+      LLM query optimization techniques to reduce the cost
+                                                                     cally, LLM can perform the tasks better than the benchmark
+      of task automation.
+                                                                     models trained on dedicated datasets. The input of an LLM
+  (3) Through a comprehensive evaluation, we demonstrate
+                                                                     is a prompt, which is an instruction to guide its generation
+      the effectiveness of our approach and the potential to
+                                                                     of responses. The prompt is tokenized into tokens (words or
+      advance the field of mobile task automation.
+                                                                     subwords) before being fed into the LLM.
+                                                                        Researchers are actively exploring methods to enhance
+2 BACKGROUND AND MOTIVATION
+                                                                     the problem-solving capabilities of LLMs by incorporating
+2.1 Mobile Task Automation                                           reasoning skills [44] and tool utilization [25, 30, 49]. These
+The goal of mobile task automation is to automatically com-          efforts aim to enable LLMs to use tools by teaching them to
+plete different kinds of tasks given by users. Its input is an       call APIs or to synthesize codes. However, task automation
+arbitrary task described with natural language and a mobile          in smartphone apps is more complex since it is often related
+app to execute the task. The output is a sequence of UI actions      to the environment without documented interfaces.
+that can be executed on a smartphone.
+   A task is a multi-step functionality request from the user        2.3    LLM meets Mobile Task Automation
+intended for completion on a smartphone, often lacking ex-           We believe that incorporating LLMs into mobile task automa-
+plicit instructions. A UI state, visible to users on their mobile    tion brings unique advantages and strengths to both fields.
+device, is an arrangement of controls depicted through im-              First, LLMs have the potential to significantly advance
+ages and text, typically organized as a GUI tree. A UI action,       the applications of mobile task automation. The voice-
+performable by the user or an agent on the device’s screen, is       controlled intelligent personal assistants (IPA) are typical ap-
+defined by a tuple (target element, action type, value). Target      plications of mobile task automation, aiming to provide intelli-
+element refers to a control in the UI state, such as a button,       gent, efficient, hands-free user experience on mobile devices.
+text box, input field, or slider. Action type represents how         Such applications are not only useful in smartphones, but
+the target element is manipulated. We consider three main            also in many other scenarios, including automotive in-vehicle
+types of smartphone interactions, including “click”, “input”,        infotainment (IVI) systems [31], wearable fitness trackers
+and “swipe”. The value field is the text content of the “input”      [34, 46], and VR/AR devices [12]. To support IPA services,
+action, which is empty for other action types.                       developers usually have to manually configure the task work-
+   In contrast to existing methods that utilize LLMs to sum-         flows, which is a cumbersome process even for experienced
+marize or respond to queries about individual mobile UIs             developers. Researchers have also attempted to build agents
+[41, 42], automating mobile tasks demands the capability to          that can directly manipulate GUI elements like human users
+plan task solutions and an in-depth understanding of which           [15, 16, 35, 42]. However, they usually require a lot of human
+UIs are essential for task completion. AutoDroid aims to             demonstrations, step-by-step instructions, or clearly-designed
+ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA                                            Wen and Li et al.
+
+
+                                                                    to undertaking tasks for users. Third, using LLMs for task
+        Step1: tap on “more options”
+                                                                    completion may be costly. The price of querying ChatGPT
+                                                                    API [28] is $1.5 / 1000K tokens. Even if we can deploy a
+                                                                    private LLM service, the computational cost is still high. For
+                    Step2: tap on “settings”
+                                                  GUI 2             example, inferring a single token with LLaMA-7B [38] takes
+                                                                    6.7 billion FLOPs, and the whole process of task completion
+                                                                    may use over 2000 tokens.
+
+           Step3: tap on “Delete all events”
+                                                                    3     OUR APPROACH: AUTODROID
+                            GUI 1                 GUI 3
+                                                                    We introduce AutoDroid, an LLM-powered end-to-end mo-
+Figure 2: An example task of “Remove all the events in the          bile task automation system to solve the aforementioned chal-
+Calendar”. The agent needs to tap on "more options" and             lenges. In the offline stage, AutoDroid obtains app-specific
+"settings" on the first and second GUI, which do not have           knowledge by exploring UI relations and synthesizing sim-
+a direct semantic association with the ultimate goal. This          ulated tasks. In the online stage, AutoDroid continuously
+association can be grasped more easily with app analysis.           queries the memory-augmented LLMs to obtain guidance
+                                                                    on the next action. The task is completed by following the
+                                                                    LLM-suggested actions. AutoDroid adopts several techniques
+task-specific reward functions for task completion [10, 19].        to improve the task completion rate and optimize the query
+LLM-based agents can be better at GUI task automation with          cost. Figure 3 illustrates the workflow.
+their strong language comprehension and reasoning abilities.           We explain the functioning of AutoDroid using the exam-
+   Second, equipping LLMs with smartphones can sig-                 ple of automating tasks in a calendar app: During the offline
+nificantly augment their abilities. LLMs are trained with           stage, AutoDroid explores the app by randomly clicking but-
+large-scale public data that contains rich commonsense and          tons on the screen and records the result in a UI Transition
+world knowledge, while they have limited knowledge about            Graph (UTG) memory (Step 1). Next, it traverses all the UI
+individual users and limited abilities to provide personalized      elements in the UTG and summarizes the tasks they can ac-
+services. Smartphones have been an important part of daily          complish (Step 2). During online operation, when the user
+life by helping people connect with others, stay organized          issues a command such as “delete all the events in the cal-
+with calendars, navigate and get directions, control smart-         endar”, the Prompt Generator generates a prompt based on
+home devices, and so on. If LLMs learn to use smartphone            the task, the UI state description, and relevant information
+apps and access data siloed in them, they could become much         stored in the App Memory. This information includes instruc-
+better personal assistants with access to the rich sensors and      tions on how to navigate to the GUI page that contains the
+personal data in mobile apps.                                       “delete events” option. Subsequently, the Privacy Filter re-
+   Yet, applying LLMs to mobile task automation involves            places any sensitive information in the prompt to safeguard
+several challenges, including GUI representation, knowledge         privacy. The filtered prompt is then sent to the LLM. Once
+integration, and cost optimization. First, LLMs are only capa-      the LLM provides an answer, the Task Executor parses the
+ble of processing plain text data and cannot directly handle        action that can be executed on the smartphone and verifies
+GUI or interact with it. Although the GUI state in Android can      its security before performing it. If the executor deems the
+be represented as text using the UI Hierarchy Viewer or Ac-         action to be potentially risky, such as “delete all the events”
+cessibility Services, it is usually lengthy (about 40k tokens on    in this particular task, it will seek confirmation from the user
+average for each UI state) and difficult for LLMs to interpret.     before proceeding. We will explain how AutoDroid does all
+Second, LLMs lack knowledge and experience about certain            of these in the rest of this section.
+applications, which may lead to incorrect execution of instruc-
+tions. Figure 2 shows an example where a deep understanding
+of the app is needed to complete the task. It is difficult to de-   3.1    Task-oriented UI Prompting
+termine solely based on semantics and prior knowledge that          UI prompting refers to the process of representing underlying
+clicking on ‘more options’ and then ’settings’ on the first two     UI information in text and injecting it into the prompt to query
+screens will lead to the screen containing the option to ‘delete    the LLM. The goal of UI prompting is to clearly present the
+all events’. Therefore, relying solely on prompt engineering        UI textual and structural content to the LLM and restrict
+for LLMs to produce common-sense solutions can result in            the output of the LLM to predict only valid UI interactions.
+mistakes. A better approach might be to let LLMs investigate        Figure 4 showcases an example of AutoDroid converting a
+and learn from mobile apps, gaining practical experience prior      GUI interface into a prompt while completing the task.
+AutoDroid: LLM-powered Task Automation in Android                                 ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA
+
+
+                 Offline                          1. UI relationship exploration                              2. Simulated task synthesis
+                                    UI          Random          Record                                      Memory               <simulated task,
+                                                Explorer                                                    Generator             actions> pairs
+                        App Action
+                                                                           UI Transition Graph                                     App Memory
+
+                 Online
+                                                                              Action Request Prompt:                                 Knowledge
+                                                        Prompt                                                                       Augmenter
+                                     Task                                     •     Overall guidance
+                                                       Generator
+                          User                                                •     Task representation
+                                           UI                                 •     Action history                    Privacy             LLM
+                                         Action                               •     Optimized UI description           Filter        (Cloud/Local)
+                                                             Task
+                                      Protector                               •     Output requirements
+                                                           Executor
+                      Smartphone                                                                                   Action Guidance
+
+                                                             Figure 3: The workflow of AutoDroid.
+
+  You are a smartphone assistant to help users complete tasks by interacting                    Table 1: The classes and properties of GUI elements
+  with mobile apps. Given a task, the previous UI actions, and the content of
+  current UI state, your job is to decide whether the task is already finished by              Class         Properties                                Available action
+  the previous actions, and if not, decide which UI element in current UI state                <button>   ID, label, onclick (§3.2.2), text            click
+  should be interacted.                                                                        <checkbox> ID, checked, label, onclick (§3.2.2), text   check/uncheck
+  Task: List the files stored in SD card                                                       <scroller> ID, scroll direction, label, text            scroll <direction>
+  Previous UI actions:                                                                         <input>    ID, label, text, value                       input <text>
+    - Start the File manager app.                                                              <p>        ID, label, text                              N/A
+  Current UI state:
+    <input id=0>Search</input>                                                               respectively. The properties included for each element are:
+    <button id=1 label='Sort by'></button>                                                   ID (the order in which the element appears in the GUI tree),
+    <button id=2 label='Add to
+    favorites'></button>                                                                     label (the content description that describes the function of
+    <button id=3 label='More                                                                 the element), onclick (hints about the UI states that will be
+    options'></button>
+    <button id=4>Internal</button>                                                           accessed upon clicking this button or checking/unchecking
+    <button id=5>Alarms<br>0 items</button>                                                  this checkbox, which will be introduced in §3.2.2), text (the
+    <button id=6>Android<br>2 items</button>
+    ··· ···
+                                                                                             text on the element), direction (scrolling direction, includ-
+                                                                                             ing up/down/left/right), checked (whether the checkbox is
+  Which action should you choose next? Fill in
+  the blanks about the next one interaction:-                                                checked or not), value (the text that has been input to the text
+  id=<id number> - action=<tap/input> -                                                      box). The classes and properties of GUI elements are shown
+  input text=<text or N/A>. (if you think the
+  task has been completed, the id should be -1)                                              in Table 1. We further simplify the DOM tree by pruning invis-
+                                                                                             ible elements and merging functionally equivalent elements,
+Figure 4: An illustration of the prompt used by AutoDroid.                                   which will be introduced in §3.3. The texts of two merged
+The content in red, blue, and green boxes are the overall                                    UI elements are separated by “<br>”, which represents a line
+guidance, the task representation, and the output require-                                   break in HTML.
+ments respectively. The ‘current UI State’ in the prompt                                        In our experiments, we observe that the agent generally
+refers to the UI displayed within the black box.                                             does not proactively scroll on interfaces that can be scrolled
+                                                                                             vertically (shown in §6.2). However, having information about
+3.1.1 Converting GUI to Simplified HTML Represen-                                            the scrolled interface is crucial for decision-making, espe-
+tation. We develop a GUI parsing module to convert GUI to                                    cially when the target button is located on a scrolled portion
+a simplified HTML representation that can be processed by                                    of the interface that is not yet visible. Therefore, to provide
+LLMs. Researchers have found that LLMs are better at under-                                  the agent with comprehensive information, we need to include
+standing HTML than natural-language-described UIs due to                                     the components from the scrolled portion of the interface in
+the large amount of HTML code in the training data of LLMs                                   the current UI state. To achieve this, for a given interface,
+[42]. Therefore, we represent the GUI in HTML style, which                                   AutoDroid first automatically scrolls through all scrollable
+can preserve the attribute information of UI elements. We                                    components and records the information of the visible UI
+use five types of HTML tags, namely <button>, <checkbox>,                                    elements, and then provides this information to the LLM
+<scroller>, <input>, and <p>, which represent elements that                                  for decision-making. This approach offers two advantages.
+can be clicked, checked, swiped, edited, and any other views                                 Firstly, it prevents LLMs from making blind selections when
+ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA                                            Wen and Li et al.
+
+
+they cannot see all the information on the interface. Secondly,   recorded by the random Explorer, denoted as U and A respec-
+it eliminates the need for LLMs to provide explicit instruc-      tively. For each UI state U𝑖 , the memory generator queries
+tions for scrolling, reducing the frequency of calling the LLM    LLM to summarize the functionalities of all the UI elements
+and lowering the associated computational overhead.               {𝑒𝑖𝑗 } |𝑈 𝑖|
+                                                                         𝑗=1 , where |𝑈𝑖 | denotes the number of elements in 𝑈𝑖 .
+                                                                  Note that AutoDroid only extracts the functionality of an
+3.1.2 Restricting the Action Space with Selections. A             element on the UI state that is closest to the initial UI if it
+key characteristic of UI task automation is that all agent ac-    appears on multiple UI states. After traversing all UI elements
+tions need to be confined to the constraints of the underlying    in the UTG, we obtain the simulated task table in the app
+app i.e., the agent can only perform actions of a supported       memory containing 𝑛 entries, where 𝑛 represents the total
+action type on one of the existing UI elements. Thus, a chal-     number of UI elements on the UTG. Each entry in the table
+lenge is to adapt LLMs, which are generative in nature, to        corresponds to a UI element 𝑒𝑖𝑗 and is divided into three parts:
+such a discrete choice task. Hence, we impose the necessity       <Simulated task, UI states, UI elements>. “Simulated task”
+for LLMs to produce results in a predetermined structure by       represents the functionality of 𝑒𝑖𝑗 that has been summarized by
+completing the following requirement: “- id=<id number> -         LLM, which can be perceived as a simulated task that can be
+action=<tap/input> input text=<text or N/A> (in the event of      completed by clicking this element. “UI elements” includes
+task completion, id=-1)”. LLMs must refrain from generating       all the elements that were clicked, starting from the initial UI
+id or input in an arbitrary format.                               of the app and leading up to the attainment of 𝑈𝑖 . “UI states”
+                                                                  represents the sequence of UI states that were traversed from
+                                                                  the initial UI state to 𝑈𝑖 . This table provides the agent with
+3.2    Exploration-based Memory Injection                         information about the required operations to achieve each
+Exploration-based memory injection aims to provide app-           functionality, aiding the agent in planning how to complete
+related information to LLMs, enabling them to gain insights       a given task efficiently. Apart from the simulated task table,
+into apps, understand app utilization methods, and make ef-       there is an additional table called the UI function table in
+fective decisions. However, there are challenges in utiliz-       the app memory. It provides a summary of the functionality
+ing automated app-related knowledge to assist LLMs in task        associated with each UI state in the UTG. This information is
+automation, including: (i) The UI Transition Graph (UTG)          obtained by querying the LLM to summarize the function of
+obtained through random exploration cannot be directly pro-       each UI state.
+cessed by the LLM. (ii) Memory acquired solely through UI
+automation tools contains only UI and action data, without        3.2.2 Augmenting Prompts with App Memory. The most
+the essential information needed to directly enable task au-      straightforward approach to leveraging app-specific knowl-
+tomation. This includes details about the specific UI elements    edge is to incorporate the app memory directly into the prompt,
+and actions necessary to accomplish a particular task. (iii) An   which can provide guidance to the LLM. However, this may
+app may have numerous UI screens and UI elements (buttons,        exceed the maximum token limit of the LLM such as 4097 to-
+text boxes, etc.), exceeding the token length limit of LLMs       kens for GPT-3.5 [28]. In many cases, only a few UI elements
+if all of them are included in a prompt. To overcome these        are necessary to complete a user’s task. Hence, we selectively
+challenges, AutoDroid synthesizes simulated tasks based on        incorporate the most relevant UI information into the prompt.
+the randomly explored UI graph. These simulated tasks serve          AutoDroid determines the importance of a UI element in
+as a guide for LLMs on how to accomplish a user task.             the app memory based on the similarity between its simulated
+                                                                  task and the current user task. We use an embedding model
+3.2.1 Simulated Task Generation. AutoDroid generates              (Instructor-XL [33]) that maps natural language sentences
+simulated tasks by analyzing the UI Transition Graph (UTG)        to a fixed-dimension embedding, where the embeddings of
+as depicted in Figure 5. The UTG generated by the UI automa-      sentences with similar meanings are closer. The cosine sim-
+tor contains crucial information about the application, such as   ilarity between the embeddings of the simulated task 𝑆 and
+the connections between UIs and the presence of different UI      the current task 𝑇 is denoted as 𝑠𝑖𝑚(𝐸 (𝑆), 𝐸 (𝑇 )). Then, we
+elements on each screen. By summarizing the functionalities       can find k most similar simulated tasks in the app memory,
+of all UI elements, we can gain a thorough understanding of       denoted as {𝑆 1, 𝑆 2, ..., 𝑆𝑘 }. For each 𝑆𝑖 , we can retrieve the
+the tasks that can be performed within the app and determine      corresponding UI states and the UI elements from the “simu-
+the corresponding UI elements required to execute them. As a      lated task table” in the app memory. In the online stage, if the
+result, AutoDroid parses all UI states and UI elements present    current UI matches one of the UI states associated with 𝑆𝑖 ,
+in the UTG and extracts their functions by querying LLMs.         we give hints about the UI elements that the random explorer
+   Specifically, UTG can be regarded as a directed graph,         interacted with in this UI state. This helps LLMs understand
+where the nodes and edges are all UI states and actions           the outcome of interacting with the elements. Specifically,
+AutoDroid: LLM-powered Task Automation in Android                          ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA
+
+
+                                         - Memory Generator:                                                   (i) Simulated task table
+                                         Given an HTML representation of the current screen, previous
+                                         UI actions, and the next element to interact with, summarize    Simulated task UI states     UI elements
+                                         the task these steps are trying to accomplish.                  <Function of     GUI 1 →     ① → ... →
+                    ①                         Current UI State: <GUI 1/2/3>                              Element A>       GUI 2 ...   <Element A>
+                             GUI 2            Previous UI actions: <previous actions>                    <Function of     GUI 1 →     ① → ③ → ...
+                      ②                       Next element to be interacted with: <Element A/B/C/D...>   Element B>       GUI 2 →     → <Element
+          GUI 1
+                                         Your answer should be no more than 15 words, do not include                      GUI 3...    B>
+                            ③            any previous step information in the summary. <an example>
+                                                                                                         ... ...          ... ...     ... ...
+                                         - LLM:
+                   ④
+                                         <Function of Element A/B/C/D...>
+                                                                                                                 (ii) UI function table
+                          GUI 3         - Memory Generator:                                              UI states Functions
+                                        Given the HTML statement of a GUI screen, you should             GUI 1     <Function of GUI 1>
+                                        summarize its function in a few phrases. GUI: <GUI 1/2/3>
+                                                                                                         GUI 2     <Function of GUI 2>
+                                        - LLM:
+                                        <Function of GUI 1/2/3>                                          ... ... ... ...
+
+               (a) UTG                                    (b) Memory Generation                                      (c) App Memory
+
+Figure 5: Workflow of offline simulated task synthesis. Given the UI Transition Graph (UTG), Memory Generator
+synthesizes a simulated task for each UI element with LLMs, then records the task-states-elements in the App Memory.
+the prompt generator of AutoDroid will add a new property                               Take the task shown in Figure 2 as an example. Given the
+“onclick” to the HTML UI statement in the prompt (shown                              task “Remove all the events in the calendar”, AutoDroid
+in Table1). In HTML, “onclick” is used to describe the event                         can retrieve in the app memory and find the simulated task
+that will occur when users click a button, link, or image.                           of the “delete all events” button in GUI 3 to be a relevant
+In our prompt, the content of the “onclick” property refers                          task. Additionally, AutoDroid can find that clicking “more
+to the functionality of the UI states that will be accessed                          options” and “settings” in GUI 1 and GUI 2 can lead to
+after clicking this element, which is most relevant to complet-                      the target button. Therefore, if the current UI screen is GUI
+ing the 𝑆𝑖 . Algorithm 1 shows how to augment prompt with                            1, the HTML description of “more options” in GUI 1 will
+{𝑆 1, 𝑆 2, ..., 𝑆𝑘 } and app memory 𝑀.                                               change from “<button label=‘More options’></button>”, to
+                                                                                     “<button label=‘More options’ onclick=‘navigate to GUIs that
+                                                                                     can: 1.add contact holidays and anniversaries, import and
+Algorithm 1 Prompt Augmentation
+                                                                                     export events, manage settings, 2.Delete all events in the app,
+ Input: Current user task 𝑇 , k most similar simulated tasks in the app mem-
+    ory S = {𝑆 1 , 𝑆 2 ...𝑆𝑘 }, App Memory 𝑀
+                                                                                     manage event reminders, etc.’></button>”.
+ Output: Final GUI state after completing the task 𝑇
+ 1: function O NLINE -M AIN:                                                         3.2.3 Tuning Local LLM with App-specific Data. Auto-
+ 2:    𝐺𝑢𝑖𝑑𝑒 ← 𝐺𝑒𝑛𝑒𝑟𝑎𝑡𝑒𝐺𝑢𝑖𝑑𝑒 (𝑀, S)                                                  Droid can also utilize smaller local LLMs (e.g. Vicuna-7B
+ 3:     while 𝑇 not completed do                                                     [5]) to make decisions, as a cost-effective alternative to larger
+ 4:        𝑈 𝐼 ← Current GUI of SmartPhone                                           on-cloud LLMs (e.g. GPT-3.5 [28]). However, the reason-
+ 5:         if 𝑈 𝐼 ∈ 𝐺𝑢𝑖𝑑𝑒.𝑈 𝐼𝑠 then
+ 6:             𝑈 𝐼 .𝑒𝑙𝑒𝑚𝑒𝑛𝑡𝑠.ℎ𝑖𝑛𝑡 ← 𝐺𝑢𝑖𝑑𝑒.𝑈 𝐼 .𝑒𝑙𝑒𝑚𝑒𝑛𝑡𝑠.𝐹𝑢𝑛𝑐𝑡𝑖𝑜𝑛
+                                                                                     ing ability of these smaller LLMs is weaker than on-cloud
+ 7:         end if                                                                   LLMs, leading to a noticeable decrease in accuracy. It is ob-
+ 8:         𝑃𝑟𝑜𝑚𝑝𝑡 ← 𝑃𝑟𝑜𝑚𝑝𝑡𝐺𝑒𝑛𝑒𝑟𝑎𝑡𝑜𝑟 (𝑇 , 𝑈 𝐼, 𝐻𝑖𝑠𝑡𝑜𝑟 𝑦)                             served that local LLMs still exhibit suboptimal performance
+ 9:         𝐴𝑐𝑡𝑖𝑜𝑛 ← 𝐿𝐿𝑀 (𝑃𝑟𝑜𝑚𝑝𝑡 )                                                   even with the prompt augmentation methods introduced in
+10:         𝑇 𝑎𝑠𝑘𝐸𝑥𝑒𝑐𝑢𝑡𝑜𝑟 .𝑒𝑥𝑒𝑐𝑢𝑡𝑒 (𝐴𝑐𝑡𝑖𝑜𝑛)                                          §3.2.2. Researchers have found that fine-tuning using domain-
+11:         𝐻𝑖𝑠𝑡𝑜𝑟 𝑦.𝑖𝑛𝑠𝑒𝑟𝑡 (𝐴𝑐𝑡𝑖𝑜𝑛)
+12:     end while
+                                                                                     specific data is an effective way to improve small LLM’s
+13: return 𝐶𝑢𝑟𝑟𝑒𝑛𝑡 𝐺𝑈 𝐼                                                              abilities [5, 36]. Therefore, we can augment smaller LLMs
+14: end function                                                                     by fine-tuning using app-specific data.
+15:                                                                                      A key challenge in our scenario is how to generate high-
+16: function G ENERATE G UIDE(𝑀, S):                                                 quality (question, answer) pairs to fine-tune the LLM. A naive
+17:     for each 𝑆𝑖 of S do
+18:
+                            𝑗
+            for each 𝑈 𝐼𝑖 of 𝑀 .𝑆𝑖𝑚𝑢𝑙𝑎𝑡𝑒𝑑_𝑇 𝑎𝑠𝑘_𝑇 𝑎𝑏𝑙𝑒 {𝑆𝑖 } do
+                                                                                     way is to directly synthesize these data pairs from the sim-
+19:
+                              𝑗        𝑗
+                𝐺𝑢𝑖𝑑𝑒.𝑈 𝐼𝑖 .𝐸𝑙𝑒𝑚𝑒𝑛𝑡𝑖 .ℎ𝑖𝑛𝑡 ← 𝑀 .𝐹𝑢𝑛𝑐𝑡𝑖𝑜𝑛{𝑈 𝐼𝑖
+                                                                    𝑗 +1,𝑗 +2...
+                                                                                 }   ulated task table of the app memory. For a simulated task
+20:         end for                                                                  𝑆, the memory generator records a sequence of UI states
+21:     end for                                                                      {𝑈 1, 𝑈 2, ..., 𝑈𝑘 } and the UI elements {𝑒 1, 𝑒 2, ..., 𝑒𝑘 } to complete
+22: return 𝐺𝑢𝑖𝑑𝑒                                                                     it. We can directly generate k data pairs (𝑞𝑖 , 𝑎𝑖 )𝑖=1      𝑘 based on
+23: end function
+                                                                                     this record. Specifically, 𝑞𝑖 is a prompt generated based on the
+ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA                                                  Wen and Li et al.
+
+
+task 𝑆, previous UI actions {𝐴1, 𝐴2, ..., 𝐴𝑘 } (where the target       approach, pruning unnecessary tokens in the prompt, we can
+elements are {𝑒 1, 𝑒 2, ..., 𝑒𝑘 } and the action type is click), and   effectively decrease the computational cost of LLM.
+the current UI state 𝑈𝑖 . Then, the description of the action
+                                                                       3.3.1 Pruning Tokens by Merging Functionally Equiv-
+𝐴𝑖 can be the answer 𝑎𝑖 . The rationale behind this approach
+                                                                       alent Elements. The HTML statement of UI described in
+is that: Based on the generation process of the app memory,
+                                                                       §3.1 contains a lot of redundant information, which will in-
+we already know that when transitioning from interface 𝑈𝑖 to
+                                                                       crease the number of tokens and cause the LLM to overlook
+complete task 𝑆, action 𝐴𝑖 needs to be performed. Therefore,
+                                                                       the most useful information. Therefore, We adopt two tech-
+the correct answer of which action to choose given the state
+                                                                       niques to reduce the length of the text: First, we prune the
+𝑈𝑖 should be 𝐴𝑖 .
+                                                                       elements without any visual or textual information (such as
+    However, the answers generated in this way only include
+                                                                       background or container items). Second, we merge function-
+<target element, action type, value>, lacking detailed infor-
+                                                                       ally equivalent UI elements into one element and separate the
+mation or context. Thus, it is difficult for the local LLM to
+                                                                       originally different elements with a “<br>” delimiter, which
+learn how to choose the correct action based on the prompt.
+                                                                       means a line-break-like spacing in HTML. We merge UI el-
+If we include the reasons for choosing the target action in the
+                                                                       ements based on two rules: (i) Based on UTG: If operating
+answers, it will enhance the local LLM’s understanding and
+                                                                       on these two UI elements leads to the same interface, we
+enable it to learn how to reason based on the current task and
+                                                                       combine them into a single component. Specifically, if the
+UI [9]. Thus, we can ask larger LLMs (such as GPT-4 [29])
+                                                                       starting and ending points of two edges representing actions
+to answer the reason why 𝐴𝑖 is chosen to complete task 𝑆, and
+                                                                       in the UTG are the same, we merge the components they
+prompt it to reason in a step-by-step manner like a Zero-shot
+                                                                       operate on. (ii) Based on UI tree analysis: We merge the non-
+Chain-of-Thought (0-shot CoT) [11]. The prompt sent to the
+                                                                       interactive (plain text or image) UI leaf nodes sharing the
+larger LLM is mainly the same as Figure 4. Additionally, we
+                                                                       same interactive ancestor (button, checkbox, text field, etc.)
+provide the correct action to choose 𝐴𝑖 , and prompt the LLM
+                                                                       in the UI tree. For example, in the GUI screenshot shown in
+to reason about the correct action by changing the “output
+                                                                       Figure 4, “Alarms” and “0 items” are two single plain-text
+requirements” part to the following format:
+                                                                       nodes in the GUI tree that have a common clickable ancestor.
+    Your answer should always use the following format: 1.
+                                                                       Thus, we can merge them into an HTML statement: “<button
+Completing this task on a smartphone usually involves these
+                                                                       id=5>Alarms<br>0 items</button>” instead of two single
+steps: <?>. 2. Analyses of the relations between the task and
+                                                                       statements “<button id=5>Alarms</button>” and “<button
+the previous UI actions and current UI state: 3. Based on the
+                                                                       id=6>0 items</button>”.
+previous actions, is the task already finished? <Y/N>. The
+next step should be <?/None>. 4. Can the task be proceeded             3.3.2 Reducing Query Times by Shortcuts and GUI
+with the current UI state? <Y/N>. Fill in the blanks about the         Merging. GUI merging is to include several GUI states into
+next one interaction: - id=<id number> - action=<tap/input>            one prompt if LLMs need them all to make decisions. The
+- input text=<text or N/A>.                                            automatic scrolling introduced in §3.1.1 can accomplish this
+    The answer to the above questions can be used as the an-           by skipping the intermediate steps like “scroll down”. With-
+swer in the (question, answer) pair for fine-tuning the local          out automatic scrolling, AutoDroid has to query LLMs at
+LLM. The thinking and reasoning data generated by these                least twice to touch an element within the GUI after swip-
+larger LLMs contains rich information and knowledge. Us-               ing, involving both scrolling and clicking. After merging the
+ing it as answers to fine-tune smaller LLMs can enable it to           scrolled UIs into one prompt, we only need to call LLMs once
+mimic the emergent reasoning abilities of the large model.             and get the action “Scroll down to Button A and touch it”.
+Besides leveraging the knowledge from larger LLMs, fine-                  The shortcut is to execute simple actions directly with
+tuning LLMs with app-specific data also has the bellow two             the help of the app memory. Although some steps are cru-
+advantages: (i) Learning from the UTG and incorporating the            cial and require a large model to make decisions, others are
+insights gained from it. (ii) Let smaller LLMs generate an-            straightforward and do not require it. So if we can iden-
+swers that adhere to the desired format instead of unrestricted        tify steps that are simple enough so that a local embedding
+formatting in the answers.                                             model [33] can make decisions, we can reduce the number
+                                                                       of queries. Specifically, let 𝑇 , 𝐸, and {𝑆 1, 𝑆 2, ...} denote the
+                                                                       user task, the embedding model, and the simulated tasks
+3.3     Multi-granularity Query Optimization                           respectively. If we find 𝑠𝑖𝑚(𝐸 (𝑆𝑘 ), 𝐸 (𝑇 )) > 𝛾 where 𝑆𝑘 =
+We observe that the primary source of overhead in AutoDroid            arg max𝑆𝑖 ∈ S 𝑠𝑖𝑚(𝐸 (𝑆𝑖 ), 𝐸 (𝑇 )), then 𝑆𝑘 is very similar to 𝑇 ,
+arises from querying LLMs. Consequently, reducing the fre-             and accomplishing 𝑆𝑘 is straightforward because we have a
+quency of LM queries for each task will result in a reduction          series of actions {𝐴𝑘1 , 𝐴𝑘2 , ...} in the app memory that navigate
+of AutoDroid’s overhead. Additionally, as a more granular              from the initial UI state to 𝑆𝑘 . Thus we can perform 𝑆𝑘 by the
+AutoDroid: LLM-powered Task Automation in Android           ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA
+
+
+task executor without calling LLM. 𝛾 is a hyper-parameter,
+
+
+                                                                       Task Number
+                                                                                     30                                    15
+the larger the value of 𝛾, the stricter our criteria for selecting
+                                                                                     20                                    10
+similar simulated tasks become. We observe that even if the
+                                                                                     10                                     5
+shortcut navigates to UI states unrelated to the task, LLM is
+still able to identify issues and quickly navigate to the correct                     0                                     0
+                                                                                                5      10    15     20        G al
+                                                                                                                               F le
+                                                                                                                            Re ire ry
+                                                                                                                               co fox
+                                                                                                    Step Number
+                                                                                                                                 rd
+UI states.
+                                                                                                                                D e
+                                                                                                                             C ial r
+                                                                                                                            La am er
+                                                                                                                           M un er
+                                                                                                                            es c a
+                                                                                                                              se he
+                                                                                                                                 ng r
+                                                                                                                            Co Fi er
+                                                                                                                               nt les
+                                                                                                                                 a
+                                                                                                                                N cts
+                                                                                                                                 o
+                                                                                                                               Pl tes
+                                                                                                                                 ay
+                                                                                                                            Ca Cl er
+                                                                                                                               le ock
+                                                                                                                                 nd ar
+                                                                                          (a) Different Numbers of Steps        (b) Different Apps
+4   IMPLEMENTATION                                                    Figure 6: The distribution of tasks in DroidTask across
+We implement AutoDroid using Python and Java. The local               different numbers of steps (a) and different apps (b).
+LLM Vicuna [5] is fine-tuned using PyTorch.
+   Identifying Risky Actions. Some actions may potentially            collected our data. While previous benchmarks [3, 16, 35]
+alter local or server data, or cannot be undone once performed.       also provide tasks and corresponding actions, they lack a
+These actions are considered risky and require user confirma-         reproducible environment. However, with the emergence of
+tion before being executed by the agent. For example, before          LLM-powered task automation methods [30, 47], which of-
+calling a contact, AutoDroid needs to first prompt the user           ten require dynamic information about the environment for
+to verify the correctness of the action. If the user notices any      decision-making, our benchmark offers greater convenience
+errors in the number about to be dialed, they can manually            for evaluating the performance of autonomous agents on mo-
+make the necessary modifications. AutoDroid accomplishes              bile phones.
+this by prompting the LLM to identify risky actions, i.e. ap-            We develop a system for collecting datasets that can inter-
+pending the sentence “If this action potentially leads to a           act with Android smartphones. The selected apps primarily
+change of user data or server state that requires user confir-        consist of common mobile tools (such as contacts, dialer, cam-
+mation, please answer requires_confirmation=Yes)” to the              era, calendar, etc.) from F-Droid, a free and open-source app
+prompt. In addition, AutoDroid also utilizes key phrases on           platform. For each app, we ask annotators to provide a list of
+the UI, such as “warning”, to further identify potentially risky      5-15 tasks described in natural language. To complete each
+actions.                                                              task, annotators interact with the smartphone through a desk-
+   Eliding Private Information. We add a privacy filter that          top computer in an iterative manner. During each iteration,
+can mask the private information in the query. During on-             the system displays the smartphone’s user interface (UI) in
+line processing, it runs a Personal Identifiable Information          its current state to the annotator, along with a list of available
+(PII) scanner [26] that can detect sensitive information in           actions. Annotators can also directly observe the actual state
+the prompt, including name, phone number, email address,              of the smartphone. They can choose an action from the fol-
+etc. This personal information is replaced with non-private           lowing options: 1. Touch <Button ID>, 2. Input <input text>
+words (e.g. “<name>”→“Alice”) before sending the prompt               to <EditBox ID>, 3. Swipe <Scroller ID> <direction> in the
+to the cloud. After receiving the response from LLMs, Auto-           terminal. The distribution of tasks is shown in Figure 6.
+Droid maps the special words back to the original ones before
+parsing actions.                                                      6                   EVALUATION
+                                                                      We conduct experiments to examine the accuracy and cost of
+5   BENCHMARK                                                         AutoDroid in mobile task automation.
+We introduce DroidTask, an Android Task Automation bench-
+mark suite designed to evaluate the performance of end-to-end         6.1                   Experimental Setup
+mobile task automation systems. DroidTask consists of 158             Dataset. We mainly evaluate AutoDroid on DroidTask (men-
+high-level tasks extracted from 13 popular apps. What sets            tioned in §5). We also utilize MoTiF [3] dataset to train the
+our benchmark apart is that it not only provides tasks and cor-       baseline methods and fine-tune the LLMs. MoTiF [3] is a
+responding GUI action traces but also offers the exploration          large-scale mobile app task dataset with more than 4.7k tasks
+memory and environment for the underlying apps. Agents can            (excluding tasks without valid demonstrations). It also pro-
+actively interact with the environment during the offline stage,      vides the screenshot and the tree-based representation of the
+gathering information about the apps and recording UTGs.              GUI screens that annotators interacted with when completing
+All 13 apps used to collect the tasks are installed, granted          these tasks, but lacks the exploration environment of the apps.
+necessary permissions, and can reproduce the GUI action                  Hardware. We evaluate the end-to-end performance of Au-
+traces in our environment. We will release the environment            toDroid on a OnePlus ACE 2 Pro with 8 3.2 GHz ARM-based
+in the form of an Android Virtual Machine Snapshot, allow-            cores (Snapdragon 8 Gen2 CPU) and Adreno™ 740 GPU.
+ing researchers to restore the exact environment in which we          The local LLM Vicuna-7B [5] is deployed on the smartphone
+ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA                                                 Wen and Li et al.
+
+
+based on Machine Learning Compilation for LLM (MLC                       the LLM going larger, LLM-based methods outperform the
+LLM) [37]. Additionally, it is deployed on an edge server                model trained from scratch [35]. This is because the model
+equipped with 1 NVIDIA 3090 24G GPU to assess inference                  has only been exposed to apps and tasks from specific datasets
+latency in an edge computing context. The Vicuna-7B model                [3]. Thus, it will not perform well on new apps and tasks in
+is fine-tuned on an 8× A100 80GB server for about 4 GPU                  the DroidTask. However, by accumulating sufficient prior
+hours.                                                                   knowledge and incorporating our memory integration, LLMs
+   Baselines. We choose META-GUI [35] and an existing                    can engage in rational reasoning on how to solve problems
+LLM-based design for UI task automation [42] (referred to as             on new apps. For scrollable UIs, AutoDroid will first browse
+LLM-framework) as our main baselines. META-GUI [35] is                   and traverse all the components on the screen, eliminating
+a training-based conversational agent on mobile GUI that can             the need for the “scroll” action. From the scroll accuracy of
+accomplish various tasks. We train it on the MoTiF [3] dataset.          the baseline, it is observed that the probability of the agent
+LLM-framework [42] is an LLM-based framework that en-                    actively selecting this action is very low. Thus, browsing and
+ables diverse language-based interactions with mobile UIs.               traversing first can improve the overall accuracy of the agent.
+We also implement two relatively simple baselines, random                   The reason AutoDroid outperforms baselines is: (i) Au-
+performer (randomly selecting one UI element within each                 toDroid prunes and merges UI elements, which reduces the
+UI screen) and similarity-based (selecting the UI element that           action space (from 36.4 to 13.2 choices per GUI state on
+is semantically closest to the task using a SOTA embedding               average). (ii) The exploration-based memory can enhance
+model [33]) performer.                                                   the LLM with domain-specific knowledge about the apps,
+   Metrics. Given a sequence of UIs {𝑈 1, 𝑈 2, ..., 𝑈𝑛 } in which        which will be detailed in §6.4. (iii) The output format of the
+human annotators performed actions A = {𝐴1, 𝐴2, ..., 𝐴𝑛 } to             fine-tuned model is aligned more closely with the format re-
+complete a task 𝑇 , if one agent can make a sequence of deci-            quirements specified in the output requirements. If the output
+sions Â = {𝐴ˆ1, 𝐴ˆ2, ..., 𝐴ˆ𝑛 } on {𝑈 1, 𝑈 2, ..., 𝑈𝑛 }, we use below   is not standardized, the task executor would be unable to
+two metrics to measure its performance:                                  extract or recognize the element ID and action.
+   (i) Action Accuracy: The ratio of the action 𝐴ˆ𝑖 matching                We further analyze why and how AutoDroid fails on some
+the ground-truth actions 𝐴𝑖 , namely 𝑃 (𝐴ˆ𝑖 = 𝐴𝑖 ). One action           steps. We randomly sample 20 failure cases by AutoDroid
+is right only if the target UI element and input text (“null” if         (using GPT-4 [29] as the LLM), and categorize 3 typical fail-
+there is no need to input) are both right. This metric reflects          ure causes, as explained below: 1. Multiple Correct Choices.
+the ability of the agent to make correct decisions based on the          In certain cases, there can be multiple valid ways to complete
+available information.                                                   a task. Annotators may not be able to exhaustively list all the
+   (ii) Completion Rate: The probability of completing all               possible ways to complete a task, and if the agent attempts a
+the actions in one sequence correctly, namely 𝑃 ( Â = A).               different approach than what the annotators specified, it may
+This metric reflects the probability of the agent being able to          be deemed incorrect. 2. Unable to accurately determine if the
+consistently and successfully complete a task.                           task has been completed. Sometimes AutoDroid mistakenly
+                                                                         considers a task completed when it detects the presence of
+                                                                         a specific UI element. 3. Lack of understanding of the GUI.
+6.2    Action Accuracy                                                   AutoDroid occasionally overlooks important information or
+We first evaluate the action accuracy of AutoDroid. The open-            hints in the UI and makes decisions based on its prior experi-
+sourced LLM Vicuna-7B [5] is fine-tuned using the generated              ence. For example, in the task “open the camera and record a
+app-specific data, as mentioned in §3.2.3. For the closed-               short video, name it ‘test.mp3’ ”, the agent only needs to input
+source LLM such as GPT-3.5 [28] and GPT-4 [29], which                    ‘test’ into the “name” box. This is because the GUI indicates
+can not be fine-tuned directly, we augment them with auto-               that the file extension ‘.mp3’ is already displayed in the “file
+matically generated app memory, as mentioned in §3.2.2. The              type” box. However, AutoDroid still selects ‘test.mp3’ as the
+temperature of the LLMs is set to a lower value of 0.25 to               input to the “name” box.
+encourage creativity while preventing it from being overly
+random. The action accuracy of AutoDroid and baselines is
+listed in Table 2. AutoDroid outperforms baselines on every              6.3    Task Completion Rate
+action type, resulting in an overall accuracy improvement of             The Task Completion Rate of AutoDroid and LLM-framework
+37.6%. Among all the actions, clicking is the simplest, only             [42] is shown in Figure 7 (a). Note that we do not include
+requiring the decision of the element ID. On the other hand,             the completion determination step for clear comparison. Au-
+scrolling and inputting necessitate specifying the direction or          toDroid outperforms baseline by 40.5%, 26.4%, and 39.7%
+value of the UI element, and determining completion entails              for Vicuna-7B, GPT-3.5, and GPT-4 respectively. We also
+considering all previous actions.It is also observed that with           show the completion rate of AutoDroid with and without
+AutoDroid: LLM-powered Task Automation in Android                                       ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA
+
+
+Table 2: Action accuracy of AutoDroid and baselines on DroidTask. Rand: Randomly selecting actions, Sim: Similarity-
+based action prediction, LLM-F: LLM-framework [42], Complete: Determining completion.
+                                                                                      Vicuna-7B                            GPT-3.5                 GPT-4
+                                      Action       Rand      Sim        MG       LLM-F       AutoDroid LLM-F                   AutoDroid LLM-F AutoDroid
+                                     Click          2.3%    35.1%      25.3%     15.2%          74.5%               58.1%        72.1%       65.4%         91.2%
+                                     Input            0       0          0         0            40.0%               5.0%         62.5%       27.5%         82.5%
+                                     Scroll         2.5%      0          0       8.2%            N/A                  0           N/A         0.6%          N/A
+                                    Complete        2.5%      0         N/A      4.4%            5.7%                 0          41.8%          0          93.7%
+                                      Overall       2.3%    20.8%      22.4%     11.3%          57.7%               34.7%        65.1%       54.5%        90.9%
+
+
+                      100                                   100
+                                                                                                                               Without memory                    With memory
+                                   AutoDroid                                       Vi+Mem
+
+
+
+
+Completion Rate (%)
+                       80          LLM-framework    71.3%    80                    3.5                              100                    2.7%    80
+                                                                                                                                                                          7.8%
+                                                                                   3.5+Mem
+                                                                                                                     80
+                       60                                    60                    4                                                               60
+                                                                                                                                  2.5%
+
+
+                                                                                                        Ratio (%)
+                             41.1%      40.3%                                      4+Mem                             60 53.4%
+                       40                          31.6%     40                                                                                          40.5%     9.0%
+                                                                                                                                                   40
+                                                                                                                     40
+                       20              13.9%                 20
+                                                                                                                                                   20
+                            0.6%                                                                                     20
+                        0                                     0
+                             Vi        3.5      4                 2        4        6       8                         0                              0
+                                      Model                                Step num                                       Vicuna GPT-3.5 GPT-4           Vicuna GPT-3.5 GPT-4
+                              (a) Different models                    (b) Different steps
+                                                                                                                            (a) Action accuracy           (b) Completion rate
+Figure 7: Task completion rate of AutoDroid with differ-                                            Figure 8: Action accuracy and task completion rate of
+ent LLMs and with varying numbers of steps. Vi: Vicuna-                                             AutoDroid, with and without memory augmentation.
+7B, 3.5: GPT-3.5, 4: GPT-4.
+                                                                                                    Table 3: Action accuracy and completion rate of Auto-
+memory augmentation in Figure 7 (b). As the number of                                               Droid based on Vicuna-7B with different fine-tuning tech-
+steps increases, the overall completion rate decreases. This                                        niques. Original: Vicuna-7B without fine-tuning. CoT:
+is because (i) the probability of each step being executed                                          Fine-tuning with zero-shot chain-of-thought. Mo: Incorpo-
+correctly decreases. (ii) Tasks that involve multiple steps of-                                     rating a small portion of MoTiF [3] dataset for fine-tuning.
+ten have multiple approaches to completion (e.g., creating a                                              Metric   Original            AutoDroid   No Mo No CoT       No Mo&CoT
+new contact by entering either the name or the phone num-                                                 Action    11.3%               57.7%      51.9% 20.6%           51.9%
+ber first). However, human annotators typically only annotate                                           Completion   0.6%               41.1%      29.8%  0.6%           31.6%
+one approach, which can lead to the model’s solution being
+mistakenly judged as incorrect. The actual completion rate in
+the real-system can be higher than the reported results, but                                        requiring more guidance from application-specific knowledge.
+we do not include real-system results since determining task                                        However, even for larger models, the incorporation of memory
+completion can be ambiguous.                                                                        remains meaningful. Limited model capacity cannot store
+                                                                                                    the vast and ever-growing knowledge present in the world,
+6.4                         Ablation Study                                                          making it difficult to stay updated on the evolving usage
+                                                                                                    patterns of new applications. Therefore, automatic exploration
+6.4.1 Memory Injection. The action accuracy and task                                                and recording of their usage patterns play a crucial role in
+completion Rate of AutoDroid with and without memory is                                             enabling LLMs to effectively use applications.
+shown in Figure 8. We can observe that the improvement in
+overall completion rate is much higher than the improvement                                         6.4.2 Zero-shot Chain of Thought Fine-tuning. The ac-
+in single-step accuracy. This is because the introduction of                                        tion accuracy and task completion rate of AutoDroid based on
+memory allows LLMs to make crucial single-step decisions                                            Vicuna-7B [5] fine-tuned with and without Zero-shot Chain-
+(such as the example in Figure 2). Although these critical steps                                    of-Thought (0-shot CoT) [11] is shown in Table 3. Since
+account for a small proportion of all the action steps, they are                                    the app memory automatically generated by AutoDroid only
+essential for successfully completing certain tasks. Moreover,                                      contains clicking and checking actions, the LLM fine-tuned
+it can be observed that smaller models benefit more from the                                        merely on the app memory is poor on inputting and adjusting
+inclusion of memory in terms of task completion rate. This                                          whether the task has been completed. Hence, we incorporate
+is because smaller models possess less prior knowledge, thus                                        a small portion of manually annotated data for fine-tuning.
+ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA                                                                       Wen and Li et al.
+
+
+Specifically, we add only the input and completion judgment                   200             AutoDroid                 Vicuna-S
+data from MoTiF dataset [3] into the app memory dataset.                                      LLM-framework
+                                                                              150
+                                                                                                                          GPT-4
+
+                                                                   Quantity
+Note that the app and task in the MoTiF dataset [3] are unre-
+                                                                                                                Model
+                                                                              100     mean: 339.0
+lated to our dataset. Thus, adding this portion of data will not                        mean: 625.3
+                                                                                                                                                        Embed
+                                                                                                                        Vicuna-E
+result in any test data leakage. It simply enables the model to                                                                                         LLM
+                                                                               50                                                                       Scroll
+learn to input and to determine the task’s completion.                                                                  GPT-3.5                         Execute
+
+   Vicuna-7B [5] fine-tuned with Zero-shot Chain-of-Thought                     0
+                                                                                            1000       2000                        0             20           40
+data generated by app memory mixed with a small portion of                               Token number                                         Latency (s)
+                                                                                       (a) Prompt length                                (b) End-to-end latency
+MoTiF [3] (AutoDroid) can achieve 57.7% action accuracy
+and 41.1% completion rate on DroidTask, with an input ac-          Figure 9: Overhead of AutoDroid and LLM-framework
+curacy of 40.0%. Without MoTiF [3] data (“No Mo”), the             [42]. Left: The number of prompts with different token
+fine-tuned model can achieve 51.9% action accuracy, and            counts. Right: The component of per-step latency of Auto-
+the inputting accuracy is 0%. We observe that when there           Droid based on 3 LLMs respectively. Vicuna-E: Vicuna-
+are no CoT and no MoTiF data (“No Mo&CoT”), the fine-              7B deployed on the edge server. Vicuna-S: Vicuna-7B de-
+tuned LLM can achieve a high accuracy rate with simple click       ployed on the smartphone.
+actions, and it can generally handle tasks that involve only       Table 4: Per-step inference cost of AutoDroid with
+clicking. However, once the MoTiF dataset is introduced (“No       Vicuna-7B deployed on the OnePlus ACE 2 Pro smart-
+CoT”) to teach the LLM additional types of actions (such as        phone. LLM-F: LLM-framework [42]. 𝑃 1∼5 : Five random
+input and task completion judgments), the LLM is heavily           prompts from LLM-framework.
+misled by the completion of judgment tasks. As a result, it
+outputs a significant number of “task completed” instead of                   Prompt length / Inference latency           𝑃1       𝑃2       𝑃3     𝑃4     𝑃5
+selecting actions correctly. Consequently, the action accuracy                  LLM-F input length (token)               252   401        460     559    719
+drops from 51.9% to 20.6%.                                                     AutoDroid input length (token)            299   280        233     177    233
+                                                                               On device LLM-F latency (s)              40.6 50.2 63.9 64.9 36.0
+6.5    Cost Analysis                                                          On device AutoDroid latency (s)           39.7 30.8 33.9 39.7 22.7
+Runtime Cost. AutoDroid reduces runtime overhead by ad-                        On cloud LLM-F latency (s)                4.4 5.5   6.4 16.1 6.5
+                                                                              On cloud AutoDroid latency (s)             4.2 8.8   4.9  5.3 5.6
+dressing two aspects: reducing the number of tokens per query
+and minimizing the frequency of query. In Figure 9 (a), we
+show the count for each prompt length. Our baseline [42] in-          Figure 9 (b) shows the component of per-step latency of Au-
+cludes only visible leaf nodes in the UI tree, and contains        toDroid. The Vicuna-7B model is deployed on the smartphone
+625.3 tokens within each prompt on average. AutoDroid              and on the edge server. On-cloud GPT-3.5 and GPT-4 models
+merges functionally equivalent nodes in the UI tree and fur-       are accessed by making API calls. The embedding model [33]
+ther simplifies the expression of properties, reducing the token   is deployed on an edge 1080 Ti GPU with 11 GB memory.
+count by nearly half (339.0 on average). There are two main        Note that the latency in calling GPT-3.5 and GPT-4 is sig-
+benefits: (i) Reducing token length can significantly decrease     nificantly influenced by network conditions, server load, and
+the model’s inference latency. (ii) For calling on-cloud LLM       so on. Therefore, we make 10 measurements to calculate the
+API, it can reduce costs. For example, for GPT-3.5 and GPT-4,      average latency, but there still remains a considerable degree
+the cost can be reduced from $0.938 and $18.76 to $0.509           of instability. Calling LLMs (“LLM”) accounts for the major-
+and $10.17 every 1000 queries respectively on average.             ity of the latency, with 42.1%, 51.9%, 77.6%, and 87.1% of
+   In Table 4, we randomly select five baseline prompts and        the latency based on GPT-3.5, Vicuna-7B (on-server), GPT-4,
+find the corresponding prompts optimized by AutoDroid. We          and Vicuna-7B (on-device) respectively. Therefore, reducing
+measure their real latency on the Vicuna-7B [5] deployed on        LLM calls can largely reduce the end-to-end overhead. Be-
+the smartphone as well as on the edge server. Our optimized        sides, Embedding the task and searching the most similar UI
+prompt reduces inference latency by 21.3% on average. Note         element (“Embed”) account for only 1.7% of the overhead,
+that the inference latency of LLMs on the smartphone and the       and only needs to be executed once for every task. Therefore,
+edge server primarily depends on the number of output tokens.      the overheads of finding the shortcuts and memory injection
+Therefore, when deploying the LLM on a mobile device, we           are acceptable.
+do not require the LLM to output the Chain-of-Thought but             We also conducted experiments on saving the number of
+rather output in the original manner shown in Figure 4. In the     calls based on merging GUI and shortcuts. On average, Au-
+case of 𝑃5 , due to the excessive length of the baseline, it was   toDroid reduces LLM calls by 1.2 per task resulting in an
+truncated after outputting only one word, resulting in minimal     overall decrease of 13.7% in the total number of calls using
+inference latency.                                                 the GUI merging technique. Our shortcuts correctly guide
+AutoDroid: LLM-powered Task Automation in Android           ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA
+
+
+Table 5: Action accuracy and completion rate of Auto-                 other hand, leverages the UI transition memory to complete
+Droid based on GPT-4 with privacy information replace-                complex, multi-step tasks on smartphones. The memory can
+ment and security confirmation on 5 apps in DroidTask.                help agents to understand richly informative UIs and the usage
+Priv: Privacy information replacement, Sec: Security con-             of apps, and augment the LLMs in reasoning and planning.
+firmation.                                                            After the first release of AutoDroid, there were various LLM-
+                                                                      based UI agents proposed, which had been comprehensively
+           Metric     Original   +Priv   +Sec   +Priv&Sec             summarized in a recent survey [20].
+            Acc       92.9%      89.9% 89.9%     89.9%                   Augmented LLM. Although LLMs excel in tasks like
+         Completion   75.4%      69.9% 68.5%     69.9%
+                                                                      question answering and text generation, they are still con-
+                                                                      strained by the information they can store in their fixed set of
+LLMs in 75% of cases. Considering only the correct short-
+                                                                      weights and context length. Therefore, researchers are aug-
+cuts, we save 38.02% of the number of steps, with an average
+                                                                      menting LLMs with different tools, such as web browser
+savings of 1.73 steps per task.
+                                                                      [8, 27], APIs [25, 30], and other DNN models [32]. Unlike
+   Offline Preparation Cost. For every app, it takes about
+                                                                      existing approaches that often depend on public APIs, our
+0.5-1 hour to generate the UI Transition Graph (UTG), which
+                                                                      method does not require custom APIs, which are uncommon
+is then analyzed to synthesize simulated tasks based on LLMs,
+                                                                      in mobile applications.
+taking about 5-10 minutes. Finally, the simulated tasks are
+mapped into high-dimensional vectors by an embedding model            8    DISCUSSION
+[33] for runtime lookup, which typically takes about 10 sec-          Randomness of LLMs. We can set the ‘temperature’ hyperpa-
+onds on a desktop computer. The offline preparation is a              rameter to 0 for consistent responses. But setting temperature
+one-time process and does not need to be performed again at           too small will inhibit innovative answers, thereby potentially
+runtime.                                                              reducing the performance of our system. In our experiments,
+                                                                      we set the temperature to 0.25. And we observe a 2.1% accu-
+6.6    Influence of Security/Privacy Filtering                        racy reduction when we set the ‘temperature’ of GPT-3.5 to 0.
+We ask the annotators of DroidTask to also determine whether          Conversely, increasing the temperature to 0.7 boosted action
+each action could potentially change the state of the user or         accuracy by 3.8%.
+the app. If so, we consider the action to be risky and prompt            Increased latency limits the practical use of AutoDroid.
+the user to confirm whether to proceed with the action. We            Our work could be extended by a collaborative approach
+evaluate AutoDroid’s accuracy in detecting risky actions in           between LLMs and smaller models. We could call LLMs
+five apps that may contain risky actions (contacts, dialer, SMS       only once for each task to create a guideline based on the fil-
+messenger, clock, and calendar). We consider risky actions            tered domain-specific knowledge about the app. Subsequently,
+as positive examples and AutoDroid achieved a precision of            smaller models could be employed to associate these guide-
+75.0% and a recall of 80.5%. We further show the influence            lines with UI elements [16, 35]. Introducing an instruction
+of adding privacy information replacing and security confir-          cache could further reduce latency by storing and reusing
+mation into the prompt in Table 5. When privacy replacement           common commands, minimizing the need for repeated LLM
+and security confirmation are added, a decrease in accuracy           invocations.
+and completion rate can be observed, which is acceptable.
+                                                                      9    CONCLUSION
+7     RELATED WORK                                                    We present an LLM-powered mobile task automation sys-
+UI Understanding and Automation. There has been grow-                 tem that can support arbitrary tasks without manual efforts.
+ing interest in using machine learning techniques to com-             Experiment results have shown that our method can achieve
+prehend and summarize user interfaces, enabling use cases             effective task automation, outperforming existing training-
+such as accessibility and task-oriented bots. Key areas of re-        based and LLM-based baselines. We believe that the synergy
+search include: 1) Semantic analysis of GUIs to summarize             between the commonsense knowledge of LLMs and domain-
+functions [13, 18], interpret UI elements’ purposes [17, 48],         specific knowledge in mobile apps can potentially bring truly
+and address user questions related to the GUI [42, 43]. It is         intelligent and helpful personal assistants into reality.
+crucial for various interaction tasks such as UI automation
+and accessibility. 2) Mapping user instructions to UI elements        ACKNOWLEDGEMENT
+[15, 16, 35]. These methods aim to to select the most relevant        This work is supported by the National Key R&D Program
+GUI elements for given tasks. 3) Mobile UI task automation            of China (No.2022YFF0604501), NSFC (No.62272261), and
+[45, 49]. These methods build agents to complete tasks for            Tsinghua University (AIR)–AsiaInfo Technologies (China)
+users by performing actions on the GUI. AutoDroid, on the             Inc. Joint Research Center.
+ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA                                                              Wen and Li et al.
+
+
+REFERENCES                                                                        5495–5510. https://doi.org/10.18653/v1/2020.emnlp-main.443
+ [1] Anthropic. 2023. Claude. https://www.anthropic.com/product.             [18] Yang Li, Gang Li, Xin Zhou, Mostafa Dehghani, and Alexey A. Grit-
+ [2] Tanzirul Azim, Oriana Riva, and Suman Nath. 2016. ULink: Enabling            senko. 2022. VUT: Versatile UI Transformer for Multimodal Multi-Task
+     User-Defined Deep Linking to App Content. In Proceedings of the 14th         User Interface Modeling. In International Conference on Learning Rep-
+     Annual International Conference on Mobile Systems, Applications, and         resentations (ICLR). https://openreview.net/forum?id=rF5UoZFrsF4
+     Services (MobiSys ’16). Association for Computing Machinery, New        [19] Yuanchun Li and Oriana Riva. 2021. Glider: A Reinforcement Learn-
+     York, NY, USA, 305–318. https://doi.org/10.1145/2906388.2906416              ing Approach to Extract UI Scripts from Websites. In Proceedings
+ [3] Andrea Burns, Deniz Arsan, Sanjna Agrawal, et al. 2022. A Dataset            of the 44th International ACM SIGIR Conference on Research and
+     for Interactive Vision Language Navigation with Unknown Command              Development in Information Retrieval (SIGIR ’21). Association for
+     Feasibility. In European Conference on Computer Vision (ECCV).               Computing Machinery, New York, NY, USA, 1420–1430. https:
+ [4] Mark Chen, Jerry Tworek, Heewoo Jun, et al. 2021. Evaluating Large           //doi.org/10.1145/3404835.3462905
+     Language Models Trained on Code. (2021). arXiv:cs.LG/2107.03374         [20] Yuanchun Li, Hao Wen, Weijun Wang, et al. 2024. Personal LLM
+ [5] Wei-Lin Chiang, Zhuohan Li, et al. 2023. Vicuna: An Open-Source              Agents: Insights and Survey about the Capability, Efficiency and Secu-
+     Chatbot Impressing GPT-4 with 90%* ChatGPT Quality. https://lmsys.           rity. arXiv preprint arXiv:2401.05459 (2024).
+     org/blog/2023-03-30-vicuna/                                             [21] Yuanchun Li, Ziyue Yang, Yao Guo, and Xiangqun Chen. 2017. Droid-
+ [6] Aakanksha Chowdhery, Sharan Narang, Jacob Devlin, Maarten Bosma,             Bot: A Lightweight UI-Guided Test Input Generator for Android.
+     et al. 2022. PaLM: Scaling Language Modeling with Pathways.                  In Proceedings of the 39th International Conference on Software
+     arXiv:cs.CL/2204.02311                                                       Engineering Companion (ICSE-C ’17). IEEE Press, 23–26. https:
+ [7] Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, et al. 2021.                 //doi.org/10.1109/ICSE-C.2017.8
+     Training Verifiers to Solve Math Word Problems. arXiv preprint          [22] Yuanchun Li, Ziyue Yang, Yao Guo, and Xiangqun Chen. 2019. Hu-
+     arXiv:2110.14168 (2021).                                                     manoid: A deep learning-based approach to automated black-box an-
+ [8] Xiang Deng, Yu Gu, Boyuan Zheng, et al. 2023. Mind2Web: Towards              droid app testing. In 2019 34th IEEE/ACM International Conference
+     a Generalist Agent for the Web. arXiv:cs.CL/2306.06070                       on Automated Software Engineering (ASE). IEEE, 1070–1073.
+ [9] Cheng-Yu Hsieh, Chun-Liang Li, Chih-Kuan Yeh, et al. 2023. Distilling   [23] Chieh-Jan Mike Liang, Nicholas D. Lane, Niels Brouwers, et al. 2014.
+     step-by-step! outperforming larger language models with less training        Caiipa: Automated Large-Scale Mobile App Testing through Contextual
+     data and smaller model sizes. arXiv preprint arXiv:2305.02301 (2023).        Fuzzing. In Proceedings of the 20th Annual International Conference
+[10] Peter C Humphreys, David Raposo, Tobias Pohlen, et al. 2022. A data-         on Mobile Computing and Networking (MobiCom ’14). Association
+     driven approach for learning to control computers. In International          for Computing Machinery, New York, NY, USA, 519–530. https:
+     Conference on Machine Learning. PMLR, 9466–9482.                             //doi.org/10.1145/2639108.2639131
+[11] Takeshi Kojima, Shixiang (Shane) Gu, Machel Reid, et al. 2022. Large    [24] Hao Lin, Jiaxing Qiu, Hongyi Wang, Zhenhua Li, Liangyi Gong, Di
+     Language Models are Zero-Shot Reasoners. In Advances in Neural In-           Gao, Yunhao Liu, et al. 2023. Virtual Device Farms for Mobile App
+     formation Processing Systems (NeurIPS 2022), Vol. 35. 22199–22213.           Testing at Scale: A Pursuit for Fidelity, Efficiency, and Accessibil-
+[12] Sunjae Lee, Hoyoung Kim, Sijung Kim, et al. 2022. A-Mash: Pro-               ity. In Proceedings of the 29th Annual International Conference on
+     viding Single-App Illusion for Multi-App Use through User-Centric            Mobile Computing and Networking (MobiCom ’23). Association for
+     UI Mashup. In Proceedings of the 28th Annual International Con-              Computing Machinery.
+     ference on Mobile Computing And Networking (MobiCom ’22). As-           [25] Pan Lu, Baolin Peng, Hao Cheng, Michel Galley, Kai-Wei Chang,
+     sociation for Computing Machinery, New York, NY, USA, 690–702.               Ying Nian Wu, Song-Chun Zhu, and Jianfeng Gao. 2023. Chameleon:
+     https://doi.org/10.1145/3495243.3560522                                      Plug-and-Play Compositional Reasoning with Large Language Models.
+[13] Gang Li and Yang Li. 2023. Spotlight: Mobile UI Understanding                arXiv:cs.CL/2304.09842
+     using Vision-Language Models with a Focus. In The Eleventh Interna-     [26] Microsoft. 2023. PII Codex. [Online]. Available at: https://github.com/
+     tional Conference on Learning Representations. https://openreview.           EdyVision/pii-codex.
+     net/forum?id=9yE2xEj0BH7                                                [27] Reiichiro Nakano, Jacob Hilton, Suchir Balaji, et al. 2022. WebGPT:
+[14] Toby Jia-Jun Li, Yuanchun Li, Fanglin Chen, and Brad A Myers. 2017.          Browser-assisted question-answering with human feedback. (2022).
+     Programming IoT devices by demonstration using mobile apps. In End-          arXiv:cs.CL/2112.09332
+     User Development: 6th International Symposium, IS-EUD 2017, Eind-       [28] OpenAI. 2022. ChatGPT. [Online]. Available at: https://openai.com/
+     hoven, The Netherlands, June 13-15, 2017, Proceedings 6. Springer,           blog/chatgpt/.
+     3–17.                                                                   [29] OpenAI. 2023. GPT-4 Technical Report. arXiv:cs.CL/2303.08774
+[15] Toby Jia-Jun Li and Oriana Riva. 2018. Kite: Building Conversational    [30] Shishir G. Patil, Tianjun Zhang, Xin Wang, and Joseph E. Gonzalez.
+     Bots from Mobile Apps. In Proceedings of the 16th Annual Inter-              2023. Gorilla: Large Language Model Connected with Massive APIs.
+     national Conference on Mobile Systems, Applications, and Services            arXiv:cs.CL/2305.15334
+     (MobiSys ’18). Association for Computing Machinery, New York, NY,       [31] Preeti Rani and Rohit Sharma. 2023. Intelligent Transportation System
+     USA, 96–109. https://doi.org/10.1145/3210240.3210339                         Performance Analysis of Indoor and Outdoor Internet of Vehicle (IOV)
+[16] Yang Li, Jiacong He, Xin Zhou, Yuan Zhang, and Jason Baldridge.              Applications Towards 5G. Tsinghua Science and Technology (2023).
+     2020. Mapping Natural Language Instructions to Mobile UI Action              https://doi.org/10.26599/TST.2023.9010119
+     Sequences. In Annual Conference of the Association for Computational    [32] Yongliang Shen, Kaitao Song, Xu Tan, Dongsheng Li, Weiming Lu, and
+     Linguistics (ACL 2020). https://www.aclweb.org/anthology/2020.acl-           Yueting Zhuang. 2023. HuggingGPT: Solving AI Tasks with ChatGPT
+     main.729.pdf                                                                 and its Friends in Hugging Face. arXiv:cs.CL/2303.17580
+[17] Yang Li, Gang Li, Luheng He, Jingjie Zheng, Hong Li, and Zhiwei         [33] Hongjin Su, Weijia Shi, Jungo Kasai, et al. 2023. One Embedder,
+     Guan. 2020. Widget Captioning: Generating Natural Language De-               Any Task: Instruction-Finetuned Text Embeddings. In Findings of the
+     scription for Mobile User Interface Elements. In Proceedings of the          Association for Computational Linguistics: ACL 2023. Association
+     2020 Conference on Empirical Methods in Natural Language Pro-                for Computational Linguistics, Toronto, Canada, 1102–1121. https:
+     cessing (EMNLP). Association for Computational Linguistics, Online,          //aclanthology.org/2023.findings-acl.71
+AutoDroid: LLM-powered Task Automation in Android                 ACM MobiCom ’24, September 30–October 4, 2024, Washington D.C., DC, USA
+
+
+[34] Boyuan Sun, Qiang Ma, Shanfeng Zhang, Kebin Liu, and Yunhao Liu.            with Multimodal Learning. In The 34th Annual ACM Symposium on
+     2017. iSelf: Towards Cold-Start Emotion Labeling Using Transfer             User Interface Software and Technology (UIST ’21). Association for
+     Learning with Smartphones. ACM Trans. Sen. Netw. 13, 4, Article 30          Computing Machinery, New York, NY, USA, 498–510. https://doi.
+     (sep 2017), 22 pages. https://doi.org/10.1145/3121049                       org/10.1145/3472749.3474765
+[35] Liangtai Sun, Xingyu Chen, Lu Chen, Tianle Dai, Zichen Zhu, and Kai    [44] Jason Wei, Xuezhi Wang, Dale Schuurmans, et al. 2022. Chain-
+     Yu. 2022. META-GUI: Towards Multi-modal Conversational Agents               of-Thought Prompting Elicits Reasoning in Large Language Mod-
+     on Mobile GUI. arXiv preprint arXiv:2205.11029 (2022).                      els. In Advances in Neural Information Processing Systems,
+[36] Rohan Taori, Ishaan Gulrajani, Tianyi Zhang, et al. 2023. Stanford          S. Koyejo, S. Mohamed, A. Agarwal, D. Belgrave, K. Cho,
+     Alpaca: An Instruction-following LLaMA model. https://github.com/           and A. Oh (Eds.), Vol. 35. Curran Associates, Inc., 24824–
+     tatsu-lab/stanford_alpaca. GitHub repository (2023).                        24837.      https://proceedings.neurips.cc/paper_files/paper/2022/file/
+[37] MLC team. 2023. MLC-LLM. https://github.com/mlc-ai/mlc-llm                  9d5609613524ecf4f15af0f7b31abca4-Paper-Conference.pdf
+[38] Hugo Touvron, Thibaut Lavril, Gautier Izacard, et al. 2023.            [45] Hao Wen, Hongming Wang, Jiaxuan Liu, and Yuanchun Li. 2023.
+     LLaMA: Open and Efficient Foundation Language Models. (2023).               DroidBot-GPT: GPT-powered UI Automation for Android. arXiv
+     arXiv:cs.CL/2302.13971                                                      preprint arXiv:2304.07061 (2023).
+[39] Daniel Toyama, Philippe Hamel, Anita Gergely, et al. 2021.             [46] Jian Xu, Qingqing Cao, Aditya Prakash, Aruna Balasubramanian, and
+     AndroidEnv: A Reinforcement Learning Platform for Android.                  Donald E. Porter. 2017. UIWear: Easily Adapting User Interfaces for
+     abs/2105.13231 (2021). arXiv:cs.LG/2105.13231 http://arxiv.org/abs/         Wearable Devices. In Proceedings of the 23rd Annual International
+     2105.13231                                                                  Conference on Mobile Computing and Networking (MobiCom ’17).
+[40] Ashish Vaswani, Noam Shazeer, Niki Parmar, et al. 2017. Attention is        Association for Computing Machinery, New York, NY, USA, 369–382.
+     All You Need. In Proceedings of the 31st International Conference on        https://doi.org/10.1145/3117811.3117819
+     Neural Information Processing Systems (NIPS’17). Curran Associates     [47] Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik
+     Inc., Red Hook, NY, USA, 6000–6010.                                         Narasimhan, and Yuan Cao. 2023. ReAct: Synergizing Reasoning and
+[41] Sagar Gubbi Venkatesh, Partha Talukdar, and Srini Narayanan.                Acting in Language Models. In International Conference on Learning
+     2022. UGIF: UI Grounded Instruction Following. arXiv preprint               Representations (ICLR).
+     arXiv:2211.07615 (2022).                                               [48] Xiaoyi Zhang, Lilian de Greef, Amanda Swearngin, et al. 2021. Screen
+[42] Bryan Wang, Gang Li, and Yang Li. 2023. Enabling Conversational             Recognition: Creating Accessibility Metadata for Mobile Applications
+     Interaction with Mobile UI Using Large Language Models. In Proceed-         from Pixels. In Proceedings of the 2021 CHI Conference on Human
+     ings of the 2023 CHI Conference on Human Factors in Computing Sys-          Factors in Computing Systems (CHI ’21). Association for Computing
+     tems (CHI ’23). Association for Computing Machinery, New York, NY,          Machinery, New York, NY, USA, Article 275, 15 pages. https://doi.
+     USA, Article 432, 17 pages. https://doi.org/10.1145/3544548.3580895         org/10.1145/3411764.3445186
+[43] Bryan Wang, Gang Li, Xin Zhou, Zhourong Chen, Tovi Grossman, and       [49] Zhizheng Zhang, Xiaoyi Zhang, Wenxuan Xie, and Yan Lu. 2023.
+     Yang Li. 2021. Screen2Words: Automatic Mobile UI Summarization              Responsible Task Automation: Empowering Large Language Models
+                                                                                 as Responsible Task Automators. arXiv:cs.AI/2306.01242
+

@@ -1,0 +1,829 @@
+__HTTP 200__
+
+
+
+
+  
+
+ 
+ 
+
+
+
+
+   
+     
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+
+   
+
+   
+
+     
+     
+     
+     
+   
+
+  
+
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+   Cloud Tasks Emulator ignores `scheduleDelaySeconds` or `scheduleTime` and instantly executes enqueued tasks (v2) · Issue #8254 · firebase/firebase-tools · GitHub 
+
+
+
+   
+   
+   
+   
+
+    
+   
+
+
+   
+
+
+     
+
+
+   
+  
+
+   
+   
+
+     
+
+ 
+
+
+
+
+
+   
+
+  
+
+
+
+
+     
+
+  
+
+     
+
+    
+
+       
+
+       
+
+     
+     
+     
+
+       
+   
+  
+
+
+
+
+       
+
+
+
+         
+
+
+   
+   
+   
+   
+
+   
+
+       
+   
+
+   
+  
+
+
+
+       
+
+
+     
+   
+
+
+   
+
+
+   
+
+   
+   
+
+   
+   
+   
+
+ 
+ 
+
+
+   
+
+   
+
+   
+     
+       
+      
+
+     
+       Skip to content 
+
+       
+     
+       
+       
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+
+
+
+      
+
+           
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+          
+
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge APPLICATION SECURITY GitHub Advanced Security Find and fix vulnerabilities Code security Secure your code as you build Secret protection Stop leaks before they start EXPLORE Why GitHub Documentation Blog Changelog Marketplace View all features Solutions BY COMPANY SIZE Enterprises Small and medium teams Startups Nonprofits BY USE CASE App Modernization DevSecOps DevOps CI/CD View all use cases BY INDUSTRY Healthcare Financial services Manufacturing Government View all industries View all solutions Resources EXPLORE BY TOPIC AI Software Development DevOps Security View all topics EXPLORE BY TYPE Customer stories Events & webinars Ebooks & reports Business insights GitHub Skills SUPPORT & SERVICES Documentation Customer support Community forum Trust center Partners View all resources Open Source COMMUNITY GitHub Sponsors Fund open source developers PROGRAMS Security Lab Maintainer Community GitHub Stars Archive Program REPOSITORIES Topics Trending Collections Enterprise ENTERPRISE SOLUTIONS Enterprise platform AI-powered developer platform AVAILABLE ADD-ONS GitHub Advanced Security Enterprise-grade security features Copilot for Business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Pricing Search / Sign in Sign up Appearance settings 
+ 
+
+
+
+       
+  
+         
+         You signed in with another tab or window.  Reload  to refresh your session. 
+         You signed out in another tab or window.  Reload  to refresh your session. 
+         You switched accounts on another tab or window.  Reload  to refresh your session. 
+
+        
+ Dismiss alert 
+
+
+  
+ 
+     
+
+   
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+   
+    
+ 
+   
+     
+       
+     
+     
+      
+       {{ message }} 
+
+     
+   
+ 
+   
+ 
+
+
+    
+
+
+
+
+
+
+   
+         
+     
+      
+      
+    
+
+
+    
+
+
+
+
+
+
+
+
+  
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   firebase firebase-tools Repository navigation Code Issues 495  ( 495 ) Pull requests 563  ( 563 ) Discussions Actions Projects Wiki Security and quality Insights More  items 
+ 
+
+
+  
+
+
+
+ 
+     
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+  
+
+
+ 
+  
+   
+   Cloud Tasks Emulator ignores  scheduleDelaySeconds  or  scheduleTime  and instantly executes enqueued tasks (v2)   #8254 New issue Copy link New issue Copy link Open Open Cloud Tasks Emulator ignores  scheduleDelaySeconds  or  scheduleTime  and instantly executes enqueued tasks (v2) #8254 Copy link Assignees   Labels emulators: functions type: feature request Description th0rgall opened  on Feb 25, 2025 Issue body actions 
+ [REQUIRED] Environment info 
+
+
+ firebase-tools:  13.31.2 
+
+ Platform:  macOS 
+ Since the emulator uses java: 
+ java --version
+openjdk 17.0.5 2022-10-18
+OpenJDK Runtime Environment Temurin-17.0.5+8 (build 17.0.5+8)
+OpenJDK 64-Bit Server VM Temurin-17.0.5+8 (build 17.0.5+8, mixed mode)
+ 
+ [REQUIRED] Test case 
+
+ The minimal example is whatever minimal example can be derived from the Firebase docs, see reproduction steps below. For the enqueue call, include the  scheduleDelaySeconds  parameter: 
+ await   myQueue . enqueue ( 
+       { 
+         data :  'test' 
+       } , 
+       { 
+         scheduleDelaySeconds :  40 , 
+       } ,   ( )   =>   {  ...  } ) 
+ I'm not including an  uri  in the second parameter object here because it causes issues in my emulator environment, and this bug report is about the emulator. 
+ [REQUIRED] Steps to reproduce 
+ 
+ Follow the  Enqueue functions with Cloud Tasks (2nd gen) docs 
+ Enqueue a task in the emulator with  scheduleDelaySeconds  > 0, in my example, 40 seconds. 
+ Observe that  scheduleDelaySeconds  has no effect, as soon as the task is enqueued, it is executed virtually without delay. See debug logs below. 
+ 
+ [REQUIRED] Expected behavior 
+ scheduleDelaySeconds  should be respected as it behaves that way in deployed Firebase environments, and I don't see why the behavior should be different in local emulators. 
+ If Emulator users want to manually invoke their schedules tasks more quickly in local testing, they can use the REST API designed for that. 
+ I'd also like to quote from another Firebase user with same issue (3 weeks ago): 
+ 
+ Is a solution to this coming? Scheduling is the reason I'm using Cloud Tasks in the first place :) 
+ 
+ Originally posted by  @starcrest  in  #4884 
+ Scheduling is also the main reason why I want to use Cloud Tasks. It's why I'm opening a new issue here to raise attention to this, since  #4884  is closed, and I think this is still a bug. 
+ [REQUIRED] Actual behavior 
+ The issue was already observed in  #4884  but apparently never addressed: 
+ 
+ [...] 
+The task will run immediately and not respect  scheduleTime  or  scheduleDelaySeconds  should you have one set. 
+[...] 
+ 
+ Originally posted by  @tzappia  in  #4884 
+ In my own testing, I could confirm that   scheduleDelaySeconds  was not respected. 
+ It is interesting that   retryConfig.minBackoffSeconds  in the queue setup  is  respected however. 
+
+  
+   Debug logs 
+I don't want to drop my full real application logs here, because I can't easily scan it for potentially sensitive data, but I'll try to extract relevant bits:   
+ 
+ My queue handler method and exported  onTaskDispatched  return value are both called  checkContactCreation . 
+ When my queue listener is described: 
+ "checkContactCreation":{"platform":"gcfv2","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":1,"serviceAccountEmail":null,"vpc":null,"cpu":1,"region":["europe-west1"],"labels":{},"taskQueueTrigger":{"retryConfig":{"maxAttempts":15,"maxDoublings":null,"maxBackoffSeconds":null,"maxRetrySeconds":null,"minBackoffSeconds":60},"rateLimits":{"maxConcurrentDispatches":6,"maxDispatchesPerSecond":null}},"entryPoint":"checkContactCreation"},"
+ 
+ When it is created: 
+ [2025-02-25T16:48:06.511Z] addTaskQueueTrigger {"retryConfig":{"maxAttempts":15,"maxRetrySeconds":null,"maxBackoffSeconds":null,"maxDoublings":null,"minBackoffSeconds":60},"rateLimits":{"maxConcurrentDispatches":6,"maxDispatchesPerSecond":null}}
+[2025-02-25T16:48:06.511Z] >>> [apiv2][query] POST http://127.0.0.1:9499/projects/demo-test/locations/europe-west1/queues/checkContactCreation [none]
+[2025-02-25T16:48:06.511Z] >>> [apiv2][body] POST http://127.0.0.1:9499/projects/demo-test/locations/europe-west1/queues/checkContactCreation {"retryConfig":{"maxAttempts":15,"maxRetrySeconds":null,"maxBackoffSeconds":null,"maxDoublings":null,"minBackoffSeconds":60},"rateLimits":{"maxConcurrentDispatches":6,"maxDispatchesPerSecond":null},"defaultUri":"http://127.0.0.1:5001/demo-test/europe-west1/checkContactCreation"}
+✔  tasks: Created queue with key: queue:demo-test-europe-west1-checkContactCreation {"metadata":{"emulator":{"name":"tasks"},"message":"Created queue with key: queue:demo-test-europe-west1-checkContactCreation"}}
+[2025-02-25T16:48:06.519Z] Created task queue queue:demo-test-europe-west1-checkContactCreation with configuration: {"retryConfig":{"maxAttempts":15,"maxRetrySeconds":null,"maxBackoffSeconds":3600,"maxDoublings":16,"minBackoffSeconds":60},"rateLimits":{"maxConcurrentDispatches":6,"maxDispatchesPerSecond":500},"timeoutSeconds":10,"retry":false,"defaultUri":"http://127.0.0.1:5001/demo-test/europe-west1/checkContactCreation"} {"metadata":{"emulator":{"name":"tasks"},"message":"Created task queue queue:demo-test-europe-west1-checkContactCreation with configuration: {\"retryConfig\":{\"maxAttempts\":15,\"maxRetrySeconds\":null,\"maxBackoffSeconds\":3600,\"maxDoublings\":16,\"minBackoffSeconds\":60},\"rateLimits\":{\"maxConcurrentDispatches\":6,\"maxDispatchesPerSecond\":500},\"timeoutSeconds\":10,\"retry\":false,\"defaultUri\":\"http://127.0.0.1:5001/demo-test/europe-west1/checkContactCreation\"}"}}
+[2025-02-25T16:48:06.521Z] <<< [apiv2][status] POST http://127.0.0.1:9499/projects/demo-test/locations/europe-west1/queues/checkContactCreation 200
+[2025-02-25T16:48:06.521Z] <<< [apiv2][body] POST http://127.0.0.1:9499/projects/demo-test/locations/europe-west1/queues/checkContactCreation {"taskQueueConfig":{"retryConfig":{"maxAttempts":15,"maxRetrySeconds":null,"maxBackoffSeconds":3600,"maxDoublings":16,"minBackoffSeconds":60},"rateLimits":{"maxConcurrentDispatches":6,"maxDispatchesPerSecond":500},"timeoutSeconds":10,"retry":false,"defaultUri":"http://127.0.0.1:5001/demo-test/europe-west1/checkContactCreation"}}
+✔  functions[europe-west1-checkContactCreation]: http function initialized (http://127.0.0.1:5001/demo-test/europe-west1/checkContactCreation). {"metadata":{"emulator":{"name":"functions"},"message":"http function initialized (http://127.0.0.1:5001/demo-test/europe-west1/checkContactCreation)."}}
+[2025-02-25T16:48:06.521Z] addTaskQueueTrigger {"retryConfig":{"maxAttempts":1,"maxRetrySeconds":null,"maxBackoffSeconds":null,"maxDoublings":null,"minBackoffSeconds":null},"rateLimits":{"maxConcurrentDispatches":null,"maxDispatchesPerSecond":null}}
+ 
+ When an enqueue happens: 
+ ⚠  Google API requested!
+   - URL: "https://oauth2.googleapis.com/token"
+   - Be careful, this may be a production service. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-onUserPrivateWriteV2"},"extension":{},"message":"Google API requested!\n   - URL: \"https://oauth2.googleapis.com/token\"\n   - Be careful, this may be a production service."}}
+[2025-02-25T16:48:13.213Z] Enqueueing task /projects/demo-test/locations/europe-west1/queues/checkContactCreation/tasks/1815625063765355 onto queue:demo-test-europe-west1-checkContactCreation {"metadata":{"emulator":{"name":"tasks"},"message":"Enqueueing task /projects/demo-test/locations/europe-west1/queues/checkContactCreation/tasks/1815625063765355 onto queue:demo-test-europe-west1-checkContactCreation"}}
+ 
+ When it is picked up? 
+ [2025-02-25T16:48:14.222Z] [work-queue] {"queuedWork":["/demo-test/europe-west1/checkContactCreation-2025-02-25T16:48:14.222Z"],"queueLength":1,"runningWork":["/functions/projects/demo-test/triggers/europe-west1-onUserPrivateWriteV2-0-2025-02-25T16:48:13.217Z"],"workRunningCount":1}
+[2025-02-25T16:48:14.223Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/functions/projects/demo-test/triggers/europe-west1-onUserPrivateWriteV2-0-2025-02-25T16:48:13.217Z","/demo-test/europe-west1/checkContactCreation-2025-02-25T16:48:14.222Z"],"workRunningCount":2}
+[2025-02-25T16:48:14.223Z] Accepted request POST /demo-test/europe-west1/checkContactCreation --> europe-west1-checkContactCreation
+[2025-02-25T16:48:14.224Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[2025-02-25T16:48:14.224Z] [functions] Got req.url=/demo-test/europe-west1/checkContactCreation, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/demo-test/europe-west1/checkContactCreation, mapping to path=/"}}
+ 
+ When the handler first logs something (that my code logs): 
+ [2025-02-25T16:48:14.938Z] [runtime-status] [36280] Functions runtime initialized. {"cwd":"/Users/thor/Code/slowby/welcometomygarden/api","node_version":"20.11.0"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-checkContactCreation"},"extension":{},"message":"[runtime-status] [36280] Functions runtime initialized. {\"cwd\":\"/Users/thor/Code/slowby/welcometomygarden/api\",\"node_version\":\"20.11.0\"}"}}
+[2025-02-25T16:48:14.939Z] [runtime-status] [36280] Listening to port: /var/folders/0m/d2znfz1n41d599lzrhwyzfwh0000gn/T/fire_emu_423b906c9240954b.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-checkContactCreation"},"extension":{},"message":"[runtime-status] [36280] Listening to port: /var/folders/0m/d2znfz1n41d599lzrhwyzfwh0000gn/T/fire_emu_423b906c9240954b.sock"}}
+[2025-02-25T16:48:14.939Z] [runtime-status] [36279] Functions runtime initialized. {"cwd":"/Users/thor/Code/slowby/welcometomygarden/api","node_version":"20.11.0"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-checkContactCreation"},"extension":{},"message":"[runtime-status] [36279] Functions runtime initialized. {\"cwd\":\"/Users/thor/Code/slowby/welcometomygarden/api\",\"node_version\":\"20.11.0\"}"}}
+[2025-02-25T16:48:14.941Z] [runtime-status] [36279] Listening to port: /var/folders/0m/d2znfz1n41d599lzrhwyzfwh0000gn/T/fire_emu_25a84222f4832042.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-checkContactCreation"},"extension":{},"message":"[runtime-status] [36279] Listening to port: /var/folders/0m/d2znfz1n41d599lzrhwyzfwh0000gn/T/fire_emu_25a84222f4832042.sock"}}
+[2025-02-25T16:48:14.978Z] [worker-europe-west1-checkContactCreation-4988a5a9-8cf2-4b51-9eda-3c1ade3d3b83]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-checkContactCreation"},"extension":{},"message":"[worker-europe-west1-checkContactCreation-4988a5a9-8cf2-4b51-9eda-3c1ade3d3b83]: IDLE"}}
+[2025-02-25T16:48:14.978Z] [worker-pool] submitRequest(triggerId=europe-west1-checkContactCreation) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=europe-west1-checkContactCreation)"}}
+i  functions: Beginning execution of "europe-west1-checkContactCreation" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-checkContactCreation"},"extension":{},"message":"Beginning execution of \"europe-west1-checkContactCreation\""}}
+[2025-02-25T16:48:14.978Z] [worker-europe-west1-checkContactCreation-4988a5a9-8cf2-4b51-9eda-3c1ade3d3b83]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-checkContactCreation"},"extension":{},"message":"[worker-europe-west1-checkContactCreation-4988a5a9-8cf2-4b51-9eda-3c1ade3d3b83]: BUSY"}}
+>  {"severity":"INFO","message":"Checking SG contact creation of uid UfdkoFg14zmjNRLjV7KdfY8AQoRC / jobId e1ed89d0-1803-4a63-8428-5c321bbe90c7 on creation attempt 1, check no. 1"} {"user":{"severity":"INFO","message":"Checking SG contact creation of uid UfdkoFg14zmjNRLjV7KdfY8AQoRC / jobId e1ed89d0-1803-4a63-8428-5c321bbe90c7 on creation attempt 1, check no. 1"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-checkContactCreation"},"extension":{},"message":">  {\"severity\":\"INFO\",\"message\":\"Checking SG contact creation of uid UfdkoFg14zmjNRLjV7KdfY8AQoRC / jobId e1ed89d0-1803-4a63-8428-5c321bbe90c7 on creation attempt 1, check no. 1\"}"}}
+ 
+ 
+ 
+ In the logs above, notice the difference between the timestamps of the first enqueue, and the first log from the handler: 
+ [2025-02-25T16:48:13.213Z]
+[2025-02-25T16:48:14.978Z] 
+ 
+ They should be at least 40 second apart, but they are ~1.7 seconds apart here. Reactions are currently unavailable Activity aalej added  emulators: functions   type: bug   on Feb 25, 2025 joehan added  type: feature request   and  removed  type: bug   on Feb 25, 2025 joehan assigned  taeold on Feb 25, 2025 mdcotter   commented   on   Apr 29, 2025   mdcotter on Apr 29, 2025 More actions is there any update on when this bug will be fixed or a suggested patch? nikhil-here   commented   on   Aug 10, 2025   nikhil-here on Aug 10, 2025 More actions I was enjoying working with the Firebase Emulator to test Cloud Functions and Firestore until I ran into this issue. :( 😕 React with 😕 1 Reacted by  starcrest reimertz   commented   on   Jan 7, 2026   reimertz on Jan 7, 2026 Last edited by  reimertz More actions Damn, been debugging for quite some time - would've loved for this to be raised either in emulator logs or in the documentation. I thought it might have been TZ related.. 😄 React with 😄 1 Reacted by  nikhil-mandlik-chalo Sign up for free   to join this conversation on GitHub.   Already have an account?   Sign in to comment Metadata Metadata Assignees taeold Labels emulators: functions type: feature request Type No type Projects No projects Milestone No milestone Relationships None yet Development No branches or pull requests Issue actions Open in GitHub Copilot app 
+ 
+ 
+
+
+
+
+   
+
+ 
+
+     
+   
+
+   
+
+           
+   Footer 
+
+  
+
+
+   
+     
+       
+         
+ 
+       
+        © 2026 GitHub, Inc.
+       
+     
+
+     
+       Footer navigation 
+
+       
+
+
+           
+             Terms 
+           
+
+           
+             Privacy 
+           
+
+
+             
+               Security 
+             
+
+             
+               Status 
+             
+
+           
+             Community 
+           
+
+           
+             Docs 
+           
+
+           
+             Contact 
+           
+
+          
+ 
+   
+     
+      Manage cookies
+     
+   
+ 
+
+   
+     
+       
+        Do not share my personal information
+       
+     
+   
+
+       
+     
+   
+ 
+
+
+
+     
+
+
+
+
+   
+     
+     
+       
+     
+    You can’t perform that action at this time.
+   
+
+     
+   
+     
+     
+       
+         
+       
+       
+     
+   
+ 
+
+     
+   
+   
+ 
+
+     
+   
+     
+       
+       
+     
+   
+ 
+ 
+   
+     
+       
+       
+     
+   
+ 
+
+
+
+
+     
+     
+     
+   
+ 
+

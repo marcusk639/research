@@ -1,0 +1,7248 @@
+__HTTP 200__
+
+
+
+
+
+
+
+
+
+ 
+ 
+   
+     
+     
+     
+     
+    
+
+     
+     
+     
+     
+       
+      
+         
+       
+     
+       Unit testing of Cloud Functions  |  Cloud Functions for Firebase 
+
+ 
+   
+  
+
+  
+
+  
+
+  
+
+  
+
+
+     
+   
+  
+     
+  
+  
+     
+      
+      Skip to main content
+     
+     
+       
+         
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+   
+     
+       
+         
+         
+        
+ 
+
+   
+  
+   
+    
+     
+    
+     
+   
+  
+ 
+
+
+
+ 
+         
+           
+            
+              
+              
+   
+
+     
+      
+        
+           
+  
+     
+    Build
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+                 Build 
+              
+              
+                 Get to market quickly and securely with products that can scale globally
+ 
+              
+              
+                 
+                   
+                    
+                     
+                      Go to Build
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+                 Build Products 
+              
+              
+              
+                 
+                   
+                    
+                     
+                      App Check
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      App Hosting
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Authentication
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Functions
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Storage
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      SQL Connect
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Extensions
+                     
+                    
+                   
+                 
+              
+             
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Firestore
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Hosting
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Phone Number Verification
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Realtime Database
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Firebase AI Logic
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Generative AI
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    Run
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+                 Run 
+              
+              
+                 Run your app with confidence and deliver the best experience for your users
+ 
+              
+              
+                 
+                   
+                    
+                     
+                      Go to Run
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+                 Run Products 
+              
+              
+              
+                 
+                   
+                    
+                     
+                      A/B Testing
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      App Distribution
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Messaging
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Crashlytics
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Google Analytics
+                     
+                    
+                   
+                 
+              
+             
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      In-App Messaging
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Performance Monitoring
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Remote Config
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Test Lab
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+            
+     
+    Solutions
+  
+     
+    
+  
+           
+        
+      
+        
+           
+            
+     
+    Pricing
+  
+     
+    
+  
+           
+        
+      
+        
+           
+  
+     
+    Docs
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Overview
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Fundamentals
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      AI
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Build
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Run
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Reference
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Samples
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    Community
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Learn
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Stories
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+            
+     
+    Support
+  
+     
+    
+  
+           
+        
+      
+     
+
+   
+
+            
+            
+          
+ 
+   
+     
+       
+       
+         
+           
+            
+               
+            
+           
+           
+             / 
+           
+       
+     
+   
+   
+ 
+
+         
+
+        
+
+          
+
+          
+
+          
+
+           
+
+          
+ 
+   
+    
+    
+     
+       English 
+     
+    
+     
+       Deutsch 
+     
+    
+     
+       Español – América Latina 
+     
+    
+     
+       Français 
+     
+    
+     
+       Indonesia 
+     
+    
+     
+       Italiano 
+     
+    
+     
+       Polski 
+     
+    
+     
+       Português – Brasil 
+     
+    
+     
+       Tiếng Việt 
+     
+    
+     
+       Türkçe 
+     
+    
+     
+       Русский 
+     
+    
+     
+       עברית 
+     
+    
+     
+       العربيّة 
+     
+    
+     
+       فارسی 
+     
+    
+     
+       हिंदी 
+     
+    
+     
+       বাংলা 
+     
+    
+     
+       ภาษาไทย 
+     
+    
+     
+       中文 – 简体 
+     
+    
+     
+       中文 – 繁體 
+     
+    
+     
+       日本語 
+     
+    
+     
+       한국어 
+     
+    
+   
+ 
+
+
+          
+             
+  Blog
+ 
+          
+             
+  Go to console
+ 
+          
+
+        
+
+        
+           
+            
+              
+               Sign in 
+            
+           
+        
+        
+        
+       
+     
+   
+
+
+
+   
+     
+      
+        
+           
+             
+              
+                
+                 
+                  
+                  
+                  
+                     
+  
+   
+    
+    
+    
+      
+        
+   
+    
+          Documentation
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Cloud Functions
+        
+   
+  
+      
+    
+   
+  
+ 
+                 
+                
+              
+              
+             
+            
+           
+          
+        
+      
+      
+         
+          
+          
+            
+            
+   
+
+     
+      
+        
+           
+            
+     
+    Overview
+  
+     
+    
+  
+           
+        
+      
+        
+           
+  
+     
+    Fundamentals
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Apple platforms (iOS+)
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Android
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Web
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Flutter
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - C++
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Unity
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Server environments
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Manage Firebase projects
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Supported platforms & frameworks
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    AI
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+                 Develop with AI assistance 
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Overview
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Gemini in Firebase
+                     
+                    
+                     
+                      Streamline development with an AI-powered assistant in Firebase interfaces and tools.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      AI tools, skills, & MCP
+                     
+                    
+                     
+                      Access agentive development tools, like our agent skills and MCP server.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Firebase Studio (deprecated)
+                     
+                    
+                     
+                      Build and ship full-stack AI-infused apps right from your browser.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+                 Build AI-powered apps 
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Firebase AI Logic
+                     
+                    
+                     
+                      Build genAI features and securely access Gemini models directly from your mobile & web apps.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    Build
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Authentication
+                     
+                    
+                     
+                      Simplify user authentication and sign-in on a secure, all-in-one identity platform.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Phone Number Verification
+                     
+                    
+                     
+                      Obtain the phone number of a device directly from the carrier, without SMS.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      App Check
+                     
+                    
+                     
+                      Protect your backend resources from abuse and unauthorized access.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Security Rules
+                     
+                    
+                     
+                      Define granular, server-enforced rules to protect your database and storage data.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      SQL Connect
+                     
+                    
+                     
+                      Build and scale your apps using a fully-managed PostgreSQL relational database service.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Firestore
+                     
+                    
+                     
+                      Store and sync data using a scalable NoSQL cloud database with rich data models and queryability.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Realtime Database
+                     
+                    
+                     
+                      Store and sync data in realtime with a NoSQL cloud database.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Storage
+                     
+                    
+                     
+                      Store and serve content like images, audio, video with a secure cloud-hosted solution.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      App Hosting
+                     
+                    
+                     
+                      Deploy your modern, full-stack web apps with server-side rendering and AI features.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Hosting
+                     
+                    
+                     
+                      Deploy your static and single-page web apps to a global CDN with a single command.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Functions
+                     
+                    
+                     
+                      Run backend code in response to events without provisioning or managing a server.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Extensions (deprecated)
+                     
+                    
+                     
+                      Deploy pre-built integrations and solutions for common tasks.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Emulator Suite
+                     
+                    
+                     
+                      Test your app in real-world conditions without affecting live data.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    Run
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Test Lab (deprecated)
+                     
+                    
+                     
+                      Test your Android and iOS apps on a wide range of real and virtual devices, all in the cloud.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      App Distribution
+                     
+                    
+                     
+                      Streamline delivery of pre-release Android and iOS apps to trusted testers.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Crashlytics
+                     
+                    
+                     
+                      Track, prioritize, and fix app stability issues.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Performance Monitoring
+                     
+                    
+                     
+                      Gain real-time insight into your app's performance and fix issues.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Remote Config
+                     
+                    
+                     
+                      Instantly change your app's behavior and appearance, without publishing an update.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      A/B Testing
+                     
+                    
+                     
+                      Test variants to make data-driven decisions about changes, features, and campaigns.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Messaging
+                     
+                    
+                     
+                      Send notifications and messages to your users on Android, iOS, and the Web.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      In-App Messaging
+                     
+                    
+                     
+                      Engage your active users with targeted, contextual messages within your app.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Google Analytics
+                     
+                    
+                     
+                      Gain insights into user behavior, and optimize your app's marketing and performance.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Google AdMob
+                     
+                    
+                     
+                      Monetize your app, gain user insights, and tailor the ad experience.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Google Ads
+                     
+                    
+                     
+                      Run smarter campaigns, find high-value users, and measure in-app conversions.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+            
+     
+    Reference
+  
+     
+    
+  
+           
+        
+      
+        
+           
+            
+     
+    Samples
+  
+     
+    
+  
+           
+        
+      
+     
+
+   
+
+          
+          
+         
+      
+     
+   
+
+ 
+
+
+
+  
+
+  
+ 
+         
+          
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+   
+   
+  
+   
+ 
+
+ 
+   
+     
+     
+     
+
+   
+  
+   
+    
+     
+    
+     
+   
+  
+ 
+
+
+ 
+   
+
+   
+     
+      
+         
+          
+             
+              
+  
+   
+  
+     
+      Build
+    
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Run
+    
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Solutions
+    
+    
+  
+   
+  
+
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Pricing
+    
+    
+  
+   
+  
+
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Docs
+    
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+              
+                 
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Overview
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Fundamentals
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      AI
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Build
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Run
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Reference
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Samples
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                 
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Community
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Support
+    
+    
+  
+   
+  
+
+  
+              
+             
+          
+          
+    
+    
+ 
+
+  
+   
+  
+     
+      Blog
+    
+    
+  
+   
+  
+
+ 
+
+  
+    
+    
+ 
+
+  
+   
+  
+     
+      Go to console
+    
+    
+  
+   
+  
+
+ 
+
+  
+          
+         
+      
+     
+    
+       
+        
+          
+           
+             Overview 
+
+   
+       
+         Emulator Suite 
+       Introduction 
+       
+         Connect your app and prototype 
+       Get started Connect to the Authentication emulator Connect to the Realtime Database emulator Connect to the Firestore emulator Connect to the Cloud Storage for Firebase emulator Use the Hosting emulator Use the App Hosting emulator Connect to the Cloud Functions emulator Use the Extensions emulator Install, configure and integrate FAQ and troubleshooting 
+
+   
+       
+         Authentication 
+       Introduction Where do I start? Users in Firebase Projects 
+       
+         iOS+ 
+       Sign in with a pre-built UI Get Started Manage Users Password Authentication Email Link Authentication Email Link Migration Sign in with Google Facebook Login Sign in with Apple Twitter Login GitHub Microsoft Yahoo Game Center Sign-in Phone Number OpenID Connect Use a Custom Auth System Anonymous Authentication Enabling cross-app authentication with shared Keychain Link Multiple Auth Providers SMS Multi-factor Auth TOTP Multi-factor Auth Passing State in Email Actions Handle Errors 
+       
+         Android 
+       Sign in with a pre-built UI Get Started Manage Users Password Authentication Email Link Authentication Email Link Migration Sign in with Google Facebook Login Sign in with Apple Twitter GitHub Microsoft Yahoo Play Games Sign-in Phone Number OpenID Connect Use a Custom Auth System Anonymous Authentication SMS Multi-factor Auth TOTP Multi-factor Auth Link Multiple Auth Providers Passing State in Email Actions 
+       
+         Flutter 
+       Get Started Manage Users Password Authentication Email Link Authentication Federated Identity & Social Phone Number Use a Custom Auth System Anonymous Authentication Multi-factor Auth Link Multiple Auth Providers Passing State in Email Actions Handle Errors 
+       
+         Web 
+       Sign in with a pre-built UI Get Started Manage Users Password Authentication Email Link Authentication Sign in with Google Facebook Login Sign in with Apple Twitter GitHub Microsoft Yahoo Phone Number OpenID Connect SAML Use a Custom Auth System Anonymous Authentication SMS Multi-factor Auth TOTP Multi-factor Auth Link Multiple Auth Providers Customize Dependencies OAuth Sign-In for Cordova Sign in users from a Chrome extension Auth State Persistence Passing State in Email Actions Service Worker Sessions Best practices for signInWithRedirect flows 
+       
+         C++ 
+       Get Started Manage Users Password Authentication Sign in with Google Play Games Sign-in GitHub Facebook Login Sign in with Apple Twitter Login Microsoft Yahoo Phone Number Use a Custom Auth System Anonymous Authentication Link Multiple Auth Providers 
+       
+         Unity 
+       Get Started Manage Users Password Authentication Sign in with Google Play Games Sign-in GitHub Authentication Facebook Login Sign in with Apple Twitter Login Microsoft Yahoo Phone Number Use a Custom Auth System Anonymous Authentication Link Multiple Auth Providers 
+       
+         Admin 
+       Introduction Manage Users Import Users Create Custom Tokens Verify ID Tokens Manage Multi-factor Users Manage User Sessions Manage Session Cookies Control Access with Custom Claims Generating Email Action Links Errors Configure OAuth identity providers programmatically Configure Auth providers using the Firebase CLI Customize the Email Action Handler Extend with Cloud Functions Extend with blocking functions Email Custom Domains Case Studies Usage Limits FAQ and troubleshooting 
+
+   
+       
+         Phone Number Verification 
+       Introduction Codelab Get started on Android Upgrade to production Verify tokens on your server Customize the flow Sign in with phone numbers Observability Cloud Audit Logging Pricing 
+
+   
+       
+         App Check 
+       Introduction 
+         Get started 
+       
+       
+         Default providers 
+       iOS+ (DeviceCheck) iOS+ (App Attest) iOS+ (reCAPTCHA Enterprise) Android (Play Integrity) Android (reCAPTCHA Enterprise) Web (reCAPTCHA Enterprise) Web (reCAPTCHA v3) Flutter Flutter (reCAPTCHA Enterprise) Unity C++ 
+       
+         Custom providers 
+       Server implementation iOS+ client implementation Android client implementation Web client implementation Unity client implementation C++ client implementation 
+       
+         Debug & test providers 
+       iOS+ Android Web Flutter Unity C++ 
+         Monitor request metrics 
+       Standard Google services Cloud Functions for Firebase 
+         Enable enforcement 
+       Standard Google services Cloud Functions for Firebase 
+         Protect custom resources 
+       
+       
+         Send tokens from the client 
+       iOS+ Android Web Flutter Unity C++ Verify tokens on the backend 
+         Additional information 
+       Create reCAPTCHA keys 
+
+   
+       
+         SQL Connect 
+       Introduction Pricing and billing Get started Get started with AI agents 
+         Quickstarts 
+       Apple platforms Android React Flutter 
+         Design schemas and operations 
+       Design SQL Connect schemas Implement SQL Connect queries Implement SQL Connect mutations Secure operations with authorization Implement operations using native SQL 
+         Develop and test with SQL Connect 
+       Seed test data and perform bulk operations Generate Web SDKs Generate Android SDKs Generate iOS SDKs Generate Flutter SDKs Get real-time updates Generate Admin SDKs Use the SQL Connect emulator for CI/CD 
+         Manage SQL Connect projects 
+       Manage schemas and connectors Manage services and databases Run privileged operations with the Firebase Admin SDK 
+         SQL Connect solutions 
+       Use AI assistance for schemas, queries and mutations Extend with Cloud Functions Extend data source support with custom resolvers Perform vector similarity search Perform full-text search 
+         GraphQL language reference guides 
+       Directives reference Queries reference Mutations reference Objects reference Input objects reference Scalars reference Enums reference 
+         Additional reference guides 
+       CLI reference SQL Connect configuration file reference IAM configuration for SQL Connect projects Common Expression Language (CEL) reference Cloud Audit Logging reference 
+
+   
+       
+         Cloud Firestore 
+       Introduction 
+       
+         Cloud Firestore editions 
+       Overview Firestore Native mode in Standard and Enterprise editions 
+         Standard edition 
+       
+       
+         Discover 
+       Overview of Core operations 
+       
+         Understand Firestore Standard edition 
+       Compare Cloud Firestore and Realtime Database Data model Data types SDKs and client libraries Index types Database locations Data bundles 
+       
+         Get started with Core operations 
+       Get started with mobile and web SDKs Get started with server client libraries Manage databases 
+       
+         Manage data 
+       
+       
+         Add data 
+       Structure data Add data Transactions and batched writes Data contention in transaction 
+       
+         Query data with Core operations 
+       Get data Get real-time updates Perform simple and compound queries Order and limit data 
+       
+         Query with range & inequality filters on multiple fields 
+       Overview Optimize your queries Summarize data with aggregation queries Paginate data with query cursors Access data offline Search with vector embeddings Manage indexes 
+       
+         Process and move data 
+       Manage Cloud Firestore with the Firebase console Export and import data Manage data retention with time-to-live policies Process data in bulk with Dataflow Move data between projects 
+       
+         Delete data 
+       Delete data Bulk delete data 
+       
+         Secure and validate data 
+       Overview Get started Identity and Access Management (IAM) Structure Security Rules Writing conditions for Security Rules Fix insecure rules Test your Security Rules Securely query data Control access per field Configure data locality with regional endpoints 
+       
+         Solutions 
+       Overview 
+         Solutions using guided custom implementations 
+       Develop generative AI features Firestore Lite Web SDK Write-time aggregations Distributed counters Build presence Secure data access for users and groups 
+       
+         Secure data with customer-managed encryption keys (CMEK) 
+       About CMEK Use CMEK Delete data with a callable Cloud Function Schedule data exports Sharded timestamps Geo queries Serve bundled Firestore content from a CDN 
+       
+         Usage, limits, and pricing 
+       Usage and limits Monitor usage Explain query performance Query Explain report reference Understand Cloud Firestore billing Committed use discounts Example Cloud Firestore costs Understand storage size calculations 
+       
+         Monitor and troubleshoot 
+       
+       
+         Analyze usage patterns with Key Visualizer 
+       Overview Get started Exploring heatmaps Heatmap patterns for document keys Heatmap patterns for index keys View Knowledge Catalog insights 
+       
+         Backups and point-in-time recovery 
+       Disaster recovery planning 
+         Scheduled backups 
+       Create a backup schedule and restore data Perform an in-place restore 
+         Point-in-time recovery (PITR) 
+       PITR overview Work with PITR 
+       
+         Techniques and best practices 
+       Best practices for Cloud Firestore Map data with Swift Codable Understand reads and writes at scale Understand real-time queries at scale 
+       
+         Cloud Firestore integrations 
+       Use the Cloud Firestore REST API Use Cloud Firestore and Realtime Database Extend with Cloud Functions for Firebase (2nd gen) Extend with Cloud Functions for Firebase (1st gen) Third-party library integrations 
+       
+         API & SDK reference 
+       Swift Objective-C Android (Kotlin) Android (Java) Web Flutter Unity C++ Cloud Functions Node.js Java Python Go C# PHP Ruby REST RPC 
+       
+         Samples 
+       iOS Android Web 
+         Enterprise edition 
+       Overview of Enterprise edition modes 
+       
+         Native mode with Core and Pipeline operations 
+       Overview of Native mode on Enterprise edition 
+       
+         Get started with Native mode 
+       Get started with mobile and web SDKs Get started with server client libraries Supported data types Migrate from Standard edition to Enterprise edition 
+       
+         Manage databases 
+       Create and manage databases 
+       
+         Manage data 
+       Add data using Firestore Core operations Transactions and batched writes Data contention in transaction 
+       
+         Indexing data 
+       Indexing overview Manage indexes 
+       
+         Data behaviour and lifecycle management 
+       Manage data retention with TTL policies Understand reads and writes at scale Understand real-time queries at scale Extend with Cloud Functions for Firebase (2nd gen) Import and export data 
+       
+         Query data with Firestore Core operations 
+       Get data Get realtime updates Access data offline Perform simple and compound queries 
+       
+         Query data with Firestore Pipeline operations 
+       Get started with Pipeline operations Perform joins with subqueries 
+       
+         Functions 
+       Aggregate Functions Arithmetic Functions Array Functions Comparison Functions Debugging Functions Generic Functions Logical Functions Map Functions Reference Functions String Functions Timestamp Functions Type Functions Vector Functions 
+       
+         Stages 
+       
+       
+         Input Stages 
+       Collection Collection Group Database Documents Literals Subcollection 
+       
+         Transformation Stages 
+       Add Fields Aggregate Distinct Find Nearest Let Limit Offset Remove Fields Replace With Sample Search Select Sort Unnest Union Where 
+       
+         Output Stages 
+       Delete Update Modify data with Firestore Pipeline operations Use text search with Firestore Pipeline operations Use geospatial queries with Firestore Pipeline operations 
+       
+         Delete data 
+       Delete data Bulk data delete 
+       
+         Optimize query and usage performance 
+       Identify queries to optimize Analyze query execution with Query Explain Optimize query execution Query execution reference 
+       
+         Use saved queries 
+       Overview Create and manage saved queries 
+       
+         Secure and validate data 
+       
+       
+         Security Rules 
+       Overview Get started Security Rules for Pipeline queries Structure Security Rules Writing conditions for Security Rules Fix insecure rules Test your Security Rules Securely query data Control access per field Identity and Access Management (IAM) VPC Service Controls Configure data locality with regional endpoints Server-side encryption 
+       
+         Secure data with customer-managed encryption keys (CMEK) 
+       About CMEK Use CMEK 
+       
+         Usage, locations, and pricing 
+       Quotas and limits Analyze usage insights 
+       
+         Pricing 
+       Pricing overview Read/Write operation pricing examples Query and real-time pricing examples Storage size calculations Locations for Native mode 
+       
+         Monitor and troubleshoot 
+       Monitor database metrics Audit logging Resolve latency issues Understand error codes View Knowledge Catalog insights 
+       
+         Backups and point-in-time recovery 
+       Disaster recovery planning 
+         Scheduled backups 
+       Create a backup schedule and restore data Perform an in-place restore 
+         Point-in-time recovery (PITR) 
+       PITR overview Work with PITR 
+       
+         Firestore with MongoDB compatibility 
+       Overview of MongoDB compatibility 
+       
+         Get started with MongoDB compatibility 
+       Create a Firestore with MongoDB compatibility database and connect to it 
+       
+         Manage databases 
+       Create and manage databases 
+       
+         Connect to a database 
+       Authenticate and connect to a database 
+       
+         Manage data 
+       
+       
+         Indexing data 
+       Indexing overview Manage indexes Read real-time data with change streams 
+       
+         Data behaviour and lifecycle management 
+       Behavior differences Understand reads and writes at scale Extend with Cloud Functions for Firebase (2nd gen) Import and export data 
+       
+         Supported MongoDB data types, drivers, and features 
+       Supported data types and drivers Supported features: 8.0 Supported features: 7.0 Supported features: 6.0 Supported features: 5.0 Supported features: 4.0 Supported features: 3.6 
+       
+         Delete data 
+       Bulk data delete 
+       
+         Optimize query performance 
+       Identify queries to optimize Analyze query execution with Query Explain Optimize query execution Query execution reference Write MQL with Gemini assistance Use text search Use geospatial queries 
+       
+         Use saved queries 
+       Overview Create and manage saved queries 
+       
+         Migrate 
+       Migrate to Firestore with MongoDB compatibility Best practices for bulk data loading 
+       
+         Secure and validate data 
+       Identity and Access Management (IAM) Configure Private Google Access with MongoDB compatibility VPC Service Controls Server-side encryption 
+       
+         Secure data with customer-managed encryption keys (CMEK) 
+       About CMEK Use CMEK 
+       
+         Usage, locations, and pricing 
+       Quotas and limits Analyze usage insights 
+       
+         Pricing 
+       Read/Write operation pricing examples Storage size calculations Locations for MongoDB compatibility 
+       
+         Monitor and troubleshoot 
+       Monitor database metrics Audit logging Resolve latency issues Understand error codes View Knowledge Catalog insights 
+       
+         Backups and point-in-time recovery 
+       Disaster recovery planning 
+         Scheduled backups 
+       Create a backup schedule and restore data Perform an in-place restore 
+         Point-in-time recovery (PITR) 
+       PITR overview Work with PITR 
+
+   
+       
+         Realtime Database 
+       Introduction Choose a Database 
+       
+         iOS+ 
+       Get Started Structure Data Read and Write Data Work with Lists of Data Enable Offline Capabilities 
+       
+         Android 
+       Get Started Structure Data Read and Write Data Work with Lists of Data Enable Offline Capabilities 
+       
+         Web 
+       Get Started Structure Data Read and Write Data Work with Lists of Data Enable Offline Capabilities 
+       
+         Flutter 
+       Get Started Structure Data Read and Write Data Work with Lists of Data Enable Offline Capabilities 
+       
+         Admin 
+       Get Started Structure Data Save Data Retrieve Data 
+       
+         REST 
+       Get Started Structure Data Save Data Retrieve Data Authenticate REST Requests 
+       
+         C++ 
+       Get Started Structure Data Save Data Retrieve Data 
+       
+         Unity 
+       Get Started Structure Data Save Data Retrieve Data 
+       
+         Security & Rules 
+       Understand Security Rules Get started Structure Security Rules Write conditions Use regular expressions Index data Manage Security Rules via REST 
+       
+         Usage and Performance 
+       Understand Billing Realtime Database Limits Monitor Database Usage Monitor Database Performance Scale with Multiple Databases Profile Your Database Optimize Database Performance Locations Automated Backups View & edit data in console Extend with Cloud Functions Video series: Firebase for SQL Developers Cloud Audit Logs FAQ and troubleshooting 
+
+   
+       
+         Storage 
+       Introduction 
+       
+         iOS+ 
+       Get Started Create a Reference Upload Files Download Files Use File Metadata Delete Files List Files Handle Errors 
+       
+         Android 
+       Get Started Create a Reference Upload Files Download Files Use File Metadata Delete Files List Files Handle Errors 
+       
+         Web 
+       Get Started Create a Reference Upload Files Download Files Use File Metadata Delete Files List Files Handle Errors 
+       
+         Flutter 
+       Get Started Create a Reference Upload Files Download Files Use File Metadata Delete Files List Files Handle Errors 
+       
+         Admin 
+       Get Started 
+       
+         C++ 
+       Get Started Create a Reference Upload Files Download Files Use File Metadata Delete Files Handle Errors 
+       
+         Unity 
+       Get Started Create a Reference Upload Files Download Files Use File Metadata Delete Files Handle Errors 
+       
+         Security & Rules 
+       Understand Security Get Started Structure Security Rules Write Conditions for Security Rules Locations Monitor activity Manage stored files in console Extend with Cloud Functions Integrate with Google Cloud Cloud Audit Logs 
+       
+         FAQ and troubleshooting 
+       Billing requirements FAQ General FAQ and troubleshooting 
+
+   
+       
+         Security Rules 
+       Introduction Get started 
+       
+         Understand Security Rules 
+       Security Rules language How Security Rules work Security Rules and Firebase Authentication 
+       
+         Write Security Rules 
+       Basic Security Rules Avoid insecure rules Data validation 
+       
+         Test Security Rules 
+       Set up the emulator Build unit tests Generate test reports Quickly validate Security Rules Manage and deploy Security Rules Cloud Audit Logs 
+
+   
+       
+         App Hosting 
+       Introduction 
+         Discover 
+       How App Hosting works The App Hosting build process App Hosting costs Related serverless solutions 
+         Get started 
+       Deploy a basic app Deploy multiple environments Deploy a monorepo app Other ways to deploy 
+         Develop 
+       Frameworks and tooling Configure and manage backends Connect a custom domain Integrate Firebase SDKs API Reference Cache app content 
+         Monitor, log and debug 
+       Manage rollouts and releases Test your app locally Monitor routes Write and view logs FAQ and troubleshooting Cloud Audit Logging 
+         Solutions 
+       Optimize image loading on Next.js Connect a VPC network 
+
+   
+       
+         Hosting 
+       Introduction Explore use cases Get started 
+         Deployment options 
+       Test, preview, then deploy Deploy via GitHub pull requests Deploy using the REST API 
+         Customize 
+       Connect a custom domain Configure hosting behavior Configure i18n rewrites 
+         Manage sites 
+       Understand the default site Share project resources across multiple sites Manage live & preview channels, releases, and versions 
+         Serve dynamic content and host microservices 
+       Overview Use Cloud Functions for Firebase Use Cloud Run Manage cache behavior 
+         Usage and monitoring 
+       Usage, quotas, and pricing Monitor web request data with Cloud Logging FAQ and troubleshooting 
+       
+         Integrate web frameworks 
+       Overview Integrate Angular Integrate Next.js Integrate Flutter Integrate other frameworks with Express.js Add SDKs using reserved URLs 
+
+   
+       
+         Cloud Functions 
+       Introduction 1st and 2nd gen version comparison Explore use cases Get started Upgrade to 2nd gen Try the experimental Dart SDK 
+       
+         Call functions directly 
+       Call functions from your app Invoke Genkit flows from your app Call functions via HTTP requests Enqueue functions with Cloud Tasks Run functions on a schedule 
+       
+         Trigger background functions 
+       Firebase Alert triggers Custom event/extension triggers Authentication triggers Blocking Auth triggers Cloud Firestore triggers Data Connect triggers Realtime Database triggers Remote Config triggers Cloud Storage triggers Pub/Sub triggers Test Lab triggers 
+       
+         Write functions 
+       Manage deployment and runtime options Write functions in TypeScript Sync, async, and promises Retry asynchronous functions Configure your environment Organize functions Handling dependencies Optimizing networking Tips & tricks 
+       
+         Test functions 
+       Run functions locally Unit testing functions Test functions interactively 
+       
+         Monitor functions 
+       Write and view logs Report errors 
+       
+         API Reference 
+       Node.js 2nd gen Node.js 1st gen Node.js Test SDK Python Protocol specification for https.onCall Experimental Dart SDK Cloud Run functions and Firebase Cloud Functions locations Quotas and limits FAQ and troubleshooting 
+       
+         Cloud Functions (1st gen) 
+       Analytics triggers Authentication triggers Blocking Auth triggers Call functions from your app Call functions via HTTP requests Cloud Firestore triggers Cloud Storage triggers Configure your environment Enqueue functions with Cloud Tasks Get started Manage deployment and runtime options Organize functions Pub/Sub triggers Realtime Database triggers Remote Config triggers Report errors Run functions on a schedule Test Lab triggers Write and view logs 
+
+   
+       
+         Extensions 
+       Introduction Use case examples 
+         Migrate an extension 
+       Migrate an extension to Cloud Functions as a publisher Migrate an extension to Cloud Functions as a user Post migration best practices Deprecation FAQ 
+         Use an extension in your project 
+       Overview Install an extension Manage installed extensions Permissions granted to an extension Manage configurations with manifests 
+         Extensions by Firebase 
+       
+       
+         Trigger Email 
+       Get started Use Handlebars templates Manage delivery status 
+       
+         Delete User Data 
+       Get Started 
+       
+         Firestore Bundle Builder 
+       Get Started Reference Resize Images Export Collections to BigQuery Translate Text Distributed Counter Shorten URLs Limit Child Nodes 
+         Build & publish extensions 
+       Overview Get started Write functions Set up parameters Handle lifecycle events Add user hooks Set up appropriate access Create user documentation Register as a publisher Publish an extension Reference for extension.yaml Firebase Extensions Publisher Agreement 
+
+   
+       
+         Firebase ML 
+       Introduction 
+         Custom Models 
+       Migrate to Cloud Storage 
+       
+         Use a custom model 
+       Overview iOS+ Android Flutter Deploy & manage custom models 
+         Use Cloud Vision APIs 
+       
+       
+         Recognize text 
+       Overview iOS+ Android 
+       
+         Label images 
+       Overview iOS+ Android 
+       
+         Recognize landmarks 
+       Overview iOS+ Android 
+         Advanced Topics 
+       
+       
+         A/B test two versions of a model 
+       iOS+ Android 
+
+   
+         RELATED PRODUCTS 
+       
+
+   Cloud Messaging 
+
+   Remote Config 
+           
+        
+        
+          
+    
+      
+       
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Build
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Go to Build
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Build Products
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      App Check
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      App Hosting
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Authentication
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Functions
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Storage
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      SQL Connect
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Extensions
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Firestore
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Hosting
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Phone Number Verification
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Realtime Database
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Firebase AI Logic
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Generative AI
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Run
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Go to Run
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Run Products
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      A/B Testing
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      App Distribution
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Messaging
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Crashlytics
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Google Analytics
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      In-App Messaging
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Performance Monitoring
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Remote Config
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Test Lab
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+  
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Overview
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Fundamentals
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      AI
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Build
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Run
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Reference
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Samples
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Learn
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Stories
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+  
+        
+        
+          
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Apple platforms (iOS+)
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Android
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Web
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Flutter
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - C++
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Unity
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Server environments
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Manage Firebase projects
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Supported platforms & frameworks
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Develop with AI assistance
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Overview
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Gemini in Firebase
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      AI tools, skills, & MCP
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Firebase Studio (deprecated)
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Build AI-powered apps
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Firebase AI Logic
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Authentication
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Phone Number Verification
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      App Check
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Security Rules
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      SQL Connect
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Firestore
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Realtime Database
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Storage
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      App Hosting
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Hosting
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Functions
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Extensions (deprecated)
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Emulator Suite
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Test Lab (deprecated)
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      App Distribution
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Crashlytics
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Performance Monitoring
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Remote Config
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      A/B Testing
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Messaging
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      In-App Messaging
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Google Analytics
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Google AdMob
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Google Ads
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+  
+    
+  
+        
+       
+    
+   
+ 
+          
+         
+      
+       
+         
+           
+             
+                
+                 
+                 
+                 
+             
+           
+           
+            
+              
+
+
+
+
+
+
+
+
+
+
+ 
+  
+  
+  
+  
+  
+
+   
+    
+    
+     
+  
+   
+    
+    
+    
+      
+        
+   
+    
+          Firebase
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Documentation
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Cloud Functions
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Build
+        
+   
+  
+      
+    
+   
+  
+ 
+    
+      
+     
+     
+  
+    
+   
+  
+     
+
+   
+  
+    
+    Send feedback
+  
+   
+ 
+  
+     
+      Unit testing of Cloud Functions 
+
+    
+    
+       
+    
+
+     
+      
+      Stay organized with collections
+     
+     
+      
+      Save and categorize content based on your preferences.
+     
+   
+     
+  
+      
+     
+   
+  
+
+   
+   
+   
+
+  
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ This page describes best practices and tools for writing unit tests for your
+functions, such as tests that would be a part of a Continuous Integration (CI)
+system. To make testing easier, Firebase provides the  Firebase Test SDK  for  Cloud Functions . It
+is distributed on npm as  firebase-functions-test , and is a companion test SDK
+to  firebase-functions . The  Firebase Test SDK  for  Cloud Functions : 
+
+ 
+ Takes care of the appropriate setup and teardown for your tests, such as
+setting and unsetting environment variables needed by  firebase-functions . 
+ Generates sample data and event context, so that you only have to specify
+the fields that are relevant to your test. 
+ 
+ Note:   firebase-functions-test  can only be used with functions written with
+ firebase-functions  2.0.0 or above. 
+ Test setup 
+
+ Install both  firebase-functions-test  and  Jest , a
+testing framework, by running the following commands in your functions folder: 
+ npm install --save-dev firebase-functions-test
+npm install --save-dev jest
+ 
+ Next create a  test  folder inside the functions folder, create a new file
+inside it for your test code, and name it something like  index.test.js . 
+
+ Finally, modify  functions/package.json  to add the following: 
+ "scripts": {
+  "test": "jest"
+}
+ 
+ Once you have written the tests, you can run them by running  npm test  inside
+your functions directory. 
+
+ Initializing  Firebase Test SDK  for  Cloud Functions 
+
+ There are two ways to use  firebase-functions-test : 
+
+ 
+ Online mode (recommended):  Write tests that interact with a Firebase project
+dedicated to testing so that database writes, user creates, etc. would actually
+happen, and your test code can inspect the results. This also means that other
+Google SDKs used in your functions will work as well. 
+ Offline mode:  Write siloed and offline unit tests with no side effects.
+This means that any method calls that interact with a Firebase product (e.g.
+writing to the database or creating a user) need to be stubbed. Using offline
+mode is generally not recommended if you have  Cloud Firestore  or  Realtime Database 
+functions, since it greatly increases the complexity of your test code. 
+ 
+
+ Initialize SDK in online mode (recommended) 
+
+ If you would like to write tests that interact with a test project, you need to
+supply the Firebase configuration values that are needed for initializing the
+app through  firebase-admin , and the path to a service account key file. 
+
+ To get your Firebase configuration values: 
+
+ 
+ In the  Firebase  console, go to the
+ settings   Settings  >
+ General  page . 
+ Scroll to the  Your apps  card, and select the intended app. 
+ Get your Firebase configuration: 
+
+ 
+ For Apple and Android apps, select the option to download a configuration
+file. 
+ For web apps, select  Config  to display the configuration values. 
+ 
+ 
+
+ To create a key file: 
+
+ 
+ In the  Google Cloud  console, go to the
+ Service Accounts  pane . 
+ Select the  App Engine  default service account, and use the options menu at
+the right to select  Create key . 
+ When prompted, select JSON for the key type, and click  Create . 
+ 
+
+ After saving the key file, initialize the SDK: 
+ //   At   the   top   of   test / index . test . js 
+ //   Make   sure   to   use   values   from   your   actual   Firebase   configuration 
+ const   test   =   require ( 'firebase-functions-test' )({ 
+    databaseURL :   'https:// PROJECT_ID .firebaseio.com' , 
+    storageBucket :   ' PROJECT_ID .firebasestorage.app ' , 
+    projectId :   ' PROJECT_ID ' , 
+ },   'path/to/serviceAccountKey.json' ); 
+ Warning:  Use extra caution when handling service account
+ credentials in your code. Do not
+ commit them to a public repository, deploy them in a client app, or expose
+ them in any way that could compromise the security of your Firebase
+ project. 
+ Initialize SDK in offline mode 
+
+ If you would like to write completely offline tests, you can initialize the SDK
+without any parameters: 
+ //   At   the   top   of   test / index . test . js 
+ const   test   =   require ( 'firebase-functions-test' )(); 
+ 
+ Mocking config values 
+
+ If you use  functions.config()  in your functions code, you can mock the config
+values. For example, if  functions/index.js  contains the following code: 
+ const   functions   =   require ( 'firebase-functions/v1' ); 
+ const   key   =   functions . config () . stripe . key ; 
+ 
+ Then you can mock the value inside your test file like so: 
+ // Mock functions config values 
+ test . mockConfig ({   stripe :   {   key :   '23wr42ewr34'   }}); 
+ 
+ Importing your functions 
+
+ To import your functions, use  require  to import your main functions file as a
+module.  Be sure to only do this after initializing  firebase-functions-test ,
+and mocking config values. 
+ //   after   firebase - functions - test   has   been   initialized 
+ const   myFunctions   =   require ( '../index.js' );   //   relative   path   to   functions   code 
+ 
+ If you initialized  firebase-functions-test  in
+ offline mode , and you have
+ admin.initializeApp()  in your functions code, then you need to stub it before
+importing your functions. In your test file, require  firebase-admin  as
+ admin , then replace  initializeApp()  with a Jest mock: 
+
+ //   If   initializeApp ()   is   called   in   index . js ,   we   mock   it   out   before   requiring   index . js 
+ adminInitStub   =   jest . spyOn ( admin ,   'initializeApp' ) . mockImplementation (()   = >   {}); 
+ //   Now   we   can   require   index . js   and   save   the   exports   inside   a   namespace   called   myFunctions . 
+ myFunctions   =   require ( '../index' ); offline . test . js 
+
+ Testing background (non-HTTP) functions 
+
+ The process for testing non-HTTP functions involves the following steps: 
+
+ 
+ Wrap the function you would like to test with the  test.wrap  method 
+ Construct test data 
+ Invoke the wrapped function with the test data you constructed and any event
+context fields you'd like to specify. 
+ Make assertions about behavior. 
+ 
+
+ First wrap the function you'd like to test. Let's say you have a function in
+ functions/index.js  called  makeUppercase , which you'd like to test. Write the
+following in  functions/test/index.test.js 
+ //   "Wrap"   the   makeUpperCase   function   from   index . js 
+ const   myFunctions   =   require ( '../index.js' ); 
+ const   wrapped   =   test . wrap ( myFunctions . makeUppercase ); 
+ 
+ wrapped  is a function which invokes  makeUppercase  when it is called.  wrapped 
+takes 2 parameters: 
+
+ 
+ data  (required): the data to send to  makeUppercase . This directly
+corresponds to the first parameter sent to the function handler that you
+wrote.  firebase-functions-test  provides methods for constructing custom
+data or example data. 
+ eventContextOptions  (optional): fields of the event context that you'd
+like to specify. The event context is the second parameter sent to the
+function handler that you wrote. If you do not include an  eventContextOptions 
+parameter when calling  wrapped , an event context is still generated
+with sensible fields. You can override some of the generated fields by
+specifying them here. Note that you only have to include the fields that
+you'd like to override. Any fields that you did not override are generated. 
+ 
+ const   data   =   …   //   See   next   section   for   constructing   test   data 
+
+ //   Invoke   the   wrapped   function   without   specifying   the   event   context . 
+ wrapped ( data ); 
+
+ //   Invoke   the   function ,   and   specify   params 
+ wrapped ( data ,   { 
+    params :   { 
+      pushId :   '234234' 
+    } 
+ }); 
+
+ //   Invoke   the   function ,   and   specify   auth   and   auth   Type   ( for   real   time   database   functions   only ) 
+ wrapped ( data ,   { 
+    auth :   { 
+      uid :   'jckS2Q0' 
+    }, 
+    authType :   'USER' 
+ }); 
+
+ //   Invoke   the   function ,   and   specify   all   the   fields   that   can   be   specified 
+ wrapped ( data ,   { 
+    eventId :   'abc' , 
+    timestamp :   '2018-03-23T17:27:17.099Z' , 
+    params :   { 
+      pushId :   '234234' 
+    }, 
+    auth :   { 
+      uid :   'jckS2Q0'   //   only   for   real   time   database   functions 
+    }, 
+    authType :   'USER'   //   only   for   real   time   database   functions 
+ }); 
+ 
+ Constructing test data 
+
+ The first parameter of a wrapped function is the test data to invoke the underlying
+function with. There are a number of ways to construct test data. 
+
+ Using custom data 
+
+ firebase-functions-test  has a number of functions for constructing data needed
+to test your functions. For example, use  test.firestore.makeDocumentSnapshot 
+to create a Firestore  DocumentSnapshot . The first argument is the data, and the
+second argument is the full reference path, and there is an
+ optional third argument 
+for other properties of the snapshot you can specify. 
+ //   Make   snapshot 
+ const   snap   =   test . firestore . makeDocumentSnapshot ({ foo :   'bar' },   'document/path' ); 
+ //   Call   wrapped   function   with   the   snapshot 
+ const   wrapped   =   test . wrap ( myFunctions . myFirestoreDeleteFunction ); 
+ wrapped ( snap ); 
+ 
+ If you are testing an  onUpdate  or  onWrite  function, you'll need to create
+two snapshots: one for the before state and one for the after state. Then, you
+can use the  makeChange  method to create a  Change  object with these snapshots. 
+ //   Make   snapshot   for   state   of   database   beforehand 
+ const   beforeSnap   =   test . firestore . makeDocumentSnapshot ({ foo :   'bar' },   'document/path' ); 
+ //   Make   snapshot   for   state   of   database   after   the   change 
+ const   afterSnap   =   test . firestore . makeDocumentSnapshot ({ foo :   'faz' },   'document/path' ); 
+ const   change   =   test . makeChange ( beforeSnap ,   afterSnap ); 
+ //   Call   wrapped   function   with   the   Change   object 
+ const   wrapped   =   test . wrap ( myFunctions . myFirestoreUpdateFunction ); 
+ wrapped ( change ); 
+ Note:  You should only construct custom data for  Cloud Firestore  and  Realtime Database 
+if you initialized the SDK in  online mode . Otherwise,
+you should use  stubbed data  to avoid unexpected behavior. 
+ See the  API reference  for similar functions
+for all the other data types. 
+
+ Using example data 
+
+ If you don't need to customize the data used in the your tests, then
+ firebase-functions-test  offers methods for generating example data for each
+function type. 
+ //   For   Firestore   onCreate   or   onDelete   functions 
+ const   snap   =   test . firestore . exampleDocumentSnapshot (); 
+ //   For   Firestore   onUpdate   or   onWrite   functions 
+ const   change   =   test . firestore . exampleDocumentSnapshotChange (); 
+ Note:  You should only construct example data for  Cloud Firestore  and  Realtime Database 
+if you initialized the SDK in  online mode . Otherwise,
+you should use  stubbed data  to avoid unexpected behavior. 
+ See the  API reference  for methods for
+getting example data for every function type. 
+
+ Using stubbed data (for offline mode) 
+
+ If you initialized the SDK in offline mode, and are testing a  Cloud Firestore  or
+ Realtime Database  function, you should use a plain object with stubs
+instead of creating an actual  DocumentSnapshot  or  DataSnapshot . 
+
+ Let's say you are writing a unit test for the following function: 
+
+ //   Listens   for   new   messages   added   to   / messages / : pushId / original   and   creates   an 
+ //   uppercase   version   of   the   message   to   / messages / : pushId / uppercase 
+ exports . makeUppercase   =   functions . database . ref ( '/messages/{pushId}/original' ) 
+      . onCreate (( snapshot ,   context )   = >   { 
+        //   Grab   the   current   value   of   what   was   written   to   the   Realtime   Database . 
+        const   original   =   snapshot . val (); 
+        functions . logger . log ( 'Uppercasing' ,   context . params . pushId ,   original ); 
+        const   uppercase   =   original . toUpperCase (); 
+        //   You   must   return   a   Promise   when   performing   asynchronous   tasks   inside   a   Functions   such   as 
+        //   writing   to   the   Firebase   Realtime   Database . 
+        //   Setting   an   "uppercase"   sibling   in   the   Realtime   Database   returns   a   Promise . 
+        return   snapshot . ref . parent . child ( 'uppercase' ) . set ( uppercase ); 
+      }); index . js 
+
+ Inside of the function,  snap  is used twice: 
+
+ 
+ snap.val() 
+ snap.ref.parent.child('uppercase').set(uppercase) 
+ 
+
+ In test code, create a plain object where both of these code paths will work,
+and use Jest  mock functions  to stub
+the methods. 
+
+ //   The   following   lines   create   a   fake   snapshot ,   'snap' ,   which   returns   'input'   when   snap . val ()   is   called , 
+ //   and   returns   true   when   snap . ref . parent . child ( 'uppercase' ) . set ( 'INPUT' )   is   called . 
+ const   snap   =   { 
+    val :   ()   = >   'input' , 
+    ref :   { 
+      parent :   { 
+        child :   childStub , 
+      } 
+    } 
+ }; offline . test . js 
+
+ Making assertions 
+
+ After initializing the SDK, wrapping the functions, and constructing data, you
+can invoke the wrapped functions with the constructed data and make assertions
+about behavior. You can use Jest's  expect 
+to make these assertions. 
+
+ Making assertions in online mode 
+
+ If you initialized the  Firebase Test SDK  for  Cloud Functions  in  online mode , you
+can assert that the desired actions (such as a database write) has taken place by
+using the  firebase-admin  SDK. 
+
+ The example below asserts that 'INPUT' has been written into the database of the
+test project. 
+
+ //   Create   a   DataSnapshot   with   the   value   'input'   and   the   reference   path   'messages/11111/original' . 
+ const   snap   =   test . database . makeDataSnapshot ( 'input' ,   'messages/11111/original' ); 
+ //   Wrap   the   makeUppercase   function 
+ const   wrapped   =   test . wrap ( myFunctions . makeUppercase ); 
+ //   Call   the   wrapped   function   with   the   snapshot   you   constructed . 
+ return   wrapped ( snap ) . then (()   = >   { 
+    //   Read   the   value   of   the   data   at   messages / 11111 / uppercase .   Because   ` admin . initializeApp () `   is 
+    //   called   in   functions / index . js ,   there 's already a Firebase app initialized. 
+    return   admin . database () . ref ( 'messages/11111/uppercase' ) . once ( 'value' ) . then (( createdSnap )   = >   { 
+      //   Assert   that   the   value   is   the   uppercased   version   of   our   input . 
+      expect ( createdSnap . val ()) . toBe ( 'INPUT' ); 
+    }); 
+ }); online . test . js 
+
+ Making assertions in offline mode 
+
+ You can make assertions about the expected return value of the function: 
+
+ const   childParam   =   'uppercase' ; 
+ const   setParam   =   'INPUT' ; 
+ //   Spies / mocks   are   objects   that   fake   and / or   record   function   calls . 
+ //   These   are   excellent   for   verifying   that   functions   have   been   called   and   to   validate   the 
+ //   parameters   passed   to   those   functions . 
+ const   setStub   =   jest . fn () . mockImplementation (( val )   = >   val   ===   setParam   ?   true   :   undefined ); 
+ const   childStub   =   jest . fn () . mockImplementation (( path )   = >   path   ===   childParam   ?   {   set :   setStub   }   :   undefined ); 
+ //   The   following   lines   create   a   fake   snapshot ,   'snap' ,   which   returns   'input'   when   snap . val ()   is   called , 
+ //   and   returns   true   when   snap . ref . parent . child ( 'uppercase' ) . set ( 'INPUT' )   is   called . 
+ const   snap   =   { 
+    val :   ()   = >   'input' , 
+    ref :   { 
+      parent :   { 
+        child :   childStub , 
+      } 
+    } 
+ }; 
+ //   Wrap   the   makeUppercase   function . 
+ const   wrapped   =   test . wrap ( myFunctions . makeUppercase ); 
+ //   Since   we 've mocked snap.ref.parent.child(childParam).set(setParam) to return true if it was 
+ //   called   with   the   parameters   we   expect ,   we   assert   that   it   indeed   returned   true . 
+ return   wrapped ( snap ) . then ( makeUppercaseResult   = >   { 
+    expect ( makeUppercaseResult ) . toBe ( true ); 
+ }); offline . test . js 
+
+ You can also use Jest mock functions to assert that certain methods have been
+called, and with the parameters you expect. 
+
+ Testing HTTP functions 
+
+ To test HTTP onCall functions, use the same approach as  testing background functions . 
+
+ If you are testing HTTP onRequest functions, you should use
+ firebase-functions-test  if: 
+
+ 
+ You use  functions.config() 
+ Your function interacts with a Firebase project or other Google APIs, and
+you'd like to use a real Firebase project and its credentials for your tests. 
+ 
+
+ An HTTP onRequest function takes two parameters: a request object and a response
+object. Here is how you might test the  addMessage()  example function : 
+
+ 
+ Stub  admin.database() , because  addMessage()  pushes to the Realtime
+Database. In offline mode you stubbed  initializeApp() , so there is no
+Firebase app for the Admin SDK to use, and the real  admin.database()  fails
+with  The default Firebase app does not exist : 
+ const   pushStub   =   jest . fn () . mockResolvedValue ({   ref :   'new_ref'   }); 
+ const   refStub   =   jest . fn () . mockReturnValue ({   push :   pushStub   }); 
+ Object . defineProperty ( admin ,   'database' ,   { 
+    configurable :   true , 
+    writable :   true , 
+    value :   jest . fn () . mockReturnValue ({   ref :   refStub   }), 
+ }); 
+ 
+ Override the redirect function in the response object, since  addMessage() 
+calls it. 
+ Within the redirect function, use Jest's  expect  to make assertions about
+what parameters the redirect function should be called with: 
+ 
+
+ //   A   fake   request   object ,   with   req . query . text   set   to   'input' 
+ const   req   =   {   query :   { text :   'input' }   }; 
+ //   A   fake   response   object ,   with   a   stubbed   redirect   function   which   asserts   that   it   is   called 
+ //   with   parameters   303 ,   'new_ref' . 
+ const   res   =   { 
+    redirect :   ( code ,   url )   = >   { 
+      expect ( code ) . toBe ( 303 ); 
+      expect ( url ) . toBe ( 'new_ref' ); 
+      done (); 
+    } 
+ }; 
+
+ //   Invoke   addMessage   with   our   fake   request   and   response   objects .   This   will   cause   the 
+ //   assertions   in   the   response   object   to   be   evaluated . 
+ myFunctions . addMessage ( req ,   res ); offline . test . js 
+
+ Test cleanup 
+
+ At the very end of your test code, call the cleanup function. This unsets
+environment variables that the SDK set when it was initialized, and deletes
+Firebase apps that may have been created if you used the SDK to create a real
+time database  DataSnapshot  or Firestore  DocumentSnapshot . 
+ test.cleanup();
+ 
+ Review complete examples and learn more 
+
+ You can review the complete examples on the Firebase GitHub repository. 
+
+ 
+ Testing  Realtime Database  and HTTP Functions in Online Mode 
+ Testing  Realtime Database  and HTTP Functions in Offline Mode 
+ 
+
+ To learn more, refer to the  API reference 
+for  firebase-functions-test . 
+
+  
+
+  
+     
+  
+ 
+
+  
+    
+    
+      
+     
+     
+  
+       
+          
+
+   
+  
+    
+    Send feedback
+  
+   
+ 
+       
+    
+    
+  
+
+   
+
+
+ 
+   Except as otherwise noted, the content of this page is licensed under the  Creative Commons Attribution 4.0 License , and code samples are licensed under the  Apache 2.0 License . For details, see the  Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates. 
+   Last updated 2026-10-21 UTC. 
+ 
+
+
+ 
+ 
+
+
+  
+ 
+  
+    
+    
+     
+       
+
+   
+  
+    Need to tell us more?
+  
+   
+ 
+     
+  
+  
+     
+      [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2026-10-21 UTC."],[],[]]
+     
+  
+ 
+            
+           
+         
+         
+          
+            
+          
+         
+         
+          
+            
+ 
+  
+   
+    
+     
+     Learn 
+       
+        
+         
+          
+           
+            
+          
+            Developer guides
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            SDK & API reference
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Samples
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Libraries
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            GitHub
+          
+           
+          
+          
+         
+        
+       
+     
+    
+     
+     Stay connected 
+       
+        
+         
+          
+           
+            
+          
+            Check out the blog
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Find us on Reddit
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Follow on X
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Subscribe on YouTube
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            Attend an event
+          
+           
+          
+          
+         
+        
+       
+     
+    
+     
+     Support 
+       
+        
+         
+          
+           
+            
+          
+            Contact support
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Stack Overflow
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Google group
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Release notes
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Brand guidelines
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            FAQs
+          
+           
+          
+          
+         
+        
+       
+     
+    
+   
+  
+ 
+          
+         
+         
+          
+            
+
+ 
+  
+  
+   
+     
+       
+        
+         
+        
+         
+       
+     
+     
+      
+       
+         
+          Android
+         
+       
+      
+       
+         
+          Chrome
+         
+       
+      
+       
+         
+          Firebase
+         
+       
+      
+       
+         
+          Google Cloud Platform
+         
+       
+      
+       
+         
+          All products
+         
+       
+      
+     
+   
+  
+
+  
+   
+    
+     
+      
+       
+        
+        
+         
+          Terms
+         
+        
+       
+      
+       
+        
+        
+         
+          Privacy
+         
+        
+       
+      
+       
+        
+        
+         
+          Manage cookies
+         
+        
+       
+      
+     
+    
+    
+ 
+   
+    
+    
+     
+       English 
+     
+    
+     
+       Deutsch 
+     
+    
+     
+       Español – América Latina 
+     
+    
+     
+       Français 
+     
+    
+     
+       Indonesia 
+     
+    
+     
+       Italiano 
+     
+    
+     
+       Polski 
+     
+    
+     
+       Português – Brasil 
+     
+    
+     
+       Tiếng Việt 
+     
+    
+     
+       Türkçe 
+     
+    
+     
+       Русский 
+     
+    
+     
+       עברית 
+     
+    
+     
+       العربيّة 
+     
+    
+     
+       فارسی 
+     
+    
+     
+       हिंदी 
+     
+    
+     
+       বাংলা 
+     
+    
+     
+       ภาษาไทย 
+     
+    
+     
+       中文 – 简体 
+     
+    
+     
+       中文 – 繁體 
+     
+    
+     
+       日本語 
+     
+    
+     
+       한국어 
+     
+    
+   
+ 
+
+   
+ 
+          
+         
+         
+          
+         
+        
+           
+ 
+        
+       
+       
+     
+     
+     
+     
+     
+      
+         
+ 
+      
+     
+    
+       
+    
+    
+    
+     
+
+   
+
+ 
+
+   
+
+    
+ 
+
+     
+   

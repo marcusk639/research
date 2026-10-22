@@ -1,0 +1,34 @@
+__HTTP 200__
+Mailpit features 
+ Mailpit
+ 
+ About Documentation 
+ 
+ Search docs... 
+GitHub
+ 
+Docker
+ 
+ 
+ 
+ 
+ 
+ 
+GitHub 
+Docker 
+ 
+Dark theme
+ 
+ 
+ 
+Light theme Documentation Mailpit features Installation Configuration Usage Integration testing Development API (v1) Mailtrap (for teams) 
+ 
+Documentation navigation Mailpit features Mailpit is packed full of features for developers wanting to test SMTP and emails.
+It acts as an SMTP server, provides a modern web interface to view & test intercepted emails.
+It also contains an API for automated integration testing. Some of the main features include: Runs entirely from a single  static binary  or multi-architecture  Docker images . Modern web UI with advanced  mail search  to view emails (formatted HTML, highlighted HTML source, text, headers, raw source, and MIME attachments including image thumbnails), with optional  HTTPS  and  authentication . SMTP server  with optional STARTTLS or SSL/TLS, and authentication (including an “accept any” mode). A  REST API  for integration testing. Real-time web UI updates using web sockets for new mail, with optional  browser notifications  when new mail is received. Optional  POP3 server  to download captured messages directly into your email client. HTML check  to test and score mail client compatibility with HTML emails. Link check  to test message links (HTML and text) and linked images. Spam check  to test message “spamminess” using a running SpamAssassin server. Create screenshots  of HTML messages via the web UI. Mobile and tablet HTML preview toggle in desktop mode. Message tagging , including manual tagging or automated tagging using filtering and “plus addressing”. SMTP relaying  (message release) — relay messages via a different SMTP server, including an optional allowlist of accepted recipients. SMTP forwarding  — automatically forward messages via a different SMTP server to predefined email addresses. Chaos  feature to enable configurable SMTP errors for testing application resilience. Fast message  storing and processing  — ingest 100–200 emails per second over SMTP (depending on CPU, network speed, and email size), easily handling tens of thousands of emails, with automatic email pruning (by default, keeping the most recent 500 emails). List-Unsubscribe  syntax validation. Optional  webhook  for received messages. 
+ Edit this page 
+ [[ r.item.title ]] [[ r.item.description ]] No results.... Type to start searching Github stars 
+ Latest release 
+ Docker pulls 
+ Sponsors 
+ Supported by Mailtrap 

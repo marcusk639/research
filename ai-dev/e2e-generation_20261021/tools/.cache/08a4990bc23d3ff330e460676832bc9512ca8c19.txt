@@ -1,0 +1,570 @@
+__HTTP 200__
+
+ 
+ 
+ Self Greening | MoTaverse 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+ 
+
+
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 👉 MoTaCon 2027 👈 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Learn 
+ 
+ 
+ Events 
+ 
+ 
+ Chapters 
+ 
+ 
+ Insights 
+ 
+ 
+ Sessions 
+ 
+ 
+ Certs 
+ 
+ 
+ Observatory 
+ 
+ 
+ Moments 
+ 
+ 
+ Join 
+ 
+ 
+ 
+ 
+ Search  * 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Sign In
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ View Glossary 
+ 
+ 
+Self Greening
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Self greening is a term used to describe a situation where AI automatically “fixes” or adjusts tests so that they pass, potentially hiding genuine problems that should have caused them to fail. It’s a side effect of AI-driven test maintenance or “self-healing” systems that focus on achieving green (passing) test results, sometimes at the expense of meaningful accuracy or visibility into real issues. Here’s what it looks like: 
+ You run an automated accessibility scan. 
+ The AI finds two issues. 
+ You tell it to keep fixing until tests pass. 
+ It changes the test to expect “2 issues found.” 
+ The test passes. 
+ Now, if a later version adds two new issues, the AI updates the expected count to 4, and the test still passes. You get a clean dashboard.  But the product is breaking quietly. Self-greening gives you a false sense of stability.  Everything looks green, but the tests are no longer testing anything useful. While AI can be guided or configured to restrict healing to safe areas (like element identifiers or path changes), out-of-the-box implementations often risk self-greening, trading genuine test insight for the illusion of stability. You can reduce self-greening risks by: 
+ Limiting where AI can apply self-healing (for example, only to locators or paths). 
+ Reviewing AI-made changes before merging them. 
+ Tracking the difference between AI-fixed and human-reviewed test results. 
+ Treating “all-green” reports with healthy skepticism. 
+ 
+ 
+ 
+Source:
+ https://www.linkedin.com/in/andrew-kelly-a730792/ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Rahul Parwal
+ 
+ 
+13th November 2025
+ 
+ 
+ 
+ 
+
+ 
+ 
+ Add Definition 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Enterprise-Grade Power, Small Team Price 
+ 
+ 
+ 
+ 
+Team of 5 or fewer? TestRail now starts at $22/user. Test case management, defect integrations, reporting, and more.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Explore MoT 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ QFireside Chat: The AI Eval Mindset 
+ 
+ 
+ 
+ 
+ Thu, 22 Oct 
+ 
+ 
+Moving from Vibe Checks to Automated Quality Gates
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ MoT Software Testing Essentials Certificate 
+ 
+ 
+ 
+ 
+Boost your career in software testing with the MoT Software Testing Essentials Certificate. Learn essential skills, from basic testing techniques to advanced risk analysis, crafted by industry experts.
+ 
+ 
+ 
+ 
+ 
+01 Sep 24
+ 
+
+ 
+ 
+ 
+ 
+Certification
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ This Week in Quality 
+ 
+ 
+ 
+ 
+Debrief the week in Quality via a community radio show hosted by Simon Tomes and members of the community
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+Subscribe to our newsletter
+ 
+ 
+ 
+ 
+ 
+ Subscribe 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+The tech community that has everything you need to grow your career in tech.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Learn
+ 
+ 
+ 
+ MoTaCon 
+ 
+ 
+ Events 
+ 
+ 
+ Certifications 
+ 
+ 
+ Courses 
+ 
+ 
+ Sessions 
+ 
+ 
+ 
+ 
+ 
+Insights
+ 
+ 
+ 
+ Insights 
+ 
+ 
+ Observatory 
+ 
+ 
+ Podcasts 
+ 
+ 
+ Tools 
+ 
+ 
+ Glossary 
+ 
+ 
+ Newsletter 
+ 
+ 
+ Salary 
+ 
+ 
+ 
+ 
+ 
+Community
+ 
+ 
+ 
+ Membership 
+ 
+ 
+ Moments 
+ 
+ 
+ Collections 
+ 
+ 
+ Open To 
+ 
+ 
+ Chapters 
+ 
+ 
+ Slack 
+ 
+ 
+ Contribute 
+ 
+ 
+ Jobs 
+ 
+ 
+ Ambassadors 
+ 
+ 
+ Scholarship 
+ 
+ 
+ The Club 
+ 
+ 
+ 
+ 
+ 
+Company
+ 
+ 
+ 
+ News 
+ 
+ 
+ Partner 
+ 
+ 
+ Media Kit 
+ 
+ 
+ Contact 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Copyright © 2026 Ministry of Testing Ltd. All rights reserved.
+ 
+ The Ministry of Testing Ltd is not responsible for the content of external sites. 
+ 
+ 
+ 
+ 
+ 
+ Terms 
+ 
+ 
+ Privacy 
+ 
+ 
+ Conduct 
+ 
+ 
+ About 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 

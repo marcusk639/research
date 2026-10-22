@@ -1,0 +1,641 @@
+__HTTP 200__
+
+
+
+
+  
+
+ 
+ 
+
+
+
+
+   
+     
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+
+
+   
+
+   
+
+     
+     
+     
+     
+   
+ 
+
+  
+
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+   GitHub - DavidKipe/mutta: Automatic Mutations for Test Automation · GitHub 
+
+
+
+   
+   
+   
+   
+
+    
+   
+
+
+   
+
+
+     
+
+
+   
+  
+
+   
+   
+
+     
+
+ 
+
+
+
+
+
+   
+
+  
+
+
+
+
+     
+
+  
+
+     
+
+    
+
+       
+
+       
+
+     
+     
+     
+
+       
+   
+  
+
+
+
+
+       
+
+
+
+         
+
+
+   
+   
+   
+   
+
+   
+
+       
+
+     
+
+   
+
+   
+  
+
+
+
+    
+
+     
+   
+
+
+   
+
+
+   
+
+   
+   
+
+   
+   
+   
+
+ 
+ 
+
+
+   
+
+   
+
+   
+     
+       
+      
+
+     
+       Skip to content 
+
+       
+     
+       
+       
+ 
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+
+
+
+      
+
+           
+ 
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+          
+
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge APPLICATION SECURITY GitHub Advanced Security Find and fix vulnerabilities Code security Secure your code as you build Secret protection Stop leaks before they start EXPLORE Why GitHub Documentation Blog Changelog Marketplace View all features Solutions BY COMPANY SIZE Enterprises Small and medium teams Startups Nonprofits BY USE CASE App Modernization DevSecOps DevOps CI/CD View all use cases BY INDUSTRY Healthcare Financial services Manufacturing Government View all industries View all solutions Resources EXPLORE BY TOPIC AI Software Development DevOps Security View all topics EXPLORE BY TYPE Customer stories Events & webinars Ebooks & reports Business insights GitHub Skills SUPPORT & SERVICES Documentation Customer support Community forum Trust center Partners View all resources Open Source COMMUNITY GitHub Sponsors Fund open source developers PROGRAMS Security Lab Maintainer Community GitHub Stars Archive Program REPOSITORIES Topics Trending Collections Enterprise ENTERPRISE SOLUTIONS Enterprise platform AI-powered developer platform AVAILABLE ADD-ONS GitHub Advanced Security Enterprise-grade security features Copilot for Business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Pricing Search / Sign in Sign up Appearance settings 
+ 
+
+
+
+       
+  
+         
+         You signed in with another tab or window.  Reload  to refresh your session. 
+         You signed out in another tab or window.  Reload  to refresh your session. 
+         You switched accounts on another tab or window.  Reload  to refresh your session. 
+
+        
+ Dismiss alert 
+
+
+  
+ 
+     
+
+   
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+   
+    
+ 
+   
+     
+       
+     
+     
+      
+       {{ message }} 
+
+     
+   
+ 
+   
+ 
+
+
+    
+
+
+
+
+
+
+   
+         
+     
+      
+      
+
+
+
+
+
+
+
+
+  
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   DavidKipe mutta Repository navigation Code Issues Pull requests Actions Projects Security and quality Insights More  items 
+ 
+
+
+  
+
+
+
+ 
+     
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+
+ 
+  
+   
+         mutta Public Notifications You must be signed in to change notification settings Fork 0  ( 0 ) Star 1  ( 1 ) You must be signed in to star a repository About Automatic Mutations for Test Automation Topics code-coverage end-to-end-testing mutation-testing Resources Readme GPL-3.0 license Activity Stars 1  star Watchers 1  watching Forks 0  forks Report repository master Branches Tags Go to file Code Open more actions menu Latest commit   History 55 Commits 55 Commits Folders and files Name Name Last commit message Last commit date configurations configurations     .gitignore .gitignore     LICENSE LICENSE     Mutta.iml Mutta.iml     README.md README.md     config.py config.py     core.py core.py     core_coverage.py core_coverage.py     core_mutant_analysis.py core_mutant_analysis.py     csv_result_writer.py csv_result_writer.py     mutated_app_manager.py mutated_app_manager.py     mutation_creator.py mutation_creator.py     mutation_selector.py mutation_selector.py     mutationinfo.py mutationinfo.py     mutator.py mutator.py     result_extractor.py result_extractor.py     testsuite_manager.py testsuite_manager.py     utils.py utils.py     View all files Repository files navigation README GPL-3.0 license More  items Mutta 
+ Automatic Mutations for Test Automation 
+ automatic  MUT ations for  T est  A utomation 
+ Overview 
+ This Python application is actually a set of tools that automates the source code mutation of a Java application under test, consequently automates the execution of test suites on mutated application and retrieves all the results 
+ Note : This application does not create code mutation from scratch. It uses the mutation descriptions provided from another Java tool, and interpreting them, it applies them in the source code. Therefore this application is dependent from  Pitest  output, because it is the starting point of the entire process of this set of tools. 
+ Features 
+ Core tools (or modules) of this application 
+ 
+ Mutation creator from Pitest output information:  It takes the information from Pitest and elaborating them, it creates the actual code mutations ready to be applied.  Since Pitest works at bytecode level, it is necessary to convert a mutation description in a source code mutation using static mutated strings, string replace or elebarotion with RegEx. 
+ Mutator:  It apply the mutation in the source code 
+ Mutated Application Manager:  It executes and stops the mutated application under test in asynchronous way, and it can reset the application in a clean state 
+ Test Suite Manager:  It synchronously runs the test suite application and saves the results 
+ Result Extractor:  It reads the output of the test suite and extracts the information about tests passed or failed and other data 
+ CSV Result Writer:  It takes the mutation information with the results of the test suites and write new rows in CSV files that contain all the results, overall and detailed of current mutation outcome 
+ 
+ Other features 
+ 
+ Mutation Selector:  Given the created information about the mutations, it creates a new JSON file filtering the mutations in a certain way. In our case, it takes in input an integer, which is the maximum number of mutants that will be picked randomically per Java method. 
+ Mutation Coverage with prints:  This procedure is very similar to the one that applies the mutant in the source code, but instead of inserting a mutation, it puts a print instruction with the ID of the mutant. With these “mutations”, we can analyze the coverage of the mutations inserted running normally the application under test. 
+ 
+ Goal of the application 
+ The ultimate goal of this application is to help in my thesis project by comparing two different test methodologies in order to analyze the efficacy of mutant killing and find out bugs in web applications. 
+ Main operation description 
+ Input 
+ List of Mutant descriptions from  Pitest  tool 
+ After elaborating the Pitest mutations and creating the actual mutations 
+ Core loop (pseudocode) 
+ 
+ the various tools or modules involved are highlighted 
+ Output 
+ All the information about the results of the test suite runs on the mutated application under test 
+ Configuration 
+ In  config.py  you can import the configuration file you want to use. The configuration file is a Python source file with the variables to use in the tools. 
+ Dependencies 
+ 
+ Python 3.8+ 
+ 
+ For the input data necessary to create the Java mutations, this set of tools depends on  Pitest 
+ Requirements 
+ Note : Only tested on Linux 
+ For Application Under Test 
+ 
+ Open source 
+ Written in Java 
+ Executable via Maven 
+ 
+ For Test suites 
+ 
+ Executable via Maven 
+ 
+ Developing status 
+ This application is in a very developing state. I developed these tools only for the ultimate goal described above. 
+ About Automatic Mutations for Test Automation Topics code-coverage end-to-end-testing mutation-testing Resources Readme GPL-3.0 license Activity Stars 1  star Watchers 1  watching Forks 0  forks Report repository Releases Packages Contributors Languages       
+ 
+
+
+
+
+   
+
+ 
+
+     
+   
+
+   
+
+           
+   Footer 
+
+  
+
+
+   
+     
+       
+         
+ 
+       
+        © 2026 GitHub, Inc.
+       
+     
+
+     
+       Footer navigation 
+
+       
+
+
+           
+             Terms 
+           
+
+           
+             Privacy 
+           
+
+
+             
+               Security 
+             
+
+             
+               Status 
+             
+
+           
+             Community 
+           
+
+           
+             Docs 
+           
+
+           
+             Contact 
+           
+
+          
+ 
+   
+     
+      Manage cookies
+     
+   
+ 
+
+   
+     
+       
+        Do not share my personal information
+       
+     
+   
+
+       
+     
+   
+ 
+
+
+
+     
+
+
+
+
+   
+     
+     
+       
+     
+    You can’t perform that action at this time.
+   
+
+     
+   
+     
+     
+       
+         
+       
+       
+     
+   
+ 
+
+     
+   
+   
+ 
+
+     
+   
+     
+       
+       
+     
+   
+ 
+ 
+   
+     
+       
+       
+     
+   
+ 
+
+
+
+
+     
+     
+     
+   
+ 
+

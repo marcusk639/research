@@ -1,0 +1,399 @@
+## SOURCES
+S1 [A1-S1] secondary | mobile.dev (Maestro vendor) | Maestro MCP: an introduction
+S2 [A1-S2,A5-S6] primary (official docs) | mobile.dev | Maestro MCP (docs)
+S3 [A1-S3] blog (vendor-adjacent: sells | DeviceLab (Om Narayan) | 1319 issues, data-driven (Maestro issue analysis)
+S4 [A1-S4,D3-S13] primary | Maestro GitHub | [1.34.1] MaestroDriverStartupException$IOSDriverTimeoutException
+S5 [A1-S5] primary | Maestro GitHub | inputText is typing too fast and skipping characters when app stutters/jank
+S6 [A1-S6,D3-S12] primary | Maestro GitHub | Maestro CHANGELOG / releases (CLI 2.11.0, 29 Sep 2026)
+S7 [A1-S7] blog (vendor-adjacent) | DeviceLab | Maestro on real iOS: complete guide
+S8 [A1-S8] primary | mobile.dev | Maestro React Native support
+S9 [A1-S9,A4-S33] primary | mobile.dev | Maestro web (desktop browser) support
+S10 [A1-S10,D3-S20] secondary (vendor about own  | mobile.dev | Detox vs Maestro: reducing flakiness in React Native
+S11 [A1-S11] secondary | mobile.dev | Maestro pricing
+S12 [A1-S12] primary | Wix | Detox design principles
+S13 [A1-S13,D3-S1] primary | Wix | Detox environment setup
+S14 [A1-S14] primary | Wix | Detox README
+S15 [A1-S15] primary | Wix | Detox 20.34.0 release
+S16 [A1-S16] primary | Wix | Detox 20.17.0 release ("Added support for React Native 0.72.x")
+S17 [A1-S17,D3-S8] primary | Wix | Detox troubleshooting: synchronization
+S18 [A1-S18] primary | Wix | @wix-pilot/core README
+S19 [A1-S19] primary | Appium project | appium-mcp
+S20 [A1-S20] primary | Appium project | XCUITest driver system requirements
+S21 [A1-S21] primary (project's own repo) | mobile-next | mobile-mcp README
+S22 [A1-S22] primary | LeanCode | Patrol README
+S23 [A1-S23] secondary | BrowserStack | BrowserStack App Automate: Maestro
+S24 [A1-S24] primary | Google | Firebase Test Lab overview
+S25 [A1-S25] primary | AWS | Device Farm test frameworks
+S26 [A1-S26,D1-S7,D3-S21] primary | Expo | EAS Workflows: E2E tests
+S27 [A1-S27,D2-S6] primary | Microsoft | Playwright MCP README
+S28 [A1-S28] blog | Very Good Ventures (Rafael Theni) | Using Maestro MCP with Claude
+S29 [A1-S29] primary (peer-reviewed abstr | SANER 2026 | "I Will Try to Fix You": LLMs for Mobile GUI Test Repair
+S30 [A2-S1,D1-S1] primary | FSE 2024 Industry (Meta) | Automated Unit Test Improvement using Large Language Models at Meta (TestGen-LLM
+S31 [A2-S2,A6-S17] primary | FSE 2025 Industry (Meta) | Mutation-Guided LLM-based Test Generation at Meta (ACH)
+S32 [A2-S3,D1-S19] primary | ICSE 2024 | Make LLM a Testing Expert: Bringing Human-like Interaction to Mobile GUI Testing
+S33 [A2-S4,D1-S20] primary (preprint) | arXiv (cs.SE) | Autonomous Large Language Model Agents Enabling Intent-Driven Mobile GUI Testing
+S34 [A2-S5] primary | MobiCom 2024 | AutoDroid: LLM-powered Task Automation in Android
+S35 [A2-S6] primary | CHI 2025 | AppAgent: Multimodal Agents as Smartphone Users
+S36 [A2-S7] primary | ISSTA 2024 (conference page abstract) | Guardian: A Runtime Framework for LLM-based UI Exploration
+S37 [A2-S8,D2-S25] primary | arXiv; ICSE 2026 journal-first per searc | Seeing is Believing: Vision-driven Non-crash Functional Bug Detection for Mobile
+S38 [A2-S9] primary (survey) | IEEE TSE | Software Testing with Large Language Models: Survey, Landscape, and Vision
+S39 [A2-S10] primary | arXiv (Meta AI authors) | TestGenEval: A Real World Unit Test Generation and Test Completion Benchmark
+S40 [A2-S11] primary | arXiv (ETH Zurich) | SWT-Bench: Testing and Validating Real-World Bug-Fixes with Code Agents
+S41 [A2-S12,A3-S18] primary (preprint) | arXiv | Can we find bugs using LLM-generated oracles? (Konstantinou, Degiovanni, Papadak
+S42 [A2-S13] primary | ISSTA 2026 (PACMSE) | Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated 
+S43 [A2-S14] primary | ICSE SEIP 2026 | On the Flakiness of LLM-Generated Tests for Industrial and Open-Source Database 
+S44 [A2-S15] primary | ISSTA 2025 | Are Autonomous Web Agents Good Testers?
+S45 [A2-S16,D1-S23,D2-S24] primary | ICSE 2025 (per researchr listing) | Feature-Driven End-To-End Test Generation (AutoE2E / E2EBench)
+S46 [A2-S17,D2-S31] primary | MobiCom 2025 | LLM-Explorer: Towards Efficient and Affordable LLM-based Exploration for Mobile 
+S47 [A2-S18] primary | FSE 2025 (conference page abstract) | LLMDroid: Enhancing Automated Mobile App GUI Testing Coverage with Large Languag
+S48 [A2-S19] primary (preprint) | arXiv | CovAgent: Overcoming the 30% Curse of Mobile Application Coverage with Agentic A
+S49 [A2-S20] primary | ICST 2026 | Towards Automated Page Object Generation for Web Testing using Large Language Mo
+S50 [A2-S21] primary | AST 2025 | Acceptance Test Generation with Large Language Models: An Industrial Case Study
+S51 [A2-S22,A5-S30] primary | ASE 2025 (industry) | Streamlining Acceptance Test Generation for Mobile Applications Through Large La
+S52 [A2-S23] unreliable (withdrawn; liste | arXiv, **withdrawn by authors 2025-09-11 | Towards Test Generation from Task Description for Mobile Testing with Multi-moda
+S53 [A2-S24] primary (abstract only; no n | ASE 2024 | On the Evaluation of Large Language Models in Unit Test Generation
+S54 [A3-S1] primary | TACL / arXiv | Lost in the Middle: How Language Models Use Long Contexts (Liu et al.)
+S55 [A3-S2] secondary (vendor technical  | Chroma | Context Rot: How Increasing Input Tokens Impacts LLM Performance (Hong, Troyniko
+S56 [A3-S3] primary | arXiv | LongCodeBench: Evaluating Coding LLMs at 1M Context Windows (Rando et al.)
+S57 [A3-S4,A6-S4] secondary (vendor about own  | Anthropic | Effective context engineering for AI agents
+S58 [A3-S5,A6-S1] secondary (vendor about own  | Anthropic | How we built our multi-agent research system
+S59 [A3-S6,A6-S7] secondary (vendor docs) | Anthropic | Create custom subagents (Claude Code docs)
+S60 [A3-S7] blog (the underlying X post  | SmartScope blog (quotes Boris Cherny on  | Settling the RAG Debate: Why Claude Code Dropped Vector DB-Based RAG
+S61 [A3-S8] secondary (vendor docs) | Aider | Repository map
+S62 [A3-S9] primary | ICLR 2025 / arXiv | RepoGraph: Enhancing AI Software Engineering with Repository-level Code Graph (O
+S63 [A3-S10] primary | SOAP @ PLDI 2016 | On the Unsoundness of Static Analysis for Android GUIs (Wang, Zhang, Rountev)
+S64 [A3-S11] primary | arXiv / MSR | What do all these Buttons do? Statically Mining Android User Interfaces at Scale
+S65 [A3-S12] primary (preprint) | arXiv | LLM-Assisted Model-Based GUI Testing for Vue.js Web Applications (LLMVue; Li et 
+S66 [A3-S13] secondary (official docs) | React Navigation | Static vs Dynamic API (React Navigation 7.x)
+S67 [A3-S14,D2-S29] secondary (official docs) | Stately | @xstate/test (model-based testing)
+S68 [A3-S15] primary (tool home page) | Univ. of Washington PLSE | The Daikon invariant detector
+S69 [A3-S16] primary | ICSE 2025 / arXiv | SpecGen: Automated Generation of Formal Program Specifications via LLMs (Ma et a
+S70 [A3-S17] primary | FSE 2024 / arXiv | Can LLMs Transform Natural Language Intent into Formal Method Postconditions? (n
+S71 [A3-S19] primary | CASCON 2025 / arXiv | Reverse Engineering User Stories from Code using LLMs (Ouf et al.)
+S72 [A3-S20] primary (preprint, industry  | arXiv | From Code to Requirements: Agentic Reverse Engineering of Business Rules at Ente
+S73 [A3-S21] secondary (practitioner hand | martinfowler.com (Thoughtworks) | Understanding Spec-Driven Development: Kiro, spec-kit, and Tessl (Birgitta Böcke
+S74 [A3-S22] secondary (vendor about own  | GitHub | github/spec-kit README
+S75 [A3-S23] secondary (vendor docs) | AWS Kiro | Specs (Kiro docs)
+S76 [A4-S1] primary | Google/Firebase | Introduction to Firebase Local Emulator Suite
+S77 [A4-S2] primary | Google/Firebase | Connect your app to the Cloud Functions Emulator
+S78 [A4-S3] primary | Google/Firebase | Connect your app and start prototyping
+S79 [A4-S4,D1-S15] primary | Google/Firebase | Install, configure and integrate Local Emulator Suite
+S80 [A4-S5] primary | Google/Firebase | Connect your app to the Cloud Firestore Emulator
+S81 [A4-S6,D2-S10] primary | Google/Firebase | Connect your app to the Authentication Emulator
+S82 [A4-S7] primary | Google/Firebase | Connect your app to the Authentication Emulator (official .cn mirror; REST secti
+S83 [A4-S8] primary | Google/Firebase | Run functions locally
+S84 [A4-S9] primary | Google/Firebase | Schedule functions
+S85 [A4-S10] primary | Firebase (GitHub) | firebase-tools source: functionsEmulatorShared.ts
+S86 [A4-S11] primary | Firebase (GitHub) | firebase-tools source: functionsEmulator.ts
+S87 [A4-S12] primary | Firebase (GitHub) | firebase-tools source: hub.ts
+S88 [A4-S13] secondary | GitHub issue | 2nd Gen Scheduler does not work correctly on the emulators
+S89 [A4-S14] secondary | GitHub issue | Gen 2 auth triggers silently dropped and never fire
+S90 [A4-S15] secondary | GitHub issue | Cloud Tasks Emulator ignores scheduleDelaySeconds/scheduleTime
+S91 [A4-S16] primary | Invertase (GitHub) | RNFB functions module source
+S92 [A4-S17] primary | Invertase (GitHub) | RNFB firebase.json schema
+S93 [A4-S18] primary | Invertase | RNFB Firestore emulator doc
+S94 [A4-S19] primary | Google/Android | Network security configuration
+S95 [A4-S20] primary | Google/Firebase | Prototype and test web apps with the Hosting emulator
+S96 [A4-S21,D2-S11] primary | Google/Firebase | Build unit tests (Security Rules)
+S97 [A4-S22] primary | Google/Firebase | Unit testing of Cloud Functions
+S98 [A4-S23] primary | Stripe | Receive Stripe events in your webhook endpoint
+S99 [A4-S24] primary | Stripe | Automated testing
+S100 [A4-S25] primary | Stripe (GitHub) | stripe-mock README
+S101 [A4-S26] primary | Stripe | Use Simulations (test clocks)
+S102 [A4-S27] secondary | GitHub issue | Cannot access Primary Button from Payment Sheet on Android in Detox Tests
+S103 [A4-S28] secondary | GitHub issue | Running E2E tests with Detox on Android
+S104 [A4-S29] primary | Twilio SendGrid | Sandbox Mode
+S105 [A4-S30] primary | Mailpit (axllent) | Mailpit API v1
+S106 [A4-S31] primary | Mailpit (axllent) | Mailpit documentation
+S107 [A4-S32] primary | Maestro (mobile.dev) | Make HTTP(S) requests
+S108 [A4-S34] blog | Infomaze Elite (vendor blog) | Field service QA: web, mobile, API in one suite
+S109 [A4-S35] primary | Google Cloud | Use Firestore emulator locally
+S110 [A5-S1,D1-S6] primary | Google / Firebase docs | App Testing agent (Android)
+S111 [A5-S2,D1-S14] primary | Google / Firebase docs | Run a Robo test (Android)
+S112 [A5-S3,D2-S1] primary | Microsoft / Playwright docs | Playwright Test Agents
+S113 [A5-S4,D2-S2] primary | Microsoft / Playwright docs | Release notes (v1.56, v1.62, v1.64)
+S114 [A5-S5,D2-S13] primary | mobile.dev / Maestro docs | assertWithAI
+S115 [A5-S7] secondary (vendor) | Maestro blog (A. Kharche) | Mobile UI Testing with Claude Code, Cursor and Codex
+S116 [A5-S8] primary (feature description | Momentic docs | How Momentic works
+S117 [A5-S9] secondary (vendor comparison | Momentic docs | Momentic vs Maestro
+S118 [A5-S10] secondary (vendor marketing) | Meticulous | Meticulous homepage
+S119 [A5-S11] primary | Meticulous docs | Network Recording & Patching
+S120 [A5-S12] primary | Meticulous changelog | Agent Skills, custom checks, and backend record & replay
+S121 [A5-S13] primary | GitHub (takahirom) | Arbigent README
+S122 [A5-S14] primary | Midscene (open source) | Midscene.js homepage
+S123 [A5-S15] primary | Midscene docs | Midscene caching
+S124 [A5-S16] primary | Browserbase / Stagehand docs | Stagehand caching
+S125 [A5-S17] primary (thin) | Revyl | Revyl docs home
+S126 [A5-S18] secondary (vendor marketing) | testRigor | testRigor Features
+S127 [A5-S19] secondary (vendor-affiliated | Applitools blog (K. Pathak, Applitools A | AI-Driven Testing with Applitools Autonomous
+S128 [A5-S20] secondary (vendor marketing) | QA Wolf | Automation AI
+S129 [A5-S21] blog (vendor) | QA Wolf blog (J. Gluck) | The 6 Types of AI Self-Healing in Test Automation
+S130 [A5-S22] blog (community) | Ministry of Testing (R. Parwal) | Self Greening
+S131 [A5-S23] blog (vendor) | Bug0 blog (S. F. Rahman) | Self-healing tests are table stakes, and most of them aren't real
+S132 [A5-S24] blog (independent-ish analys | Ry Walker (CEO of Tembo, disclosed) | AI QA agents research
+S133 [A5-S25] blog (HN discussion) | Hacker News | Launch HN: GPT Driver (YC S21)
+S134 [A5-S26] blog (HN discussion) | Hacker News | Show HN: Automated, hosted UI tests with AI test discovery (octomind.dev)
+S135 [A5-S27] blog (HN discussion) | Hacker News | Show HN: Checksum
+S136 [A5-S28] secondary (vendor, own produ | Google blog | Introducing the Gemini 2.5 Computer Use model
+S137 [A5-S29] primary | Anthropic docs | Computer use tool
+S138 [A5-S31] academic (preprint) | arXiv | LELANTE: LEveraging LLM for Automated ANdroid TEsting
+S139 [A6-S2] primary | Anthropic Engineering | Building effective agents
+S140 [A6-S3] primary | Anthropic Engineering | Effective harnesses for long-running agents
+S141 [A6-S5] primary | Anthropic Engineering | Harness design for long-running application development
+S142 [A6-S6] primary | Anthropic | Skills (Claude Code docs)
+S143 [A6-S8] primary | Anthropic | Hooks reference (Claude Code docs)
+S144 [A6-S9] primary | Anthropic | Run Claude Code programmatically (Agent SDK / `-p`)
+S145 [A6-S10] primary | Anthropic | Plugins overview (Claude Code docs)
+S146 [A6-S11] primary | Anthropic | Claude 3.7 Sonnet System Card §6 "Excessive Focus on Passing Tests"
+S147 [A6-S12] primary | Anthropic | System Card: Claude Opus 4 & Claude Sonnet 4 (rev. 2025-09-02), §6 Reward hackin
+S148 [A6-S13] primary (independent eval or | METR | Recent Frontier Models Are Reward Hacking
+S149 [A6-S14] secondary (single-author pre | arXiv preprint | Practical Limits of Autonomous Test Repair: A Multi-Agent Case Study… (H. Lee)
+S150 [A6-S15] primary (peer reviewed) | arXiv / ICLR 2024 | Teaching Large Language Models to Self-Debug (Chen et al.)
+S151 [A6-S16,D1-S2] primary (vendor blog) | Meta Engineering | Revolutionizing software testing: LLM-powered bug catchers (ACH)
+S152 [A6-S18] primary | arXiv / IEEE TSE | Mutation-Guided Unit Test Generation with a Large Language Model (MutGen; Wang, 
+S153 [A6-S19] primary (tool docs) | Stryker Mutator | StrykerJS introduction
+S154 [A6-S20] primary | ESEC/FSE 2017 | Enabling Mutation Testing for Android Apps (MDroid+; Linares-Vásquez et al.)
+S155 [A6-S21] blog/unreliable (thesis code | GitHub (thesis tool) | Mutta README (E2E web mutation runner)
+S156 [A6-S22] primary (dated) | Google Testing Blog | Flaky Tests at Google and How We Mitigate Them (J. Micco)
+S157 [A6-S23] primary | ICST 2019 | iDFlakies: A Framework for Detecting and Partially Classifying Flaky Tests (Lam 
+S158 [A6-S24] blog/unreliable (self-descri | GitHub | Bosphorus: code coverage for remotely executed tests (IstanbulJS)
+S159 [A6-S25] primary (vendor blog) | Meta Engineering | Predictive test selection
+S160 [A6-S26] secondary (vendor; dated) | SmartBear | Best Practices for Peer Code Review (Cisco study)
+S161 [D1-S3] primary | arXiv (FSE 2026 industry) | Just-in-Time Catching Test Generation at Meta
+S162 [D1-S4] primary | arXiv / FSE 2025 | Agentless: Demystifying LLM-based Software Engineering Agents
+S163 [D1-S5] secondary (journalism quotin | OfficeChai (transcribes Latent Space pod | Claude Researcher Explains How Agentic Search Performed Better Than RAG
+S164 [D1-S8] primary | arXiv | Design choices made by LLM-based test generators prevent them from finding bugs
+S165 [D1-S9] secondary (vendor success st | QA Wolf | Wordwatch cuts QA cycles by 50% and saves $400k/yr
+S166 [D1-S10] secondary (vendor success st | Momentic | Quora case study
+S167 [D1-S11] secondary (vendor press rele | Diffblue press release (Business Wire vi | New Diffblue Testing Agent automatically generates comprehensive regression test
+S168 [D1-S12] primary | arXiv | Testing with AI Agents: An Empirical Study of Test Generation Frequency, Quality
+S169 [D1-S13] primary (self-reported bench | SWE-agent team (Princeton/Stanford) | mini-swe-agent README
+S170 [D1-S16] secondary (vendor) | mobile.dev | Maestro README
+S171 [D1-S17] primary (customer-authored r | Duolingo blog | How Duolingo reduced manual regression testing (GPT Driver)
+S172 [D1-S18] unreliable (forum; useful on | Hacker News mirror | Launch HN: GPT Driver (YC S21)
+S173 [D1-S21] blog | dev.to (individual) | Does Graphify actually help an AI coding agent?
+S174 [D1-S22] primary | arXiv (SuperAGI) | Code Isn't Memory: A Structural Codebase Index Inside a Coding Agent
+S175 [D2-S3] primary | Playwright docs | Authentication
+S176 [D2-S4] primary | Playwright docs | Test generator
+S177 [D2-S5] primary | Playwright docs | Migrating from Protractor
+S178 [D2-S7] primary | Angular (Google) | End-to-End Testing
+S179 [D2-S8] primary | Angular team | Future of Angular E2E & Plans for Protractor
+S180 [D2-S9] primary | Angular team | protractor repo (archived)
+S181 [D2-S12] primary | Firebase | Generate test reports (rule coverage)
+S182 [D2-S14] primary (vendor docs) | Meticulous | Architecture Overview
+S183 [D2-S15] unreliable (vendor marketing | Checksum | Checksum homepage
+S184 [D2-S16] unreliable (vendor marketing | Applitools | Visual, Functional, and Autonomous Testing—All in One
+S185 [D2-S17] blog (vendor, secondary) | BrowserStack | Playwright Test Agents: Setup, Components, and Limitations
+S186 [D2-S18] primary (peer-reviewed) | ACM TWEB 6(1) | Crawling AJAX-Based Web Applications through Dynamic Analysis of UI State Change
+S187 [D2-S19] primary (peer-reviewed) | ASE 2017 | Automated Cross-Platform Inconsistency Detection for Mobile Apps (DiffDroid)
+S188 [D2-S20] primary (peer-reviewed) | IEEE S&P 2018 | Mobile Application Web API Reconnaissance: Web-to-Mobile Inconsistencies & Vulne
+S189 [D2-S21] primary | ICSE 2022 (companion) / arXiv | Deriving Semantics-Aware Fuzzers from Web API Schemas (Schemathesis)
+S190 [D2-S22] primary (peer-reviewed) | WWW 2007 | A Fault Model and Mutation Testing of Access Control Policies
+S191 [D2-S23] primary (peer-reviewed) | IEEE TSE 31(3) | Leveraging User-Session Data to Support Web Application Testing
+S192 [D2-S26] secondary (artifact; paper n | research artifact repo | MT-GUI: Metamorphic Testing of Multimodal LLMs as GUI Test Oracles
+S193 [D2-S27] primary (peer-reviewed) | ASE 2025 | Do LLMs Generate Useful Test Oracles? An Empirical Study with an Unbiased Datase
+S194 [D2-S28] primary (preprint) | arXiv | Unleashing the Power of LLM to Infer State Machine from the Protocol Implementat
+S195 [D2-S30] primary (preprint) | arXiv | PropGen: Automated Property Generation for PBT of Mobile Apps
+S196 [D2-S32] primary (preprint) | arXiv | Tracking the Moving Target: Continuous Evaluation of LLM Test Generation in Indu
+S197 [D3-S2] primary | Wix / GitHub | Detox releases list
+S198 [D3-S3] primary | Wix / GitHub | Detox 20.47.0
+S199 [D3-S4] primary | Wix / GitHub | Detox 20.17.0
+S200 [D3-S5] primary | Wix / GitHub | Detox 20.41.0
+S201 [D3-S6] primary | Wix / GitHub (maintainer) | iOS 26 initial test run
+S202 [D3-S7] primary (index) | GitHub | Detox issues search "iOS 26"
+S203 [D3-S9] primary | Wix (official docs) | Detox project setup
+S204 [D3-S10] primary | Wix (npm package) | @wix-pilot/core README
+S205 [D3-S11] primary | mobile.dev / GitHub | Maestro CLI releases
+S206 [D3-S14] primary | GitHub | iOS: transient AX failure … tears down the driver
+S207 [D3-S15] primary | GitHub | MCP: every iOS Simulator session shares driver port 22087
+S208 [D3-S16] primary | GitHub | MCP: after a simulator is erased and rebooted, every run fails
+S209 [D3-S17] primary (index) | GitHub | Maestro open issues "iOS driver"
+S210 [D3-S18] vendor | mobile.dev (vendor blog) | Maestro CLI v2.6.0
+S211 [D3-S19] primary/vendor | mobile.dev (official docs) | Maestro MCP
+S212 [D3-S22] secondary | Infinite Red | Ignite Cookbook: Detox intro
+## CLAIMS
+C1=A1-C1 src=S1,S2 pubs=1 conf=high (official docs, features  :: Maestro ships an official MCP server (`maestro mcp`) that lets an agent list devices, read the view hierarchy as JSON, take screenshots and run inline
+C2=A1-C2 src=S3,S4 pubs=2 conf=high :: Maestro's iOS simulator driver has a long, documented history of startup timeouts and XCTest-runner failures, and the main issue (#1585) was closed wi
+C3=A1-C3 src=S3,S4 pubs=2 conf=medium (no exact rate publishe :: The reference project's "driver crashes every 2–4 runs" fits a known Maestro iOS failure class. Not a local misconfiguration.
+C4=A1-C4 src=S5 pubs=1 conf=high for the bug; medium that  :: Maestro `inputText` has dropped characters at random on both iOS and Android, especially when the app janks. This would explain flaky Formik field inp
+C5=A1-C5 src=S6,S7 pubs=2 conf=high :: As of CLI 2.11.0 (Sep 2026), Maestro refuses to run on physical iOS devices.
+C6=A1-C6 src=S8 pubs=1 conf=high :: Maestro works with a React Native app without any in-app instrumentation, and maps RN `testID` to its `id` selector.
+C7=A1-C7 src=S9 pubs=1 conf=high :: Maestro web support is Beta and runs on Chromium only. It is a weak substitute for Playwright on the Angular companion app.
+C8=A1-C8 src=S10 pubs=1 conf=medium :: Maestro is black-box. It infers UI stability by polling, and continuous animations can defeat that check.
+C9=A1-C9 src=S10 pubs=1 conf=low (as a fact about flakiness :: The head-to-head flakiness figures (Maestro <1%, Detox <2%) are vendor claims with no independent measurement and should not carry weight.
+C10=A1-C10 src=S12 pubs=1 conf=high for the mechanism; medium :: Detox is gray-box. By default it holds each action until the app is idle (animations, network, RN load), which removes a whole class of timing flakes.
+C11=A1-C11 src=S17 pubs=1 conf=high :: Detox's gray-box sync breaks on apps that never go idle (endless animations, long timers, polling). The fallback is to disable sync and wait explicitl
+C12=A1-C12 src=S13,S14,S15,S16 pubs=1 conf=high :: Current Detox officially supports only RN 0.77–0.84. RN 0.72 support was added in Detox 20.17.0, so an RN 0.72 app needs a pinned older Detox release 
+C13=A1-C13 src=S13 pubs=1 conf=high (does not matter for a ba :: Detox has no official Expo support.
+C14=A1-C14 src=S18 pubs=1 conf=high (exists); low (maturity i :: Wix Pilot (formerly Detox Copilot) runs natural-language test steps through an LLM. Drivers exist for Detox, Appium, Playwright and Puppeteer.
+C15=A1-C15 src=S19 pubs=1 conf=high :: Appium has an official MCP server. It exposes page source, locator generation and test generation, but generates Java/TestNG, which does not fit a JS/
+C16=A1-C16 src=S20 pubs=1 conf=high :: Appium's iOS XCUITest driver is tied to Xcode versions and fully supports only the latest two majors, with WDA versions locked to the driver. New Xcod
+C17=A1-C17 src=S21 pubs=1 conf=high :: mobile-next/mobile-mcp is a framework-neutral MCP that drives iOS and Android from the native accessibility tree, with screenshots as fallback. It exp
+C18=A1-C18 src=S22 pubs=1 conf=high :: Patrol is Flutter-only, so it does not apply to React Native.
+C19=A1-C19 src=S23 pubs=1 conf=medium :: BrowserStack runs Maestro on real iOS and Android devices and also supports Detox, Appium, Espresso and XCUITest.
+C20=A1-C20 src=S24,S25 pubs=2 conf=high :: Firebase Test Lab and AWS Device Farm do not natively list Maestro or Detox. FTL takes instrumentation/Espresso/XCTest/Robo; Device Farm takes Appium,
+C21=A1-C21 src=S26 pubs=1 conf=high :: EAS Workflows' documented E2E path is Maestro on emulator/simulator, using a prebuilt .apk/.app.
+C22=A1-C22 src=S11 pubs=1 conf=high :: Maestro Cloud costs $250 per device per month.
+C23=A1-C23 src=S27 pubs=1 conf=high :: Playwright MCP drives web through the accessibility tree and has no native-app support, so it suits the Angular half only.
+C24=A1-C24 src=S28 pubs=1 conf=medium :: LLM-generated flows can be syntactically valid and still miss business logic.
+C25=A1-C25 src=S29 pubs=1 conf=medium (small n=61, Android on :: Most GUI test breakage comes from UI structure changes rather than defects, and LLMs repaired 73.8% of broken tests in one pass (91.8% with several pa
+C26=A2-C1 src=S30 pubs=1 conf=high (for Meta/Kotlin unit tes :: In Meta's industrial deployment, most LLM-generated tests are discarded: only 75% built, 57% passed reliably and 25% increased coverage (measured per 
+C27=A2-C2 src=S30 pubs=1 conf=high :: TestGen-LLM's filter chain (build → pass → 5× rerun to reject flaky → must add coverage) is what makes the output acceptable; humans then accepted 73%
+C28=A2-C3 src=S30 pubs=1 conf=high :: Build/run filtering only yields regression tests: they lock in current behaviour and cannot tell a real bug from a wrong assertion
+C29=A2-C4 src=S31 pubs=1 conf=medium (one vendor, privacy do :: Steering generation with a concern-specific target (mutants of a fault class) gives high acceptance (73%) on Android Kotlin code at Meta scale
+C30=A2-C5 src=S41,S42 pubs=2 conf=high :: LLM oracles tend to encode the code's actual behaviour, bugs included, rather than intended behaviour
+C31=A2-C6 src=S41,S42 pubs=2 conf=medium (unit-level Java/Python :: Giving the model a specification instead of (buggy) code, or meaningful names and docs, reduces bug-encoding tests and improves oracle accuracy
+C32=A2-C7 src=S43 pubs=1 conf=medium (DBMS domain) :: LLM-generated tests are slightly flakier than human ones, mostly from assumed ordering, and the flakiness of existing tests carries over through the p
+C33=A2-C8 src=S39 pubs=1 conf=medium :: Even strong models get low coverage on realistic unit-test generation (GPT-4o 35.2% average on TestGenEval), with assertion errors a main cause
+C34=A2-C9 src=S40 pubs=1 conf=medium :: General code agents beat purpose-built test generators at reproducing real issues, and generated tests are useful as a filter on fixes
+C35=A2-C10 src=S32,S33,S47 pubs=3 conf=medium (Android-only, small ap :: LLM GUI agents report better coverage and bug-finding than pre-LLM Android tools, with gains of roughly 10 points to 32% relative in activity coverage
+C36=A2-C11 src=S48 pubs=1 conf=medium :: Activity coverage in real apps stays low for both classic and LLM explorers (about 30%)
+C37=A2-C12 src=S34,S48 pubs=2 conf=low-medium (CovAgent is a prep :: Using source or decompiled code alongside the GUI beats exploration-only tools on coverage
+C38=A2-C13 src=S46,S47 pubs=2 conf=medium :: Calling the LLM at every step costs too much and is not needed; hybrid designs keep or raise coverage at much lower cost
+C39=A2-C14 src=S34,S36 pubs=2 conf=medium :: Task-directed LLM agents complete only about 48–71% of feature-level tasks, and instruction-following and replanning are documented weaknesses
+C40=A2-C15 src=S44 pubs=1 conf=medium :: LLM agents judging natural-language E2E test verdicts get about 60% right and often flag passing tests as failing (specificity ≤57%)
+C41=A2-C16 src=S49 pubs=1 conf=medium :: Generating selectors/locators is error-prone: page-object accuracy was only 32.6–54.0%
+C42=A2-C17 src=S50,S51 pubs=2 conf=medium (both by the same FEUP  :: Spec-first pipelines (requirements/user stories → Gherkin → page objects → scripts) give high usability in industry, but a large share of scripts stil
+C43=A2-C18 src=S45 pubs=1 conf=medium (its own benchmark) :: Feature-inference-first E2E generation gives much higher feature coverage than prior web test generators
+C44=A2-C19 src=S37 pubs=1 conf=medium :: Crash-only oracles miss most functional bugs; vision/MLLM oracles improve recall and precision on non-crash bugs
+C45=A3-C1 src=S54,S55,S56,S57 pubs=4 conf=high :: Putting more tokens into context reliably degrades retrieval/reasoning; the degradation depends on position and is non-uniform, so "load the whole rep
+C46=A3-C2 src=S56 pubs=1 conf=medium (single benchmark, olde :: On code specifically, long-context performance drops sharply at the 1M-token scale (e.g., Claude 3.5 Sonnet 29%→3% on LongCodeBench). A 212k-LOC app (
+C47=A3-C3 src=S57,S59 pubs=1 conf=medium (vendor guidance, not a :: Anthropic's guidance for large tasks: just-in-time agentic retrieval through tools, subagents in isolated contexts that return condensed summaries of 
+C48=A3-C4 src=S60 pubs=1 conf=medium-low :: Claude Code moved from a RAG/vector index to agentic (grep and read) search because it worked better.
+C49=A3-C5 src=S58 pubs=1 conf=medium (vendor internal eval;  :: Multi-agent orchestration beat a single agent by 90.2% on Anthropic's internal research eval, at about 15× chat token cost. Anthropic itself cautions 
+C50=A3-C6 src=S58,S59 pubs=1 conf=low (analyst inference) :: Feature-by-feature comprehension of a repo is a read-mostly, highly parallel task, which is closer to "research" than to "coding" in A3-E11's sense. T
+C51=A3-C7 src=S61,S62 pubs=2 conf=medium-high :: Deterministic structural indexes (a tree-sitter repo map ranked by a dependency graph; repository code graphs) measurably help LLM agents. RepoGraph r
+C52=A3-C8 src=S63,S64 pubs=2 conf=high :: Static GUI/navigation models are useful but unsound. Static analyses for Android, GATOR included, systematically miss runtime GUI control flow, so a s
+C53=A3-C9 src=S65 pubs=1 conf=medium (single preprint, GPT-4 :: A hybrid works well on web SPAs: high-recall static extraction from router config and components, then LLM semantic refinement, then deterministic nor
+C54=A3-C10 src=S66 pubs=1 conf=medium (the v6 usage is an inf :: React Navigation's static API (v7+) gives a machine-readable route graph, but only when the whole structure is static. An app on RN 0.72 most likely u
+C55=A3-C11 src=S67 pubs=1 conf=high (doc fact) :: Model-based testing tools take an explicit state machine whose states carry assertions and whose events carry executors, and they generate covering pa
+C56=A3-C12 src=S68 pubs=1 conf=high (doc fact) :: Classic dynamic invariant mining (Daikon) does not support JavaScript/TypeScript, so it is not usable off the shelf for an RN/Angular/Functions stack.
+C57=A3-C13 src=S69,S70 pubs=2 conf=medium-high (function-level, J :: LLMs can produce verifiable formal specs and postconditions with useful bug-finding power when verification closes the loop (SpecGen 279/385, verifier
+C58=A3-C14 src=S41 pubs=1 conf=medium (single preprint, unit- :: The core epistemic risk is empirically real: LLM-generated oracles mostly capture the program's actual behaviour, not its expected behaviour. A spec m
+C59=A3-C15 src=S71 pubs=1 conf=medium (snippet-level; perform :: LLMs recover user stories from small code units well (F1 about 0.8 up to 200 NLOC). One worked example closes much of the gap between small and large 
+C60=A3-C16 src=S72 pubs=1 conf=medium-low (fresh preprint, in :: Industrial agentic code→requirements pipelines exist (7 agents, user journeys + business rules). They rely on human reviewers at escalation points and
+C61=A3-C17 src=S73,S74,S75 pubs=3 conf=medium-high :: Current spec-driven-development tools (Spec Kit, Kiro, Tessl) are built for forward generation (spec→code), not for recovering specs from code. Hands-
+C62=A3-C18 src=S74,S75 pubs=2 conf=medium :: Spec formats in current SDD tools are Markdown user stories with acceptance criteria (Kiro requirements.md; Spec Kit specify). These are human-reviewa
+C63=A4-C1 src=S76 pubs=1 conf=high :: The Emulator Suite emulates Firestore, RTDB, Storage, Auth, Hosting, Functions (beta), Pub/Sub (beta) and Extensions (beta). FCM, Cloud Scheduler, Rem
+C64=A4-C2 src=S76,S77 pubs=1 conf=high :: If a product's emulator is not configured or not running, the client SDKs silently talk to production, unless the project ID is a demo- project. With 
+C65=A4-C3 src=S77 pubs=1 conf=high :: Firebase officially recommends demo- projects wherever possible.
+C66=A4-C4 src=S79,S80 pubs=1 conf=medium (the mechanism is infer :: Emulator data is namespaced by project ID, and the CLI warns when it sees more than one project ID. If a seed script (Admin SDK) uses a different proj
+C67=A4-C5 src=S77,S80 pubs=1 conf=high :: Background triggers are emulated for Firestore, RTDB, Auth, Pub/Sub and Firebase Alerts. Storage triggers also work when both the Storage and Function
+C68=A4-C6 src=S83,S84,S85,S86 pubs=2 conf=high for "no cron", medium for :: Scheduled functions (v1 and v2 onSchedule) are NOT run on a cron by the emulator. The emulator maps them to a Pub/Sub trigger on topic "firebase-sched
+C69=A4-C7 src=S88,S89,S90 pubs=1 conf=medium :: Emulator trigger support has had silent gaps. As recently as firebase-tools 15.30.1 (Sept 2026), Gen 2 auth triggers were dropped with no warning (sin
+C70=A4-C8 src=S77,S83 pubs=1 conf=high :: The Functions emulator does not retry failed functions, does not enforce memory or CPU limits, ignores IAM, may differ in timing, and simulates us-cen
+C71=A4-C9 src=S83 pubs=1 conf=high :: The TypeScript functions source must be compiled before the emulator starts. Otherwise the emulator serves stale or missing code.
+C72=A4-C10 src=S109,S80 pubs=2 conf=high :: Firestore emulator differences: composite indexes are not enforced (any valid query runs), not all limits are enforced, concurrent transactions can ta
+C73=A4-C11 src=S80,S82 pubs=1 conf=high :: Deterministic reset uses emulator REST endpoints. DELETE the Firestore documents endpoint, and DELETE /emulator/v1/projects/{id}/accounts for Auth. Re
+C74=A4-C12 src=S87 pubs=1 conf=high (code), medium (API stabi :: The Emulator Hub exposes PUT /functions/disableBackgroundTriggers and /functions/enableBackgroundTriggers. A harness can seed data without firing trig
+C75=A4-C13 src=S78,S79 pubs=1 conf=high :: Seed state can be snapshotted and restored with --export-on-exit / --import (and emulators:export). emulators:exec starts the emulators, runs a test c
+C76=A4-C14 src=S81 pubs=1 conf=high :: The Auth emulator issues unsigned ID tokens that only emulators or a configured Admin SDK accept. A mixed setup (some services emulated, some real) br
+C77=A4-C15 src=S91,S92 pubs=1 conf=high :: React Native Firebase automatically remaps localhost/127.0.0.1 to 10.0.2.2 on Android, unless android_bypass_emulator_url_remap is true in firebase.js
+C78=A4-C16 src=S91,S94,S95 pubs=3 conf=medium (the reference-project  :: Android also needs two things: the emulators bound beyond localhost (host "0.0.0.0") for physical devices, and cleartext HTTP allowed for API 28+. Cle
+C79=A4-C17 src=S76,S93 pubs=2 conf=high :: useEmulator must be called before any read/write. Otherwise the client may already be bound to production.
+C80=A4-C18 src=S96 pubs=1 conf=high :: @firebase/rules-unit-testing gives authenticated and unauthenticated contexts, rules-disabled seeding, and assertSucceeds/assertFails against the emul
+C81=A4-C19 src=S97 pubs=1 conf=high :: For firebase-functions-test, online mode (real test project) is recommended. Offline mode is discouraged for Firestore/RTDB functions.
+C82=A4-C20 src=S99 pubs=1 conf=high :: Stripe states that Checkout and the Payment Element block automated testing and that its APIs are rate-limited. It recommends mocked responses and err
+C83=A4-C21 src=S98 pubs=1 conf=high :: Local Stripe webhook testing uses \`stripe listen --forward-to <url>\`, which prints its own whsec\_ signing secret, and \`stripe trigger <event>\`. T
+C84=A4-C22 src=S100 pubs=1 conf=high :: stripe-mock is stateless, uses hardcoded fixtures, and does not emit webhooks. It cannot validate stateful payment flows.
+C85=A4-C23 src=S101 pubs=1 conf=high :: Stripe test clocks control time for billing flows. Stripe recommends a separate sandbox for CI.
+C86=A4-C24 src=S102,S103 pubs=1 conf=medium :: The PaymentSheet UI in stripe-react-native has long-standing Android Detox selector problems (one issue open since 2023). Driving the native sheet in 
+C87=A4-C25 src=S104,S105,S106 pubs=2 conf=high (SMTP-only is analyst inf :: SendGrid sandbox mode validates sends without delivering (200 vs 202), so content cannot be asserted in an inbox. Mailpit captures SMTP mail and expos
+C88=A4-C26 src=S107,S9 pubs=2 conf=high :: Maestro JS can call HTTP APIs and pass the results into flow assertions. This allows backend-as-bridge steps (seed or verify through REST) inside a mo
+C89=A4-C27 src=S108 pubs=1 conf=low :: Precedent exists for cross-client tests where a web runner (Playwright) creates state and a mobile runner (Detox) verifies it, coordinated through the
+C90=A5-C1 src=S110 pubs=1 conf=high :: Firebase's App Testing agent (Gemini) takes natural-language test cases (step goals, hints, a final-screen assertion) and executes them with AI on eac
+C91=A5-C2 src=S110 pubs=1 conf=high (as of access date; iOS a :: The App Testing agent is Android-only, preview, with no SLA, a 200-tests/month/project free quota and a 5-minute per-test timeout.
+C92=A5-C3 src=S110 pubs=1 conf=high :: Google's own docs say the App Testing agent is non-deterministic ("will sometimes take different actions").
+C93=A5-C4 src=S111 pubs=1 conf=medium-high (business-logic po :: Robo test (Test Lab) explores without a script and is deterministic for a fixed device/config. It does not assert business logic, and it degrades to r
+C94=A5-C5 src=S112,S113 pubs=1 conf=high :: Playwright v1.56 shipped "Test Agents": a planner (explores the app, writes a Markdown plan), a generator (plan to Playwright test files, verifying se
+C95=A5-C6 src=S112,S113 pubs=1 conf=medium (inference: mobile is n :: Playwright agents are web-only. They are the closest published template for a planner, generator and healer pipeline, but they do not cover React Nati
+C96=A5-C7 src=S114,S117 pubs=2 conf=high :: Maestro's AI assertion (`assertWithAI`) is experimental. It sends a screenshot plus an NL assertion to an LLM and defaults to `optional: true` because
+C97=A5-C8 src=S115,S2 pubs=2 conf=high (that it exists); medium  :: Maestro MCP lets coding agents (incl. Claude Code) inspect the screen, run inline YAML and save durable Flow files. Maestro's recommended pattern is t
+C98=A5-C9 src=S116,S117,S132 pubs=2 conf=high :: Momentic stores NL tests as YAML in the repo, resolves targets with AI, caches resolutions for deterministic replay and re-resolves (auto-heals) on ca
+C99=A5-C10 src=S118,S119,S120 pubs=3 conf=high for mechanism; low for "e :: Meticulous records real sessions (events plus network pairs) through a JS snippet and replays them per PR against stubbed network with no live backend
+C100=A5-C11 src=S119,S135 pubs=2 conf=medium :: Record and replay from real traffic avoids LLM comprehension entirely, but it cannot test features before users exist and has no oracle beyond visual 
+C101=A5-C12 src=S121,S123,S124 pubs=3 conf=high :: Open-source agentic runners (Arbigent, Midscene, Stagehand) all converge on the same cost control: cache the AI's first successful plan or locator, re
+C102=A5-C13 src=S121 pubs=1 conf=high :: Arbigent supports Android, iOS and web, runs AI every execution unless replay-with-fallback is on, and can call existing Maestro YAML as setup.
+C103=A5-C14 src=S122,S123 pubs=2 conf=medium-high :: Midscene drives Android (ADB) and iOS (WebDriverAgent) by vision. Its locator cache is web-only, and assertion and query results are never cached, so 
+C104=A5-C15 src=S128,S132 pubs=2 conf=medium (pricing is a third-par :: QA Wolf generates deterministic Playwright (web) and Appium (mobile) code maintained by AI plus human engineers, sold per test (third-party estimate ~
+C105=A5-C16 src=S132,S134 pubs=2 conf=medium :: Octomind, which produced portable Playwright code from URL-only discovery, shut down in mid-2026 citing lack of market validation.
+C106=A5-C17 src=S129,S130,S131 pubs=3 conf=high :: "Self-healing" can produce false greens. QA Wolf, Bug0 and Ministry of Testing each warn that selector healing can pick the wrong element or mask a re
+C107=A5-C18 src=S129,S131 pubs=2 conf=medium :: Proposed mitigations: diagnose root cause before healing (DOM, network, console, fixtures), and require an independent assertion check (e.g., two-mode
+C108=A5-C19 src=S133 pubs=1 conf=medium :: Practitioner skepticism on HN centers on non-determinism in CI and debuggability, not authoring cost. Some practitioners dissent and claim non-determi
+C109=A5-C20 src=S133,S137,S138 pubs=3 conf=medium-high :: Runtime agents are slow and token-heavy: LELANTE takes ~11–12 s per step and success falls with step count. Anthropic says screenshots cost ~1–1.8K to
+C110=A5-C21 src=S51 pubs=1 conf=medium :: Generating durable mobile test artifacts from requirements plus code changes is shown to work industrially: on BMW's Flutter app, 100% of generated UI
+C111=A5-C22 src=S110,S125,S127,S128,S132 pubs=5 conf=medium-high :: Several vendors pair AI authoring with deterministic, LLM-free execution (Applitools Autonomous, QA Wolf, Octomind, Autify Genesis per search snippets
+C112=A5-C23 src=S136,S137 pubs=2 conf=medium-high :: Gemini 2.5 Computer Use (Oct 2025) is "primarily optimized for web browsers" but shows "promise" on mobile (AndroidWorld). Google uses it internally f
+C113=A5-C24 src=S126 pubs=1 conf=low (marketing) :: testRigor claims plain-English tests across native and hybrid mobile with API, email and DB checks, and "50x faster than Selenium". No independent evi
+C114=A6-C1 src=S142,S143,S144,S145,S59 pubs=1 conf=medium :: Claude Code's native extension surface (skills with SKILL.md + bundled scripts, subagents with own context, hooks with blocking exit-code-2/Stop `deci
+C115=A6-C2 src=S142 pubs=1 conf=high :: Custom slash commands are now skills; a `/generate-e2e` command should be built as `.claude/skills/generate-e2e/SKILL.md` (≤500 lines, details in supp
+C116=A6-C3 src=S145 pubs=1 conf=high :: Packaging as a plugin is warranted only for distribution of multiple components; it adds always-on context cost for model-invocable skills/agents.
+C117=A6-C4 src=S58 pubs=1 conf=high (as a quote); low as a ge :: Anthropic states multi-agent systems use ~15× the tokens of chat (agents ~4×); token usage explains 80% of BrowseComp performance variance.
+C118=A6-C5 src=S58 pubs=1 conf=high :: Anthropic itself cautions that coding tasks are less parallelizable than research and that agents coordinate poorly, so multi-agent gains (90.2% on re
+C119=A6-C6 src=S139,S141 pubs=1 conf=medium-high :: Separating generator from evaluator is recommended because self-evaluation is lenient; Anthropic's March 2026 harness used a Playwright-driven evaluat
+C120=A6-C7 src=S141 pubs=1 conf=medium (single example) :: Full generator/evaluator harnesses cost ~20× more than a solo run in Anthropic's own example ($200/6 hr vs $9/20 min).
+C121=A6-C8 src=S140,S57,S58 pubs=2 conf=high :: Long-running agent work benefits from externalized state (feature list with pass flags, progress file, git commits, structured notes) and condensed su
+C122=A6-C9 src=S146,S148,S149 pubs=3 conf=high :: Frontier coding models have documented tendencies to make tests pass by special-casing or modifying tests, especially after repeated failures; this is
+C123=A6-C10 src=S147 pubs=1 conf=medium :: The tendency has decreased in newer Claude models (67–69% less hard-coding, Opus/Sonnet 4 vs 3.7) and explicit "do not special-case; report bad tests"
+C124=A6-C11 src=S143,S146 pubs=1 conf=high (as guidance); untested a :: Anthropic-recommended detectors map directly to hook-enforceable gates: excessive edit/test cycles on one file, test-specific comments, unexpected tes
+C125=A6-C12 src=S149 pubs=1 conf=medium-low :: Autonomous test-repair loops converge often but with inflated success: one 2026 case study found 70% convergence (mean 3.4 iterations) while 38% of re
+C126=A6-C13 src=S150 pubs=1 conf=medium :: Execution-feedback self-repair improves code-generation accuracy modestly (≤12% on benchmarks); evidence is for programs, not E2E tests.
+C127=A6-C14 src=S151,S152,S31 pubs=3 conf=high for unit tests; unproven  :: Mutation-guided generation is industrially proven at Meta (73% engineer acceptance of 571 tests) and outperforms coverage-driven prompting in research
+C128=A6-C15 src=S153,S154,S155 pubs=3 conf=medium :: Mutation testing of full E2E suites is feasible but tooling is immature: StrykerJS supports JS/TS (Jest runner) but not device E2E runners natively; E
+C129=A6-C16 src=S158 pubs=1 conf=medium-low :: Collecting JS coverage from RN E2E runs is possible in principle via babel-plugin-istanbul + an extraction channel, but the only fetched purpose-built
+C130=A6-C17 src=S156,S157 pubs=2 conf=high (dated 2016/2019; unit/in :: Flakiness is pervasive at scale (Google: 1.5% of runs, ~16% of tests, 84% of pass→fail transitions flaky) and rerun/reorder detection is the establish
+C131=A6-C18 src=S159 pubs=1 conf=medium :: Change-impact test selection can retain very high regression detection with a fraction of tests (Meta: >99.9% regressions, one-third of dependent test
+C132=A6-C19 src=S160 pubs=1 conf=low-medium :: Human review effectiveness degrades with volume/time (≤200–400 LOC, ~60 min), arguing for reviewing compact specs rather than generated test code.
+C133=A6-C20 src=S58 pubs=1 conf=medium :: Evaluation of an LLM pipeline can start small (~20 cases) with a single-call LLM judge producing 0–1 score plus pass/fail.
+C134=D1-C1 src=S161,S30 pubs=2 conf=high :: LLM test generation has run at industrial scale (Meta, thousands of classes). Every documented deployment kept a human acceptance step and was unit-le
+C135=D1-C2 src=S167 pubs=1 conf=low–medium :: One vendor claims single-prompt autonomous generation of a verified regression suite across whole codebases (81% line, 61% mutation coverage on 8 Java
+C136=D1-C3 src=S32,S33 pubs=2 conf=medium–high :: Autonomous LLM GUI agents find real, developer-confirmed bugs in mobile apps without a human spec, mainly crash-type faults found by exploration.
+C137=D1-C4 src=S151,S161 pubs=2 conf=medium :: LLM-generated tests can catch real intent-level bugs from a natural-language concern or from the code-change diff, with no full behavioral spec: ACH w
+C138=D1-C5 src=S161 pubs=1 conf=high :: The yield of real bugs from spec-free generated tests is low and needs triage: 8 true positives of 41 reported candidates.
+C139=D1-C6 src=S164 pubs=1 conf=medium :: Coverage-filtered LLM test generators can systematically validate existing bugs. This supports H3, not a counter.
+C140=D1-C7 src=S170,S26,S79 pubs=3 conf=medium (vendor docs; no effort :: Mobile E2E environment setup is partly turnkey. EAS Workflows wires Maestro E2E in about 5 config steps. The Firebase Emulator Suite supports seeded i
+C141=D1-C8 src=S111 pubs=1 conf=high :: Spec-free crawlers (Firebase Robo) give zero-authoring smoke coverage but have no functional oracle beyond crashes and need manual credential setup.
+C142=D1-C9 src=S171 pubs=1 conf=medium :: Runtime natural-language agents cut manual regression effort in at least one named production deployment (Duolingo, up to 70%). They replaced manual t
+C143=D1-C10 src=S171,S172 pubs=2 conf=medium :: Runtime agents carry specific reliability costs: non-deterministic "go rogue" behavior and silently working around bugs.
+C144=D1-C11 src=S165,S166 pubs=2 conf=low (as evidence for agents be :: Managed E2E services report large savings and fast authoring (QA Wolf, Momentic), but QA Wolf's model relies on human QA engineers for writing and mai
+C145=D1-C12 src=S163 pubs=1 conf=medium (it happened) / low (th :: Pure agentic search (grep/glob, no index) replaced RAG in Claude Code and was judged much better, but the judgment rested on internal "vibes", not a p
+C146=D1-C13 src=S169 pubs=1 conf=medium (self-reported, benchma :: A minimal bash-only agent with no structural tooling reaches >74% on SWE-bench Verified, so heavy structural extraction is not necessary for strong re
+C147=D1-C14 src=S174 pubs=1 conf=medium :: A controlled 2026 study found a structural codebase index only matched agentic grep on resolve rate and localization; its advantage was lower cost per
+C148=D1-C15 src=S173 pubs=1 conf=low (n=12) :: A small practitioner pilot (12 tasks) found a code graph gave no correctness gain and slightly higher token use than disciplined search.
+C149=D1-C16 src=S162 pubs=1 conf=medium :: Agentless's simple non-agentic pipeline beat open-source agents on cost and accuracy (2024). This counters "agentic reading", not H5.
+C150=D1-C17 src=S45 pubs=1 conf=medium (benchmark; oracle qual :: LLMs can infer features and generate E2E scenarios for web apps with no human-written spec, reaching 79% feature coverage on E2EBench.
+C151=D2-C1 src=S179,S180 pubs=1 conf=high :: Protractor development ended around Angular 15 (end of 2022), and the repo has been archived read-only since 2024-07-29.
+C152=D2-C2 src=S178,S179 pubs=2 conf=high :: The Angular CLI's `ng e2e` lists Playwright, Cypress, WebdriverIO, Nightwatch and Puppeteer as e2e packages. Protractor is no longer listed.
+C153=D2-C3 src=S177 pubs=1 conf=high :: Playwright has an official Protractor migration guide, and its auto-waiting removes the general need for `waitForAngular`.
+C154=D2-C4 src=S112,S113 pubs=1 conf=high :: Playwright Test Agents (v1.56) are three agent definitions: planner, generator and healer. The planner writes Markdown plans to `specs/`, the generato
+C155=D2-C5 src=S112,S185 pubs=2 conf=high :: Generated tests may fail at first, and the healer can turn a failing test into a skipped one. Unreviewed agent output can hide regressions.
+C156=D2-C6 src=S113,S175 pubs=2 conf=high. The claim that Firebase' :: Playwright `storageState` can persist IndexedDB from v1.51. This is the mechanism needed to reuse a Firebase JS SDK login across tests.
+C157=D2-C7 src=S81 pubs=1 conf=high :: Web apps attach to the Auth emulator with `connectAuthEmulator`. The emulator issues unsigned tokens that production rejects, which is a natural guard
+C158=D2-C8 src=S27 pubs=1 conf=medium-high :: Playwright MCP drives the browser through accessibility snapshots rather than screenshots. Microsoft says CLI+skills is the more token-efficient choic
+C159=D2-C9 src=S185,S45 pubs=2 conf=medium :: No independent, peer-reviewed measurement of the quality of Playwright Test Agent output was found. Published numbers come from vendors or blogs. The 
+C160=D2-C10 src=S186 pubs=1 conf=high :: Building a GUI state model by dynamic exploration has an established precedent with measured accuracy: Crawljax, ACM TWEB 2012.
+C161=D2-C11 src=S46 pubs=1 conf=medium :: In LLM-guided exploration, using the LLM to maintain an abstract model is far cheaper than calling it on every step: LLM-Explorer reports more than 14
+C162=D2-C12 src=S181,S96 pubs=2 conf=high :: Firebase provides executable building blocks for a rules-as-oracle approach: `assertSucceeds`/`assertFails` under auth contexts, plus per-expression r
+C163=D2-C13 src=S189,S190 pubs=2 conf=high (precedent); high (absenc :: Deriving tests from a declarative schema or policy is proven elsewhere. Schemathesis, which derives tests from OpenAPI/GraphQL schemas, found 1.4–4.5x
+C164=D2-C14 src=S188 pubs=1 conf=high :: Mismatches between client-side validation and server-side enforcement are common and exploitable: WARDroid found problematic API logic in more than 4,
+C165=D2-C15 src=S187 pubs=1 conf=medium :: Differential testing of one app across platforms has peer-reviewed precedent (DiffDroid, Android device/OS variants, few false positives). No preceden
+C166=D2-C16 src=S191 pubs=1 conf=high :: Tests generated from real user sessions found faults as well as or better than white-box suites, and found different faults (Elbaum et al., TSE 2005).
+C167=D2-C17 src=S182,S183 pubs=2 conf=medium :: Commercial tools that turn traffic into tests (Meticulous, Checksum) are web-only and run in Chrome with stubbed network. Meticulous replays recorded 
+C168=D2-C18 src=S114 pubs=1 conf=high :: Maestro marks `assertWithAI` experimental and non-blocking by default (`optional: true`) because of unstable AI responses.
+C169=D2-C19 src=S184,S192,S37 pubs=3 conf=medium :: Vision-LLM oracles show research gains: Trident's precision rose 108–147% over the baselines. Their answers are unstable across repeated queries, as M
+C170=D2-C20 src=S194,S67 pubs=2 conf=medium (precedent); medium (ab :: LLMs can recover state machines from source code with more than 90% precision in the protocol domain (ProtocolGPT). XState provides deterministic path
+C171=D3-C1 src=S13 pubs=1 conf=high :: Detox's official support window is RN 0.77–0.84; RN 0.72 is outside it and only "best effort".
+C172=D3-C2 src=S199 pubs=1 conf=high :: RN 0.72 support was added in Detox 20.17.0 (confirms Worker A1).
+C173=D3-C3 src=S197,S198,S201,S202 pubs=2 conf=medium-high :: Detox has explicit iOS 26 work: maintainer-run iOS 26 suite (most tests passed), "iOS 26 compatibility" in 20.47.0, further iOS 26 fixes through 20.51
+C174=D3-C4 src=S13,S200,S203 pubs=2 conf=low (open question) :: No evidence found either way that Detox ≥20.47 builds/runs against RN 0.72.17; the iOS-26-capable Detox and the RN-0.72-supported Detox may not overla
+C175=D3-C5 src=S17 pubs=1 conf=high (mechanism) / unknown (th :: Detox's flake advantage depends on the app idling; endless timers/animations/polling/websockets cause wait-for-idle timeouts, and the fixes (URL black
+C176=D3-C6 src=S4 pubs=1 conf=high :: Maestro #1585 is **closed** (2026-03-09, not fixed, closed for lack of repro) — Worker/brief statement "open since 2023" is outdated.
+C177=D3-C7 src=S206 pubs=1 conf=high :: An open, specific Maestro bug (#3538) on Xcode 26.3–26.6 / iOS 26.2–26.5, reported on 2.8.0–2.11.0, describes the driver dying mid-suite and all later
+C178=D3-C8 src=S206,S6 pubs=2 conf=medium-high :: Maestro maintainers say an iOS driver rework is in progress that should remove this failure class; no shipped rework appears in CHANGELOG through 2.11
+C179=D3-C9 src=S206 pubs=1 conf=medium :: Running a whole folder in one `maestro test` session does **not** avoid the #3538 failure; one driver death fails every remaining flow in that suite. 
+C180=D3-C10 src=S207,S208 pubs=1 conf=high :: `maestro mcp` has open iOS session-handling bugs relevant to an agent loop: stale driver after simulator erase/reboot (reported on Xcode 26.6/iOS 26.5
+C181=D3-C11 src=S204,S211 pubs=2 conf=medium-high :: Maestro MCP gives an agent `inspect_screen` (hierarchy JSON) + inline-YAML `run`, a direct authoring loop; Detox has no equivalent MCP-style explorati
+C182=D3-C12 src=S204 pubs=1 conf=medium :: Wix Pilot (Detox Copilot successor) exists and drives tests from natural-language steps through LLMs at runtime; the README does not describe generati
+C183=D3-C13 src=S10 pubs=1 conf=high (that the evidence is wea :: Published flakiness numbers (Detox <2%, Maestro <1%) come from Maestro's own marketing with no methodology; no independent quantitative comparison was
+C184=D3-C14 src=S26 pubs=1 conf=medium :: Expo documents only Maestro for EAS Workflows E2E, a non-vendor ecosystem signal toward Maestro for the generic case.
+C185=D3-C15 src= pubs=0 conf=n/a (gap) :: No source evaluates how well LLMs write Detox TS vs Maestro YAML.

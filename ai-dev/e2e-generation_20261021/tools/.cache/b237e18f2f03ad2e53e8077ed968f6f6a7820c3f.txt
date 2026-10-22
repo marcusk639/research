@@ -1,0 +1,824 @@
+__HTTP 200__
+                                                On the Flakiness of LLM-Generated Tests for Industrial and
+                                                      Open-Source Database Management Systems
+                                                        Alexander Berndt∗                                             Thomas Bach                                    Rainer Gemulla
+                                              alexander.berndt@uni-heidelberg.de                                thomas.bach03@sap.com                         rgemulla@uni-mannheim.de
+                                                     Heidelberg University                                               SAP                                    University of Mannheim
+                                                           Germany                                                     Germany                                         Germany
+
+                                                                                        Marcus Kessel                                     Sebastian Baltes
+                                                                            marcus.kessel@uni-mannheim.de                        sebastian.baltes@uni-heidelberg.de
+                                                                                University of Mannheim                                  Heidelberg University
+
+
+
+
+arXiv:2601.08998v1 [cs.SE] 13 Jan 2026
+                                                                                       Germany                                                Germany
+
+                                         Abstract                                                                                ACM Reference Format:
+                                         Flaky tests are a common problem in software testing. They produce                      Alexander Berndt, Thomas Bach, Rainer Gemulla, Marcus Kessel, and Se-
+                                                                                                                                 bastian Baltes. 2026. On the Flakiness of LLM-Generated Tests for Indus-
+                                         inconsistent results when executed multiple times on the same code,
+                                                                                                                                 trial and Open-Source Database Management Systems. In 2026 IEEE/ACM
+                                         invalidating the assumption that a test failure indicates a software                    48th International Conference on Software Engineering (ICSE-SEIP ’26), April
+                                         defect. Recent work on LLM-based test generation has identified                         12–18, 2026, Rio de Janeiro, Brazil. ACM, New York, NY, USA, 12 pages.
+                                         flakiness as a potential problem with generated tests. However, its                     https://doi.org/10.1145/3786583.3786919
+                                         prevalence and underlying causes are unclear. We examined the
+                                         flakiness of LLM-generated tests in the context of four relational
+                                         database management systems: SAP HANA, DuckDB, MySQL, and                               1    Introduction
+                                         SQLite. We amplified test suites with two LLMs, GPT-4o and Mistral-                     Large language models (LLMs) have emerged as a promising tool to
+                                         Large-Instruct-2407, to assess the flakiness of the generated test                      automate test generation [70]. Although traditional test generation
+                                         cases. Our results suggest that generated tests have a slightly higher                  approaches, such as search-based techniques, have been shown to
+                                         proportion of flaky tests compared to existing tests. Based on a                        produce high-coverage test suites [34, 58], the resulting test code
+                                         manual inspection, we found that the most common root cause                             suffers from poor readability and does not integrate well with exist-
+                                         of flakiness was the reliance of a test on a certain order that is                      ing tests [16, 24, 59]. In contrast, LLMs have the ability to generate
+                                         not guaranteed (“unordered collection”), which was present in 72                        test code that appears natural to humans [24, 39, 60]. Hence, various
+                                         of 115 flaky tests (63%). Furthermore, both LLMs transferred the                        LLM-based test generation approaches have been evaluated [29, 70],
+                                         flakiness from the existing tests to the newly generated tests via the                  leading to industrial adoption of such approaches [5, 37].
+                                         provided prompt context. Our experiments suggest that flakiness                            To evaluate the resulting tests, existing studies on LLM-based test
+                                         transfer is more prevalent in closed-source systems such as SAP                         generation typically measure the effectiveness of LLM-generated
+                                         HANA than in open-source systems. Our study informs developers                          tests based on metrics such as code coverage and the mutation
+                                         on what types of flakiness to expect from LLM-generated tests. It                       score, that is, quantifiable signals regarding the quality of the sys-
+                                         also highlights the importance of providing LLMs with tailored                          tem under test [22, 70]. However, to our knowledge, there exists no
+                                         context when employing LLMs for test generation.                                        dedicated research that focuses on the flakiness of LLM-generated
+                                                                                                                                 tests. Test flakiness is a major problem in industrial software test-
+                                         CCS Concepts                                                                            ing, which has been studied by large software companies such
+                                         • Software and its engineering → Empirical software valida-                             as Google, Meta, Microsoft, and SAP [14, 35, 40, 46]. Flaky tests
+                                         tion; Software evolution; Development frameworks and environments;                      produce inconsistent results when executed multiple times under
+                                         Software reliability.                                                                   the same conditions [50]. Such flaky behavior is undesirable as it
+                                                                                                                                 reduces the efficiency and effectiveness of testing, thus leading to
+                                         Keywords                                                                                increased testing costs [12, 35, 53].
+                                                                                                                                    Flaky tests invalidate the assumption that a test failure indicates
+                                         Test Flakiness, Software Testing, Empirical Study, Database Man-
+                                                                                                                                 the presence of a defect in the system under test. Thus, developers
+                                         agement Systems, Large Language Models, Artificial Intelligence
+                                                                                                                                 may lose trust in the test suite and waste time debugging spurious
+                                         ∗ Also with SAP.                                                                        failures [28]. In continuous integration (CI) pipelines, flaky tests
+                                                                                                                                 impede the automated assessment of code changes. For example,
+                                                                                                                                 Google reported that the CI pipeline in their testing infrastructure
+                                                                                                                                 fails in 3.5% of runs due to flaky failures [40].
+                                         This work is licensed under a Creative Commons Attribution 4.0 International License.      Previous research on LLM-based test generation indicates that
+                                         ICSE-SEIP ’26, Rio de Janeiro, Brazil                                                   LLMs might produce flaky tests [5, 64]. However, the prevalence
+                                         © 2026 Copyright held by the owner/author(s).
+                                         ACM ISBN 979-8-4007-2426-8/2026/04                                                      of flaky tests and the root causes of flakiness remain unclear. As a
+                                         https://doi.org/10.1145/3786583.3786919                                                 practical solution, previous work suggested repeatedly executing
+ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil                    Alexander Berndt, Thomas Bach, Rainer Gemulla, Marcus Kessel, and Sebastian Baltes
+
+
+LLM-generated tests to filter flaky tests before handing them to              in LLM-generated tests in the context of database management
+developers for review [6]. Although this strategy can be helpful to           systems, (2) a comparison of the resulting flakiness between closed-
+filter out flaky tests, we consider it important to obtain additional in-     and open-source database management systems and between two
+formation and a more holistic view of how and why LLM-generated               LLMs, and (3) a benchmark on the susceptibility of LLM to transfer
+tests are flaky [14]. Gaining insight into the flaky tests that LLMs          flakiness from the given context in a prompt to the generated tests.
+produce can help practitioners set realistic expectations about the              We provide our code and datasets for the three open-source
+types of flakiness they may encounter when reviewing and us-                  projects in a replication package [13].
+ing LLM-generated test code [28, 33]. Furthermore, comparing the
+prevalence of flakiness in LLM-generated tests with existing tests            2     Background
+can help project the long-term flakiness rate of a test suite when            In this section, we provide the flakiness definition that we adopted
+LLMs are increasingly used to automatically generate tests.                   and flakiness categories motivated by prior work.
+    In this work, we have evaluated the flakiness of LLM-generated
+tests for relational database management systems. Previous re-                2.1     Flakiness Definition
+search in the context of the large industrial database system SAP
+                                                                              Flaky tests produce inconsistent results, i.e., yield at least one posi-
+HANA has identified test flakiness as a major issue for automated
+                                                                              tive and one negative result, when executed multiple times under
+testing [8, 12, 14, 15]. Motivated by this previous work, we focused
+                                                                              the same conditions on the same state of the source code [33]. More
+on test generation for SAP HANA. In addition, we added three
+                                                                              formally, let 𝑅𝑡 = [𝑟 1, ..., 𝑟𝑛 ] be the sequence of observed test ex-
+popular open-source databases to foster reproducibility and enable
+                                                                              ecutions for a test 𝑡 on the same state of the source code, where
+comparisons between open-source and closed-source software [11].
+                                                                              𝑟𝑖 denotes the result of the 𝑖-th execution. Furthermore, let 𝑟𝑖 = 0
+We consider this comparison valuable, as the source code of SAP
+                                                                              for negative results and 𝑟𝑖 = 1 for positive results. In accordance
+HANA was not included in the training data, which might impact
+                                                                              with previous work on flakiness, we considered a test 𝑡 flaky iff
+the results of our experiments.                                                    Í
+                                                                              0 < 𝑛𝑖 𝑟𝑖 < 𝑛, i.e., if the test did show both positive and negative
+    We adapted Alshawan et al.’s approach for LLM-based test gen-
+                                                                              results [14]. We viewed passed as the only positive result, and con-
+eration, which was previously applied in an industrial study at
+                                                                              sidered failed, crashed, or timed out negative results. We ignored
+Meta [5], to amplify tests in the four target systems and generate
+                                                                              skipped executions. Tests were mainly skipped due to mismatched
+new test cases. Our study focused on two types of tests: i) native
+                                                                              environmental preconditions, such as a specific operating system.
+unit tests written in C++ , and ii) SQL system tests. We generated
+new tests for more than 5000 test files using two LLMs, GPT-4o and
+                                                                              2.2     Types of Flakiness
+Mistral-Large-Instruct-2407 [56, 68]. In accordance with previous
+empirical studies on flakiness [14, 33, 61, 63], we compiled and re-          Flaky tests can arise due to a variety of reasons. We focused on
+peatedly executed the tests to obtain information on their flakiness.         flakiness from the intra-flakiness family as introduced by Parry et al.
+We compared the prevalence and root causes of the resulting flaky             [62]. We added uninitialized variable and non-idempotent-outcome
+tests based on a manual inspection of more than 100 samples.                  (NIO) Flakiness as we considered them relevant for our experiments.
+    Our results suggested that LLMs struggle to produce compilable            This results in the following set of flakiness categories.
+C++ code, especially in the closed-source context of SAP HANA. We             Unordered Collection. Incorrect assumptions on a specific order
+attribute this finding to the model’s limited understanding of the            in an inherently unordered data structure, such as a hash table [62].
+provided code bases. In LLM-generated tests, the prevalence of flaky          NIO. Side effects of a test execution persist in the execution envi-
+tests was often higher than in existing tests. Based on our manual            ronment, contaminating subsequent test executions [72].
+inspection, we identified the reliance of tests on ordered test results       I/O. Improper handling of file system operations, for example, when
+from a collection that does not guarantee an order (“unordered                tests fail due to the disk running out of free space [62].
+collection”) as the most common root cause of flakiness in LLM-               Uninitialized Variable. Use of variables that have not been prop-
+generated tests for database systems.                                         erly initialized [32, 52].
+    To test the robustness of LLMs against flakiness transfer from            Time. Precision issues caused by improper use of system time [62].
+existing tests, we injected a flaky assertion into the original test          Concurrency. Unsafe handling of threads, leading to problems
+code before providing it as input for generating additional tests.            such as race conditions [62].
+In the generated tests, we found that both evaluated LLMs are                 Randomness. Use of random data generators without proper seed-
+susceptible to transferring the injected flakiness to generated tests.        ing, leading to inconsistent results [62].
+Although LLMs transferred the injected flaky assertion to two-                Floating Point. Inaccuracies in floating point operations, such as
+thirds of the newly generated SAP HANA tests, only half of the                numerical overflows or underflows [62].
+generated MySQL tests were affected. Therefore, we conjecture                 Too Restrictive Range. Too narrow assertions, only allowing a
+that LLMs rely more heavily on the input context in a closed-source           subset of the valid outputs of the system under test [62].
+project, for which the source code was not present in the training            Test Case Timeout. Upper limit on execution time too low, causing
+data. Based on a discussion of these results with practitioners, we           intermittent test failures due to execution time variance [62].
+conclude that developers should prioritize fixing flaky tests before
+applying LLM-based generation approaches.                                     2.3     Flakiness of LLM-Generated Tests
+    In summary, our study provides the following contributions. We            In the following, we provide an overview of related work on LLM-
+report (1) insights into the prevalence and root causes of flakiness          based test generation that mentions flakiness as a potential problem.
+On the Flakiness of LLM-Generated Tests for Industrial and Open-Source Database Management Systems           ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil
+
+
+   Alshahwan et al. [5] filtered flaky tests by repeatedly executing                 cope with the resource demands of the tests executed in the later
+LLM-generated tests five times before presenting them to devel-                      testing stages, SAP has set up a central testing infrastructure where
+opers for review. In their experiments, 76% of the Kotlin tests that                 tests are executed in parallel on over 1000 servers. However, al-
+built correctly passed reliably across five executions. However, this                though this central testing infrastructure offers vast computational
+proportion also included tests that failed in all five executions, and               resources for test execution, previous work has pointed out that
+the exact proportion of flaky tests remains unclear.                                 such complex testing environments may also cause flakiness, e.g.,
+   Pizzorno and Berger [64] pointed out that LLM-generated tests                     through hardware failures [14, 51, 66]. In this work, we evaluated
+can suffer from flakiness if the LLM is not provided with sufficient                 the flakiness of DBMS tests, which, according to our definition in
+context. They report an example in which GPT-4o generated a flaky                    Section 2, requires repeated test executions in a controlled envi-
+test that randomly assigns a value to the property of an object.                     ronment [33]. To minimize the flakiness caused by environmental
+Since the list of valid values of this property was unknown to the                   factors during repeated test executions [66], instead of relying on
+model, this random operation led to intermittent failures when the                   the central testing infrastructure, we conducted the test executions
+property was assigned an invalid value. However, since the main                      on a dedicated server. As executing tests from the later testing
+focus of their study was LLM-based test generation rather than                       stages of SAP HANA would lead to long execution times, we fo-
+flaky tests, they provided no information on how often such cases                    cused on tests that are used for local developer testing, i.e., native
+occurred or any other information on test flakiness.                                 C++ tests, written with the GoogleTest framework [31].
+   In their framework for benchmarking LLMs for test generation,
+Azanza et al. [9] introduced test isolation as an important quality                  3.2    MySQL Server
+criterion of the resulting tests. Thereby, they aimed to prevent tests              MySQL Server is an open-source DBMS initially released in 1995 [27].
+that are flaky due to a high reliance on external dependencies or                   Today, Oracle offers MySQL Server in two versions: the open-source
+due to inter-dependencies with other tests. Expert judges in the lon-               MySQL Community Server and the proprietary MySQL Enterprise
+gitudinal study found that most LLMs are proficient in generating                   Server. For this work, we examine the open-source MySQL Com-
+isolated tests, with GPT-4 being the only exception.                                munity Server (in the following referred to as MySQL).
+                                                                                       The source code in MySQL’s GitHub repository [27] is mostly
+3     Database Management Systems                                                   written in C/C++ and consists of approximately 7 million SLOC,
+The goal of our study was to gain insights into the flakiness of                    measured using CLOC [3]. Similar to SAP HANA, the MySQL test
+LLM-generated tests in the context of database management sys-                      suite mainly comprises two types of tests: SQL tests written in a
+tems (DBMS). The observed types of flakiness may vary for other                     dedicated test language and unit tests written in C++. Also similar
+software projects [32]. We focused our study on two types of tests                  to SAP HANA, MySQL has a set of unit tests that are written using
+commonly encountered in database systems: native C++ tests and                      the GoogleTest framework. To enable a comparison between the
+SQL tests, which execute SQL statements against a running data-                     results for SAP HANA and MySQL, we examined these GoogleTest
+base [10]. We chose SAP HANA and MySQL for our evaluation of                        unit tests in our study.
+native unit tests, as they both share GoogleTest as one of the adopted
+test frameworks. We further examined DuckDB’s and SQLite’s SQL                       3.3    SQLite
+tests, as they represent lightweight alternatives offering short build              SQLite is a lightweight open-source DBMS mostly written in C [20].
+and test times. Table 1 provides a summary of the considered DBMS                   According to its documentation, SQLite is the most widely used
+and included test cases.                                                            database engine in the world [19]. The main use case of SQLite is
+                                                                                    to provide a local data storage for applications that is easy to use
+3.1    SAP HANA                                                                     and requires no complex setup or administration.
+SAP HANA is an in-memory DBMS that was introduced by SAP in                            Compared to SAP HANA and MySQL, the SQLite repository con-
+2010 [10]. Typically, SAP software is used to orchestrate business                  tains fewer lines of code, comprising approximately 400 000 SLOC.
+operations, often using SAP HANA to store and retrieve business-                    For testing the SQLite core library, there exist four different test
+critical data [42]. Thus, failures of SAP HANA can have a negative                  harnesses: TH3, TCL, SQL Logic Test, and dbsqlfuzz [19]. TH3 and
+impact on customers’ business operations. This, in turn, justifies                  dbsqlfuzz are proprietary harnesses and are not publicly available.
+high investments in an extensive and continuous testing process.                       Therefore, in our study, we focused on SQLite’s Tool Command
+   SAP HANA’s source code consists of millions of source lines of                   Language (TCL) test harness, which is publicly available and serves
+code (SLOC), mostly written in C++ [14, 42]. The regression test suite              as the main test suite for testing SQLite during development. The
+of SAP HANA mainly includes two types of tests: 1) native C++ unit                  TCL test harness provides a TCL wrapper around SQL tests that
+tests that verify a certain functionality in isolation and 2) system                are executed against a running database instance, similar to SAP
+tests that execute SQL statements on a running database [10].                       HANA’s system tests. Thus, our goal was to gain insights into the
+   Due to the large amount of resources required for testing, SAP                   flakiness of LLM-generated tests that contain SQL statements.
+utilizes a multistage approach to test SAP HANA [14]. The dif-
+ferent testing stages vary in resource demands and the frequency                     3.4    DuckDB
+with which the respective tests are executed. These stages range                     DuckDB is a lightweight analytical RDBMS developed in C++ [25].
+from the local testing of developers in the initial stage to extended                Since its release in 2018, DuckDB has become an emerging DBMS
+manual and automated testing for final release qualification. To                     that is continually refined [44, 45, 55]. With its vectorized query
+ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil                   Alexander Berndt, Thomas Bach, Rainer Gemulla, Marcus Kessel, and Sebastian Baltes
+
+
+Table 1: The number of relevant test files and test cases in                 therefore tailored for projects that already contain a large number
+the original test suites of the study subjects. Note that (1) the            of existing tests, and iii) it provides the existing test code as an input
+number of relevant files and tests represents only a subset of               for an LLM, which we expected to increase the chance of obtaining
+SAP HANA’s unit tests, which we selected with the assistance                 compilable and executable output for closed-source projects with
+of practitioners, and (2) the numbers depend on the different                highly customized and rather complex test code such as SAP HANA.
+ways in which the test frameworks count tests.                               Furthermore, the chosen approach utilizes a relatively simple setup
+                                                                             to generate flaky tests, which enabled its adoption in the context of
+               Language       Project          #Test Files   #Tests          SAP HANA. In the following, we detail our setup to generate tests
+                                                                             for our flakiness evaluation.
+                              MySQL                    260     2127
+               C++                                                               Prompt. In accordance with Alshahwan et al. [5], we instructed
+                              SAP HANA                1525    19 947
+                                                                             the model to “Write an extended version of the test file that includes
+                              DuckDB                  2748   236 185         additional tests to cover some extra corner cases.”. We provided
+               SQL
+                              SQLite                   603   388 282
+                                                                             the existing test file as input context, as previous work has shown
+                                                                             that LLMs are capable of generating tests that amplify the current
+                                                                             test suite given a minimal context [5]. We chose this rather simple
+execution engine, DuckDB is specifically optimized for online ana-           setup, as the focus of our study was only to generate a sample
+lytical process (OLAP) workloads.                                            of tests for our flakiness evaluation, assuming that flakiness is
+   DuckDB’s source code is mostly written in C++, comprising al-             evenly distributed between tests generated by different approaches
+most 2 million SLOC. The DuckDB test suite consists of native                for LLM-based ATG. Finally, we added an output indicator to the
+C++ tests written with the Catch2 unit testing framework and SQL             prompt so that we could parse the generated code from the LLM’s
+tests written with sqllogictest [25]. While native C++ tests are specif-     response and patch the existing test file.
+ically targeting the C++ API of DuckDB, DuckDB’s developers aim to               Models. We conducted our experiments using two LLMs, GPT-
+test most functionality with the help of SQL tests. For our study, we        4o and Mistral-Large-Instruct-2407 (in the following: Mistral). Both
+focused on DuckDB’s SQL tests to gain insights into the flakiness            models were provided by an internal API at SAP, which can be used
+of LLM-generated SQL tests.                                                  with an SDK that supports LangChain integration [26], allowing up
+                                                                             to 100 requests per minute. We mainly chose GPT-4o because it was
+4     Methodology and Research Questions                                     the best-performing model [2] available via the internal API, which
+In this section, we motivate our research questions and outline our          allowed us to use internal data (i.e., the SAP HANA source code).
+methodology for addressing them.                                             We repeated our experiments with Mistral’s large instruct model to
+                                                                             foster the reproducibility of the results for the open-source projects
+4.1     RQ1: Prevalence                                                      in this study in accordance with existing guidelines on empirical
+                                                                             studies using LLMs [11, 69]. We chose Mistral as the open-source
+With the first research question, we wanted to gain insights into
+                                                                             alternative as it was the only open-source model available via the
+the prevalence of flakiness in LLM-generated tests.
+                                                                             internal API at the time of our study. We set the temperature to
+        RQ1: What is the proportion of flaky tests in LLM-                   zero for both models, as this setting has been shown to produce
+        generated tests for test amplification?                              tests with the highest compilation success rate (CSR) in a previous
+   Motivation: Automated test generation (ATG) is one of the                 study [5]. Both models have a context window of 128k tokens.
+most commonly targeted tasks by previous research on LLM-based               While GPT-4o’s number of parameters is estimated at 200b [1],
+software testing [70]. Thus, many potential approaches to em-                Mistral-Large-Instruct-2407 has 123b parameters.
+ploy an LLM for test generation have been proposed [4, 5, 18, 22–                Based on the given prompt and models, we generated code for
+24, 37, 48, 59, 74], most of them focusing on the generation of              each of the files listed in Table 1 using both LLMs. After parsing
+regression tests [36]. The goal of this research question was to gain        the newly generated test code from the LLMs’ response, we ex-
+insights into the prevalence of flakiness in LLM-generated regres-           tended the original test files with the new code. By integrating the
+sion tests. With this, we aimed to project the long-term impact              generated code into existing test files, we were able to utilize the
+of an increasing use of LLM-based test generation on the flaki-              test frameworks of the respective projects as-is, which simplified
+ness of a test suite. Existing LLM-based ATG approaches typically            the automated execution of the resulting test code. After patch-
+utilize LLMs to generate the desired test code directly [4], or in           ing the original test files, we compiled the resulting code to filter
+combination with traditional ATG tools such as Pynguin or Evo-               syntactically incorrect files.
+suite [24, 30, 43, 49]. In this study, we chose to employ a standalone           Execution Environment. To ensure a clean environment for
+LLM approach, as the scalability of traditional ATG tools to large           every test execution and avoid flakiness caused by environmental
+code bases is limited [41]. Moreover, we did not find any readily            factors, we executed the tests in separate Docker containers, which
+available solution for our study subjects, that is large C++ projects.       is common practice in empirical studies on test flakiness [33, 47, 63,
+   Approach: We adopted an approach of Alshawan et al. [5],                  65, 66, 71, 75]. For this, we created a dedicated Docker image for
+which was previously deployed at Meta with promising results.                each of the projects in our study. These Docker images contained
+Figure 1 illustrates our approach, which we chose for three main             a compiled version of the respective project, so after launching a
+reasons: i) it was already tested in a large industrial software project     container based on the image, we only had to patch the relevant
+with promising results, ii) it amplifies existing test suites and is         test file before initiating the test execution. We report the commit
+On the Flakiness of LLM-Generated Tests for Industrial and Open-Source Database Management Systems                ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil
+
+
+                                                                                                         Test 1
+                                                                                                                  Execute
+                                                                                                                    30x
+                                                                          no
+
+                                                                                            Identify
+                                                      Patch          Compiles?     yes
+                                                                                             Added                                        Test Result
+                                                                                             Tests                                         Database
+             Existing      LLM       Generated
+             Test File                  Diff                                                                      Execute
+                                                                                                                    30x
+                                                                                                         Test n
+
+
+Figure 1: Study setup inspired by Alshahwan et al. [5]: We first prompt the LLM to generate new tests given an existing test file.
+Then, the generated code is added to the existing test file before compilation. After compilation, we identify the newly added,
+generated tests, execute them in separate Docker containers, and store the results in a database.
+
+
+hashes of the projects we used for this study in our replication                         perform 30 repeated executions, as our goal was to detect flaky
+package. In the following, we briefly describe the execution setup                       tests that are practically relevant, i.e., tests that fail with a high
+for the two types of tests in this study.                                                probability.
+   Executing C++ Tests. For the C++ tests, we launched a Docker
+container for each test before executing the tests one-by-one in                         4.2    RQ2: Root Causes
+isolation. In preliminary experiments, we found that “naively” ex-                   With the second research question, our aim was to find the most
+ecuting generated tests for database systems at scale may lead to                    prominent root causes of test flakiness in LLM-generated tests.
+crashes of the execution server. For example, a generated test for
+                                                                                             RQ2: What are the flakiness root causes of LLM-generated
+SAP HANA’s memory management tried to allocate a very large
+                                                                                             tests for test amplification?
+amount of memory, thus causing resource contention. We limited
+the impact of such cases by providing the Docker containers with                        Motivation: One might expect that the root causes for the flaki-
+a fixed amount of computational resources and timing out long-                       ness of LLM-generated tests follow the distribution of existing tests,
+running test executions after five minutes. Note that this specific                  as LLMs essentially mimic human behavior they learned from their
+execution environment also sets limits on the types of flakiness                     pre-training. However, as discussed in Section 2, previous research
+that we could possibly observe. For example, by providing the test                   suggests that flakiness in LLM-generated tests can occur due to
+executions with a fixed amount of computational resources, we                        different root causes [9, 64]. For example, LLMs may generate flaky
+expected to reduce the impact of resource-affected flaky tests [66].                 tests due to a lack of sufficient context, which is available to de-
+More specifically, we expected mainly observe intra-test flakiness                   velopers but has not been externalized in the context of a prompt.
+in our experiments, as our test isolation via Docker minimizes                       Furthermore, previous work also pointed out that the root causes of
+the probability of failures caused by inter-dependencies between                     flakiness vary between different types of software [32]. Therefore,
+tests [62]. We made this decision to increase the control and focus                  we investigated the root causes of flaky tests generated by LLMs in
+of our study and to identify only the types of flakiness that were                   the context of DBMS.
+caused by the generated code itself.                                                    Approach: To gain insights into the root causes of flakiness in
+   Executing SQL Tests. In contrast to the C++ tests, we launched                    LLM-generated tests, we manually labeled the flaky tests identified
+the Docker containers for the SQL tests for each test file. This is                  based on our definition of flakiness in Section 2, identified by re-
+due to the structure of the SQL tests. The SQL tests are order-                      peated test executions. We conducted the labeling using the test
+dependent by design, i.e., the custom test frameworks of SQLite                      results of the repeated test executions, the resulting error messages
+and DuckDB always execute the tests in a file in the same order,                     in failing executions if reproducible, and the executed test code. In
+thus explicitly allowing developers to write order-dependent tests.                  accordance with previous research on flakiness [33], we utilized
+Listing 1 illustrates an example from DuckDB. In this case, the test                 the categories by Parry et al. [62] as described in Section 2 for our
+aims to test the join operator. For this, a table is first created and               labeling. To enable a comparison between the root causes of flak-
+populated, before the join operator is applied. Although one might                   iness for tests written by developers and those generated by the
+consider such tests inherently flaky, as executing them in a different               LLM, labeling was conducted for the flaky tests resulting from the
+order would cause test failures, we emphasize that the focus of our                  generation experiments, as well as for existing flaky tests.
+study was on practically relevant flakiness. Therefore, we executed
+the tests in an environment that resembles the testing environment                       4.3    RQ3: Transfer
+in practice, where the execution order is predetermined.                                 Our third research question concerned the degree to which LLMs
+   Existing Tests. To ensure that our execution environment meets                        are susceptible to transferring flakiness from existing tests to the
+the requirements for the given projects and to identify any poten-                       newly generated tests.
+tially existing flaky tests, we first executed all relevant existing tests                      RQ3: To what degree does an LLM transfer flakiness
+from the different projects 𝑛 = 30 times and stored the results from                            present in the provided in-context example tests to the
+these test executions in a database for later analysis. We chose to                             newly generated tests?
+ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil                    Alexander Berndt, Thomas Bach, Rainer Gemulla, Marcus Kessel, and Sebastian Baltes
+
+
+   Motivation: Previous work on LLM-based test generation found             1   statement ok
+                                                                            2   CREATE TABLE test (a INTEGER, b INTEGER);
+that when generating new tests, LLMs follow existing coding con-            3   statement ok
+ventions and adhere to the structure of the code presented in the           4   INSERT INTO test VALUES (11, 1), (12, 2), (13, 3);
+                                                                            5   statement ok
+context of a prompt [5, 37]. Harman et al. [36] called this effect          6   CREATE TABLE test2 (b INTEGER, c INTEGER);
+“Fashion Following” and argued that the resulting test code is thus         7   statement ok
+                                                                            8   INSERT INTO test2 VALUES (1, 10), (1, 20), (2, 30);
+more intuitive to human readers. This “Fashion Following” can be            9   # simple cross product + join condition
+                                                                           10   query III
+attributed to the ability of LLM to learn from examples in the given       11   SELECT a, test.b, c FROM test, test2 WHERE test.b = test2.b ORDER BY c;
+input context, that is, in-context learning (ICL) [17, 73]. ICL has        12   ----
+                                                                           13   11      1       10
+been shown to be an effective approach to improve the performance          14   11      1       20
+of an LLM on various tasks [17]. However, previous research has            15   12      2       30
+
+also shown that LLMs lack robustness against spurious correlations                  Listing 1: Example structure of an SQL test for DuckDB.
+when learning from the provided context [38, 67]. We hypothesized
+that, for test amplification, this may lead to the transfer of flakiness
+from the existing tests, which are shown to the LLM, to the newly
+                                                                                Table 2: An overview of the relevant existing tests in our
+generated test code. Therefore, we aimed to gain insights into the
+                                                                                study subjects.
+robustness of LLMs against such a flakiness transfer.
+   Approach: We injected flakiness into existing tests and repli-
+cated our test generation experiment with the injected flaky tests.                   Metric           SAP HANA          MySQL       SQLite     DuckDB
+More specifically, we added an assertion to the C++ tests that fails                  #Tests                 19 947          2127    388 282      236 185
+with 50% probability, using the following steps [21]: (1) Parse the                   #Flaky Tests       13 (0.07%)    13 (0.61%)          0            0
+original code of the given tests from the C++ files. (2) Add an asser-
+tion to the test, which may fail based on the outcome of a coin flip
+at the end of the test code. (3) Replace the original test code with
+the injected code for every test in all relevant test files. (4) Persist        and repeated the injection experiments two additional times to en-
+the injected files for later use. We performed these steps before               sure the reported proportion of tests containing the flaky assertion
+providing the test files to the LLM and evaluated whether the LLM               is valid. Furthermore, in all our experiments, we set the tempera-
+“follows” the injected flakiness in its generated output.                       ture to zero, as this setting has been shown to promise the most
+                                                                                consistent results in a previous study [57].
+                                                                                    Construct Validity. In contrast to previous studies on flakiness,
+                                                                                which have performed up to 10 000 repeated executions of a test
+4.4     Threats to Validity                                                     to gain insights into its flakiness [7], we executed the tests in this
+Internal Validity. In contrast to Alshahwan et al. [5], we did not              study only 30 times. Since some flaky tests have been shown to
+calculate the code coverage of the resulting tests. Instead, we kept all        fail rarely [14], we may therefore underestimate the prevalence of
+compiling tests for our flakiness evaluation. To mitigate the threat            flakiness in our study. For example, assuming that test executions
+of analyzing mostly nonsensical tests, we conducted a qualitative               are independent and identically distributed, we expected to identify
+analysis of the flaky tests during our manual inspection of flakiness           tests with a failure probability of 15% with a probability of 99%.
+categories. Furthermore, we analyzed the syntactic similarity of                With 10 000 repeated executions, tests with a failure probability of
+the generated tests with the existing tests to ensure that the LLM              0.04% could be identified with 99% probability. However, using 30
+did not simply reproduce existing tests with new inputs at scale.               repeated executions to identify flaky tests is similar to the reality
+We measured the syntactic similarity with the Levenshtein Edit                  of SAP’s approach for detecting flaky tests, which is based on the
+Distance (LED), as it is a simple but effective measure to compare              trade-off between detecting all flaky tests and overestimating the
+the syntactical similarity of generated test code [57]. To achieve              flakiness due to environmental noise.
+this, we compared each existing test with each newly generated test                 External Validity. Our study setup is limited to a single LLM-
+in a file. For example, in a file with 𝑛 = 3 existing tests and 𝑚 = 2           based ATG approach in the idiosyncratic context of relational data-
+LLM-generated tests, we compared both LLM-generated tests with                  base systems. Therefore, the resulting flakiness distributions we
+the 3 existing tests, thus ending up with 𝑛 × 𝑚 = 6 comparisons.                observe might not generalize to other contexts, such as NoSQL data-
+We report the distribution of the closest distances between existing            base systems or different software domains. Furthermore, given
+and LLM-generated tests per file in Figure 2.                                   the small number of flaky tests in our study, the statistical signifi-
+   Since LLMs are inherently non-deterministic, multiple repeti-                cance of our results is limited. We view the results of our study as
+tions of the same experiment may lead to different results. To mit-             a first step toward more detailed insights into the flakiness of LLM-
+igate the threat of the inherent non-determinism of LLM, we fol-                generated tests. We motivate other researchers to experiment with
+lowed two approaches. First, we repeated relevant parts of our                  different prompts, LLM-based ATG setups, and software projects.
+experiments to measure the degree to which our conclusions could
+be impacted by randomness. We performed these repetitions with                  5     Results
+GPT-4o, as it consistently yielded better results than Mistral. More            In this section, we report the results of our experiments. We start
+specifically, we repeated the generation for files containing flaky             by giving an overview of the execution results of existing tests.
+tests in our initial experiments to see whether the flakiness persists,         Afterwards, we report the results of the LLM-generated tests.
+On the Flakiness of LLM-Generated Tests for Industrial and Open-Source Database Management Systems                                                              ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil
+
+
+
+                                   Distribution of Levenshtein Distances (90th percentile; n = 2680)                                        Distribution of Levenshtein Distances (90th percentile; n = 774)
+                             500
+                                                                                                                                      800
+                             400
+
+
+
+
+      Levenshtein Distance                                                                                     Levenshtein Distance
+                                                                                                                                      600
+                             300
+
+                                                                                                                                      400
+                             200
+
+                                                                                                                                      200
+                             100
+
+                                                                                                                                       0
+                              0
+
+
+
+
+   (a) Tests generated by GPT-4o using existing tests in SAP HANA.                                                    (b) Tests generated by GPT-4o using existing tests in MySQL.
+
+                                         Figure 2: Violin plots displaying the syntactical difference between generated and existing tests.
+
+Table 3: The results from the executions of our LLM-generated tests. Note that SQLite and DuckDB tests are written in SQL and
+do not need to be compiled (compilation success rate marked with “—” in the table).
+
+                                                            Project           #Diffs    #Compilation Successes                        #Added Tests       #Passing Tests       #Flaky Tests
+                                                            SAP HANA           1525                    707 (46%)                               2975          1678 (56%)           5 (0.29%)
+                                                            MySQL               260                    173 (67%)                                 868           550 (63%)          1 (0.18%)
+                                                GPT-4o
+                                                            SQLite              598                           —                              133 592       126 774 (95%)          4 (0.00%)
+                                                            DuckDB             2688                           —                               71 031        57 591 (81%)         42 (0.07%)
+                                                            SAP HANA           1525                    616 (40%)                               3257          1773 (54%)           6 (0.39%)
+                                                            MySQL               241                    138 (57%)                                 861           560 (65%)          4 (0.71%)
+                                                Mistral
+                                                            SQLite              592                           —                               60 123        52 276 (87%)          6 (0.01%)
+                                                            DuckDB             2676                           —                              119 666       100 794 (84%)         47 (0.05%)
+
+
+5.1                     RQ1: Proportion of Flaky Tests                                                             Generated C++ Tests. Table 3 shows the execution results of
+In our first research question, our aim was to gain insights into the                                          the LLM-generated tests. Using GPT-4o, we generated 1785 diffs
+prevalence of flakiness in LLM-generated tests. In the following,                                              resulting in 3843 added tests. For Mistral, we obtained a similar
+we report the quantitative results of our test executions.                                                     number with 4012 added tests. The compilation success rate (CSR)
+   Existing Tests. Table 2 shows the results of 30 repeated execu-                                             differed between MySQL and SAP HANA both for Mistral and GPT-
+tions of the existing tests. We observed that both C++ projects show                                           4o. While GPT-4o produced compilable code for two out of three
+a small number of flaky tests. For MySQL, 13 of 2127 (0.6%) passing                                            files for MySQL, less than half of the resulting files for SAP HANA
+tests show flaky behavior. This number is similar to the flakiness                                             were compilable. We consider this result intuitive, as SAP HANA’s
+numbers reported in previous work [33]. Analyzing the 13 flaky                                                 source code was not part of the training data and previous research
+tests, we observed that they originated from four different test files.                                        suggests that missing background knowledge on the project context
+They all suffered from NIO flakiness, i.e., the tests self-pollute the                                         may cause compilation errors due to hallucination [76]. Comparing
+execution environment in their first execution. Listing 2 shows an                                             Mistral to GPT-4o, we observed a slightly lower CSR for Mistral,
+example of an NIO-flaky MySQL test. In the example in Listing 2,                                               with a drop by a factor of 0.87 for SAP HANA and 0.82 for MySQL.
+the test uses static variables that are not reinitialized in subsequent                                        Similarly, comparing the pass rates for SAP HANA and MySQL,
+executions, thus causing the assertions in lines 18 and 19 to fail.                                            we observed that tests generated for MySQL yield a slightly higher
+   We observed no flaky tests in the existing tests of SQLite and                                              pass rate (63% vs. 56%) for both LLMs.
+DuckDB. While all original tests for DuckDB yielded a passing                                                      We observed a relatively low number of flaky tests for both SAP
+result, ten tests of SQLite did not pass in our execution environment.                                         HANA and MySQL. GPT-4o generated a single flaky test for MySQL.
+We found that one of these tests exceeded our five-minute timeout,                                             For SAP HANA, we observed flaky behavior in five generated tests.
+one was skipped, and eight tests failed. All failing tests resulted from                                       With six flaky tests for SAP HANA and four for MySQL, Mistral
+a single file containing tests for SQLite’s write-ahead logging (WAL)                                          generated a higher number of flaky tests, resulting in a slightly
+mode [19]. Each of these tests required ten threads simultaneously,                                            higher proportion of flaky tests in both projects.
+which collides with our approach to parallelized test execution. We                                                Generated SQL Tests. We report the results of the SQL tests in
+omitted this file in the following experiments.                                                                Table 3. Compared to the two C++ projects, we observed higher pass
+     ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil                 Alexander Berndt, Thomas Bach, Rainer Gemulla, Marcus Kessel, and Sebastian Baltes
+
+
+ 1       TEST(                                                                1   -- Test with UNION BY NAME and complex data types
+ 2         ut0new_new_delete_arr,                                             2   query I
+ 3         destructors_of_successfully_instantiated_                          3   SELECT {'key': 'val'} AS json_col UNION BY NAME SELECT {'key': 123} AS json_col;
+ 4         trivially_constructible_elements_are_invoked                       4   ----
+ 5         _when_one_of_the_element_constructors_throws) {                    5   {'key': val}
+ 6       static int n_constructors = 0;                                       6   {'key': 123}
+ 7       static int n_destructors = 0;
+ 8                                                                                Listing 3: Example for a flaky test of the unordered collection
+ 9       bool exception_thrown_and_caught = false;
+10       try {                                                                    category generated by GPT-4o for DuckDB.
+11         auto ptr = ut::new_arr_withkey<Type_that_may_throw>(
+12             ut::make_psi_memory_key(pfs_key), ut::Count(7));
+13         ASSERT_FALSE(ptr);
+14       } catch (std::runtime_error &) {
+15         exception_thrown_and_caught = true;                                1   -- Test with a large number of random values
+16       }                                                                    2   statement ok
+17       EXPECT_TRUE(exception_thrown_and_caught);                            3   CREATE TABLE random_values AS
+18       EXPECT_EQ(n_constructors, 4);                                        4   SELECT random() * 1000 - 500 AS x FROM range(10000);
+19       EXPECT_EQ(n_destructors, 3);                                         5   query I
+20   }                                                                        6   SELECT mad(x) FROM random_values
+                                                                              7   ----
+            Listing 2: Example for existing flaky test in MySQL.              8   250
+
+                                                                                  Listing 4: Example for a flaky test of the random category
+                                                                                  generated by GPT-4o for DuckDB.
+     rates for SQL tests, ranging between 81% and 95%. Note that there
+     was a large difference in the number of generated tests for DuckDB
+     and SQLite between models. We attribute this difference to the way
+     we count SQL tests. A single SQL test in the code may be executed               Overall, the most prevalent category for flaky LLM-generated
+     for different configurations of the database on which the test is            tests was “unordered collection”, appearing in 33 of 52 flaky tests
+     executed. Since we counted each instance of such an execution as             for GPT-4o (65%) and 38 of 63 tests for Mistral (60%). All flaky
+     a distinct test, one additional generated test may increase the num-         tests in the “unordered collection” category were generated for
+     ber we count by more than one. Although there were no existing               DuckDB. In these cases, the LLMs generated SQL statements that
+     flaky tests in the original test suites of both projects, both models        assumed an order for the result of a query, without proper use of
+     generated flaky tests for SQLite and DuckDB. GPT-4o generated                ORDER BY. Listing 3 illustrates an example of such a test, which was
+     a relatively low number of flaky tests for SQLite (4), but a notably         generated for a file containing tests for the UNION BY NAME operator.
+     higher number of flaky tests for DuckDB (42). With six flaky tests           Generally, DuckDB offers two base operators for performing unions,
+     for SQLite and 53 for DuckDB, Mistral generated more flaky tests             UNION and UNION ALL [54]. The difference between UNION and
+     than GPT-4o, similar to our results for the C++ tests.                       UNION ALL is that UNION performs deduplication when stacking,
+        Syntactical Similarity. Figure 2 displays the LEDs between                thereby neglecting the original row order. However, in the case
+     existing and LLM-generated tests. We observed an average LED of              of the example in Listing 3, the LLM utilized the UNION BY NAME
+     299.14 between LLM-generated and existing tests for SAP HANA                 operator instead of UNION ALL BY NAME, without an explicit ORDER
+     (min=8, 𝑄 1 =62, 𝑄 3 =250, max=45 926). Furthermore, for SAP HANA,           BY. Thus, the test suffered from flaky failures as the values might
+     there was no LLM-generated test that was an exact copy of an                 be returned in the wrong order.
+     existing test. For MySQL, the syntactic similarity between LLM-                 Generally, the distribution of flakiness categories appeared simi-
+     generated and the closest existing test per test file is higher, with        lar between the two models. As shown in Figure 3, there was also a
+     an average of 405 (min=0, 𝑄 1 =101, 𝑄 3 =466, max=10 154). Overall,          notable overlap in the files that include the generated flaky tests,
+     we conclude that the resulting LEDs suggest a sufficiently large             suggesting that some files are particularly prone to flakiness. List-
+     syntactical dissimilarity between existing tests and tests generated         ing 4 shows an example of a test that suffered from randomness,
+     by the LLMs.                                                                 which was generated by both the GPT-4o and the Mistral model for
+         Result RQ1 (Proportion): The proportion of flaky tests gener-            the file test_mad.test. In addition to “unordered collection”, we
+         ated by the LLM varied between projects and models. Compared             found “NIO” flakiness to be a problem for both LLMs, appearing in
+         against existing tests, we observed a higher proportion in the           12 of 115 flaky tests overall (10%). Nine of these 12 flaky tests were
+         generated C++ tests by GPT-4o for SAP HANA. For MySQL, the               generated for one file in SAP HANA’s repository, five by Mistral
+         proportion of flaky tests was lower for the generated tests. For         and four by GPT-4o. In this case, the LLMs employed an existing
+         Mistral, the proportion of flaky C++ tests is slightly higher. Al-       test function that increases a counter variable without properly
+         though we found no flaky SQL test written by a developer, we             cleaning the state at the end of the test. Since this function also
+         found 96 flaky tests in the tests generated by the LLMs in this          causes flakiness in existing tests, the models merely followed the
+         study (43 for GPT-4o, 53 for Mistral).                                   flakiness that was already present in the context.
+                                                                                     For tests of the “concurrency” category, there is a notable differ-
+                                                                                  ence between the models. Eight out of nine tests that suffered from
+     5.2       RQ2: Root Causes                                                   concurrency were generated by Mistral. These tests were generated
+     We manually inspected the resulting flaky tests to gain insights             for SQLite, MySQL, and DuckDB. For SQLite and DuckDB, they
+     into the root causes of their flakiness. We report the results of our        tested the respective thread handling implemented in the project. In
+     manual categorization in Table 4.                                            DuckDB, the issue was related to the locking functionality. In these
+On the Flakiness of LLM-Generated Tests for Industrial and Open-Source Database Management Systems           ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil
+
+
+
+          Mistral                                    GPT- 4o
+                                                                                     5.3    RQ3: Flakiness Transfer
+                                                                                    We report the results of our flakiness transfer experiment in Table 5.
+                                                                                    As shown in Table 5, both models were susceptible to transferring
+                      36         19       29
+                                                                                    the injected assertion to the newly generated tests. In addition,
+                                                                                    GPT-4o and Mistral showed an increased susceptibility to trans-
+                                                                                    ferring the flaky assertion in the context of SAP HANA compared
+                                                                                    to MySQL. The proportion of tests containing the flaky assertion
+Figure 3: Venn diagram showing the number of files contain-                         was approximately 20% higher between projects for both models.
+ing generated flaky tests for GPT-4o and Mistral, respectively.                     We conjecture that this is due to the background knowledge the
+                                                                                    models have gained on MySQL during pre-training.
+                                                                                       Comparing between models, GPT-4o yielded a lower proportion
+                                                                                    of tests containing the flaky assertion by a factor of 0.88 for SAP
+    Table 4: Root cause category frequency of flaky tests.
+                                                                                    HANA and 0.72 for MySQL. Looking at the difference between
+                                                                                    passing and non-passing tests, there was only a negligible difference
+       Type                               GPT-4o       Mistral      Total           between the proportion of tests containing the flaky assertion for
+       Unordered Collection                     34             38     72            GPT-4o. For tests generated by Mistral, the proportion was lower
+       NIO                                       5              7     12            by a factor of 0.92 for SAP HANA and 0.78 for MySQL. On a file-
+       Concurrency                               1              8      9            level, we observed that the LLM most often either transfers the
+       Unknown                                   4              2      6            flaky assertion to all newly generated tests in a file, or to none of
+       I/O                                       2              3      5            them. For example, the 1052 resulting flaky tests for SAP HANA
+       Randomness                                1              3      4
+                                                                                    generated by GPT-4o arose from 344 generated diffs, i.e., 23% of all
+       Other                                     3              0      3
+                                                                                    generated diffs. However, only one of these diffs contained both
+       Uninitialized Variable                    1              1      2
+       Time                                      1              1      2            tests with and without the flaky assertion. Similarly, the flaky tests
+       Floating Point                            0              0      0            generated for SAP HANA by Mistral are contained in two files.
+       Too Restrictive Range                     0              0      0               Repeated Executions. Based on two additional repetitions of
+       Test Case Timeout                         0              0      0            our experiments, we observed only marginal changes compared
+       Total                                    52             63    115
+                                                                                    to the results in Table 5, with the largest deviation being 2%. For
+                                                                                    MySQL, the proportion of tests that contained the flaky assertion
+                                                                                    in our repetitions was 40% and 42% compared to 42% in our initial
+                                                                                    experiment. For SAP HANA, we observed 68% and 71% compared
+                                                                                    to 69% in our initial experiment.
+cases, similar to the tests in “unordered collection”, Mistral lacked
+knowledge of parallelism handling in the respective projects.                         Result RQ3 (Following): Both LLMs were susceptible to trans-
+   Repeated Executions. To gain insights into whether the flaky                       ferring the flakiness present in the provided context. Compared
+tests persist in repeated executions of our experiment, we repeated                   to GPT-4o, a higher proportion of tests generated by Mistral con-
+our generation for the files containing flaky tests in the context                    tained the flaky assertion. For both models, the prevalence was
+of SAP HANA and MySQL two additional times. We found that                             higher in the context of SAP HANA compared to MySQL.
+every flaky test in the initial iteration was reproduced in at least
+one of the repetitions for the C++ tests. For MySQL, the single flaky
+test observed in our initial experiment was reproduced in both                       6     Discussion
+repetitions. For SAP HANA, we found that one flaky test was only                    In this section, we discuss the implications of our empirical results.
+reproduced in a single repetition, whereas the semantic copies of                      On LLM-based Test Generation. Overall, we observed that the
+the other four flaky tests were contained in both iterations.                       LLM-based test generation approach of Alshahwan et al. [5] resulted
+   For the SQL tests, we observed that three of four flaky tests for                in a reasonable number of generated tests. Although we chose the
+SQLite were reproduced in two additional repetitions. For DuckDB,                   simplest possible setup to generate tests using an LLM, we were able
+of the 42 flaky tests in the initial experiment, we were able to                    to generate compilable diffs, even for complex projects such as SAP
+reproduce 37 in the first and 40 in the second repetition. Overall,                 HANA. However, compared to the original study of Alshahwan
+we conclude that there was a sufficiently large overlap of the root                 et al. [5], we observed a notable decrease in compilation success.
+causes between repetitions.                                                         This decrease is expected due to the inherent complexity of database
+                                                                                    systems and the complexity of C++ compared to Kotlin. The drop in
+ Result RQ2 (Root causes): Unordered collection was the most
+                                                                                    compilation success for SAP HANA confirms our assumption that
+ prevalent root cause of flaky tests in our study. All instances of
+                                                                                    LLMs may yield worse results in a large and complex closed-source
+ tests suffering from this cause were SQL tests, where the LLMs
+                                                                                    project. Based on the results of our study, future work at SAP is
+ expected an ordered result set without proper use of order by. We
+                                                                                    currently exploring approaches to provide LLMs with the required
+ also found NIO to be a common root cause of flakiness in LLM-
+                                                                                    context to handle the large number of custom libraries used within
+ generated tests, mostly caused by LLM following the flakiness of
+                                                                                    SAP HANA’s source code, which are not known to public LLMs. We
+ existing tests.
+                                                                                    view the simple setup of this study as a starting point for future work
+ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil                           Alexander Berndt, Thomas Bach, Rainer Gemulla, Marcus Kessel, and Sebastian Baltes
+
+
+             Table 5: The results from our test amplification approach using the test files with injected flaky assertions.
+
+                       Project          #Diffs     #Compilation Successes   #Added Tests   #Tests w/ Flaky Assertion         #Passing Tests       #Flaky Tests
+                       SAP HANA           1505                  638 (42%)          2794                      1939 (69%)                  1510       1052 (70%)
+           GPT-4o
+                       MySQL               259                  176 (68%)           792                       331 (42%)                   526        217 (41%)
+                       SAP HANA           1505                  652 (43%)          2591                      2012 (78%)                  1467       1051 (72%)
+           Mistral
+                       MySQL               252                  142 (56%)           867                       507 (58%)                   715        319 (45%)
+
+
+on this topic, which may employ more sophisticated approaches to                     7     Conclusions
+test generation. For example, future work could experiment with                      To gain insights into the flakiness of LLM-generated tests for data-
+other setups than test amplification or investigate the impact of                    base systems, we used two LLMs to generate two types of tests
+different prompting techniques.                                                      commonly encountered in database systems: native C++ unit tests
+   On the Resulting Proportion of Flaky Tests. We found that                         and SQL tests that run SQL statements. We applied an approach for
+both LLMs generate flaky tests across all projects. The resulting                    LLM-based test amplification to three open-source databases and
+proportion of flaky tests for LLM-generated C++ tests was slightly                   SAP HANA, a large industrial database, and examined the flakiness
+higher than the proportion of flaky tests in the existing tests. Con-                of the resulting tests.
+sequently, we expect that the use of LLMs for the test generation                       Our study revealed that LLMs struggle to generate compilable
+could increase the overall proportion of flaky tests in a test suite.                C++ source code, especially in complex closed-source projects such
+Furthermore, fixing flaky tests is often neglected due to other pri-                 as SAP HANA. Our analysis showed that the most common root
+orities [14, 40], even for existing tests. For generated tests, the lack             cause of flakiness generated by LLMs in the context of our study
+of ownership for these tests may exacerbate this effect, leaving                     was SQL statements in which the LLM expects a certain order
+LLM-generated flaky tests as a long-term liability in the test suite.                without proper use of ORDER BY. We found that the proportion of
+   On the Results of our Manual Inspection. Based on our                             flaky tests as well as root causes varied between LLMs. However,
+manual inspection of flaky tests, we conjecture that a lack of context               both LLMs transferred existing flakiness from existing tests in the
+on the system under test may be the major cause of flakiness in LLM-                 given context of a prompt to newly generated tests. We attribute
+generated tests. This seems particularly pronounced for SQL tests,                   this problem to the shortcut learning of LLMs, where they follow
+where the LLM had no information on when the system under test                       spurious correlations in the provided context during in-context
+guarantees the order of query results. While adding related context                  learning. To further understand this phenomenon, we injected a
+may be a valid solution in the context of unit tests, where the test’s               flaky assertion into all existing tests before repeating our generation
+scope is by definition limited, such approaches are challenging to                   experiment with the injected files. Our results suggest that LLMs
+apply to SQL tests, as they may require a large amount of context.                   are susceptible to transferring the injected assertion. We found that
+For example, with millions of SLOC, SAP HANA’s source code                           both LLMs were more susceptible to our injection in the context of
+does not fit entirely into the context windows of contemporary                       SAP HANA compared to MySQL. We attribute this finding to the
+LLMs. Therefore, we encourage future work on approaches that                         fact that public LLMs lack prior knowledge of SAP HANA, as its
+automatically provide LLMs with tailored context for generating                      source code was not part of their training data, leading to greater
+system tests, which requires information about the entire software.                  reliance on the given context in the prompt.
+   On the Impact of Flakiness Injection. Overall, we observe                            Our findings substantiate the importance of providing LLMs
+that the LLM transfers the injected flaky assertion to a notable                     with appropriate context when employing them for test generation.
+number of newly generated tests for both study subjects. Since                       We motivate practitioners to pay attention not only to engineering
+the flaky assertion in the provided context is clearly not causally                  goals such as coverage or mutation scores when evaluating LLMs
+related to the task at hand, we attribute this finding to the LLM’s                  for test generation, but also to consider potential side effects of the
+susceptibility to spurious correlations in in-context learning. We                   resulting tests, such as flakiness. We encourage future studies to
+conjecture that the LLM overvalues the provided context compared                     evaluate and extend our test generation setup by including addi-
+to the knowledge gained from pre-training. While this may lead to                    tional test generation approaches and models. We also encourage
+desirable effects such as the “Fashion Following” of existing coding                 researchers to investigate the impact of shortcut learning on the
+conventions [36], the results of our simple setup suggest that this                  application of LLMs for automating software engineering tasks.
+happens without any semantic understanding of the given code,
+which may also lead to undesired properties in code synthesized by
+LLM in practice. Therefore, we encourage future work to investigate
+this effect. For example, future studies could further validate the                  References
+                                                                                      [1] Asma Ben Abacha, Wen-wai Yim, Yujuan Fu, Zhaoyi Sun, Meliha Yetisgen, Fei
+degree to which LLMs propagate non-functional code properties,                            Xia, and Thomas Lin. 2024. Medec: A Benchmark for Medical Error Detection
+such as code smells, from the code shown for in-context learning.                         and Correction in Clinical Notes. arXiv preprint arXiv:2412.19260 (2024).
+                                                                                      [2] Azat Abdullin, Pouria Derakhshanfar, and Annibale Panichella. 2025. Test Wars:
+                                                                                          A Comparative Study of SBST, Symbolic Execution, and LLM-Based Approaches
+                                                                                          to Unit Test Generation. In IEEE Conference on Software Testing, Verification
+                                                                                          and Validation, ICST 2025, Napoli, Italy, March 31 - April 4, 2025. IEEE, 221–232.
+                                                                                          doi:10.1109/ICST62969.2025.10989033
+On the Flakiness of LLM-Generated Tests for Industrial and Open-Source Database Management Systems                       ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil
+
+
+ [3] Danial Al. 2025. CLOC Repository. https://github.com/AlDanial/cloc Accessed                Language Models and Mutation Testing. Information and Software Technology
+     2025-09-29.                                                                                171 (2024), 107468. doi:10.1016/j.infsof.2024.107468
+ [4] Saranya Alagarsamy, Chakkrit Tantithamthavorn, and Aldeida Aleti. 2024. A3test:       [23] Arghavan Moradi Dakhel, Amin Nikanjam, Vahid Majdinasab, Foutse Khomh,
+     Assertion-augmented Automated Test Case Generation. Information and Software               and Michel C Desmarais. 2024. Effective Test Generation using Pre-trained Large
+     Technology 176 (2024), 107565.                                                             Language Models and Mutation Testing. Information and Software Technology
+ [5] Nadia Alshahwan, Jubin Chheda, Anastasia Finogenova, Beliz Gokkaya, Mark                   171 (2024), 107468.
+     Harman, Inna Harper, Alexandru Marginean, Shubho Sengupta, and Eddy Wang.             [24] Amirhossein Deljouyi, Roham Koohestani, Maliheh Izadi, and Andy Zaidman.
+     2024. Automated Unit Test Improvement using Large Language Models at                       2024. Leveraging Large Language Models for Enhancing the Understandability of
+     Meta. In Companion Proceedings of the 32nd ACM International Conference                    Generated Unit Tests. arXiv:2408.11710 [cs.SE] https://arxiv.org/abs/2408.11710
+     on the Foundations of Software Engineering (Porto de Galinhas, Brazil) (FSE           [25] DuckDB Developers. 2025. DuckDB Documentation. https://duckdb.org/docs
+     2024). Association for Computing Machinery, New York, NY, USA, 185–196.                    Accessed 2025-09-29.
+     doi:10.1145/3663529.3663839                                                           [26] LangChain Developers. 2025. LangChain Docs. https://www.langchain.com/
+ [6] Nadia Alshahwan, Mark Harman, and Alexandru Marginean. 2023. Software                      Accessed 2026-01-03.
+     Testing Research Challenges: An Industrial Perspective. In 2023 IEEE Conference       [27] MySQL Developers. 2025. MySQL GitHub Repository. https://github.com/mysql/
+     on Software Testing, Verification and Validation (ICST). IEEE, 1–10.                       mysql-server Accessed 2025-09-29.
+ [7] Abdulrahman Alshammari, Christopher Morris, Michael Hilton, and Jonathan              [28] Moritz Eck, Fabio Palomba, Marco Castelluccio, and Alberto Bacchelli. 2019. Un-
+     Bell. 2021. Flakeflagger: Predicting Flakiness Without Rerunning Tests. In 2021            derstanding Flaky Tests: The Developer’s Perspective. In Proceedings of the ACM
+     IEEE/ACM 43rd International Conference on Software Engineering (ICSE). IEEE,               Joint Meeting on European Software Engineering Conference and Symposium on
+     1572–1584.                                                                                 the Foundations of Software Engineering, ESEC/SIGSOFT FSE 2019, Tallinn, Estonia,
+ [8] Gabin An, Juyeon Yoon, Thomas Bach, Jingun Hong, and Shin Yoo. 2024. Just-                 August 26-30, 2019, Marlon Dumas, Dietmar Pfahl, Sven Apel, and Alessandra
+     in-time Flaky Test Detection via Abstracted Failure Symptom Matching. In 2024              Russo (Eds.). ACM, 830–840. doi:10.1145/3338906.3338945
+     IEEE International Conference on Software Maintenance and Evolution (ICSME).          [29] Angela Fan, Beliz Gokkaya, Mark Harman, Mitya Lyubarskiy, Shubho Sengupta,
+     IEEE, 741–752.                                                                             Shin Yoo, and Jie M Zhang. 2023. Large Language Models for Software Engineer-
+ [9] Maider Azanza, Beatriz Pérez Lamancha, and Eneko Pizarro. 2025. Tracking the               ing: Survey and Open Problems. In 2023 IEEE/ACM International Conference on
+     Moving Target: A Framework for Continuous Evaluation of LLM Test Generation                Software Engineering: Future of Software Engineering (ICSE-FoSE). IEEE, 31–53.
+     in Industry. In Proceedings of the 29th International Conference on Evaluation        [30] Gordon Fraser and Andrea Arcuri. 2014. A Large-Scale Evaluation of Automated
+     and Assessment in Software Engineering (EASE ’25). Association for Computing               Unit Test Generation Using EvoSuite. ACM Trans. Softw. Eng. Methodol. 24, 2
+     Machinery, New York, NY, USA, 524–534. doi:10.1145/3756681.3756946                         (2014), 8:1–8:42. doi:10.1145/2685612
+[10] Thomas Bach, Artur Andrzejak, Changyun Seo, Christian Bierstedt, Christian            [31] Google. 2025. GoogleTest Docs. https://github.com/google/googletest Accessed
+     Lemke, Daniel Ritter, Dong Won Hwang, Erda Sheshi, Felix Schabernack, Frank                2025-09-29.
+     Renkes, et al. 2022. Testing Very Large Database Management Systems: The Case         [32] Martin Gruber and Gordon Fraser. 2022. A Survey on How Test Flakiness affects
+     of SAP HANA. Datenbank-Spektrum 22, 3 (2022), 195–215.                                     Developers and What Support They Need to Address it. In 2022 IEEE Conference
+[11] Sebastian Baltes, Florian Angermeir, Chetan Arora, Marvin Muñoz Barón, Chun-               on Software Testing, Verification and Validation (ICST). IEEE, 82–92.
+     yang Chen, Lukas Böhme, Fabio Calefato, Neil Ernst, Davide Falessi, Brian             [33] Martin Gruber, Muhammad Firhard Roslan, Owain Parry, Fabian Scharnböck, Phil
+     Fitzgerald, Davide Fucci, Marcos Kalinowski, Stefano Lambiase, Daniel Russo,               McMinn, and Gordon Fraser. 2024. Do Automatic Test Generation Tools Generate
+     Mircea Lungu, Lutz Prechelt, Paul Ralph, Rijnard van Tonder, Christoph Treude,             Flaky Tests?. In Proceedings of the 46th IEEE/ACM International Conference on
+     and Stefan Wagner. 2025. Guidelines for Empirical Studies in Software En-                  Software Engineering. 1–12.
+     gineering involving Large Language Models. arXiv:2508.15503 [cs.SE] https:            [34] Mark Harman and Phil McMinn. 2009. A Theoretical and Empirical Study of
+     //arxiv.org/abs/2508.15503                                                                 Search-based Testing: Local, Global, and Hybrid Search. IEEE Transactions on
+[12] Alexander Berndt, Thomas Bach, and Sebastian Baltes. 2024. Do Test and Envi-               Software Engineering 36, 2 (2009), 226–247.
+     ronmental Complexity Increase Flakiness? An Empirical Study of SAP HANA. In           [35] Mark Harman and Peter O’Hearn. 2018. From start-ups to scale-ups: Opportuni-
+     Proceedings of the 18th ACM/IEEE International Symposium on Empirical Software             ties and open problems for static and dynamic program analysis. In 2018 IEEE
+     Engineering and Measurement. 572–581.                                                      18Th international working conference on source code analysis and manipulation
+[13] Alexander Berndt, Thomas Bach, Rainer Gemulla, Marcus Kessel, and Sebastian                (SCAM). IEEE, 1–23.
+     Baltes. 2026. On the Flakiness of LLM-Generated Tests for Industrial and Open-        [36] Mark Harman, Peter W. O’Hearn, and Shubho Sengupta. 2025. Harden and Catch
+     Source Database Management Systems. https://doi.org/10.5281/zenodo.18148199                for Just-in-Time Assured LLM-Based Software Testing: Open Research Chal-
+[14] Alexander Berndt, Sebastian Baltes, and Thomas Bach. 2024. Taming Timeout                  lenges. In Proceedings of the 33rd ACM International Conference on the Foundations
+     Flakiness: An Empirical Study of SAP HANA. In Proceedings of the 46th Inter-               of Software Engineering, FSE Companion 2025, Clarion Hotel Trondheim, Trondheim,
+     national Conference on Software Engineering: Software Engineering in Practice.             Norway, June 23-28, 2025, Leonardo Montecchi, Jingyue Li, Denys Poshyvanyk,
+     69–80.                                                                                     and Dongmei Zhang (Eds.). ACM, 1–17. doi:10.1145/3696630.3734199
+[15] Alexander Berndt, Zoltán Nochta, and Thomas Bach. 2023. The Vocabulary                [37] Mark Harman, Jillian Ritchey, Inna Harper, Shubho Sengupta, Ke Mao, Abhishek
+     of Flaky Tests in the Context of SAP HANA. In 2023 ACM/IEEE International                  Gulati, Christopher Foster, and Hervé Robert. 2025. Mutation-Guided LLM-based
+     Symposium on Empirical Software Engineering and Measurement (ESEM). IEEE,                  Test Generation at Meta. In Proceedings of the 33rd ACM International Conference
+     1–9.                                                                                       on the Foundations of Software Engineering, FSE Companion 2025, Clarion Hotel
+[16] Matteo Biagiola, Gianluca Ghislotti, and Paolo Tonella. 2025. Improving the                Trondheim, Trondheim, Norway, June 23-28, 2025, Leonardo Montecchi, Jingyue
+     Readability of Automatically Generated Tests Using Large Language Models.                  Li, Denys Poshyvanyk, and Dongmei Zhang (Eds.). ACM, 180–191. doi:10.1145/
+     In IEEE Conference on Software Testing, Verification and Validation, ICST 2025,            3696630.3728544
+     Napoli, Italy, March 31 - April 4, 2025. IEEE, 162–173. doi:10.1109/ICST62969.2025.   [38] Katherine L. Hermann, Hossein Mobahi, Thomas Fel, and Michael Curtis Mozer.
+     10989020                                                                                   2024. On the Foundations of Shortcut Learning. In The Twelfth International
+[17] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan,                     Conference on Learning Representations, ICLR 2024, Vienna, Austria, May 7-11,
+     Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda                 2024. OpenReview.net. https://openreview.net/forum?id=Tj3xLVuE9f
+     Askell, et al. 2020. Language Models are Few-Shot Learners. Advances in neural        [39] Abram Hindle, Earl T. Barr, Mark Gabel, Zhendong Su, and Premkumar T. De-
+     information processing systems 33 (2020), 1877–1901.                                       vanbu. 2016. On the Naturalness of Software. Commun. ACM 59, 5 (2016), 122–131.
+[18] Yinghao Chen, Zehao Hu, Chen Zhi, Junxiao Han, Shuiguang Deng, and Jianwei                 doi:10.1145/2902362
+     Yin. 2024. ChatUniTest: A Framework for LLM-Based Test Generation. In Com-            [40] Minh Hoang and Adrian Berding. 2024. Presubmit Rescue: Automatically Ignoring
+     panion Proceedings of the 32nd ACM International Conference on the Foundations of          FlakyTest Executions. In Proceedings of the 1st International Workshop on Flaky
+     Software Engineering (Porto de Galinhas, Brazil) (FSE 2024). Association for Com-          Tests, FTW 2024, Lisbon, Portugal, 14 April 2024. ACM, 1–2. doi:10.1145/3643656.
+     puting Machinery, New York, NY, USA, 572–576. doi:10.1145/3663529.3663801                  3643896
+[19] SQLite Contributors. 2025. SQLite Docs. https://www.sqlite.org/ Accessed              [41] Dong Huang, Jie M. Zhang, Mark Harman, Qianru Zhang, Mingzhe Du, and See-
+     2025-09-29.                                                                                Kiong Ng. 2025. Benchmarking LLMs for Unit Test Generation from Real-World
+[20] SQLite Contributors. 2025. SQLite Github Repository. https://github.com/sqlite/            Functions. CoRR abs/2508.00408 (2025). arXiv:2508.00408 doi:10.48550/ARXIV.
+     sqlite Accessed 2025-09-29.                                                                2508.00408
+[21] Maxime Cordy, Renaud Rwemalika, Adriano Franci, Mike Papadakis, and Mark              [42] Neetha Jambigi, Thomas Bach, Felix Schabernack, and Michael Felderer. 2022.
+     Harman. 2022. FlakiMe: Laboratory-Controlled Test Flakiness Impact Assessment.             Automatic Error Classification and Root Cause Determination While Replaying
+     In 44th IEEE/ACM 44th International Conference on Software Engineering, ICSE 2022,         Recorded Workload Data at SAP HANA. In 2022 IEEE Conference on Software
+     Pittsburgh, PA, USA, May 25-27, 2022. ACM, 982–994. doi:10.1145/3510003.3510194            Testing, Verification and Validation (ICST). IEEE, 323–333.
+[22] Arghavan Moradi Dakhel, Amin Nikanjam, Vahid Majdinasab, Foutse Khomh,                [43] Konstantinos Kitsios, Marco Castelluccio, and Alberto Bacchelli. 2025. Automated
+     and Michel C. Desmarais. 2024. Effective Test Generation using Pre-Trained Large           Generation of Issue-Reproducing Tests by Combining LLMs and Search-Based
+ICSE-SEIP ’26, April 12–18, 2026, Rio de Janeiro, Brazil                                    Alexander Berndt, Thomas Bach, Rainer Gemulla, Marcus Kessel, and Sebastian Baltes
+
+
+     Testing. In Proceedings of the 40th IEEE/ACM International Conference on Auto-                arXiv preprint arXiv:2504.16777 (2025).
+     mated Software Engineering, ASE 2025, Seoul, Korea, November 16 - November 20,           [62] Owain Parry, Gregory M Kapfhammer, Michael Hilton, and Phil McMinn. 2021. A
+     2025.                                                                                         Survey of Flaky Tests. ACM Transactions on Software Engineering and Methodology
+[44] Laurens Kuiper, Peter Boncz, and Hannes Mühleisen. 2024. Robust External Hash                 (TOSEM) 31, 1 (2021), 1–74.
+     Aggregation in the Solid State Age. In 2024 IEEE 40th International Conference on        [63] Owain Parry, Gregory M Kapfhammer, Michael Hilton, and Phil McMinn. 2023.
+     Data Engineering (ICDE). IEEE, 3753–3766.                                                     Empirically Evaluating Flaky Test Detection Techniques Combining Test Case
+[45] Laurens Kuiper and Hannes Mühleisen. 2023. These Rows are Made for Sorting                    Rerunning and Machine Learning Models. Empirical Software Engineering 28, 3
+     and That’s Just What We’ll Do. In 2023 IEEE 39th International Conference on                  (2023), 72.
+     Data Engineering (ICDE). IEEE, 2050–2062.                                                [64] Juan Altmayer Pizzorno and Emery D. Berger. 2025. CoverUp: Effective High
+[46] Wing Lam, Kivanç Muslu, Hitesh Sajnani, and Suresh Thummalapenta. 2020. A                     Coverage Test Generation for Python. Proc. ACM Softw. Eng. 2, FSE (2025),
+     Study on the Lifecycle of Flaky Tests. In ICSE ’20: 42nd International Conference on          2897–2919. doi:10.1145/3729398
+     Software Engineering, Seoul, South Korea, 27 June - 19 July, 2020, Gregg Rothermel       [65] Shanto Rahman and August Shi. 2024. FlakeSync: Automatically Repairing
+     and Doo-Hwan Bae (Eds.). ACM, 1471–1482. doi:10.1145/3377811.3381749                          Async Flaky Tests. In Proceedings of the IEEE/ACM 46th International Conference
+[47] Wing Lam, Reed Oei, August Shi, Darko Marinov, and Tao Xie. 2019. iDFlakies: A                on Software Engineering. 1–12.
+     framework for Detecting and Partially Classifying Flaky Tests. In 2019 12th ieee         [66] Denini Silva, Martin Gruber, Satyajit Gokhale, Ellen Arteca, Alexi Turcotte,
+     conference on software testing, validation and verification (icst). IEEE, 312–322.            Marcelo d’Amorim, Wing Lam, Stefan Winter, and Jonathan Bell. 2024. The
+[48] Andrea Lops, Fedelucio Narducci, Azzurra Ragone, Michelantonio Trizio, and                    Effects of Computational Resources on Flaky Tests. IEEE Trans. Software Eng. 50,
+     Claudio Bartolini. 2024. A System for Automated Unit Test Generation                          12 (2024), 3104–3121. doi:10.1109/TSE.2024.3462251
+     Using Large Language Models and Assessment of Generated Test Suites.                     [67] Ruixiang Tang, Dehan Kong, Longtao Huang, and Hui Xue. 2023. Large Language
+     arXiv:2408.07846 [cs.SE] https://arxiv.org/abs/2408.07846                                     Models Can be Lazy Learners: Analyze Shortcuts in In-Context Learning. In
+[49] Stephan Lukasczyk and Gordon Fraser. 2022. Pynguin: Automated Unit Test                       Findings of the Association for Computational Linguistics: ACL 2023, Anna Rogers,
+     Generation for Python. In 44th IEEE/ACM International Conference on Software                  Jordan Boyd-Graber, and Naoaki Okazaki (Eds.). Association for Computational
+     Engineering: Companion Proceedings, ICSE Companion 2022, Pittsburgh, PA, USA,                 Linguistics, Toronto, Canada, 4645–4657. doi:10.18653/v1/2023.findings-acl.284
+     May 22-24, 2022. ACM/IEEE, 168–172. doi:10.1145/3510454.3516829                          [68] Mistral AI Team. 2024. Mistral Large Instruct 2407. https://huggingface.co/
+[50] Qingzhou Luo, Farah Hariri, Lamyaa Eloussi, and Darko Marinov. 2014. An                       mistralai/Mistral-Large-Instruct-2407 Accessed 2025-09-17.
+     Empirical Analysis of Flaky Tests. In Proceedings of the 22nd ACM SIGSOFT                [69] Stefan Wagner, Marvin Muñoz Barón, Davide Falessi, and Sebastian Baltes.
+     international symposium on foundations of software engineering. 643–653.                      2025. Towards Evaluation Guidelines for Empirical Studies Involving LLMs.
+[51] Mateusz Machalica, Wojtek Chmiel, Stanislaw Swierc, and Ruslan Sakevych. 2020.                In IEEE/ACM International Workshop on Methodological Issues with Empirical
+     How do you Test your Tests? https://engineering.fb.com/2020/12/10/developer-                  Studies in Software Engineering, WSESE@ICSE 2025, Ottawa, ON, Canada, May 3,
+     tools/probabilistic-flakiness/ Accessed 2025-09-17.                                           2025. IEEE, 24–27. doi:10.1109/WSESE66602.2025.00011
+[52] Mateusz Machalica, Wojtek Chmiel, Stanislaw Swierc, and Ruslan Sakevych.                 [70] Junjie Wang, Yuchao Huang, Chunyang Chen, Zhe Liu, Song Wang, and Qing
+     2020.     Test Flakiness - One of the Main Challenges of Automated                            Wang. 2024. Software Testing With Large Language Models: Survey, Landscape,
+     Testing. https://testing.googleblog.com/2020/12/test-flakiness-one-of-main-                   and Vision. IEEE Trans. Software Eng. 50, 4 (2024), 911–936. doi:10.1109/TSE.2024.
+     challenges.html?utm_source=chatgpt.com Accessed 2025-09-27.                                   3368208
+[53] Atif Memon, Zebao Gao, Bao Nguyen, Sanjeev Dhanda, Eric Nickell, Rob Siem-               [71] Ruixin Wang, Yang Chen, and Wing Lam. 2022. iPFlakies: A framework for
+     borski, and John Micco. 2017. Taming Google-scale Continuous Testing. In                      detecting and fixing python order-dependent flaky tests. In Proceedings of the
+     2017 IEEE/ACM 39th International Conference on Software Engineering: Software                 ACM/IEEE 44th International Conference on Software Engineering: Companion
+     Engineering in Practice Track (ICSE-SEIP). IEEE, 233–242.                                     Proceedings. 120–124.
+[54] Alex Monahan. 2025. Vertical Stacking as the Relational Model Intended:                  [72] Anjiang Wei, Pu Yi, Zhengxi Li, Tao Xie, Darko Marinov, and Wing Lam. 2022.
+     UNION ALL BY NAME. https://duckdb.org/2025/01/10/union-by-name.html#:~:                       Preempting Flaky Tests via Non-Idempotent-Outcome Tests. In Proceedings of
+     text=If%20only%20using%20the%20keyword,stacking%20occurs%20without%                           the 44th International Conference on Software Engineering. 1730–1742.
+     20additional%20processing Accessed 2025-09-29.                                           [73] Jason Wei, Yi Tay, Rishi Bommasani, Colin Raffel, Barret Zoph, Sebastian
+[55] Hannes Mühleisen and Mark Raasveldt. 2025. Runtime-Extensible Parsers. In                     Borgeaud, Dani Yogatama, Maarten Bosma, Denny Zhou, Donald Metzler, Ed H.
+     Proc. CIDR.                                                                                   Chi, Tatsunori Hashimoto, Oriol Vinyals, Percy Liang, Jeff Dean, and William
+[56] OpenAI. 2024. Gpt-4o System Card. arXiv preprint arXiv:2410.21276 (2024).                     Fedus. 2022. Emergent Abilities of Large Language Models. Trans. Mach. Learn.
+[57] Shuyin Ouyang, Jie M Zhang, Mark Harman, and Meng Wang. 2025. An Empirical                    Res. 2022 (2022). https://openreview.net/forum?id=yzkSU5zdwD
+     Study of the Non-determinism of Chatgpt in Code Generation. ACM Transactions             [74] Chenyuan Yang, Zijie Zhao, and Lingming Zhang. 2025. KernelGPT: Enhanced
+     on Software Engineering and Methodology 34, 2 (2025), 1–28.                                   Kernel Fuzzing via Large Language Models. In Proceedings of the 30th ACM
+[58] Carlos Pacheco, Shuvendu K Lahiri, Michael D Ernst, and Thomas Ball. 2007.                    International Conference on Architectural Support for Programming Languages
+     Feedback-directed Random Test Generation. In 29th International Conference on                 and Operating Systems, Volume 2, ASPLOS 2025, Rotterdam, Netherlands, 30 March
+     Software Engineering (ICSE’07). IEEE, 75–84.                                                  2025 - 3 April 2025, Lieven Eeckhout, Georgios Smaragdakis, Katai Liang, Adrian
+[59] Rangeet Pan, Myeongsoo Kim, Rahul Krishna, Raju Pavuluri, and Saurabh Sinha.                  Sampson, Martha A. Kim, and Christopher J. Rossbach (Eds.). ACM, 560–573.
+     2024. Multi-language Unit Test Generation using LLMs. CoRR abs/2409.03093                     doi:10.1145/3676641.3716022
+     (2024). arXiv:2409.03093 doi:10.48550/ARXIV.2409.03093                                   [75] Peilun Zhang, Yanjie Jiang, Anjiang Wei, Victoria Stodden, Darko Marinov, and
+[60] Wei Hung Pan, Ming Jie Chok, Jonathan Leong Shan Wong, Yung Xin Shin,                         August Shi. 2021. Domain-specific Fixes for Flaky Tests with Wrong Assump-
+     Yeong Shian Poon, Zhou Yang, Chun Yong Chong, David Lo, and Mei Kuan Lim.                     tions on Underdetermined Specifications. In 2021 IEEE/ACM 43rd International
+     2024. Assessing AI Detectors in Identifying AI-generated Code: Implications                   Conference on Software Engineering (ICSE). IEEE, 50–61.
+     for Education. In Proceedings of the 46th International Conference on Software           [76] Ziyao Zhang, Chong Wang, Yanlin Wang, Ensheng Shi, Yuchi Ma, Wanjun Zhong,
+     Engineering: Software Engineering Education and Training. 1–11.                               Jiachi Chen, Mingzhi Mao, and Zibin Zheng. 2025. Llm Hallucinations in Practical
+[61] Owain Parry, Gregory Kapfhammer, Michael Hilton, and Phil McMinn. 2025.                       Code Generation: Phenomena, Mechanism, and Mitigation. Proceedings of the
+     Systemic Flakiness: An Empirical Analysis of Co-Occurring Flaky Test Failures.                ACM on Software Engineering 2, ISSTA (2025), 481–503.
+

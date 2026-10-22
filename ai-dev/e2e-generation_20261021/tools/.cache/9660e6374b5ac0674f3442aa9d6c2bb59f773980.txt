@@ -1,0 +1,752 @@
+__HTTP 200__
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+"Leveraging User-Session Data to Support Web Application Testing" by Sebastian Elbaum, Gregg Rothermel et al.
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+  
+  
+   
+     
+       Home 
+        Search 
+       Browse Collections 
+       My Account 
+       About 
+        Digital Commons Network™ 
+     
+   
+ 
+
+ 
+ 
+ 
+
+
+
+
+
+ 
+	 
+		 Skip to main content 
+
+					
+			 
+				 
+					 
+				 
+				
+					 
+						 
+					 
+				
+				
+			 
+					
+			 
+				 
+	 
+		 
+			 Home 
+			 About 
+			 FAQ 
+			 Accessibility 
+			 My Account 
+		 
+	 
+
+
+
+ 
+			 
+		
+
+		 
+			 
+				 
+
+   
+ 
+
+ 
+
+                
+                 
+ <  Previous Article 
+        
+        
+        
+
+                
+                 
+ Next Article  > 
+        
+        
+        
+   
+
+ 
+     
+	
+	
+	 
+		 Home 
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	  >  
+	 
+		 Engineering 
+	 	
+	
+	
+	
+	
+	
+	
+	  >  
+	 
+		 COMPUTERSCIENCEANDENGINEERING 
+	 	
+	
+	
+	
+	
+	
+	
+	  >  
+	 
+		 Faculty Publications 
+	 	
+	
+	
+	
+	
+	
+	  >  
+	 
+		 20 
+	 	
+	
+	
+	
+	 
+ 
+
+
+ 
+ 
+
+ Computing, School of 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+	
+	
+	
+    
+    
+    
+	
+		
+		
+		
+	
+	
+	
+	
+	
+	
+
+ 
+ 
+
+ 
+ 
+
+
+
+
+	
+	
+		
+		
+			 
+		
+	
+ 
+
+
+
+
+
+   
+ School of Computing: Faculty Publications 
+
+
+
+ Accessibility Remediation 
+ If you are unable to use this item in its current form due to accessibility barriers, you may request remediation through our  remediation request form . 
+
+ 
+ 
+ 
+ Leveraging User-Session Data to Support Web Application Testing 
+ 
+ 
+ 
+ Authors 
+ Sebastian Elbaum ,  University of Nebraska-Lincoln Follow 
+ Gregg Rothermel ,  University of Nebraska-Lincoln Follow 
+ Srikanth Karre ,  University of Nebraska-Lincoln 
+ Marc Fisher II ,  University of Nebraska-Lincoln 
+ 
+ 
+ 
+ Document Type 
+ Article 
+ 
+ 
+ 
+ Date of this Version 
+ 3-2005 
+ 
+ 
+ 
+ Comments 
+ Published in  IEEE TRANSACTIONS ON SOFTWARE ENGINEERING , VOL. 31, NO. 3, MARCH 2005. © 2005 IEEE. Used by permission. 
+ 
+ 
+ 
+ Abstract 
+ Web applications are vital components of the global information infrastructure, and it is important to ensure their dependability. Many techniques and tools for validating Web applications have been created, but few of these have addressed the need to test Web application functionality and none have attempted to leverage data gathered in the operation of Web applications to assist with testing. In this paper, we present several techniques for using user session data gathered as users operate Web applications to help test those applications from a functional standpoint. We report results of an experiment comparing these new techniques to existing white-box techniques for creating test cases for Web applications, assessing both the adequacy of the generated test cases and their ability to detect faults on a point-of-sale Web application. Our results show that user session data can be used to produce test suites more effective overall than those produced by the white-box techniques considered; however, the faults detected by the two classes of techniques differ, suggesting that the techniques are complementary. 
+ 
+ 
+ 
+     
+     
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+	
+	
+	
+    
+    
+    
+	
+		
+		
+		
+	
+	
+	
+	
+	
+	
+
+ 
+
+
+	 
+        
+    	 
+        Download
+       
+ 
+
+
+ 
+	 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+
+
+
+ 
+
+      DOWNLOADS 
+     Since July 30, 2009 
+
+
+ 
+ 
+
+
+
+ 
+
+
+
+
+
+ 
+ 
+ 
+
+
+ 
+ 
+
+
+
+ 
+ 
+ 
+
+
+
+	 
+
+
+
+
+	
+
+
+
+
+
+	 
+		 Included in 
+	 
+		
+				
+					 Computer Sciences Commons 
+				
+				
+			
+		
+	 
+	 
+
+
+
+ 
+
+ 
+
+ 
+ Share 
+	
+	 
+    	 
+    	 
+		 
+		 
+    	 
+    	 
+	 
+ 
+
+ 
+ 
+
+ 
+
+ 
+
+	 
+
+ COinS 
+ 
+
+ 
+ 
+ 
+
+   
+ 
+
+ 
+
+ 
+ 
+	   
+	   
+
+ 
+
+	 
+	 
+
+	 
+
+ 
+ Search 
+
+
+	
+ 
+	 
+		Enter search terms:
+	 
+		 
+			 
+				 
+			  
+			 
+		 
+	 
+		Select context to search:
+	  
+		 
+			 
+				 
+					
+					
+						 in this series 
+					
+					
+					
+					 in this repository 
+					 across all repositories 
+				 
+			 
+		 
+		
+ 
+		
+ 
+
+ 
+	
+	
+		 
+			Advanced Search
+		 
+	
+ 
+		
+ Search Help 
+		
+ 
+ 
+
+
+	 
+		 
+			 
+				Notify me via email or  RSS 
+			 
+		 
+	 
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+ 
+ 
+
+ 
+ Browse 
+ 
+
+
+ Collections 
+ Disciplines 
+ Authors 
+
+
+ 
+ 
+ Author Corner 
+
+
+
+
+
+
+	 
+		 
+			 
+				Author FAQ
+			 
+		 
+		
+		
+
+				 Guide to Submitting 
+
+		
+			 
+				 
+					Submit your paper or article
+				 
+			 
+		
+	 
+
+ 
+ 
+
+ Links 
+	 
+		 
+			
+				 
+						School of Computing
+				 
+			
+			
+			
+		 
+	 
+ 
+	
+
+
+
+ 
+ 
+
+	
+		
+	
+
+
+	 
+
+ 
+
+ 
+
+ 
+ 
+
+
+ 
+ 
+
+		
+
+
+
+ 
+	   
+	 
+
+ 
+
+ 
+	
+	
+	 
+
+ 
+	 Elsevier - Digital Commons 
+ 
+
+ 
+ 
+	 
+		 Home  | 
+		 About  | 
+		 FAQ  | 
+		 My Account  | 
+		 Accessibility Statement 
+	 
+	 
+	
+	
+		 Privacy 
+	
+		 Copyright 	
+	  
+	
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+
+       
+
+ 

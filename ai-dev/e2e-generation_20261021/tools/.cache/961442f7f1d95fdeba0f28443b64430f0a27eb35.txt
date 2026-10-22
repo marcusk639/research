@@ -1,0 +1,55 @@
+__HTTP 200__
+  Mobile UI Testing with Claude Code, Cursor and Codex | Maestro                   00.0k Documentation Cloud Community Blog Pricing 00.0k                         Blog   
+/
+     Tutorial   
+/
+     Mobile UI Testing with Claude Code, Cursor and Codex            September 1, 2026   3 min read      Mobile UI Testing with Claude Code, Cursor and Codex   Have Claude Code, Cursor or Codex run a UI test on an iOS Simulator or Android emulator, then save it as a Flow and run the same test again.       Ashish Kharche            
+ Your coding agent can write a UI test, run it against a live app on an iOS Simulator or Android emulator, and save it so the same test runs again next week.  Maestro MCP  connects Claude Code, Cursor, Codex and other agents to the device through the  Model Context Protocol . 
+ In chat the agent explores with inline YAML: open a screen, tap a control, assert what is on the device. When the journey works, save those steps as a Flow under  .maestro/  in the repo. From then on the same file runs again through the agent or with  maestro test , in CI included. If you want the wider picture first,  what Maestro MCP gives your agent  covers the tools it exposes. 
+ Which agents, which devices 
+ Claude Code, Cursor, Codex, Copilot, Gemini, Windsurf, JetBrains AI Assistant and Grok Build all speak MCP, so any of them can drive the run. On the device side: an Android emulator, a physical Android device over USB, or the iOS Simulator. The same Flow file works on all of them, and on web through Chromium. 
+ How the agent runs it 
+ The MCP  run  tool executes Flows. It accepts exactly one of 3 inputs per call: 
+ 
+ yaml : inline YAML, preferred for exploration. 
+ files : specific  .yaml  Flow files from the repo. Same path every re-run. 
+ dir : a folder of Flows (optional  include_tags  /  exclude_tags ). Useful once you have a small suite. 
+ 
+ For this loop, the usual steps are: 
+ 
+ Look at the screen  with  inspect_screen , then  try steps  with  yaml  until the journey works. 
+ Save  those steps as a Flow file under  .maestro/  at the repo root (Maestro’s default place for Flows). 
+ Re-run  that file later: through Maestro MCP in chat with  files , or outside the agent with the CLI. 
+ 
+ maestro  test  .maestro/your-flow.yaml 
+ That is the whole loop: explore, save, re-run. The saved Flow is a regression test that any agent, or the CLI, can run again on your machine or in CI. 
+ Agentic UI testing in practice 
+ The example below uses a settings app with an Appearance screen, where a user switches between light and dark themes. Swap in any screen or feature you care about. 
+ Prompt 
+ 
+ QA the Appearance screen with Maestro MCP. 
+ 
+ The agent explores with  yaml  and uses  inspect_screen  as needed. Ask it to  open the Maestro Viewer  if you want to watch the live device and command stream. 
+ 
+ Prompt 
+ 
+ Save the steps that worked as a Maestro Flow at  .maestro/appearance.yaml . 
+ 
+ The agent writes the Flow file under  .maestro/ . The test lives in source control with the rest of the app. 
+ Prompt 
+ 
+ Re-run  .maestro/appearance.yaml  with Maestro MCP and tell me if it passed. 
+ 
+ Maestro MCP runs the saved Flow. Use the same prompt after you change the UI: if the screen still matches the Flow, it passes; if labels or layout have moved, the run fails, and you can ask the agent to update the Flow. You can also re-run via the CLI: 
+ maestro  test  .maestro/appearance.yaml 
+ 
+ Try it 
+ 
+ Connect  Maestro MCP  and put your app on an iOS Simulator or Android emulator, or connect a physical Android device. 
+ Ask the agent to QA a screen or flow. 
+ Ask the agent to save the steps that worked as a Flow under  .maestro/  at the repo root. Re-run it through Maestro MCP in chat, or from the terminal: 
+ 
+ maestro  test  .maestro/your-flow.yaml 
+ Takeaway 
+ Maestro MCP connects your AI coding agent to the live app. In one session the agent inspects the UI, proves a journey works, writes a Flow under  .maestro/ , and runs that Flow again in chat. You get fast exploration while the UI is still changing, and a repeatable end-to-end test when you want the same steps again. 
+ The same Flow runs outside the agent with  maestro test , including in CI. MCP and the CLI use the same YAML, so the steps you validated on the device are the steps you re-run later. For how this compares with a code-based suite, see  Maestro vs Appium: The Benchmark .       Share   𝕏 Twitter   in LinkedIn   🔗 Copy link     Frequently asked questions Can Claude Code use an MCP server for testing? Yes. Maestro ships an MCP server in the CLI. Register it once with `claude mcp add maestro -- maestro mcp` and Claude Code can list devices, inspect the current screen, run flows, take screenshots and open the Maestro Viewer against a live app. Can Cursor run end-to-end tests through an MCP server? Yes. Cursor, Codex, Copilot, Gemini, Windsurf, JetBrains AI Assistant and Grok Build all speak MCP, so any of them can drive a Maestro run. The agent writes inline YAML to explore, and the steps that worked get saved as a Flow file that runs again later. Does this work on an Android emulator and the iOS Simulator? Both, plus a physical Android device over USB and web through Chromium. The same Flow file runs on all of them, so a test written against an emulator runs later on a simulator without changes. How is this different from asking an agent to write a test file? The agent operates the running app instead of guessing from source. It opens screens, taps controls and reads what is on the device, so the Flow it saves reflects the UI as it actually behaves.   Get the next one in your inbox Pick what you want to hear about. Unsubscribe any time. Email address Subscribe What to send you Newsletter Office Hours invites, community news, the occasional deep dive Product updates New releases and changelogs   ← Previous Maestro CLI 2.10.0: launch a specific Android system image Next → Maestro CLI 2.9.0: test light and dark mode in one flow     Related posts                 Tutorial   4 min read       Maestro MCP for AI Coding Agents     Give your coding agent a real device. With Maestro MCP, agents like Claude Code, Cursor, and Codex can operate your live app, run flows, and check the UI without leaving the chat.     Ashish Kharche ·   Jul 6, 2026                   Tutorial   3 min read       Maestro MCP: An introduction        Simon Gilmurray ·   Apr 14, 2026                   Tutorial   3 min read       Automating Apple Maps: Dead Simple E2E Testing with Maestro        Leland Takamine ·   Sep 4, 2025                   On this page Which agents, which devices How the agent runs it Agentic UI testing in practice Try it Takeaway               ↑      Product Maestro Studio Maestro CLI Cloud Pricing Resources Documentation Blog Playground Community GitHub Slack X/Twitter Email us Legal Terms of Service Privacy Notice              

@@ -1,0 +1,36 @@
+{
+  "run_id": "e2e-generation_20261021",
+  "created": "2026-10-21",
+  "mode": "deep",
+  "query": "Best possible methods for automating the creation of full, comprehensive E2E test suites for mobile apps backed by Firebase Functions (possibly integrating with web apps), with the end goal of a one-command LLM-driven tool (e.g. /generate-e2e) that studies the codebase feature by feature, produces a behavioral specification, and from it generates a working comprehensive E2E suite. Reference target: ~/dev/recovery-platform/regroup.",
+  "audience": "Solo developer / small team building Claude Code tooling (skills, scripts, plugins) for their own React Native + Firebase + Angular projects.",
+  "decision_informed": "What architecture to build for /generate-e2e (and what not to build), which frameworks/runtimes to target, what is realistically automatable, and how to prove generated suites are correct and non-flaky.",
+  "assumptions": {
+    "in_scope": [
+      "React Native mobile apps (regroup is RN 0.72) with Firebase Auth/Firestore/Storage/Functions backends; Angular/other web companions",
+      "LLM-driven code comprehension, spec extraction, test generation, run-and-repair loops",
+      "Mobile E2E frameworks (Maestro, Detox, Appium, Patrol, native XCUITest/Espresso) and their agent/MCP integrations",
+      "Firebase Emulator Suite, data seeding, functions/triggers testing, third-party service stubbing (Stripe, SendGrid)",
+      "Commercial AI testing tools as comparison points and possible components",
+      "Academic research on LLM GUI/mobile testing and LLM test generation, including failure evidence",
+      "Methods for evaluating generated suite quality (mutation testing, coverage, flake rate, oracle strength)"
+    ],
+    "excluded": [
+      "Unit-test generation except where it informs E2E methods",
+      "Load/performance/security penetration testing",
+      "Native-only (Swift/Kotlin) apps except as evidence",
+      "Vendor pricing negotiation; detailed cost modeling beyond order-of-magnitude"
+    ]
+  },
+  "angles": {
+    "A1": "Mobile E2E frameworks and runtime layer: Maestro vs Detox vs Appium vs Patrol etc. for RN; reliability/flakiness; LLM/MCP operability (Maestro MCP, mobile-mcp, Appium MCP); CI/device clouds",
+    "A2": "Research evidence on LLM-driven test generation and LLM GUI/mobile testing agents (academic + industrial: e.g. Meta TestGen-LLM, GPTDroid, DroidAgent, AutoDroid, LLM-for-testing surveys); success rates, failure modes, oracle problem",
+    "A3": "Code-to-specification: static analysis + LLM app comprehension; extracting navigation graphs, features, roles, user flows, business rules from code; spec formats (Gherkin/BDD, flow docs, state machines); spec-driven development tooling (spec-kit, Kiro etc.); long-context vs chunked repo understanding",
+    "A4": "Firebase backend in E2E: Emulator Suite, functions/triggers in emulators, seeding/reset, auth fixtures, rules testing, backend assertions, stubbing Stripe/SendGrid, connecting RN apps and web apps to emulators, cross-platform (mobile+web) flows",
+    "A5": "Commercial / novel AI testing products and autonomous exploration: Firebase App Testing Agent, Maestro AI features, QA Wolf, Momentic, Octomind, testRigor, Mabl, Autify, Revyl, Applitools, Google Robo; self-healing; vision-based agents; independent evaluations and criticisms",
+    "A6": "Orchestration and quality assurance of generated suites: multi-agent pipelines in Claude Code (skills/subagents/hooks/plugins), generate-run-repair loops, mutation testing for E2E/test adequacy, flakiness detection, avoiding tests that encode bugs, human-in-the-loop checkpoints, cost/token budgets"
+  },
+  "local_case_study": "regroup-case.md (firsthand evidence from regroup's prior Maestro/Detox E2E attempts, cited as L-series)",
+  "tooling": "Built-in WebSearch + WebFetch only (per skill contract); local file reads for the case study",
+  "workspace_note": "Run directory placed in research repo subject dir ai-dev/ per repo CLAUDE.md, overriding the skill's ~/Documents default."
+}

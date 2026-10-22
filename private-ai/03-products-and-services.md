@@ -9,6 +9,7 @@
 - Every engagement goes assessment, then setup, then subscription. Add-ons come after the first quarter.
 - Hardware is a separate line the client pays for directly, or passed through at cost plus 8%. The company never carries inventory.
 - Contracts are 12 months, auto-renewing, with a 5% escalator (the MSP norm is 5–8%).
+- **Decision (Oct 20, 2026):** setup and implementation fees are billed 50% at signing and 50% at acceptance ([14](14-revised-plan-2026-10-20.md#6-revised-gates-and-kill-criterion)).
 - Industrial pricing stays under the buyer's approval limit (typically $25–50K) by phasing larger work.
 - Offer a 10–15% discount for case-study and reference rights on the first three clients per vertical.
 
@@ -91,7 +92,7 @@ Fixed-fee projects come first, then convert to subscriptions.
 - first plant PO within 6 months;
 - one case study by month 9.
 
-The 12-month industrial target is at or above total Year-1 revenue in the financial model; see [12-open-questions.md](12-open-questions.md#contradictions-found).
+**Revised (Oct 20, 2026):** the realistic Year-1 industrial base case is $35–60K from 7–9 engagements, led by contractor compliance. The first plant PO is expected in months 7–12. Above $60K is upside. See [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md#4-industrial-revenue-the-realistic-plan).
 
 ## Workflow library
 

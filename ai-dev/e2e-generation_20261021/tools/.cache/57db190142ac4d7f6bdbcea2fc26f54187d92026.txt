@@ -1,0 +1,443 @@
+__HTTP 200__
+                                             Testing with AI Agents: An Empirical Study of Test Generation
+                                                           Frequency, Quality, and Coverage
+                                             Suzuka Yoshimoto† , Shun Fujita† , Kosei Horikawa† , Daniel Feitosa§ , Yutaro Kashiwa† , Hajimu Iida†
+                                                                                               † Nara Institute of Science and Technology, Japan
+                                                                                                   § University of Groningen, the Netherlands
+
+                                                               {yoshimoto.suzuka.yw4,fujita.shun.fp9,horikawa.kosei.hk1,yutaro.kashiwa,iida}@naist.ac.jp
+                                                                                                   d.feitosa@rug.nl
+
+                                         Abstract                                                                                only delay bug detection but also increase the risk of regressions
+                                         Agent-based coding tools have transformed software development                          and undermine developers’ confidence in making changes [21, 38].
+
+
+
+
+arXiv:2603.13724v1 [cs.SE] 14 Mar 2026
+                                         practices. Unlike prompt-based approaches that require develop-                         Furthermore, low test coverage can discourage code modifications
+                                         ers to manually integrate generated code, these agent-based tools                       and extensions, thereby hindering the evolution of projects [19, 34].
+                                         autonomously interact with repositories to create, modify, and exe-                     To avoid such problems, developers are encouraged to write tests
+                                         cute code, including test generation. While many developers have                        in parallel with feature implementation; however, due to time con-
+                                         adopted agent-based coding tools, little is known about how these                       straints and the tedious nature of test creation, sufficient tests are
+                                         tools generate tests in real-world development scenarios or how                         often not written in practice [7, 33]. To address this, automated
+                                         AI-generated tests compare to human-written ones.                                       test generation has evolved from traditional techniques like sym-
+                                            This study presents an empirical analysis of test generation by                      bolic execution [5] to recent approaches leveraging Large Language
+                                         agent-based coding tools using the AIDev dataset. We extracted                          Models (LLMs) [15].
+                                         2232 commits containing test-related changes and investigated                              More recently, the mainstream approach has been shifting from
+                                         three aspects: the frequency of test additions, the structural charac-                  single-prompt-based methods to approaches utilizing AI agents. In
+                                         teristics of the generated tests, and their impact on code coverage.                    agent-based approaches, by understanding the context of the en-
+                                         Our findings reveal that (i) AI authored 16.4% of all commits adding                    tire repository and autonomously repeating cycles of test creation,
+                                         tests in real-world repositories, (ii) AI-generated test methods ex-                    execution, and modification, more sophisticated test generation
+                                         hibit distinct structural patterns, featuring longer code and a higher                  becomes possible [14]. Although existing studies have evaluated
+                                         density of assertions while maintaining lower cyclomatic com-                           the quality and coverage of LLM-generated tests in controlled ex-
+                                         plexity through linear logic, and (iii) AI-generated tests contribute                   perimental environments [32], it is not sufficiently understood to
+                                         to code coverage comparable to human-written tests, frequently                          what extent agent-based tools generate tests in actual development
+                                         achieving positive coverage gains across several projects.                              settings and how the generated tests differ from those created by
+                                                                                                                                 humans. This represents an important research challenge for eval-
+                                         CCS Concepts                                                                            uating the practicality of agent-based test generation technology.
+                                                                                                                                    This study aims to quantitatively analyze the reality of test gen-
+                                         • Software and its engineering → Integrated and visual de-
+                                                                                                                                 eration by agent-based coding tools. Specifically, we extracted com-
+                                         velopment environments; Automatic programming; Software
+                                                                                                                                 mits containing test-related changes from the AIDev dataset [22]
+                                         evolution; Maintaining software.
+                                                                                                                                 and investigated the frequency of test generation, characteristics,
+                                         Keywords                                                                                and impact on coverage in those commits. We identified 2232 com-
+                                                                                                                                 mits and compared test methods generated by AI with those created
+                                         Agentic Coding, Agents, Software Testing, Coverage                                      by humans, thereby conducting a multifaceted analysis of the effects
+                                         ACM Reference Format:                                                                   of test generation by agent-based tools.
+                                         Suzuka Yoshimoto† , Shun Fujita† , Kosei Horikawa† , Daniel Feitosa§ , Yutaro
+                                         Kashiwa† , Hajimu Iida† . 2026. Testing with AI Agents: An Empirical Study
+                                         of Test Generation Frequency, Quality, and Coverage. In 23rd International              2   Data Collection
+                                         Conference on Mining Software Repositories (MSR ’26), April 13–14, 2026, Rio            To identify projects suitable for our analysis, we applied the follow-
+                                         de Janeiro, Brazil. ACM, New York, NY, USA, 5 pages. https://doi.org/10.114             ing steps using the AIDev dataset [22].
+                                         5/3793302.3793620
+                                                                                                                                 1. Language Filtering: We analyzed the AIDev dataset to identify
+                                         1    Introduction                                                                       the languages with the most AI-authored pull requests (PRs). We
+                                                                                                                                 found TypeScript to be one of the most common languages across
+                                         Software testing is an essential activity that forms the foundation
+                                                                                                                                 all agents (22.4% of PRs) and, thus, selected it for this study.
+                                         of quality assurance [6, 18, 20]. Code lacking adequate tests cannot
+                                                                                                                                 2. Framework Filtering: To measure coverage systematically (for
+                                                                                                                                 RQ3), we decided to standardize the test framework use to make
+                                         This work is licensed under a Creative Commons Attribution 4.0 International License.   this study feasible. In particular, we investigated the 2,807 unique
+                                         MSR ’26, Rio de Janeiro, Brazil                                                         repositories from the AIDev dataset that contain PRs, finding that
+                                         © 2026 Copyright held by the owner/author(s).
+                                         ACM ISBN 979-8-4007-2474-9/2026/04                                                      650 were identified as TypeScript projects, of which 400 had de-
+                                         https://doi.org/10.1145/3793302.3793620                                                 tectable test frameworks. Among these, vitest was found to be the
+MSR ’26, April 13–14, 2026, Rio de Janeiro, Brazil                                                                                  Yoshimoto, et al.
+
+
+Table 1: Prevalence of AI-Generated Test Addition Commits                  commits that modified at least one test file, as these are the potential
+in Selected Projects.                                                      candidates for test additions.
+
+                                                 Test-adding Commits       3. Detecting Test Method Additions. Modification of a test file does
+         Project                                                           not necessarily guarantee that a new test was added; it could be a
+                                                 All   AI-authored (%)
+                                                                           refactor or a deletion. To accurately identify test additions, we per-
+         cal.com [8]                             894        129 (14.4%)    formed a granular analysis of the commit patch. We inspected only
+         azure-sdk-for-js [4]                    366            7 (1.9%)   the added lines (prefixed with +) and applied regular expressions
+         liam [23]                               352         43 (12.2%)    to detect the syntax of new test definitions common in the vitest
+         appkit [31]                             257         29 (11.3%)
+                                                                           and TypeScript ecosystem. Specifically, we looked for patterns such
+         helper [2]                              123         13 (10.6%)
+         primer-react [29]                        89         31 (34.8%)
+                                                                           as test(), it(), describe(), test.skip(), test.only(), xtest,
+         alchemy [1]                              76         54 (71.1%)    and ftest. A commit was classified as a “Test Addition Commit”
+         total-typescript-monorepo [25]           26        26 (100.0%)    only if its patch contained these specific markers of new test cases.
+         llmgateway [35]                          25         14 (56.0%)    4. AI Author Identification. We determined the authorship of the
+         capgo [9]                                24         20 (83.3%)
+                                                                           identified Test Addition Commits by checking the committer name
+most prevalent, used in 179 projects (44.8% of projects with test          to determine whether the author was an AI or a human. We used
+frameworks). Given vitest’s dominance in the TypeScript ecosystem          AST parsing to extract test methods and git blame to trace the
+within our dataset and its straightforward coverage measurement            authorship of each line within those methods. A commit was clas-
+capabilities, we decided to target vitest projects for our analysis.       sified as AI-authored only if all lines within all of its added test
+                                                                           methods were authored exclusively by AI agents.
+3. Project Identification: Next, focusing on the identified vitest
+projects, we returned to the AIDev dataset to find those with a            5. Metrics calculation. We computed the proportion of test-adding
+high volume of AI-authored test additions. We inspected the patch          commits attributed to AI contributors.
+information of commits within AI-authored PRs. We filtered for             Results. Table 1 summarizes the prevalence of AI-authored test
+PRs that contained new test method definitions (e.g., describe(),          additions across the selected projects. The results reveal a highly
+it()) on added lines (prefixed with +).                                    polarized landscape regarding the role of AI in test generation.
+Final Dataset: We selected the top 10 projects with the highest            Shift in AI Role by Project Scale. We observe that the role of
+AI-authored test activity to ensure a focus on the most significant        AI agents in test generation significantly varies with the project’s
+contributions. This sample size was determined by the technical            scale, which we characterize by the number of human contribu-
+complexity of dynamic analysis; measuring test coverage (RQ3)              tors. In small-scale or early-stage projects with a limited contrib-
+requires manual environment setup and dependency resolution for            utor base, AI agents often take a dominant role. For instance, in
+each repository, making a larger-scale execution impractical.              total-typescript-monorepo (5 contributors) and capgo (28 con-
+                                                                           tributors), AI-generated tests account for 100% and 83.3% of test
+3 Research Questions                                                       additions, respectively. In contrast, for large-scale projects with
+𝑅𝑄 1 : How often do developers add tests with                              hundreds of contributors, the AI contribution shifts to an auxiliary
+                                                                           role. In the largest analyzed project, cal.com (876 contributors),
+Agent Coding Tools?
+                                                                           the AI contribution is consistent but remains at 14.4%. This trend
+Motivation. Understanding the prevalence of AI-generated test              is even more pronounced in established enterprise projects like
+contributions is the first step in assessing their overall impact. We      azure-sdk-for-js (608 contributors), where the AI contribution
+examine the proportion of test-added commits among all commits             drops to a marginal 1.9%. These results suggest that while AI agents
+made by AI agents to gauge their activity level in this specific task.     can drive testing in small teams, they mainly serve as supportive
+Approach. We analyzed 10 selected TypeScript projects to quantify          tools in large-scale, community-driven, or enterprise development.
+the contribution of AI agents to test code generation. Our method-
+                                                                           High AI Dominance in Specific Projects. In three projects,
+ology focuses on identifying commits where AI agents explicitly
+                                                                           AI agents are the primary or exclusive drivers of test creation.
+introduced new test methods. The process consists of four steps:
+                                                                           In total-typescript-monorepo, 100% of detected test additions
+1. Defining the Temporal Scope. We determined the analysis period          were authored by AI. Similarly, capgo (83.3%) and alchemy (71.1%)
+for each project based on the available data in the AIDev dataset.         show very high AI participation. This suggests that in certain con-
+By examining the pull_request table, we extracted the minimum              texts (possibly smaller, experimental, or agent-centric projects), AI
+and maximum created_at timestamps for each repository. This                tools can already take over testing responsibility, or developers rely
+defined interval served as the boundary for our data collection,           on them enough to delegate the task.
+ensuring that our commit analysis corresponds precisely to the
+period of AI activity captured in the dataset.
+                                                                            Answer to RQ1. AI contribution to test generation varies by
+2. Commit Retrieval and Filtering. We utilized the GitHub API to            project type: up to 100% in agent-heavy projects, but typically
+retrieve all commits associated with pull requests within the defined       10% to 15% in broader open-source development.
+period. To isolate substantive code contributions, we filtered this set
+to exclude merge commits. Furthermore, we narrowed our focus to
+Testing with AI Agents: An Empirical Study of Test Generation Frequency, Quality, and Coverage                                                             MSR ’26, April 13–14, 2026, Rio de Janeiro, Brazil
+
+                                                                                                                    200
+                                                                                                                                                                                                         Test Author
+𝑅𝑄 2 : What is the difference between AI- and                                                                       175                                                                                       Human
+                                                                                                                                                                                                              AI
+human-created test methods?                                                                                         150
+
+
+
+                                                                                                 Effective LoC
+                                                                                                                    125
+Motivation. Understanding whether AI-generated tests differ from                                                    100
+human-written ones in structure and content is important, as this                                                       75
+impacts their quality and maintainability [27].                                                                         50
+Approach. We cloned the repositories of the 10 selected projects                                                        25
+
+and checked out the latest release for each, ensuring our analysis                                                       0
+                                                                                                                             lia         m     pkit    o
+                                                                                                                                                       pg         ac t      he           ay   he              r-js
+                                                                                                                                m    l.co                                     my                lpe
+was performed on a consistent, stable snapshot of the codebase.                                                                               ap      ca       r-re                  tew           r     -fo
+                                                                                                                                    ca                       me          alc        ga                  dk
+                                                                                                                                                            pri                    llm             azure-
+We then identified the authorship of individual test methods fol-                                                                                                 Project
+                                                                                                                                                                                                          s
+                                                                                                                                            (a) Effective eLoC Distribution
+lowing the line-level attribution methodology in Step 4 of the RQ1                                                  30
+                                                                                                                                                                                                         Test Author
+Approach (AI Author Identification). Based on this, we classified                                                                                                                                             Human
+                                                                                                                    25                                                                                        AI
+methods as either AI Test Method (all lines authored by AI) or
+
+
+                                                                                                 Number of Assertions
+                                                                                                                    20
+Human Test Method (any line authored by a human). Finally, we
+compared the two datasets (AI Test Methods and Human Test Meth-                                                     15
+
+ods) using two techniques.                                                                                          10
+
+   1. Metric-Based Analysis: We calculated metrics for each test                                                        5
+method: Effective Lines of Code (eLoC, excluding comments and                                                           0
+empty lines), number of assertions (# assertions, e.g., expect()),
+                                                                                                                             m        m         it
+                                                                                                                                               pk      o
+                                                                                                                                                      pg          ct        my           ay     r
+                                                                                                                                                                                               lpe            r-js
+                                                                                                                            lia      l.co     ap      ca      r-re a      he         tew      he         -fo
+                                                                                                                                    ca                       me          alc        ga                 dk
+and Cyclomatic Complexity (CC). eLoC and # assertions were
+                                                                                                                                                            pri                  llm                 re- s
+                                                                                                                                                                                                   azu
+                                                                                                                                                                  Project
+calculated using regular expressions. CC was calculated by parsing                                                                  (b) Number of Assertions Distribution
+each test method into an AST using Babel (@babel/parser) and                                Figure 1: Comparison of Metrics: Human vs. AI Agents
+counting decision-point nodes (e.g., If, For) via @babel/traverse.
+   2. Embedding Visualization: We generated vector embeddings for                        contrast, human developers more frequently adhere to the “one
+each test method using a pre-trained CodeBERT model to capture                           assertion per test” principle, resulting in a lower median count.
+deeper semantic and structural characteristics. We then used t-SNE                       This structural difference highlights a potential trade-off: AI tests
+(t-distributed stochastic neighbor embedding) to visualize these                         provide high verification density but may increase the maintenance
+high-dimensional embeddings in 2D space, allowing us to observe                          effort required during debugging.
+whether AI- and human-generated tests form distinct clusters.                            Cyclomatic Complexity: Simpler Logic with Fewer Outliers.
+Results. Figure 1 presents the distribution of the three metrics for                     Despite being longer, AI-generated tests do not exhibit higher com-
+human-written and AI-generated tests. We used the Mann-Whitney                           plexity. Detailed complexity results are available in our online ap-
+U test [24] to assess statistical significance. Of the 10 projects an-                   pendix [40]. Significant differences were found in 2 out of 9 projects.
+alyzed, 9 contained both AI-authored and human-authored test                             The median complexity for both groups is 1.00, but the mean for
+methods. total-typescript-monorepo was excluded because its                              AI (1.09) is lower than for humans (1.31). Crucially, AI tests rarely
+AI-generated tests had been removed or modified by human devel-                          exceed a complexity of 2 or 3, lacking the high-complexity outliers
+opers in the latest release.                                                             seen in human tests. This indicates a strong preference by AI agents
+                                                                                         for linear, straightforward test logic without complex branching.
+Effective eLoC: AI Tests are Longer and More Consistent.
+Our analysis reveals that AI-generated tests have a slightly higher                      Semantic Analysis with Embeddings. To capture characteristics
+median eLoC (12.0) compared to human-written tests (11.0). While                         beyond simple metrics, we visualized the semantic representations
+the Mann-Whitney U test shows a statistically significant difference                     of the test methods using CodeBERT and t-SNE (Figure 2). By ana-
+(𝑝 < 0.001), the calculated effect size is negligible (Cliff’s 𝛿 = −0.12),               lyzing the distribution of AI-authored tests in the semantic space,
+suggesting the central tendencies are practically similar. However,                      we identified three distinct patterns of generation based on the spa-
+a key observation lies in the variance and distribution (Figure 1a).                     tial relationship between AI-generated and human-authored tests:
+Human-written tests exhibit a long tail of outliers with high eLoC                       (i) Dispersed Distribution, where AI tests are broadly scattered
+(Max: 699), whereas AI tests are confined to a narrower range (Max:                      throughout the entire human test distribution, indicating struc-
+87). This suggests that while typical length is comparable, AI agents                    tural similarity to various human styles (e.g., appkit, cal.com, and
+generate code with higher consistency, avoiding the “massive” test                       capgo); (ii) Localized Distribution, where AI tests overlap with
+methods that occasionally occur in human-authored code.                                  only specific clusters or regions of human tests (e.g., alchemy, liam,
+                                                                                         primer-react, helper); and (iii) Isolated Distribution, where AI
+Number of Assertions: More Verification Steps. AI-generated
+                                                                                         tests are concentrated in limited regions that are spatially separated
+tests are characterized by a higher number of assertions (Figure 1b).
+                                                                                         from most human tests (e.g., llmgateway). Visualization results for
+The aggregated median is 2.00 for AI compared to 1.00 for humans
+                                                                                         all projects are available in our replication package [41].
+(𝑝 < 0.001). This finding suggests that AI agents prioritize verbose
+setup followed by multiple verification steps within a single method.
+                                                                                           Answer to RQ2. AI-generated tests tend to be longer with more
+   While this could be interpreted as thorough verification, it also
+                                                                                           assertions, yet exhibit lower or equal complexity, suggesting a
+suggests that AI agents may be prone to the Assertion Roulette test
+                                                                                           preference for linear logic over complex branching.
+smell—a known bad practice where multiple assertions in a single
+test make it difficult to pinpoint the exact cause of failure [36]. In
+MSR ’26, April 13–14, 2026, Rio de Janeiro, Brazil                                                                                                                                 Yoshimoto, et al.
+
+
+                             60
+                                   appkit                                                 alchemy                                         Table 2: Average Coverage Change
+                                                                                    20
+                             40 appkit                                                    alchemy
+                             60                                                     10
+                                                                                    20
+                             20
+                                                                                                                                   Project    Author               Statement    Branch
+                             40
+                              0                                                      0
+                                                                                    10                                             liam       AI (𝑁 = 18)           +0.072      +0.074
+                             20                                                                                                               Human (𝑁 = 143)       -0.090      -0.142
+                             20                                                     100
+                              0
+                                                                                                                                   appkit     AI (𝑁 = 28)           +0.030      +0.183
+                             40
+                             20                                                     20
+                                                                                    10                                                        Human (𝑁 = 221)       -0.001      +0.008
+                             60
+                             40 75 50             25   0       25        50    75             20     0      20      40             helper     AI (𝑁 = 13)            0.000      +0.006
+                                                                                    20
+                              60 (i)
+                             100     Dispersed Distribution
+                                 azure-sdk-for-js                                         (ii) Localized Distribution                         Human (𝑁 = 108)        0.000      +0.213
+                                  75 50 25 0 25 50 75                                         20     0      20      40
+                             75
+                             7.5 llmgateway
+
+
+
+
+   t-SNE t-SNE
+         Dimension 2
+               Dimension 2
+                             50
+                             5.0
+                                                                                                                         4    Related Work
+                             25                                                                     Human Tests
+                              0
+                             2.5                                                                    AI                   Automated test generation has evolved significantly, shifting from
+                             25
+                             0.0                                                                    Human Tests          traditional Search-Based Software Testing to LLM-driven approaches
+                             50                                                                     AI Tests             [26, 32]. Traditional tools like EvoSuite [13] excel at maximizing
+                             2.5
+                             75                                                                                          coverage but often produce unreadable code [3]. While recent
+                             5.0
+                                   100       50        0            50        100                                        LLM-based methods have improved readability [12], simple prompt-
+                             7.5            t-SNE Dimension 1                                                            based approaches suffer from hallucinations and lack project-wide
+                                             10            0             10                                              context [43], frequently leading to non-compilable code [42].
+                                            t-SNE Dimension 1
+                                    (iii) Isolated Distribution                                                             To address these limitations, recent research has focused on
+                                                                                                                         agent-based generation, demonstrating its superior performance
+  Figure 2: t-SNE Visualization of CodeBERT Embeddings.                                                                  through iterative refinement [10, 28, 37]. Studies indicate that agents
+                                                                                                                         employing self-correction loops significantly outperform single-
+                                                                                                                         turn LLMs [11, 30]. Furthermore, comparative evaluations reveal
+𝑅𝑄 3 : Do Agent Coding Tools improve test
+                                                                                                                         that Code Agents designed for repair can effectively generate re-
+coverage?                                                                                                                producing tests and achieve high coverage [39].
+Motivation. While adding tests is one thing, their practical value                                                          However, these evaluations are largely limited to controlled
+is often measured by their ability to exercise untested code [16]. We                                                    benchmarks such as SWT-Bench [17], leaving the prevalence and
+investigate the tangible impact of AI-generated tests by measuring                                                       quality of agent-generated tests in the wild unexplored. To ad-
+the extent to which they contribute to the project’s code coverage.                                                      dress this gap, we analyze the AIDev dataset [22], examining agent-
+Approach. To assess the impact of AI-generated tests on project                                                          generated tests in actual development.
+quality, we measured coverage changes before and after test-adding
+commits. For each test-adding commit identified in RQ1, we calcu-                                                        5    Conclusion
+lated coverage at two points: the parent commit and the test-adding                                                      This study presented an empirical analysis of test generation by AI
+commit itself. Comparing these metrics allowed us to assess how                                                          agents using the AIDev dataset. Our investigation of 2232 test-
+AI-authored tests contributed to coverage improvement.                                                                   related commits revealed that AI agents authored 16.4% of all
+Results. Table 2 summarizes the impact of AI-authored and human-                                                         test-adding commits, demonstrating their significant role in mod-
+authored test additions on code coverage. Of 10 projects analyzed                                                        ern software development. Structural analysis showed that AI-
+in RQ1 and RQ2, we obtained coverage data for 531 test-adding                                                            generated tests feature longer code and higher assertion density
+commits across 3 projects where automated execution was feasible                                                         than human-written tests, while maintaining lower cyclomatic
+(other projects require project-specific setup).                                                                         complexity through linear logic. AI-generated tests achieve code
+   In liam and appkit, AI-authored tests contributed positively                                                          coverage gains comparable to human-authored ones, though their
+to statement coverage, with average increases of +0.072 pts and                                                          testing scope tends to be more localized in complex contributions.
++0.030 pts, respectively. In liam, among the 12 AI commits that                                                             Future research should fully evaluate long-term quality. First,
+changed statement coverage, 9 commits (75%) resulted in improve-                                                         mutation testing should determine if the high assertion density of
+ment. In appkit, AI-authored tests showed more substantial im-                                                           AI tests translates into superior fault-detection capabilities. Second,
+provement in branch coverage (+0.183 pts) compared to human-                                                             systematic investigation of test smells (e.g., Assertion Roulette) is es-
+authored tests (+0.008 pts). For helper, AI-authored tests showed                                                        sential to assess whether AI-generated patterns introduce technical
+nearly no changes in statement and branch coverage, while human                                                          debt that could hinder future maintenance.
+contributions led to a +0.213 pts increase in branch coverage.                                                           Replication Packages: We provide the program and data used in
+                                                                                                                         our replication package [41].
+  Answer to RQ3. AI agents improve code coverage at levels                                                               Acknowledgments
+  comparable to or exceeding human developers. In liam and
+                                                                                                                         This work was supported by JSPS KAKENHI (JP24K02921, JP25K21359)
+  appkit, AI-generated tests yielded higher statement and branch
+                                                                                                                         and JST PRESTO (JPMJPR22P3), ASPIRE (JPMJAP2415), and AIP
+  coverage gains than humans.
+                                                                                                                         Accelerated Program (JPMJCR25U7).
+Testing with AI Agents: An Empirical Study of Test Generation Frequency, Quality, and Coverage                                      MSR ’26, April 13–14, 2026, Rio de Janeiro, Brazil
+
+
+References                                                                                     [22] Hao Li, Haoxiang Zhang, and Ahmed E. Hassan. 2025. The Rise of AI Team-
+ [1] alchemy-run. 2025. Alchemy. GitHub repository. https://github.com/alchemy-                     mates in Software Engineering (SE) 3.0: How Autonomous Coding Agents Are
+     run/alchemy v0.76.1.                                                                           Reshaping Software Engineering. CoRR abs/2507.15003 (2025).
+ [2] antiwork. 2025. Helper. GitHub repository. https://github.com/antiwork/helper             [23] liam-hq. 2025. Liam ERD. GitHub repository. https://github.com/liam-hq/liam
+ [3] Andrea Arcuri. 2018. An experience report on applying software testing academic           [24] H. B. Mann and D. R. Whitney. 1947. On a Test of Whether one of Two Random
+     results in industry: we need usable automated test generation. Empir. Softw. Eng.              Variables is Stochastically Larger than the Other. Annals of Mathematical Statistics
+     23, 4 (2018), 1959–1981.                                                                       18 (1947), 50–60.
+ [4] Azure. 2025. Azure SDK for JavaScript. GitHub repository. https://github.com              [25] mattpocock. 2025. Total TypeScript Monorepo. GitHub repository. https:
+     /Azure/azure-sdk-for-js                                                                        //github.com/mattpocock/total-typescript-monorepo
+ [5] Roberto Baldoni, Emilio Coppa, Daniele Cono D’Elia, Camil Demetrescu, and                 [26] Phil McMinn. 2011. Search-Based Software Testing: Past, Present and Future. In
+     Irene Finocchi. 2018. A Survey of Symbolic Execution Techniques. ACM Comput.                   Proc. of 2011 IEEE Fourth International Conference on Software Testing, Verification
+     Surv. 51, 3 (2018), 50:1–50:39.                                                                and Validation Workshops (ICST). 153–163.
+ [6] Kent L. Beck. 2003. Test-driven Development - by example. Addison-Wesley.                 [27] Gerrard Meszaros. 2007. xUnit Test Patterns: Refactoring Test Code. Addison-
+ [7] Moritz Beller, Georgios Gousios, and Andy Zaidman. 2015. How (Much) Do                         Wesley Professional, Boston.
+                                                                                               [28] Niels Mündler, Mark Niklas Müller, Jingxuan He, and Martin T. Vechev. 2024.
+     Developers Test?. In Proc. of the 37th IEEE International Conference on Software
+                                                                                                    SWT-Bench: Testing and Validating Real-World Bug-Fixes with Code Agents.
+     Engineering (ICSE). 559–562.
+                                                                                                    In Proc. of the 38th Annual Conference on Neural Information Processing Systems
+ [8] calcom. 2025. Cal.com. GitHub repository. https://github.com/calcom/cal.com
+                                                                                                    (NIPS).
+ [9] Cap-go. 2025. Capgo. GitHub repository. https://github.com/Cap-go/capgo
+                                                                                               [29] primer. 2025. Primer React. GitHub repository. https://github.com/primer/react
+[10] Guangyao Chen, Siwei Dong, Yu Shu, Ge Zhang, Jaward Sesay, Börje Karlsson,
+                                                                                               [30] Matthew Renze and Erhan Guven. 2024. Self-Reflection in Large Language Model
+     Jie Fu, and Yemin Shi. 2024. AutoAgents: A Framework for Automatic Agent Gen-
+                                                                                                    Agents: Effects on Problem-Solving Performance. In Proc. of the 2nd International
+     eration. In Proc. of the 33rd International Joint Conference on Artificial Intelligence
+                                                                                                    Conference on Foundation and Large Language Models (FLLM). 516–525.
+     (IJCAI). 22–30.
+                                                                                               [31] reown-com. 2025. AppKit. GitHub repository. https://github.com/reown-
+[11] Xinyun Chen, Maxwell Lin, Nathanael Schärli, and Denny Zhou. 2024. Teaching
+                                                                                                    com/appkit
+     Large Language Models to Self-Debug. In Proc. of The 12th International Conference
+                                                                                               [32] Max Schäfer, Sarah Nadi, Aryaz Eghbali, and Frank Tip. 2024. An Empirical
+     on Learning Representations (ICLR).
+                                                                                                    Evaluation of Using Large Language Models for Automated Unit Test Generation.
+[12] Amirhossein Deljouyi, Roham Koohestani, Maliheh Izadi, and Andy Zaidman.
+                                                                                                    IEEE Trans. Software Eng. 50, 1 (2024), 85–105.
+     2025. Leveraging Large Language Models for Enhancing the Understandability
+                                                                                               [33] Lucinéia Souza, Sávio Freire, Verusca Rocha, Nicolli Rios, Rodrigo O. Spínola, and
+     of Generated Unit Tests. In Proc. of the 47th IEEE/ACM International Conference
+                                                                                                    Manoel G. Mendonça. 2020. Using Surveys to Build-up Empirical Evidence on
+     on Software Engineering (ICSE). 1449–1461.
+                                                                                                    Test-Related Technical Debt. In Proc. of the 34th Brazilian Symposium on Software
+[13] Gordon Fraser and Andrea Arcuri. 2011. EvoSuite: automatic test suite generation
+                                                                                                    Engineering (SBES). 750–759.
+     for object-oriented software. In Proc. of the 19th ACM SIGSOFT symposium and
+                                                                                               [34] Davide Spadini, Fabio Palomba, Andy Zaidman, Magiel Bruntink, and Alberto
+     the 13th European conference on Foundations of software engineering (ESEC/FSE).
+                                                                                                    Bacchelli. 2018. On the Relation of Test Smells to Software Code Quality. In
+     416–419.
+                                                                                                    Proc. of 2018 IEEE International Conference on Software Maintenance and Evolution
+[14] Anusha Garlapati, M N V Satya Sai Muni Parmesh, Savitha, and Jaisri S. 2024.
+                                                                                                    (ICSME). 1–12.
+     AI-Powered Multi-Agent Framework for Automated Unit Test Case Generation:
+                                                                                               [35] theopenco. 2025. LLM Gateway. GitHub repository. https://github.com/theopen
+     Enhancing Software Quality through LLM’s. In Proc. of the 5th IEEE Global
+                                                                                                    co/llmgateway
+     Conference for Advancement in Technology (GCAT). 1–5.
+                                                                                               [36] A. Van Deursen, L. Moonen, A. van den Bergh, and G. Kok. 2001. Refactoring
+[15] Xinyi Hou, Yanjie Zhao, Yue Liu, Zhou Yang, Kailong Wang, Li Li, Xiapu Luo,
+                                                                                                    test code. In Proc. of the 2nd International Conference on Extreme Programming
+     David Lo, John Grundy, and Haoyu Wang. 2024. Large Language Models for
+                                                                                                    and Flexible Processes in Software Engineering (XP2001). 92–95.
+     Software Engineering: A Systematic Literature Review. ACM Trans. Softw. Eng.
+                                                                                               [37] Junlin Wang, Jue Wang, Ben Athiwaratkun, Ce Zhang, and James Zou. 2025.
+     Methodol. 33, 8 (2024), 220:1–220:79.
+                                                                                                    Mixture-of-Agents Enhances Large Language Model Capabilities. In Proc. of The
+[16] Marko Ivankovic, Goran Petrovic, René Just, and Gordon Fraser. 2019. Code
+                                                                                                    13th International Conference on Learning Representations (ICLR).
+     coverage at Google. In Proc. of 27th ACM Joint Meeting on European Software
+                                                                                               [38] Titus Winters, Tom Manshreck, and Hyrum Wright. 2020. Software Engineering
+     Engineering Conference and Symposium on the Foundations of Software Engineering
+                                                                                                    at Google - Lessons Learned from Programming Over Time. O’Reilly. Chapter 11:
+     (ESEC/FSE). 955–963.
+                                                                                                    Testing Overview..
+[17] Carlos E. Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir
+                                                                                               [39] John Yang, Carlos E. Jimenez, Alexander Wettig, Kilian Lieret, Shunyu Yao,
+     Press, and Karthik R. Narasimhan. 2024. SWE-bench: Can Language Models
+                                                                                                    Karthik Narasimhan, and Ofir Press. 2024. SWE-agent: Agent-Computer Inter-
+     Resolve Real-world Github Issues?. In Proc. of the 12th International Conference
+                                                                                                    faces Enable Automated Software Engineering. In Proc. of the 38th International
+     on Learning Representations (ICLR).
+                                                                                                    Conference on Neural Information Processing Systems (NIPS).
+[18] Ali Khatami and Andy Zaidman. 2023. Quality Assurance Awareness in Open
+                                                                                               [40] Suzuka Yoshimoto. 2025. Cyclomatic Complexity Visualization. https://github.c
+     Source Software Projects on GitHub. In Proc. of the 23rd International Working
+                                                                                                    om/suu-y/AI-human-test-comparison/blob/master/figures/cross_project_com
+     Conference on Source Code Analysis and Manipulation (SCAM). 174–185.
+                                                                                                    plexity_by_project.png. Accessed: January 26, 2026.
+[19] Miryung Kim, Thomas Zimmermann, and Nachiappan Nagappan. 2014. An
+                                                                                               [41] Suzuka Yoshimoto and Shun Fujita. 2025. Replication Package. https://github.c
+     Empirical Study of Refactoring Challenges and Benefits at Microsoft. IEEE
+                                                                                                    om/suu-y/AI-human-test-comparison. Accessed: January 26, 2026.
+     Transactions on Software Engineering (TSE) 40, 7 (2014), 633–649.
+                                                                                               [42] Zhiqiang Yuan, Yiling Lou, Mingwei Liu, Shiji Ding, Kaixin Wang, Yixuan Chen,
+[20] Amy J. Ko, Bryan Dosono, and Neeraja Duriseti. 2014. Thirty years of software
+                                                                                                    and Xin Peng. 2023. No More Manual Tests? Evaluating and Improving ChatGPT
+     problems in the news. In Proc. of the 7th International Workshop on Cooperative
+                                                                                                    for Unit Test Generation. CoRR abs/2305.04207 (2023).
+     and Human Aspects of Software Engineering (CHASE). 32–39.
+                                                                                               [43] Jiyang Zhang, Yu Liu, Pengyu Nie, Junyi Jessy Li, and Milos Gligoric. 2025. exLong:
+[21] Fabian Leinen, Daniel Elsner, Alexander Pretschner, Andreas Stahlbauer, Michael
+                                                                                                    Generating Exceptional Behavior Tests with Large Language Models. In Proc.
+     Sailer, and Elmar Jürgens. 2024. Cost of Flaky Tests in Continuous Integration:
+                                                                                                    of the 47th IEEE/ACM International Conference on Software Engineering (ICSE).
+     An Industrial Case Study. In Proc. of 2024 IEEE Conference on Software Testing,
+                                                                                                    1462–1474.
+     Verification and Validation (ICST). 329–340.
+

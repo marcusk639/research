@@ -1,0 +1,26 @@
+__HTTP 200__
+
+       
+         
+           
+          
+           Use Simulations to simulate Billing objects | Stripe Documentation 
+           
+           
+          
+           
+ 
+ 
+           
+         
+         
+           Skip to content Test clocks Create account  or  Sign in Search / Ask AI Create account Sign in Get started   Payments   Revenue   Risk   Data   Money management   Stablecoins   Embedded finance   Developer resources   More APIs & SDKs Help Overview Billing Overview How the Billing APIs work Invoicing Quotes Subscriptions Usage-based billing Test your integration Test your Billing integration Subscription testing best practices Test clocks Simulate subscriptions API and advanced usage Test your invoicing integration Automations Scripts Customer management Customer management Retention Revenue recovery Tax Overview Use Stripe Tax Tax rates Manage compliance Accounting Overview How Revenue Recognition works Get started Import data to Stripe Reports Examples Revenue Recognition for platforms United States English (United States) Home / Revenue / Test your integration Use Simulations to simulate Billing   objects Learn how to simulate Billing objects through time. Ask about this page Copy for LLM View as Markdown Set up agent Test your Billing integration and make sure it behaves as expected. By running a simulation, you can see how various Billing resources like subscriptions change over time. For example, you can see how your setup handles a payment failure for a quarterly renewal. Run simulations in the sandbox assigned to that testing workflow. For new integrations, use a separate sandbox for continuous integration (CI) so its test clocks and related objects don’t interfere with local development. Learn more about  choosing a testing environment . Simulations use test clocks to control time. In the API and Dashboard, there are references to both. A simulation uses a clock to advance time, and track how things change. Simulations let you: Test complex simulations such as upgrading or changing plans mid-cycle. Ensure your integration processes Billing lifecycle webhooks correctly. Validate that your app handles trials correctly. Build and test multi-phase subscription schedules. How to use test clocks Simulate subscriptions Learn how to simulate subscriptions in a sandbox. API and advanced usage Learn advanced strategies for using test clocks in the Dashboard and API. Was this page helpful? Yes No Need help?  Contact Support . Chat with Stripe developers on  Discord . Check out our  changelog . Questions?  Contact Sales . LLM?  Read llms.txt . Powered by  Markdoc 
+         
+         
+         
+ 
+ 
+ 
+ 
+ 
+      

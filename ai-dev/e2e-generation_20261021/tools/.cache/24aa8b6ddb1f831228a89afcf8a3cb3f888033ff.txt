@@ -1,0 +1,4456 @@
+__HTTP 200__
+
+ 
+ 
+ 
+ 
+Google Testing Blog: Flaky Tests at Google and How We Mitigate Them
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+            Testing Blog
+           
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Flaky Tests at Google and How We Mitigate Them
+ 
+ 
+ 
+ 
+ 
+Friday, May 27, 2016
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                        Google
+                       
+ 
+ 
+Labels:
+ 
+ 
+ 
+John Micco
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+36 comments
+                    :
+                   
+ 
+ 
+ 
+ 
+ TCDooM May 28, 2016 at 10:21:00 PM PDT I hear you. same issues, same solutions. but we have another tool up our sleeve, we have a section called Reservoir that runs all new tests added in a loop for a week to determine if there is any flakiness in them, in that time they are not yet part of the critical CI path. happy to hear we are not alone. good day. Reply Delete Replies Reply Arjan Kranenburg May 29, 2016 at 12:11:00 AM PDT Thanks for the great blog-post! It seems that you categorize flakiness as a test issue, but the cause of the flaky test result could be in the production-code and therefor be a real issue. Did you investigate how many of the flaky tests are due to a real issue? And do you give flaky test results lower prio than tests that fail every time? Reply Delete Replies Anonymous May 31, 2016 at 8:04:00 AM PDT We do not currently keep accurate count of the number of times that flaky tests are really masking bugs in the code.  We see it as a testing issue mostly because it makes it more difficult to use the tests for their intended purpose - finding problems with the code.  From the testing system point of view a test that fails reliably is far better than a test that is flaky!  A persistently failing test is giving a clear signal about what to do - even it means fixing the test.  Delete Replies Reply Reply Sławomir Radzymiński May 29, 2016 at 8:34:00 AM PDT Thanks John Micco for sharing your experience. Are those GUI level tests you're struggling with? They're usually considered flaky. Do you use rerun mechanism for tests that fail? Regards, Sławek Reply Delete Replies Anonymous May 31, 2016 at 8:06:00 AM PDT Flaky tests appear everywhere in our corpuse, but there is probably some skew toward UI testing that we observe - although I have not quantified this. Our rerun mechanism is only used for tests that are marked as flaky or when users specifically request it. Delete Replies Reply Anonymous June 6, 2016 at 9:07:00 AM PDT Agreed. UI tests are definitely flaky because of how test harnesses interact with the UI, timing issues, handshaking, and extraction of state. See more here: http://comet.unl.edu/tutorial.php Delete Replies Reply Reply M May 29, 2016 at 9:08:00 AM PDT Thanks John, wildly enough these are pretty common issues in large Functional Automation implementations. I know you have a heavy vest in Selenium, do you use another tool for Service Virtualization ? Reply Delete Replies Anonymous May 31, 2016 at 8:09:00 AM PDT Today at Google test authors and test infrastructure developers throughout the organization are responsible for creating/using service virtualization in their tests.  We do not have a central framework - other than providing generic Mocking frameworks like Mockito. Delete Replies Reply Reply Unknown May 30, 2016 at 4:58:00 AM PDT You touched very important and common problem here. Have you tried to track the wasted time caused by flaky tests (developers unable to submit the changes, CI that requires additional cycles)? Reply Delete Replies Anonymous May 31, 2016 at 8:09:00 AM PDT We are currently working to better analyze the cost to the developer workflows caused by test flakiness - we do not yet have anything publishable out of that effort. Delete Replies Reply Reply Stanislav Bashkyrtsev May 30, 2016 at 10:50:00 PM PDT I repeat this almost every day: do not write many UI System Tests - they should be rare. You need to build a pyramid (http://qala.io/blog/test-pyramid.html). There are almost always possibilities to write tests at lower level.  Often it's the separation of AQA and Dev teams that leads to flakiness since AQA usually write system tests only. Let Devs write all(!) the tests and the proportion of flaky tests would drop to 1:1000. Reply Delete Replies Darko Marinov May 31, 2016 at 5:08:00 PM PDT It's not only GUI tests. There're many sources of flakiness, some of which Qingzhou Luo, Farah Hariri, Lamyaa Eloussi, and I analyzed in this paper: http://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf Delete Replies Reply Reply Unknown May 31, 2016 at 2:12:00 AM PDT Great post. I guess we all experience same issues when it comes to large scale automation processes. @John Micco - do you consider versions/experiments/configurations between test cycles when deciding if test passed Beta or marked as Flaky? Thanks, Elad - WIX.com Reply Delete Replies JohnM May 31, 2016 at 8:29:00 PM PDT Good point, we definitely separate the test with all flags and configuration values and differentiate whether they are flaky based on the flag / configurations being tested. Delete Replies Reply Reply Unknown May 31, 2016 at 7:50:00 AM PDT This comment has been removed by the author. Reply Delete Replies Reply Unknown May 31, 2016 at 7:59:00 AM PDT Nice Article John!! We too have this kind of issues , and we came up with rerun concept, in which You can rerun the tests 3 times if it is failed in each of the runs. If the test fails more than 3 times we mark them as failure. We have configuration to setup the rerun count.  And Some times flaky tests are also the way tests are written up.  -Surya  Reply Delete Replies dzieciou October 19, 2016 at 11:44:00 AM PDT How will you distinguish between a failure due to environmental problems and a failure due to a software bug? A software bug can still succeed 4 out of 5 times. Delete Replies Reply Reply Unknown June 1, 2016 at 1:29:00 AM PDT Hi John, Thanks for the post, great read! Can I ask what tool you are using to monitor the flakiness of your tests? Thanks, Sarah Reply Delete Replies Reply Turbo June 1, 2016 at 12:43:00 PM PDT Thanks John. Do you also classify your flakiness data along small, medium and large tests? Reply Delete Replies Reply Anonymous June 1, 2016 at 1:19:00 PM PDT It's great to hear that you're working on this. I've been fighting against flaky tests in our c++ projects as well. I've noticed that some projects are adding flaky test information to junit xml results used by Jenkins, but the googletest framework doesn't yet support this ( https://github.com/google/googletest/issues/727 ). For projects that see lots of flaky test failures, we currently re-run failing tests one time and only report as a failure if it fails twice in a row. Reply Delete Replies Reply Matt Griscom June 1, 2016 at 2:43:00 PM PDT Marking tests as flaky is addressing the problem from the wrong direction, and it will lose potentially valuable information. Instead, have a test monitor itself for what it does. If it fails, look at root cause from available information. Then, depending on what failed (for example, an external dependency), do a smart retry. Is the failure reproduced? Then, fail the test! "Marking a test as flaky" gives one permission to ignore failures, but there is potentially important and potentially actionable information there. Instead, *use* the information to manage quality risk and/or improve the quality of the product. MetaAutomation has patterns that describe at a high level how to do this. Don't drop information on the floor that can have value for the team and for the product! Reply Delete Replies Reply Wayne Roseberry June 2, 2016 at 9:45:00 AM PDT We have been dealing with this same phenomenon for years. Currently, we execute reliability runs of all of the CI tests (we try for hundreds of executions, but it depends on automation system load levels) per build to generate consistency rates. Using those numbers, we push product teams to move all tests that fall below a certain consistency level out of the CI tests. We keep them in the reliability suite for sake of coverage and issue discovery, but do not use them to gate submission into the main code branch. We likewise have difficulty accounting for the costs, but ballpark estimates show it is very expensive. I have done prior analysis to demonstrate that intermittent failures cause engineers to take longer to submit. Intermittent failures have a high duplicate bug rate, and ad hoc estimates from engineers is that we lose ~20 per duplicate bug for an engineer to determine there is duplication. The costs go way beyond all of that, though, particularly as process gates close down team productivity (failing CI tests lock a branch from changes until it is resolved), but also from legitimate bug escapes that were ignored because of the noise. It is my own opinion that even after tons of effort to reduce noise from tests, flaky tests are inevitable when the test condition reaches a certain complexity. There are more stable coding patterns (mostly in product, but also in test) which stabilize the test results, but they can only take you so far. Once you have moved the tests (e.g. convert end to end to unit tests, move pre-release tests to TIP methodologies) you still have a core set of test problems only discoverable in an integrated end to end system. And those tests will be flaky. If they are not flaky, they tend to never find bugs. This is not because the test is bad. It is because the conditions of the test, the thing that makes them flaky, are EXACTLY the same thing that caused the bug to be introduced in the first place. These bugs are scarier, riskier and harder to find. The secret, then, is to appropriately manage them. I prefer to rely more on repetition, statistics and runs that do not block the CI process. I prefer to data mine the test results and feed the work backlog. Reply Delete Replies Reply Peter Bindels June 7, 2016 at 2:40:00 AM PDT Did you look at correlated unreliability? We have a number of tests that in themselves are stable, but use some form of global state (/tmp files, other global state) that cause it to fail if run together with another test. We also use a test environment that preferentially runs failing tests first, with the rest after it. That leads to the situation that if they ever fail, they are then run first with other failing tests, making it more likely to fail, and when they succeed they're run later making it less likely they fail again. Of course, this makes it even harder to know if you broke something, as the test will reliably fail on your machine but only for you. And even when you revert any changes you did. Reply Delete Replies Reply Unknown June 7, 2016 at 11:06:00 AM PDT Any chance these tools are open source? Reply Delete Replies Anonymous June 7, 2016 at 11:19:00 AM PDT There is a flaky test handler plugin for jenkins: https://github.com/jenkinsci/flaky-test-handler-plugin We have also written a script for merging junit xml files to mark flaky tests so that the jenkins plugin can parse them. https://bitbucket.org/osrf/release-tools/src/default/jenkins-scripts/tools/ That's all that I'm familiar with. Delete Replies Reply Akihiro Suda June 9, 2016 at 5:11:00 AM PDT cloudera's tool which uses a distributed cluster for repeating tests and reproducing flaky ones: https://github.com/cloudera/dist_test Another tool (mine) for controlling non-determinism so as to reproduce flaky tests: https://github.com/osrg/namazu Delete Replies Reply Unknown October 6, 2017 at 11:04:00 AM PDT I have created sbt plugin to detect flaky tests in our Java/Scala projects: https://github.com/otrebski/sbt-flaky. It runs tests many times and analyze JUnits reports. Also it can calculate trends for tests. You can check example HTML report: http://sbt-flaky-demo.bitballoon.com  Delete Replies Reply Reply Devasena June 8, 2016 at 5:45:00 AM PDT @John Micco,  I do not have the background on the 'process' approach for categorizing, grouping, prioritizing your tests.... Still, would like to know if a combination of Exploratory testing and CI has been considered.  One of the basic premise for automation is to consider software candidates, that are stable and are not changed too often. Please, let me know. Thanks, Devasena. Reply Delete Replies Reply Mesut Güneş June 23, 2016 at 11:34:00 PM PDT We solved this problem by re-running the failed test cases three Times. And checking them to find what causing flakiness. it is not much time consuning but more robust solution since 90 % pass at first try. Reply Delete Replies Reply Unknown July 1, 2016 at 7:23:00 AM PDT This is pretty interesting I'll definitely be investigating the flaky test handler for jenkins that was posted in the comments Reply Delete Replies Reply Unknown September 7, 2016 at 6:05:00 AM PDT TestProject conducted a survey that compares AngularJS VS. ReactJS, exposes current front end development technologies and unit testing tool preferences of software professionals! See the results here: http://blog.testproject.io/2016/09/01/front-end-development-unit-test-automation-trends2/ Reply Delete Replies Reply Sujay September 21, 2016 at 9:24:00 AM PDT How do you mark a test as flaky? Do you annotate the test in source code in some way, or does this information reside elsewhere (perhaps in a database)? Reply Delete Replies Reply Unknown October 12, 2016 at 2:29:00 PM PDT Summary: flaky tests are bugs either in the tests or in the production code. When in doubt, doubt the tests first. Do you whitelist tests that are known to be robust for a long time? Reply Delete Replies Reply Professor Fontanez April 26, 2017 at 10:02:00 PM PDT As dangerous "flaky" tests that give false negatives are, giving false positives is even more dangerous. Writing test cases for misunderstood requirements could lead of incorrect validation of production code and potentially dangerous bugs to remain undetected for a long time. I experienced such problem while working at Nokia's manufacturing facility in Fort Worth, TX in the late 90s. An incorrect calibration (adjustment) of a camera lead to a number of low-quality displays to be assembled on mobile phones. The problem was discovered by QC auditing and tedious examination of test data logged by the production test stations. The "false positive" lead to an unusually high prime pass yield of the test station in question which wasn't detected because it is almost impossible to sense a problem when all the tests are passing. Reply Delete Replies Reply dzieciou May 2, 2017 at 8:22:00 AM PDT What are the plugins that you use to identify and handle flaky tests on Jenkins? So far I have found the following two: * Flaky Test Handler Plugin: This plugin is designed to handle flaky tests, including re-running failed tests, aggregate and report flaky tests statistics and so on. https://wiki.jenkins-ci.org/display/JENKINS/Flaky+Test+Handler+Plugin * Test Results Analyzer Plugin: Displays a matrix subsequent runs of the same tests, so you can identify which tests are ocassionaly red. https://wiki.jenkins-ci.org/display/JENKINS/Test+Results+Analyzer+Plugin Reply Delete Replies Reply Unknown August 2, 2021 at 1:49:00 PM PDT Flaky Tests? I think frequently, test environments are to blame and are taken for granted. It is important to be able to run tests of "components" in an isolated environment where you control the inputs.  In other words, besides the "component" under test, you control everything else to provide known inputs (this includes data transfer rates).  Otherwise, you are setting yourself up to get inconsistent results. Per scientific process, only one thing is changing at a time, to learn something new. If more than one thing is changed at a time the result gets ambiguous. If you need more bandwidth to test more changes at the same time, you need to be able to stand up multiple identical environments that can each test one change at a time.   Reply Delete Replies Reply Add comment Load more... 
+ 
+ 
+ 
+ 
+ 
+ 
+The comments you read and contribute here belong only to the person who posted them. We reserve the right to remove off-topic comments.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                      
+                     
+ 
+ 
+ 
+ 
+                          
+                         
+ 
+ 
+ 
+ 
+ 
+                          
+                         
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Labels
+ 
+ 
+                      
+                     
+ 
+ 
+ 
+ 
+ 
+TotT
+ 
+ 
+114
+ 
+ 
+ 
+ 
+GTAC
+ 
+ 
+61
+ 
+ 
+ 
+ 
+James Whittaker
+ 
+ 
+42
+ 
+ 
+ 
+ 
+Misko Hevery
+ 
+ 
+32
+ 
+ 
+ 
+ 
+Code Health
+ 
+ 
+31
+ 
+ 
+ 
+ 
+Anthony Vallone
+ 
+ 
+27
+ 
+ 
+ 
+ 
+Patrick Copeland
+ 
+ 
+23
+ 
+ 
+ 
+ 
+Jobs
+ 
+ 
+18
+ 
+ 
+ 
+ 
+Andrew Trenk
+ 
+ 
+13
+ 
+ 
+ 
+ 
+C++
+ 
+ 
+11
+ 
+ 
+ 
+ 
+Patrik Höglund
+ 
+ 
+8
+ 
+ 
+ 
+ 
+JavaScript
+ 
+ 
+7
+ 
+ 
+ 
+ 
+Allen Hutchison
+ 
+ 
+6
+ 
+ 
+ 
+ 
+George Pirocanac
+ 
+ 
+6
+ 
+ 
+ 
+ 
+Zhanyong Wan
+ 
+ 
+6
+ 
+ 
+ 
+ 
+Harry Robinson
+ 
+ 
+5
+ 
+ 
+ 
+ 
+Java
+ 
+ 
+5
+ 
+ 
+ 
+ 
+Julian Harty
+ 
+ 
+5
+ 
+ 
+ 
+ 
+Adam Bender
+ 
+ 
+4
+ 
+ 
+ 
+ 
+Alberto Savoia
+ 
+ 
+4
+ 
+ 
+ 
+ 
+Ben Yu
+ 
+ 
+4
+ 
+ 
+ 
+ 
+Erik Kuefler
+ 
+ 
+4
+ 
+ 
+ 
+ 
+Philip Zembrod
+ 
+ 
+4
+ 
+ 
+ 
+ 
+Shyam Seshadri
+ 
+ 
+4
+ 
+ 
+ 
+ 
+Chrome
+ 
+ 
+3
+ 
+ 
+ 
+ 
+Dillon Bly
+ 
+ 
+3
+ 
+ 
+ 
+ 
+John Thomas
+ 
+ 
+3
+ 
+ 
+ 
+ 
+Lesley Katzen
+ 
+ 
+3
+ 
+ 
+ 
+ 
+Marc Kaplan
+ 
+ 
+3
+ 
+ 
+ 
+ 
+Markus Clermont
+ 
+ 
+3
+ 
+ 
+ 
+ 
+Max Kanat-Alexander
+ 
+ 
+3
+ 
+ 
+ 
+ 
+Sonal Shah
+ 
+ 
+3
+ 
+ 
+ 
+ 
+APIs
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Abhishek Arya
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Alan Myrvold
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Alek Icev
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Android
+ 
+ 
+2
+ 
+ 
+ 
+ 
+April Fools
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Chaitali Narla
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Chris Lewis
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Chrome OS
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Diego Salas
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Dori Reuveni
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Jason Arbon
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Jochen Wuttke
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Kostya Serebryany
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Marc Eaddy
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Marko Ivanković
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Mobile
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Oliver Chang
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Simon Stewart
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Stefan Kennedy
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Test Flakiness
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Titus Winters
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Tony Voellm
+ 
+ 
+2
+ 
+ 
+ 
+ 
+WebRTC
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Yiming Sun
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Yvette Nameth
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Zuri Kemp
+ 
+ 
+2
+ 
+ 
+ 
+ 
+Aaron Jacobs
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Adam Porter
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Adam Raider
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Adel Saoud
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Alan Faulkner
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Alex Eagle
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Amy Fu
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Anantha Keesara
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Antoine Picard
+ 
+ 
+1
+ 
+ 
+ 
+ 
+App Engine
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Arham Jain
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Ari Shamash
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Arif Sukoco
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Bartosz Papis
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Benjamin Pick
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Bob Nystrom
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Bruce Leban
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Carlos Arguelles
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Carlos Israel Ortiz García
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Cathal Weakliam
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Chris Kennelly
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Christopher Semturs
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Clay Murphy
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Dagang Wei
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Dan Maksimovich
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Dan Shi
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Dan Willemsen
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Dave Chen
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Dave Gladfelter
+ 
+ 
+1
+ 
+ 
+ 
+ 
+David Bendory
+ 
+ 
+1
+ 
+ 
+ 
+ 
+David Mandelberg
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Derek Snyder
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Diego Cavalcanti
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Dmitry Vyukov
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Eduardo Bravo Ortiz
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Ekaterina Kamenskaya
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Elliott Karpilovsky
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Elliotte Rusty Harold
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Espresso
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Felipe Sodré
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Francois Aube
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Gene Volovich
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Google+
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Goran Petrovic
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Goranka Bjedov
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Hank Duan
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Havard Rast Blok
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Hongfei Ding
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Jason Elbaum
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Jason Huggins
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Jay Han
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Jeff Hoy
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Jeff Listfield
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Jessica Tomechak
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Jim Reardon
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Joe Allan Muharsky
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Joel Hynoski
+ 
+ 
+1
+ 
+ 
+ 
+ 
+John Micco
+ 
+ 
+1
+ 
+ 
+ 
+ 
+John Penix
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Jonathan Rockway
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Jonathan Velasquez
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Josh Armour
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Julie Ralph
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Kai Kent
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Kanu Tewary
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Karin Lundberg
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Kaue Silveira
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Kevin Bourrillion
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Kevin Graney
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Kirkland
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Kurt Alfred Kluever
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Kyle Freeman
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Manjusha Parvathaneni
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Marek Kiszkis
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Marius Latinis
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Mark Ivey
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Mark Manley
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Mark Striebeck
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Matt Lowrie
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Meredith Whittaker
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Michael Bachman
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Michael Klepikov
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Mike Aizatsky
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Mike Wacker
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Mona El Mahdy
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Nimit Khandelwal
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Noel Yap
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Palak Bansal
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Patricia Legaspi
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Per Jacobsson
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Peter Arrenbrecht
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Peter Spragins
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Phil Norman
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Phil Rollet
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Pooja Gupta
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Project Showcase
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Radion Khait
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Radoslav Vasilev
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Rahul Singal
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Rajat Dewan
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Rajat Jain
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Rich Martin
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Richard Bustamante
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Roman Govsheev
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Roshan Sembacuttiaratchy
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Ruslan Khamitov
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Saicharan Nimmala
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Sam Lee
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Sean Jordan
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Sebastian Dörner
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Shahar Roth
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Sharon Zhou
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Shiva Garg
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Siddartha Janga
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Simran Basi
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Stan Chan
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Stephen Ng
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Tejas Shah
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Test Analytics
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Test Engineer
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Tim Lyakhovetskiy
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Tom O'Neill
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Vojta Jína
+ 
+ 
+1
+ 
+ 
+ 
+ 
+Zhe Lu
+ 
+ 
+1
+ 
+ 
+ 
+ 
+automation
+ 
+ 
+1
+ 
+ 
+ 
+ 
+dead code
+ 
+ 
+1
+ 
+ 
+ 
+ 
+iOS
+ 
+ 
+1
+ 
+ 
+ 
+ 
+mutation testing
+ 
+ 
+1
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                      
+                     
+ 
+Archive
+ 
+ 
+                      
+                     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2026
+ 
+ (8) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2025
+ 
+ (3) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2024
+ 
+ (13) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2023
+ 
+ (14) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (5) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2022
+ 
+ (2) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2021
+ 
+ (3) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2020
+ 
+ (8) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2019
+ 
+ (4) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2018
+ 
+ (7) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2017
+ 
+ (17) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ▼ 
+      
+ 
+ 
+ 
+2016
+ 
+ (15) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ▼ 
+      
+ 
+ 
+ 
+May
+ 
+ (3) 
+ 
+ 
+ 
+Flaky Tests at Google and How We Mitigate Them
+ 
+ 
+ 
+ 
+GTAC Diversity Scholarship
+ 
+ 
+ 
+ 
+GTAC 2016 Registration is now open!
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2015
+ 
+ (14) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2014
+ 
+ (24) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2013
+ 
+ (16) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2012
+ 
+ (11) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2011
+ 
+ (39) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (5) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (5) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (5) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2010
+ 
+ (37) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (8) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (1) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2009
+ 
+ (54) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (5) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (15) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (8) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (5) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2008
+ 
+ (75) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Dec
+ 
+ (6) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Nov
+ 
+ (8) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (9) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (8) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (9) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (9) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (6) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (6) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+2007
+ 
+ (41) 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Oct
+ 
+ (6) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Sep
+ 
+ (5) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Aug
+ 
+ (3) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jul
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jun
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+May
+ 
+ (2) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Apr
+ 
+ (7) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Mar
+ 
+ (5) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Feb
+ 
+ (5) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+        ► 
+      
+ 
+ 
+ 
+Jan
+ 
+ (4) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Feed 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+              Google
+             
+ 
+ 
+ 
+              Privacy
+             
+ 
+ 
+ 
+              Terms
+             
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 

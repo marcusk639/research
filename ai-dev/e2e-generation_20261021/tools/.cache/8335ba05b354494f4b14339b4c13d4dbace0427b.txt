@@ -1,0 +1,693 @@
+__HTTP 200__
+ Automated Cross-Platform Inconsistency Detection
+                for Mobile Apps
+                               Mattia Fazzini                                            Alessandro Orso
+                  Georgia Institute of Technology, USA                         Georgia Institute of Technology, USA
+                        mfazzini@cc.gatech.edu                                          orso@cc.gatech.edu
+
+
+
+   Abstract—Testing of Android apps is particularly challenging         app. Third, it runs the app against the same inputs on a large
+due to the fragmentation of the Android ecosystem in terms of           set of different platforms. Finally, D IFF D ROID compares the
+both devices and operating system versions. Developers must in          UI models of the app on these different platforms with the
+fact ensure not only that their apps behave as expected, but
+also that the apps’ behavior is consistent across platforms. To         UI model of the reference device and reports the differences
+support this task, we propose D IFF D ROID, a new technique that        identified, suitably ranked and visualized, to the app developer.
+helps developers automatically find cross-platform inconsistencies         In order to assess the effectiveness of our approach, we
+(CPIs) in mobile apps. D IFF D ROID combines input generation           implemented D IFF D ROID in a tool and performed an empir-
+and differential testing to compare the behavior of an app on           ical evaluation on 5 real-world apps and over 130 different
+different platforms and identify possible inconsistencies. Given an
+app, D IFF D ROID (1) generates test inputs for the app, (2) runs the   platforms. In the evaluation, D IFF D ROID was able to find
+app with these inputs on a reference device and builds a model          96 inconsistencies due to differences in the version of the
+of the app behavior, (3) runs the app with the same inputs on a         Android system used or in the screen configuration. Overall,
+set of other devices, and (4) compares the behavior of the app          our results show that D IFF D ROID can identify CPIs on real
+on these different devices with the model of its behavior on the        apps efficiently, while generating only a limited number of
+reference device. We implemented D IFF D ROID and performed
+an evaluation of our approach on 5 benchmarks and over 130              false positives. Our implementation of D IFF D ROID and our
+platforms. Our results show that D IFF D ROID can identify CPIs         experimental infrastructure are publicly available at http://
+on real apps efficiently and with a limited number of false             www.cc.gatech.edu/~orso/software/diffdroid.
+positives. D IFF D ROID and our experimental infrastructure are            The main contributions of this paper are:
+publicly available.
+                                                                           • A new technique that combines input generation, UI mod-
+
+                       I. I NTRODUCTION                                      eling, and differential testing to automatically identify
+                                                                             cross-platform inconsistencies in the UI of Android apps.
+   Testing is a difficult and costly activity in general. When
+                                                                           • A publicly available implementation of our technique that
+testing Android apps, the task is further complicated by the
+                                                                             can be used to replicate our experiments or build on and
+extensive fragmentation of the Android ecosystem. Android
+                                                                             extend our approach.
+apps must be able to run on a myriad of devices and oper-
+                                                                           • An empirical evaluation, performed on a large number of
+ating systems; developers are thus faced with the problem of
+                                                                             platforms, that provides initial evidence of the effective-
+ensuring not only that their apps behave as expected, but also
+                                                                             ness of our approach.
+that the behavior of the apps is consistent across platforms.
+Given the large number of possible hardware and software
+configurations in Android, this makes it extremely difficult                             II. M OTIVATING E XAMPLE
+and expensive to perform adequate testing of an app [1].                   To motivate our work we provide an example from a real-
+   The problem of cross-platform inconsistencies (CPIs) is              world app called DAILY D OZEN [3]—a diet tracking app that
+therefore prevalent in the Android environment, where users             has been downloaded more than 50, 000 times and reviewed by
+can observe failures and unexpected behaviors that are caused           more than 1, 000 users. Figure 1 shows the MainAcitivity
+by differences between their platform and those on which the            of the app running on a LG G3 device, while Figure 2 shows
+app they are using was tested [2].                                      the same activity running on a LG Optimus L70 device. Users
+   To mitigate this problem, and help developers identify               can use this activity to track their daily food intake by clicking
+inconsistencies in behavior before an app is released, in               on the displayed checkbox elements.
+this paper we propose D IFF D ROID, an automated technique                 Figures 1 and 2 show a CPI for the app. Users can
+whose goal is to identify CPIs by combining input generation,           tick the checkbox element associated with the “Cruciferous
+user interface (UI) modeling, and differential testing. More            Vegetables” label on a LG G3 device, but they cannot do the
+precisely, D IFF D ROID takes as input an app and performs              same on an LG Optimus L70, as that checkbox element is not
+four main steps. First, it automatically generates a large set          visible when the app runs on such device. This inconsistency
+of test inputs for the app. Second, it runs the app with these          is caused by a bug in the layout file associated with the
+inputs on a reference device and builds a UI model of the               MainAcitivity and is revealed because of the different
+           Fig. 1: DAILY D OZEN running on LG G3.                          Fig. 2: DAILY D OZEN running on LG Optimus L70.
+screen configurations (screen resolution and pixel density) of       (AUT) and a reference device, in its input generation phase,
+the two devices.                                                     D IFF D ROID dynamically generates inputs with the goal of
+   Bugs of this type can manifests in one of two ways: (1)           testing the app’s functionality. Before providing the generated
+the checkbox element is present on one device, but not on            inputs to the app, the technique captures the UI state of the
+the other, or (2) the checkbox element is present on both            app by storing the tree of its UI hierarchy [4] and taking a
+devices, but its visual appearance is different. The checkbox        screenshot of its appearance on the device. The technique logs
+element associated with the “Cruciferous Vegetables” label is        UI hierarchy trees, screenshots, and generated inputs into the
+an example of the former case. In this case, the difference          trace, which is the input to the following phase: the test case
+can be visually perceived, but it can also be identified by          encoding phase. In this phase, our technique suitably analyzes
+comparing the UI hierarchies of the two devices. In fact,            the inputs together with UI hierarchy trees to generate a
+the UI hierarchy of the app running on the LG Optimus                platform-independent test case. While doing so, the technique
+L70 device does not have a node representing the checkbox            also creates a UI model of the app. The UI model is composed
+element, while such a node is present in the UI hierarchy of the     of a list of window models; and each window model contains
+app running on the LG G3 device. The rightmost checkbox              a UI hierarchy tree and corresponding screenshot. We call this
+element associated with the “Other Vegetables” label is an           UI model the reference UI model, as it was generated using
+example of the latter case. In this case, the difference between     the reference device. The test case execution phase takes as
+the two devices can only be perceived visually, as both nodes        input a set of test devices, executes the test case generated by
+are present the UI hierarchies of the two devices. These types       the previous phase on the devices, and produces as output a
+of issues are far from rare because developers tend to use a         UI model for each device (test UI models). Finally, in the CPI
+limited set of devices (when not only one) during development        analysis phase, D IFF D ROID performs a differential analysis to
+and testing. In addition, these inconsistencies are hard to detect   compare the reference UI model with the test UI models and
+because this testing process tends to be mostly manual.              generates a report that contains the detected CPIs. The CPI
+   Figures 1 and 2 also highlight the challenges in finding CPIs     report is the output of our technique.
+on mobile devices. Because mobile devices can have different
+screen configurations, certain differences should not be classi-     A. Input Generation
+fied as CPIs. For example, the “Nuts” label is displayed on the         The input generation phase aims to test the functionality
+LG G3 device, while it is not displayed on the LG Optimus            of the AUT on a reference device by dynamically generating
+L70 device. This difference should not be considered a CPI:          inputs and providing them to the app. We describe this phase
+the label is part of a scrollable list, and the former device        in Algorithm 1. The algorithm takes as inputs the reference
+simply accommodates more list items due to its larger screen.        device (rd), the AUT (AU T ), and a timeout (T ), and produces
+                                                                     as output a trace (trace) that contains window models and
+              III. T HE D IFF D ROID T ECHNIQUE
+                                                                     generated inputs. We present the abstrax syntax of the trace
+   In this section, we present D IFF D ROID, our technique for       produced by the algorithm in Figure 4.
+detecting CPIs on mobile devices. The basic idea behind                 The algorithm begins with an empty trace (line 2). It then
+D IFF D ROID is to use differential testing to identify such         starts the AUT (S TART) on the reference device (line 4) and
+inconsistencies. Figure 3 provides a high-level overview of our      subsequently enters its main loop, where it iterates until a
+technique and shows its main phases. Given an app under test         timeout is reached.
+                     Input                            Test Case                            Test Case                                  CPI
+Reference          Generation                         Encoding            Test Case        Execution                                Analysis
+ Device                                                                                                           Test
+                                                                                                               UI Models
+                                       Trace                                                                                                      CPI Report
+                                                                        Test Devices
+
+App Under
+  Test                                                                   Reference
+     App                                                                 UI Model
+
+
+
+                                                       Fig. 3: High-level overview of the technique.
+
+ Algorithm 1: Input generation.                                                        trace-def          ::= trace items
+                                                                                       items              ::= window-model-def input-def
+   Input : rd: reference device                                                                           ::= | window-model-def input-def items
+            AU T : application under test                                              window-model-def ::= window-model tree-def screenshot-def
+            T : input generation timeout                                               tree-def           ::= tree root-ref erence-id∗ nodes
+   Output: trace: window models and generated inputs on reference device               nodes              ::= node-def | node-def nodes
+ 1 begin                                                                               node-def           ::= node ref erence-id∗ node-props children-ids
+ 2      trace = ∅                                                                      node-props         ::= node-id† node-type† text† checkable‡
+ 3      t = G ET-C URRENT-T IME ()
+                                                                                                          ::= clickable‡ f ocusable‡ scrollable‡
+ 4      S TART (rd, AU T )
+ 5      while T < G ET-E LAPSED -T IME (t) do                                                             ::= long-clickable‡ checked‡ enabled‡ f ocused‡
+ 6           root = G ET-ROOT (rd)                                                                        ::= selected‡ lef t∗ right∗ top∗ bottom∗
+ 7           tree = T RAVERSE(root)                                                    children-ids       ::= | ref erence-id∗ children-ids
+ 8           screenshot = G ET-S CREENSHOT (rd)                                        screenshot-def     ::= screenshot image
+ 9           trace.A DD (W INDOW-M ODEL (tree, screenshot))                            input-def          ::= input input-type
+10           input = G ENERATE -I NPUT (w1 , K EY, w2 , S YSTEM , w3 , T OUCH )        input-type         ::= key-input-def | system-input-def
+11           I NJECT (rd, input)                                                                          ::= | touch-input-def
+12           trace.A DD (input)                                                        key-input-def      ::= key key-value†
+13      return trace                                                                   system-input-def   ::= system system-input-type system-input-props
+                                                                                       system-input-type ::= rotate | data
+                                                                                       system-input-props ::= exprs
+                                                                                       touch-input-def    ::= touch | coords
+                                                                                       coords             ::= x-coord∗ y-coord∗ pointer-id∗
+   In the first part of the loop iteration (lines 6-9), the algorithm                                     ::= | x-coord∗ y-coord∗ pointer-id∗ coords
+                                                                                       exprs              ::= expr | expr exprs
+retrieves the root node of the UI hierarchy (G ET-ROOT) and                            expr               ::= boolean | number | string
+traverses the UI hierarchy (T RAVERSE) to build a tree repre-
+sentation of such hierarchy. Each node in the tree is character-                       Fig. 4: Abstract syntax of the generated trace. “∗ ” indicates that the
+ized by the following set of properties: node-id, node-type,                           value is a number, “† ” indicates that the value is a string, and “‡ ”
+                                                                                       indicates that the value is a boolean.
+lef t, right, top, bottom, text, checked, enabled, f ocused,
+selected, clickable, checkable, f ocusable, scrollable, and
+long-clickable. We selected this set of properties because it is                       B. Test Case Encoding
+the minimal set of properties that allows the technique to best                           The test case encoding phase aims to generate a platform-
+differentiate nodes in the UI hierarchy (see Section III-D). Af-                       independent test case based on the content of the trace created
+ter building a tree representation of the UI hierarchy, the algo-                      by the input generation phase. We present this phase in
+rithm captures a screenshot of the AUT (G ET-S CREENSHOT).                             Algorithm 2.
+The algorithm then pairs the tree representation of the UI                                The algorithm takes as input the trace (trace) generated
+hierarchy with the screenshot of the AUT to define the current                         by the previous phase of the technique, and it produces two
+window model and adds the model to the trace.                                          outputs: a platform independent test case (tc) and a UI model
+   In the second part of the loop iteration (lines 10-12), the                         of the reference decvice (RU IM ). The algorithm begins with
+algorithm generates an input (G ENERATE -I NPUT), provides                             an empty test case (line 2) and an empty UI model (line 3).
+the input to the AUT (I NJECT), and adds the input to the trace.                       It then processes the content of the trace in its main loop
+D IFF D ROID generates three types of inputs (K EY, S YSTEM,                           (lines 4-17).
+and T OUCH) using a weighted random distribution, as done in                              In the first part of the loop iteration (lines 5-14), the
+related work [5]. (It is worth noting that the technique would                         algorithm processes window models. If the currently processed
+also work with a different dynamic input generation approach,                          window model has the same tree representation (S AME -T REE)
+such as [6], [7], [8], [9], [10], [11], [12], [13].) Key inputs are                    and the same screenshot (S AME -I MAGE) of a window model
+characterized by the value of the key they are representing;                           already added into the reference UI model (lines 7- 10),
+system inputs express a change in the orientation of the device                        the model is discarded as superfluous. Function S AME -T REE
+or data used to transfer control between components of the                             performs a breadth-first traversal of two trees and compares
+AUT; and touch inputs represent clicks or gestures on the                              the value of the properties of the traversed nodes. If the
+device. Note that our technique does not currently remove                              two trees have different structure, or if their nodes have
+inputs that do not affect the state of the AUT, but they could                         different properties, the algorithm considers the two trees
+be discarded using an approach based on delta debugging [14].                          and corresponding window models to be different. Function
+ Algorithm 2: Test case encoding.                                           an input to the AUT. These inputs are meant to exercise the
+    Input : trace: window models and generated inputs on reference device   AUT on the test device in the same way it was exercised in
+    Output: tc: test case
+            RU IM : UI model of the reference device
+                                                                            the generation phase.
+ 1 begin                                                                       The output of this phase is a mapping between test devices
+ 2      tc = ∅
+ 3      RU IM = ∅
+                                                                            and corresponding UI models. Generation of UI models for
+ 4      foreach item ∈ trace do                                             test devices is amenable to parallelization, as the computation
+  5          if item ≡ W INDOW-M ODEL then
+  6                newM odel = T RUE
+                                                                            of a UI model for one device is completely independent from
+  7                foreach wM odel ∈ RU IM do                               the computation of the UI model for a different device.
+  8                     if S AME -T REE (wM odel.G ET-T REE (),
+                          item.G ET-T REE ()) and
+  9                     S AME -I MAGE (wM odel.G ET-S CREENSHOT (),         D. CPI Analysis
+                          item.G ET-S CREENSHOT ()) then
+ 10                           newM odel= FALSE
+11                 if newM odel == T RUE then                                  The CPI analysis phase aims to identify CPIs in the AUT
+12                      RU IM.A DD(item)                                    and is the core of our technique. We present this phase in
+13                      stmt =
+                          G ENERATE -W INDOW-M ODEL -S TATEMENT (item)      Algorithm 3. Algorithm 3 takes as inputs the reference UI
+14                      tc.A DD(stmt)                                       model (RU IM ) and the map of UI models of test devices
+15           else
+16                 stmt = G ENERATE -I NPUT-S TATEMENT (item)               (T U IM M ap) generated by the previous phase. The algo-
+17                 tc.A DD(stmt)                                            rithm produces as output a report that lists the identified
+18      return tc, RU IM
+                                                                            CPIs (CP IReport); this report is also the overall output of
+S AME -I MAGE compares two screenshots using the complex                    D IFF D ROID.
+wavelet structural similarity (CW-SSIM) index [15], which                      The algorithm begins with an empty CPI report (line 2),
+can range between zero (different images) and one (similar                  iterates over each window model (rdM odel) in the reference
+images). We motivate the use of this index to compute image                 UI model (lines 3-44), and compares the window model at
+similarity in Section III-D. If two screenshots do not have                 hand to the corresponding window model (tdM odel) in all test
+CW-SSIM index equal to one, we consider the corresponding                   UI models (lines 5-44). The comparison between a reference
+window models to be different. If a window model is not                     window model and a test window model is divided into two
+redundant (lines 11-14), the algorithm adds the window model                steps. The first step (lines 6-33) matches nodes from the tree
+to the reference UI model. It also generates a test case                    representing the UI hierarchy of the reference device (rdT ree)
+statement (G ENERATE -W INDOW-M ODEL -S TATEMENT) that                      to nodes from the tree representing the UI hierarchy of the
+builds a tree representation of the UI hierarchy and takes a                test device (tdT ree). The second step (lines 34-44) compares
+screenshot of the device.                                                   the visual representation (image) of matched nodes. The first
+   In the second part of the loop iteration (lines 16-17),                  step can detect structural CPIs, which consist of missing or
+the algorithm generates a platform-independent statement                    additional nodes. The second step can detect visual CPIs,
+(G ENERATE -I NPUT-S TATEMENT) that replicates the action                   which consist of nodes with different visual representations.
+of the input in the trace; it then adds the statement to the                Considering the motivating example of Section II, the check-
+test case. We define generated statements as being platform-                box element associated with the “Cruciferous Vegetables”
+independent because they can run on any device independently                label is an example of a structural CPI, while the rightmost
+from the operating system version and the device configuration              checkbox element associated with the “Other Vegetables” label
+(e.g., screen size). The algorithm creates platform-independent             is an example of a visual CPI.
+statements following the principles presented in our previous                  The node mapping process begins by initializing the map-
+work [16]. Platform-independent test cases allow our tech-                  ping (nodeM appingM ap) between nodes in the reference
+nique to collect UI models on many different devices, thus                  tree and nodes in test tree to the empty value (line 10).
+increasing the likelihood of identifying CPIs.                              For each node (rdN ode) in the reference tree, the algorithm
+                                                                            then computes a node similarity value (nodeSim) between
+C. Test Case Execution                                                      the reference node and each node (tdN ode) in the test tree
+   The test case execution phase aims to collect UI models                  using function C OMPUTE -S TRUCTURAL -S IMILARITY. This
+from a set of test devices. This phase takes as inputs the                  function computes a value between zero and one that repre-
+test case generated by the previous phase of the technique                  sents the structural similarity of two nodes (see Section III-D1)
+and a set of test devices, and it executes the test case on                 If the similarity value is greater or equal than a threshold α,
+the set of test devices. The execution is driven by two types               the algorithm stores the similarity value, together with the test
+of statements: W INDOW-M ODEL -S TATEMENT and I NPUT-                       node, in a list (mappedN odeList). Threshold α is used to
+S TATEMENT. Statements of the former type traverse the UI                   avoid matching nodes that are too dissimilar. The choice of
+hierarchy of the AUT to build a tree representation of such                 the value of α is related to function C OMPUTE -S TRUCTURAL -
+hierarchy and capture a screenshot of the AUT. The tree and                 S IMILARITY and we describe it in Section III-D1. When the
+the screenshot are paired together to form a window model                   algorithm has processed all nodes in the test tree, it stores the
+of the test device; this window model is then added to the UI               mapping between the reference node and the computed list
+model of the test device. Statements of the latter type provide             into nodeM appingM ap (line 19).
+    Once mappedN odeList is computed for all reference                Algorithm 3: CPI detection analysis.
+nodes, the algorithm computes the optimal mapping between               Input : RU IM : UI model of reference device
+                                                                                 T U IM M ap: map of UI models of test devices
+reference nodes and test nodes using function F IND -B EST-             Output: CP IReport: set of cross device inconsistencies
+M APPING (line 20). For every reference node, this function           1 begin
+                                                                      2      CP IReport = ∅
+sorts the elements in the mappedN odeList in descending               3      for i = 0; i < RU IM.length; + +i do
+order based on their node similarity value. The function then         4            rdM odel = RU IM.G ET (i)
+                                                                      5            foreach td ∈ T U IM M ap.K EY-S ET () do
+finds the mappedN odeList containing the element with the             6                 //node mapping
+highest node similarity value, maps the reference node asso-          7                 tdM odel = T U IM M ap[td].G ET (i)
+                                                                      8                 rdT ree = rdM odel.G ET-T REE ()
+ciated with the mappedN odeList to the test node associated           9                 tdT ree = tdM odel.G ET-T REE ()
+with the element of the list, and marks the reference node as        10                 nodeM appingM ap = ∅
+                                                                     11                 foreach rdN ode ∈ rdT ree do
+processed. Finally, the function removes all occurrences of the      12                      mappedN odeList = ∅
+test node from the mappedN odeList associated with other             13                      foreach tdN ode ∈ tdT ree do
+                                                                     14                           nodeSim =
+reference nodes. This process continues until all reference          15                           C OMPUTE -S TRUCTURAL -S IMILARITY (rdT ree,
+nodes are processed.                                                                                rdN ode, tdT ree, tdN ode)
+                                                                     16                           if nodeSim ≥ α then
+    After finding the best mapping between nodes in the refer-       17                                mappedN odeList.A DD (M APPING (
+ence tree and nodes in the test tree (line 20), the algorithm        18                                nodeSim, tdN ode))
+                                                                     19                      nodeM appingM ap[rdN ode] = mappedN odeList
+analyzes the mapping to find structural CPIs. The algorithm
+iterates over each node in the reference tree (lines 21-25) to       20              F IND -B EST-M APPING (nodeM appingM ap)
+                                                                     21              //structural comparison
+find reference nodes that do not have a mapping to a node in         22              foreach rdN ode ∈ rdT ree do
+the test tree. If such a node is found, it means that the node is    23                    if nodeM appingM ap[rdN ode] == ∅ and
+                                                                                             ¬W ITHIN -DYNAMICALLY-S IZED -
+present in the AUT while running on the reference device, but                                E LEMENT (rdN ode, nodeM appingM ap)
+it is not present in the AUT while running on the test device. A                             then
+                                                                     24                          CP IReport.A DD (S TRUCTURAL -CPI(td,
+challenging aspect for the classification of the missing nodes is                                  rdN ode))
+given by the fragmentation of the Android ecosystem. Devices         25                          nodeM appingM ap.R EMOVE (rdN ode)
+                                                                     26              foreach tdN ode ∈ tdT ree do
+come with different screen configurations, and it could be           27                    mapped = FALSE
+normal that two devices have a different number of nodes in          28                    foreach rdN ode ∈ rdT ree do
+                                                                     29                          if nodeM appingM ap[rdN ode].
+their UI hierarchies.                                                30                          C ONTAINS (tdN ode) then
+    Consider again the motivating example of Section II, in          31                                mapped = TRUE
+                                                                     32                    if mapped ==FALSE and ¬W ITHIN -DYNAMICALLY-
+which the M AINACITVITY displays a list of servings. When                                    S IZED -E LEMENT (tdN ode, nodeM appingM ap)
+the app is running on the LG G3, the device displays eight                                   then
+                                                                     33                          CP IReport.A DD (S TRUCTURAL -CPI(td,
+elements. When the app is running on the LG Optimus L70,                                           tdN ode))
+conversely, the device displays only seven elements. In this         34              //visual comparison
+                                                                     35              rdScreenshot = rdM odel.G ET-S CREENSHOT ()
+case, the eighth element of the list should not be classified        36              tdScreenshot = tdM odel.G ET-S CREENSHOT ()
+as an inconsistency because the Android system does not              37              foreach rdN ode ∈ nodeM appingM ap.K EY-S ET () do
+                                                                     38                    tdN ode = nodeM appingM ap[rdN ode].R EMOVE (0)
+represent a node in the UI hierarchy if the node is not
+visible. For this reason, the algorithm further analyzes the node    39                  rdN odeImage = rdScreenshot.C ROP (rdN ode)
+                                                                     40                  tdN odeImage = tdScreenshot.C ROP (tdN ode)
+using function W ITHIN -DYNAMICALLY-S IZED -E LEMENT to              41                  isInconsistency =
+determine whether or not the node should be reported as              42                  C OMPUTE -I MAGE -S IMILARITY (rdN odeImage,
+                                                                                           tdN odeImage)
+inconsistency. If the node does not have an ancestor that is         43                  if isInconsistency then
+scrollable, the node is reported as an inconsistency. Otherwise,     44                        CP IReport.A DD (V ISUAL -CPI(td,
+                                                                                                rdN odeImage, tdN odeImage))
+if the node (1) has a scrollable ancestor and (2) has its            45     R ANK (CP IReport)
+preceding or subsequent sibling (depending on the position of        46     return CP IReport
+the node in the tree) that is matched to a node that is visibile
+and it is not at the end of the dynamically sized element, then      and test devices from their window models. Then, for each
+the node is also reported as an inconsistency. In all other cases,   node in the reference tree, the algorithm retrieves the test
+the node is not reported as an inconsistency. In case function       node mapped to it and creates two images (rdN odeImage
+W ITHIN -DYNAMICALLY-S IZED -E LEMENT confirms that the              and tdN odeImage) from the two screenshots (rdScreenshot
+node is an inconsistency, the node is added to the CPI report        and tdScreenshot) using function C ROP. At this point, the
+as a structural CPI. Similarly, the algorithm iterates over nodes    algorithm compares the two images using function C OMPUTE -
+in the test tree (lines 26-33) to find test nodes that do not have   I MAGE -S IMILARITY, which uses a decision tree classifier
+a mapping to a node in the reference tree. If such a node is         to recognize inconsistencies. We describe the decision tree
+found, and the node is not part of a dynamically sized element,      classifier we use in Section III-D2. The function uses similar
+the algorithm reports it as a structural CPI.                        principles as the ones we discussed in the context of function
+    After these steps, the algorithm visually compares mapped        W ITHIN -DYNAMICALLY-S IZED -E LEMENT: it does not report
+nodes (lines 34-44). This part of the algorithm starts by re-        as inconsistencies nodes that are partially visible because they
+trieving (G ET-S CREENSHOT) the screenshots of the reference         are part of a dynamically sized element. If the classifier
+identifies an inconsistency, the algorithm reports that the         hierarchies of apps running on different devices. The training
+reference node and the test node have a visual inconsistency        set must also include a set of images exhibiting CPIs. After
+(line 44).                                                          building the model, function C OMPUTE -I MAGE -S IMILARITY
+   The algorithm then ranks (R ANK, in line 45) inconsistencies     follows the set of decisions in the model to predict the target
+according to the following principles: (1) structural inconsis-     variable. D IFF D ROID uses the following variables as inputs to
+tencies are ranked at the top, (2) visual inconsistencies that      the the classifier:
+affect all devices with the same characteristics (e.g., version     Complex-Wavelet Structural Similarity Index. Our tech-
+of the Android operating system) are ranked next, and (3) the       nique uses the Complex-Wavelet Structural Similarity (CW-
+remaining inconsistencies are listed last. Finally the algorithm    SSIM) index [15] to compare the structural similarity of the
+returns the CPI report (line 46), which is the output of the        content of two images. CW-SSIM is an image similarity metric
+technique.                                                          robust to small rotations and translations in the images being
+   1) Node Structural Similarity: Function C OMPUTE -               compared. This characteristic makes the metric especially
+S TRUCTURAL -S IMILARITY in Algorithm 3 computes the                suitable in our context because different devices have different
+structural similarity between two nodes. The inputs to the          screen configurations; therefore, the visual representation of
+function are a reference tree (rdT ree), a reference node           two nodes may present minor differences that should not be
+(rdN ode), a test tree (tdT ree), and a test node (tdN ode).        reported as CPIs.
+The output of the function is a value between zero and one          Earth’s Mover Distance of Color Histograms. D IFF D ROID
+(nodeSim) that indicates the similarity between the reference       uses the Earth’s Mover Distance [18] (EMD) of the color
+node and the test node. This function is necessary, as nodes        histograms of two images to compare the color composition
+in the tree are not required to have identifiers, and different     of the images. EMD is a measure of the distance between
+versions of the operating system can use different node types       two distributions and, intuitively, consists of the minimal cost
+to represent the same node.                                         that must be paid to transform one color distribution into the
+   The function starts by comparing the identifiers of the          other. We decided to use this metric to take into account the
+reference and test nodes. If the identifiers are the same, and      fact that two images may have similar structure but display
+they are unique in both reference and test trees, the function      different colors.
+sets the node similarity value to one and returns it. In this       Relative Ratio Change. Our technique uses the relative ratio
+case, the function sets the similarity value to its highest value   change to assess whether two images differ significantly in
+because the identifier is a property manually defined by the        their proportions. The relative ratio change is defined as
+developer that is meant to uniquely identify nodes in the tree.     RRC = ((wt /ht ) − (wr /hr ))/(wr /hr ), where wt and ht
+   If identifiers are not unique, or they are different, the        are the width and height of the test node, while wr and hr
+function checks the position of the two nodes in the tree           are the width and height of the reference node. This value
+by comparing their XPaths (using the path expression from           allows D IFF D ROID to identify nodes whose ratio is altered as
+the root of the tree). If the nodes have the same XPath, the        a consequence of the placement of other nodes.
+function returns one as their similarity. If the path expressions   Optical Character Recognition Output. D IFF D ROID uses
+of the two nodes differ in more than one path component,            the output of optical character recognition [19] (OCR) to
+the function returns zero as similarity value (to avoid matches     assess whether two images display the same text. The classifier
+between nodes that are too distant in the tree). If only one        takes as input the value of the comparison (equal/not equal).
+path component is different, which may be due to small              We decided to use the output of OCR because nodes might
+differences in the tree representation of the test devices, the     have the same text in their tree representation but might display
+function computes the similarity value based on the following       the text differently.
+properties of the nodes: checkable, clickable, f ocusable,             The target variable predicted by the classifier indicates
+scrollable, text, checked, selected, long-clickable, enabled,       whether the visual representation of two nodes should be
+and f ocused. The similarity value, in this case, is given by       reported as an inconsistency.
+the number of matching properties divided by the number of
+properties. For the evaluation of D IFF D ROID we chose 0.9                             IV. I MPLEMENTATION
+as the value of α in Algorithm 3 to indicate that we do not
+want to match nodes having more than one property value that           D IFF D ROID’s input generation module is built on top of
+differs.                                                            Monkey [5], an input generator for Android apps that generates
+   2) Decision Tree Classifier: Function C OMPUTE -I MAGE -         pseudo-random sequences of user and system events. We
+S IMILARITY in Algorithm 3 uses a decision tree classifier [17]     extended Monkey to encode generated inputs into the trace
+to compute whether the visual representation of two nodes           and to save UI hierarchies together with visual representations
+should be reported as a CPI. The decision tree classifier           (screenshots) of the app being tested. The tool is able to inspect
+algorithm creates a model that predicts the value of a target       the screen content of the app using UiAutomation [20], which
+variable based on a set of input variables. The algorithm learns    is a special accessibility service of the Android platform.
+the model using a set of training data. In our context, the         The input generation module can run on any device without
+training data corresponds to images of nodes from the UI            modifying the Android system.
+TABLE I: B ENCHMARKS USED IN THE EMPIRICAL EVALUATION .            TABLE II: N UMBER OF TEST DEVICES DIVIDED BY RESOLUTION
+                                                                   AND VERSION OF THE OPERATING SYSTEM .
+    ID         Name         Category Version LOC (#K)
+    A1 B UILDM L EARN       Education 2.5.0    23.6                                                Android Version
+    A2 DAILY D OZEN         Health    10.3      6.3                            Resolution   19    21 22 23 24           25
+    A3 K ITCHEN T IMER      Tools     1.1.6     4.3                           720 x 1280    18    2    6    2     0     0
+    A4 O UTLAY              Finance   1.1.3      8                            768 x 1280     1    0    0    0     0     0
+    A5 T RANSLATION S TUDIO Books      9.0     51.2                          1080 x 1920    33    12   5    6     0     1
+                                                                             1440 x 2560     8    7    8    13    5     1
+   The test case encoding module uses the JAVA P OET 1.8                       480 x 800     8    0    0    0     0     0
+                                                                               540 x 960     5    1    3    0     0     0
+library [21] to generate the source code of test cases. The                    480 x 854     1    0    1    0     0     0
+implementation of D IFF D ROID extends the Espresso [22]
+framework to generate and execute test cases. The Espresso
+framework synchronizes test operations with the app being          testing environment (Espresso) used in the implementation of
+tested by waiting for UI events to be handled and for default      our technique requires the source code of an app to build and
+instances of AsyncTask (computation that runs on a back-           run test cases for it. Our technique could be directly applied
+ground thread) to complete. This capability allows D IFF D ROID    to app executables by changing testing framework.
+to execute the same test case on different devices even when          We selected apps based on three parameters: (1) presence
+devices have different hardware configurations, which could        of at least one known UI-based CPI in the app, (2) self-
+lead to different timings in the execution of an app. However,     containment, and (3) diversity. In order to find apps contain-
+there are cases in which apps perform background operations        ing at least one known CPI, we searched GitHub’s tracker
+using non-standard means (e.g., direct creation and manage-        system for the following keywords: “android not clickable”,
+ment of threads). The developer needs to manually handle           “android cut off”, and “android missing button”. We used
+such cases. For the benchmarks of Section V, this additional       these keywords instead of more generic keywords, such as
+task was not necessary. The test case encoding module uses         “android compatibility issue”, to eliminate results that were
+the implementation of CW-SSIM offered by pyssim [23] to            not UI issues, which are out of scope for our technique.
+compare screenshots taken by the input generation module           From the search results, we removed issues that did not
+and minimize the number of UI hierarchies and screenshots          correspond to Android apps and issues that we could not
+generated during test execution.                                   reproduce. Finally, we selected apps from different categories
+   The test case execution module leverages the AWS Device         to have a diverse corpus of benchmarks, while prioritizing
+Farm [24] to execute test cases on real devices. The module        apps for which we did not have to build extensive stubs.
+uses the AWS Command Line Interface (CLI) to automate the          Table I provides a summary description of the apps considered.
+process of running test cases and retrieving execution artifacts   Columns Name, Category, Version, and LOC report the name,
+(UI hierarchies and screenshots).                                  category, version, and number of lines of code for an app.
+   Finally, the CPI analysis module generates the decision            The analysis performed by D IFF D ROID relies on the use of
+tree classifier used to detect CPIs by leveraging the Weka         a reference device. We selected an LG G3 running Android
+data mining framework [25]. The CW-SSIM index used in              22 as reference device for the empirical evaluation because
+the classifier is computed using pyssim, the EMD value is          we had the device, and it did not exhibit any of the CPIs
+computed using the OpenCV [26] library, and the character          already known in the benchmarks. To compute the results
+recognition task is performed used Tesseract OCR [27] engine.      of Section V-B, we executed the input generation phase of
+                                                                   D IFF D ROID on the reference device with a timeout of 10
+                V. E MPIRICAL E VALUATION                          minutes. We chose this value because in previous work [29]
+  To determine the practicality and effectiveness of our tech-     we found that a set of dynamic input generation tools for
+nique, we performed an empirical evaluation of D IFF D ROID        Android apps hit their maximum coverage within 10 minutes
+on a set of real-world apps and targeted the following research    of execution.
+questions:                                                            D IFF D ROID’s analysis also requires a set of test devices. We
+  • RQ1: Can D IFF D ROID detect cross-platform inconsis-          used the AWS Device Farm [24] for this purpose. The AWS
+     tencies in mobile applications while reporting a limited      Device Farm is an app testing service provided by Amazon
+     number of false positives?                                    that allows to run tests on real mobile devices. Table II reports
+  • RQ2: What is the cost of running D IFF D ROID ?                the number of devices used in the empirical evaluation grouped
+  • RQ3: Are there similarities among devices exhibiting           by resolution (Resolution) and version of the operating system
+     CPIs?                                                         (Android Version). The versions of the operating system were
+                                                                   the ones available to us and supported by the technologies used
+A. Experimental Benchmarks and Setup                               for the implementation of D IFF D ROID. The total number of
+  For the empirical evaluation, we used a set of real-world        devices used was 147.
+Android apps. More specifically, we selected five open-source         Finally, D IFF D ROID uses a decision tree classifier to rec-
+apps from GitHub [28]. We used open-source apps because the        ognize CPIs. We trained the classifier using the following
+TABLE III: R ESULTS OF RUNNING D IFF D ROID . F OR EACH BENCHMARK               TABLE IV: C OST OF RUNNING D IFF D ROID . TG (s) =
+CONSIDERED : D(#) = NUMBER OF TEST DEVICES ; WM(#) = NUMBER OF                  TIME TO ENCODE INPUTS AND COMPUTE THE REFER -
+WINDOW MODELS ; NR (#) = NUMBER OF NODES IN UI HIERARCHY TREES                  ENCE UI MODEL ; TE (s) = AVERAGE TEST EXECUTION
+OF THE REFERENCE DEVICE ; NT (#) = AVERAGE NUMBER OF NODES IN UI                TIME PER DEVICE ; TS (ms) = AVERAGE TIME TO COM -
+HIERARCHY TREES PER TEST DEVICES ; CPIS (#) = NUMBER OF STRUCTURAL              PARE UI HIERARCHIES PER DEVICE ; TCW (s) = AVERAGE
+CPI S ; CPIF (#) = NUMBER OF FUNCTIONAL CPI S ; CPIV (#) = NUMBER OF            CW-SSIM COMPUTATION TIME PER DEVICE ; TEM D (s)
+CPI S RELATED TO CHANGES IN THE VERSION OF THE A NDROID SYSTEM ;                = AVERAGE EMD COMPUTATION TIME PER DEVICE ;
+CPIC (#) = NUMBER OF COSMETIC CPI S ; FP(#) = FALSE POSITIVES REPORTED          AND TOCR (s) = AVERAGE OCR COMPUTATION TIME
+BY THE TECHNIQUE .                                                              PER DEVICE .
+
+
+ID D(#) WM(#) NR (#) NT (#) CPIS (#) CPIF (#) CPIV (#) CPIC (#) FP(#)            ID TG (s) TE (s) TS (ms) TCW (s) TEM D (s) TOCR (s)
+A1 135   19    491 465.2      0         2        7       14       1              A1 2080 474.9 139         443.8    14.8      172
+A2 138   22   1199 1174.8     2         0        0       22       4              A2 1102 512.2 581         575.7    50.8     586.5
+A3 129   13    286 276.6      2         3        0        2       1              A3 2772 329.9 115         246.4    11.9     134.5
+A4 125   14    505 481.8      0         1        0       17       2              A4 851 651.9 210           275     15.1     103.7
+A5 136   17    486    466     2         3        0       19       8              A5 1803 376       166     217.5    14.1     153.5
+
+
+procedure. First, we selected one device from each category           NR (#) and NT (#) differ for two reasons: the app might contain
+(combination of resolution and Android version) in Table II           a structural CPI, and different devices display a different
+and used this set of devices to compute the training set. We          number of nodes for dynamically sized elements (e.g., list
+then collected CW-SSIM index, EMD value, OCR output, and              containers). The total number of nodes analyzed across all
+relative ratio change (inputs to the classifier) for all the nodes    benchmarks and devices is 387, 174.
+in the view hierarchies showing the known UI-based CPIs.                 The second part of Table III (columns CPIS (#), CPIF (#),
+(These nodes are not included in the results of the evaluation.)      CPIV (#), and CPIC (#)) presents the CPIs reported by D IFF -
+This procedure produced 5, 558 entries on which to train the          D ROID. We analyzed CPIs reported by our technique and
+classifier. We labeled the entries either true or false based         classified them in four categories: inconsistencies in the UI
+on whether they represented CPIs or not, respectively. We             hierarchy tree that affect the functionality of the app (structural
+labeled entries by looking at their visual representation and         CPIs, CPIS (#)); inconsistencies in the visual representation
+labeled as true entries such that, compared to the reference          of a node that affect the functionality of the app (functional
+entry, (1) differed in their content structure, (2) differed in       CPIs, CPIF (#)); inconsistencies generated by the version of
+terms of color, (3) differed in terms of visibility, (4) visualized   the Android system used to run the benchmark (version CPIs,
+a different text, and (5) had a different aspect ratio. Following     CPIV (#));and inconsistencies in the visual representation of a
+these guidelines, we labeled 282 entries. We used the Weka            node that do not affect the functionality of the app because
+data mining framework [25] to generate a C4.5 decision tree           the user can infer their meaning given the context in which
+classifier. The framework created a classifier of size 33 with        they are visualized (cosmetic CPIs, CPIC (#)). Structural CPIs
+17 leaves in 0.09 seconds. We evaluated the classifier using          correspond to the inconsistencies with the same name we
+10-fold cross validation, resulting in a precision of 0.978 and       discussed in Section III-D, while functional CPIs, version
+recall of 0.957. The CPI analysis phase was performed on a            CPIs, and cosmetic CPIs correspond to the visual CPIs that
+workstation with 64GB of memory, one Intel Xeon i7-6700K              we also discussed in Section III-D. The results presented in
+Skylake 4.0GHz processor, running Ubuntu 14.04.                       this section are deterministic, as the classification part of the
+                                                                      technique is itself deterministic. In addition, we also classified
+B. Results                                                            CPIs reported by D IFF D ROID that did not correspond to an
+   1) RQ1: To answer RQ1, we applied our technique to the             inconsistency as false positives (FP(#)). Finally, we randomly
+experimental benchmarks. Table III reports the results of the         selected 5 nodes in each benchmark on all test devices (3, 315
+evaluation.                                                           total), checked for possible false negatives, and did not find
+   The first part of Table III (columns D(#), WM(#), NR (#), and      any.
+NT (#)) provides a picture of the scale of the analysis. For each        Our technique found CPIs in all the benchmarks analyzed:
+benchmark: column D(#) reports the number of test devices             6 structural CPIs, 9 functional CPIs, 7 version CPIs, and
+used in the test execution phase; column WM(#) provides the           74 cosmetic CPIs. We now provide an example from each
+number of window models generated by the test case encoding           category to better illustrate the identified CPIs and how we
+phase; NR (#) is the number of nodes in the UI hierarchy trees        classified them.
+for the reference device; and NT (#) is the average number of            T RANSLATION S TUDIO is a translation app. In the regis-
+nodes in the UI hierarchies for the test devices. The number          tration form of the app, there is an icon that, when clicked,
+of devices used for each benchmark differs because, when              presents a privacy note to the user. However, on certain
+running the evaluation, certain devices were not available in         devices, the icon is not present, and the user will miss the
+the AWS Device Farm. For unavailable devices, we attempted            opportunity to read the privacy note. On these devices, the
+to run test cases three times before moving forward. Columns          node of the icon is not present in the UI hierarchy tree
+of the app, and D IFF D ROID reports this difference as an          TABLE V: D EVICES WITH THE HIGHEST NUMBER OF CPI S IN
+                                                                    OUR EVALUATION . C OLUMN AV (A NDROID V ERSION ) REPORTS
+inconsistency (structural CPI).                                     THE VERSION OF THE A NDROID SYSTEM RUNNING ON THE DE -
+   K ITCHEN T IMER offers a timer functionality. The app can        VICE .
+be used to start and stop three timers. If one of the timers
+is started, the label of the timer increases in size, moving                        Device             Resolution Density AV
+the button to stop the timer at the bottom of the screen.               LG Optimus L70                 480 x 800 207 19
+On certain devices, the size of the button becomes small                Samsung Galaxy S3 Mini         480 x 800 233 19
+enough to prevent users from stopping the timer. In these               Samsung Galaxy J1 Ace          480 x 800 217 19
+                                                                        Samsung Galaxy J1 Duos         480 x 800 217 19
+devices, the node representing the button is present in the UI
+                                                                        Samsung Galaxy S Duos          480 x 800 233 19
+hiearchy tree, but its visual appearance differs from that of           Samsung Galaxy Grand Neo Plus 480 x 800 187 19
+the corresponding node on the reference device. D IFF D ROID            Intex Aqua Y2 Pro              480 x 854 218 19
+reports this difference as an inconsistency (functional CPI).           Samsung Galaxy Light           480 x 800 233 19
+   B UILDM L EARN is an app that assists users in developing            Samsung Galaxy Star Advance    480 x 800 217 19
+                                                                        Samsung Galaxy Note 2         720 x 1280 267 19
+Android apps. The app has a menu that can be used to navigate
+the app. The color of the background of the items in the menu
+is different when the app is running on devices using Android       benchmarks. Table IV summarizes the results and reports:
+version 19. In these devices, the color of the background is        the time required to encode dynamically generated inputs as
+similar to the color of the text of the menu items, making          a test case while computing the UI model of the reference
+difficult to read the entries in the menu. D IFF D ROID reports     device (TG (s)); the average test case execution time per device
+this difference as an inconsistency (version CPI).                  (TE (s)); the average time required to compare reference UI
+   O UTLAY helps users track their expenses. Users can enter        hierarchies with test UI hierarchies per device (TS (ms)); the
+their expenses using a numpad. On certain devices, only             average time required to compute CW-SSIM indexes per
+roughly one fourth of the numbers is visible. Also in this          device (TCW (s)); the average time required to compute EMD
+case, D IFF D ROID reports this difference as an inconsistency      values per device (TEM D (s)); and the average time required
+(cosmetic CPI).                                                     to extract text with OCR per device (TOCR (s)).
+   We looked at the nature of the structural, functional, and          The values in column TG (s) show that the cost to compute
+cosmetic CPIs mentioned above, and discovered tha they can          the UI model based on the dynamically generated inputs is not
+be fixed by changing properties of corresponding elements in        low (but still acceptable), which validates our choice of not
+the layout files for the apps. We reported the issues found, and    performing this task during the input generation phase. The
+their possible solutions, to the developers of the apps involved.   average time to execute test cases is less than the time taken
+   D IFF D ROID also reported 16 false positives for the five       to generate inputs. This happens mainly because test cases are
+benchmarks we considered. The false positives reported can          saving significantly less UI hierarchies and screenshots. (The
+be grouped into two categories. The first category (14 false        only exception is A4, for which we had to add a 60sec sleep
+positives) includes nodes that display text with additional         time to make sure the test would go past the login screen on
+spacing at the end. This behavior causes test nodes to have a       the test devices.) In the worst case (A4), test cases took a total
+big relative ratio change, leading the classifier to report them    of 1, 358 minutes to execute (D from Table III times TE from
+as inconsistencies. To address this issue, we plan to leverage      Table IV). During the evaluation we took advantage of the fact
+OCR to recognize text boundaries and compute relative ratio         that this task is highly parallelizable and executed test cases
+changes based on such boundaries. The second category (2            on 10 devices at the time, thus reducing the cost roughly by
+false positives) includes test nodes whose image differed from      an order of magnitude.
+the reference one in the color distribution, but the difference        Finally, the last part of Table IV shows that the time required
+is such that it cannot be perceived by the human eye. This          to compare reference UI hierarchies to test UI hierarchies
+characteristic resulted in a significantly high EMD value,          is negligible compared to the time to compute values for
+leading the classifier to report these nodes as inconsistencies.    the features of the classifier. In the worst case (A2), the
+To reduce the number of this kind of false positives, we plan       CPI analysis phase took 2, 791 minutes to complete (D from
+to investigate how the number of bins in the computation of         Table III times the sum of TS , TCW , TEM D , and TOCR
+the EMD value affects false positives and performance.              from Table IV). This task is also highly parallelizable. and
+   Overall, we feel that the current number of false positives      when running the evaluation we analyzed eight devices at
+generated by D IFF D ROID is acceptable. (Moreover, they can        a time. Finally, the most expensive part of the CPI analysis
+be further reduced through improvements of the technique.)          phase consists of the computation of CW-SSIM indexes, which
+We therefore believe that the results presented in this section     across all apps and all devices took 351.7 seconds on average.
+provide initial evidence that D IFF D ROID can detect CPIs in          Based on these results, we can conclude that the analysis
+mobile applications while reporting a limited number of false       performed by D IFF D ROID can run overnight, at least for the
+positives.                                                          cases considered.
+   2) RQ2: To answer RQ2, we measured the time taken                   3) RQ3: To answer RQ3, in Table V we ranked devices
+by each phase of the technique to process the experimental          based on the number of CPIs they exhibited, with the device
+exhibiting the highest number of CPIs at the top. For each             based on static analysis that identifies compatibility issues
+device: column Device shows the name of the device; columns            using an API-Context pair model. The issues identified by their
+Resolution and Density shows the pixel resolution and density,         technique are different from those identified by D IFF D ROID,
+respectively, of the device; and column AV reports the version         as they are related to platform API evolution and drivers im-
+of the Android system running on the device. The top nine              plementation. This technique could therefore also be combined
+devices all have low values for resolution and density, and no         with D IFF D ROID to identify a broader set of issues.
+other test device has these characteristics. This result suggests          Finally, our work relates to the work on inconsistency iden-
+that developers should consider to include a device with these         tification for web apps [41], [42], [43], [44], [45]. Roy Choud-
+characteristics when testing their apps. While looking at the          hary and colleagues [41] propose a technique that crawls
+relation between inconsistencies and device characteristics,           the web app under test in different browsers, collects DOM
+however, we also observed that considering testing devices             trees and screenshots for web pages in the app, and compares
+solely based on resolution and density would have not allowed          collected trees and images to identify inconsistencies. There
+us to identify all the inconsistencies reported in Table III.          are differences between mobile and web apps that prevent this
+In fact, there are inconsistencies that derive from different          and similar techniques to be straightforwardly applied in our
+hardware configurations of the devices (e.g., the presence of          context. This technique, for instance, runs browsers so that the
+a physical menu button). It is also worth noting that, even            size of their visible area is the same, which is an assumption
+if all devices in Table V happen to run Android version 19,            that cannot be made for mobile apps.
+we could not find any reason why that this version should be
+particularly problematic.                                                                   VIII. C ONCLUSION
+
+                 VI. T HREATS T O VALIDITY                                Because of the fragmentation of the Android ecosystem, An-
+                                                                       droid apps can exhibit inconsistencies in their behavior when
+   As it is the case for most empirical evaluation, there are
+                                                                       they are run on different platforms. To help developers identify
+both construct and external threats to validity associated with
+                                                                       these behavioral inconsistencies before developers release their
+our results. In terms of construct validity, there might be errors
+                                                                       apps, we propose a technique called D IFF D ROID. D IFF D ROID
+in the implementation of our technique. To mitigate this threat,
+                                                                       aims to identify and suitably report behavioral inconsistencies
+we extensively inspected the results of the evaluation manually.
+                                                                       in Android apps by combining input generation, behavior
+In terms of external validity, our results might not generalize
+                                                                       modeling, and differential testing.
+to other apps or CPIs. In particular, we only considered a
+                                                                          We implemented and empirically evaluated D IFF D ROID by
+limited number of apps. This limitation is an artifact of the
+                                                                       running it on 5 real-world benchmark apps and over 130
+complexity involved in manually inspecting results deriving
+                                                                       different platforms. Our results provide initial evidence that
+from executions on a large set of devices (over 130). To
+                                                                       D IFF D ROID can identify CPIs on real apps efficiently and with
+mitigate this threat, we used randomly selected real-world apps
+                                                                       a limited number of false positives.
+from different domains.
+                                                                          In future work, we will first extend our evaluation by con-
+                     VII. R ELATED W ORK                               sidering additional apps. Second, we will perform a user study
+   The fragmentation of the Android ecosystem has been stud-           with app developers to assess how useful is the information
+ied in the literature [30], [31], [2], [32], [33], [34], [35], [36].   our technique provides and how effective is the format in
+Han and colleagues [30] are among the first to study the issues        which it is provided. Third, we will extend D IFF D ROID so
+generated by such fragmentation. Their work systematically             that it handles inconsistencies other than visual ones (e.g.,
+analyzes bug reports from two popular mobile device vendors            inconsistencies in the state of the app after an event is
+and proposes a method for tracking fragmentation. In this              processed). Fourth, we will investigate whether precision and
+line of research, Holzinger and colleagues [31] discuss the            accuracy of CPIs identification can improve by using a multi-
+challenges involved in developing apps due to the differences          class classifier approach. Fifth, we will investigate techniques
+in size and display resolution of different devices. Our work          for suggesting repairs for the CPIs identified by D IFF D ROID.
+helps developers in this challenging task by automatically             Finally, and more on the engineering side, we will investigate
+identifying inconsistencies across devices.                            ways to automatically build stubs for the apps being tested,
+                                                                       so as to speed up the execution on the different devices,
+   The work on Android fragmentation led to studies on
+                                                                       enforce determinism, and in general allow for performing test
+device prioritization for app testing [37], [38], [39]. The recent
+                                                                       executions in a sandbox.
+work from Lu and colleagues [37], in particular, proposes a
+technique to prioritize Android device models for individual
+                                                                                           ACKNOWLEDGMENTS
+apps, based on mining large-scale usage data. We believe this
+line of research to be complementary to ours, as it could be              This work was partially supported by the National Science
+integrated within D IFF D ROID in case resources are constrained       Foundation under grants CCF-1320783 and CCF-1161821,
+in terms of number of test devices considered.                         and by funding from Amazon under the AWS Cloud Credits
+   Other related work tries to find compatibility issues in            for Research program, Google, IBM Research, and Microsoft
+Android apps [40]. Wei and colleagues propose a technique              Research.
+                              R EFERENCES                                         [24] Amazon, “Device Farm,” https://aws.amazon.com/device-farm.
+                                                                                  [25] University of Waikato, “Weka,” http://www.cs.waikato.ac.nz/ml/weka.
+ [1] Recode, “Salesforce will only support Nexus and Samsung Galaxy
+                                                                                  [26] OpenCV, “OpenCV,” http://opencv.org.
+     phones to avoid Android fragmentation,” https://www.recode.net/2016/
+                                                                                  [27] Google, “Tesseract OCR,” https://github.com/tesseract-ocr/tesseract.
+     7/18/12217580/salesforce-support-nexus-samsung-galaxy-android.
+                                                                                  [28] GitHub, “GitHub,” https://github.com/.
+ [2] M. E. Joorabchi, A. Mesbah, and P. Kruchten, “Real Challenges in             [29] S. R. Choudhary, A. Gorla, and A. Orso, “Automated Test Input
+     Mobile app Development,” in 2013 ACM/IEEE International Symposium                 Generation for Android: Are We There Yet? (E),” in Proceedings of
+     on Empirical Software Engineering and Measurement (ESEM), 2013.                   the 2015 IEEE/ACM International Conference on Automated Software
+ [3] Google, “Daily Dozen,” https://play.google.com/store/apps/details?id=             Engineering (ASE), 2015.
+     org.nutritionfacts.dailydozen.                                               [30] D. Han, C. Zhang, X. Fan, A. Hindle, K. Wong, and E. Stroulia,
+ [4] ——, “UI Overview,” https://developer.android.com/guide/topics/ui/                 “Understanding Android Fragmentation with Topic Analysis of Vendor-
+     overview.html.                                                                    Specific Bugs,” in Proceedings of the 2012 Working Conference on
+ [5] ——, “Monkey,” https://developer.android.com/studio/test/monkey.html.              Reverse Engineering, 2012.
+ [6] A. Machiry, R. Tahiliani, and M. Naik, “Dynodroid: An Input Generation       [31] A. Holzinger, P. Treitler, and W. Slany, “Making apps useable on
+     System for Android Apps,” in Proceedings of the 2013 Joint Meeting                multiple different mobile platforms: On interoperability for business
+     on Foundations of Software Engineering, 2013.                                     application development on smartphones,” in International Conference
+ [7] D. Amalfitano, A. R. Fasolino, P. Tramontana, S. De Carmine, and A. M.            on Availability, Reliability, and Security, 2012.
+     Memon, “Using GUI Ripping for Automated Testing of Android Appli-            [32] H. Li, X. Lu, X. Liu, T. Xie, K. Bian, F. X. Lin, Q. Mei, and
+     cations,” in Proceedings of the IEEE/ACM International Conference on              F. Feng, “Characterizing smartphone usage patterns from millions of
+     Automated Software Engineering, 2012.                                             Android users,” in Proceedings of the 2015 ACM Conference on Internet
+ [8] W. Yang, M. R. Prasad, and T. Xie, “A Grey-box Approach for Auto-                 Measurement Conference, 2015.
+     mated GUI-model Generation of Mobile Applications,” in Proceedings           [33] A. Pathak, Y. C. Hu, and M. Zhang, “Bootstrapping energy debugging
+     of the 16th International Conference on Fundamental Approaches to                 on smartphones: a first look at energy bugs in mobile devices,” in
+     Software Engineering, 2013.                                                       Proceedings of the 10th ACM Workshop on Hot Topics in Networks,
+ [9] T. Azim and I. Neamtiu, “Targeted and Depth-first Exploration for                 2011.
+     Systematic Testing of Android Apps,” in Proceedings of the 2013 ACM          [34] Y. Liu, C. Xu, and S.-C. Cheung, “Characterizing and detecting perfor-
+     SIGPLAN International Conference on Object Oriented Programming                   mance bugs for smartphone applications,” in Proceedings of the 36th
+     Systems Languages, and Applications, 2013.                                        International Conference on Software Engineering, 2014.
+[10] W. Choi, G. Necula, and K. Sen, “Guided GUI Testing of Android Apps          [35] L. Wu, M. Grace, Y. Zhou, C. Wu, and X. Jiang, “The impact of vendor
+     with Minimal Restart and Approximate Learning,” in Proceedings of                 customizations on android security,” in Proceedings of the 2013 ACM
+     the 2013 ACM SIGPLAN International Conference on Object Oriented                  SIGSAC conference on Computer & communications security, 2013.
+     Programming Systems Languages, and Applications, 2013.                       [36] X. Zhou, Y. Lee, N. Zhang, M. Naveed, and X. Wang, “The peril of frag-
+[11] S. Hao, B. Liu, S. Nath, W. G. Halfond, and R. Govindan, “PUMA: Pro-              mentation: Security hazards in android device driver customizations,” in
+     grammable UI-automation for Large-scale Dynamic Analysis of Mobile                2014 IEEE Symposium on Security and Privacy (SP), 2014.
+     Apps,” in Proceedings of the 12th Annual International Conference on         [37] X. Lu, X. Liu, H. Li, T. Xie, Q. Mei, D. Hao, G. Huang, and F. Feng,
+     Mobile Systems, Applications, and Services, 2014.                                 “PRADA: Prioritizing android devices for apps by mining large-scale
+[12] R. Mahmood, N. Mirzaei, and S. Malek, “EvoDroid: Segmented Evo-                   usage data,” in Proceedings of the 38th International Conference on
+     lutionary Testing of Android Apps,” in Proceedings of the 22nd ACM                Software Engineering, 2016.
+     SIGSOFT International Symposium on Foundations of Software Engi-             [38] S. Vilkomir and B. Amstutz, “Using combinatorial approaches for
+     neering, 2014.                                                                    testing mobile applications,” in 2014 IEEE International Conference on
+[13] S. Anand, M. Naik, M. J. Harrold, and H. Yang, “Automated Concolic                Software Testing, Verification and Validation Workshops (ICSTW), 2014.
+     Testing of Smartphone Apps,” in Proceedings of the 20th ACM SIGSOFT          [39] H. Khalid, M. Nagappan, E. Shihab, and A. E. Hassan, “Prioritizing the
+     International Symposium on the Foundations of Software Engineering,               devices to test your app on: A case study of android game apps,” in
+     2012.                                                                             Proceedings of the 22nd ACM SIGSOFT International Symposium on
+[14] A. Zeller and R. Hildebrandt, “Simplifying and Isolating Failure-                 Foundations of Software Engineering, 2014.
+     Inducing Input,” IEEE Transactions on Software Engineering, 2002.            [40] L. Wei, Y. Liu, and S.-C. Cheung, “Taming Android fragmentation:
+[15] M. P. Sampat, Z. Wang, S. Gupta, A. C. Bovik, and M. K. Markey,                   Characterizing and detecting compatibility issues for Android apps,”
+     “Complex wavelet structural similarity: A new image similarity index,”            in 2016 IEEE/ACM International Conference on Automated Software
+     IEEE transactions on image processing, 2009.                                      Engineering (ASE), 2016.
+[16] M. Fazzini, E. N. d. A. Freitas, S. Roy Choudhary, and A. Orso, “Barista:    [41] S. R. Choudhary, H. Versee, and A. Orso, “Webdiff: Automated Iden-
+     A Technique for Recording, Encoding, and Running Platform Indepen-                tification of Cross-Browser Issues in Web Applications,” in 2010 IEEE
+     dent Android Tests,” in Proceedings of the 2017 IEEE International                International Conference on Software Maintenance (ICSM), 2010.
+     Conference on Software Testing, Verification and Validation, 2017.           [42] A. Mesbah and M. R. Prasad, “Automated Cross-Browser Compatibil-
+[17] J. R. Quinlan, C4. 5: programs for machine learning. Elsevier, 2014.              ity Testing,” in Proceedings of the 33rd International Conference on
+[18] Y. Rubner, C. Tomasi, and L. J. Guibas, “The earth mover’s distance as            Software Engineering, 2011.
+     a metric for image retrieval,” International journal of computer vision,     [43] S. R. Choudhary, M. R. Prasad, and A. Orso, “Crosscheck: Combining
+     2000.                                                                             Crawling and Differencing to Better Detect Cross-Browser Incompati-
+[19] C. Patel, A. Patel, and D. Patel, “Optical character recognition by open          bilities in Web Applications,” in 2012 IEEE International Conference
+     source OCR tool tesseract: A case study,” International Journal of                on Software Testing, Verification and Validation (ICST), 2012.
+     Computer Applications, 2012.                                                 [44] V. Dallmeier, M. Burger, T. Orth, and A. Zeller, “Webmate: a Tool
+[20] Google, “UiAutomation,” https://developer.android.com/reference/                  for Testing Web 2.0 Applications,” in Proceedings of the Workshop on
+     android/app/UiAutomation.html.                                                    JavaScript Tools, 2012.
+[21] Square, “JavaPoet,” https://github.com/square/javapoet.                      [45] S. Roy Choudhary, M. R. Prasad, and A. Orso, “X-PERT: Accurate Iden-
+[22] Google,                 “Espresso,”              https://google.github.io/        tification of Cross-Browser Issues in Web Applications,” in Proceedings
+     android-testing-support-library.                                                  of the 2013 International Conference on Software Engineering, 2013.
+[23] A. Vacavant, C. Godfrey, and J. Terrace, “pyssim,” https://github.com/
+     jterrace/pyssim.
+

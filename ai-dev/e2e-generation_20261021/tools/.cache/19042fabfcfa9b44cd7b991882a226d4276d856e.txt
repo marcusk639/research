@@ -1,0 +1,819 @@
+__HTTP 200__
+
+ 
+ 
+	 
+	 
+	 
+
+ 
+ New Diffblue Testing Agent Automatically Generates Comprehensive Regression Test Suites To Derisk Application Modernization | The AI Journal 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+		 
+	 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+     
+
+ 
+ 
+
+ 
+
+ 
+
+ 
+			 
+			
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 	 
+	 
+		 
+			 
+				 
+					 
+					 
+				 
+				 
+											 
+						 
+									 
+				 
+											 
+										 Subscribe 
+				 
+			 
+		 
+		 
+			 
+				 
+											 
+							 Topics 
+							 AI & Technology › Sectors & Use Cases › AI Business Strategy › AI Leadership & Perspective › Agentic Analytics Automation Blockchain Cloud Computer Vision Conversational AI Cyber Security Data Digital Transformation Ethics & Responsibility Future of AI IoT Machine Learning Metaverse Natural Language Processing (NLP) Responsible AI Robotics All AI & Technology → Automotive Education Energy Finance Gaming Healthcare Insurance Manufacturing Property & Real Estate Public Sector Retail Sports Supply Chain & Logistics Telecommunications All Sectors & Use Cases → Digital Transformation Environment & Sustainability Ethics & Responsibility HR, Workforce, and Skills Legal & Compliance Marketing & Customer Product & Revenue Policy & Regulation All AI Business Strategy → Boardroom & Governance C-Suite Perspective Community Voices Founder & Investor Voices Innovation Spotlight Interview Leadership Vision Strategic Partnerships All AI Leadership & Perspective → 						 
+											 
+							 Analysis 
+							 Interview Community Voices C-Suite Perspective Boardroom & Governance Leadership Vision Founder & Investor Voices Innovation Spotlight CEO Conversations When AI Can Write Like Anyone, The Person Speaking Becomes the Differentiator Zhengyang Yang on the Design Choices Shaping AI Shopping All Analysis → 						 
+											 
+							 Columnists 
+							 Control Layer Victor Dey EasyA Wants AI Agents to Run Startups as It Prepares to Go Public Darktrace CEO Says the Next Insider Threat Is an AI Agent You Approved Synthesia Wants AI Avatars to Make Your Employees Better at Their Jobs All Columnists → 						 
+											 
+							 Research 
+							 Research Data Analytics Machine Learning Responsible AI Ethics & Responsibility Policy & Regulation Natural Language Processing (NLP) THE UK’S DATA CENTRE DEBATE NEEDS TO MOVE BEYOND BUILDING VERSUS BANNING AI-Assisted Investigation of Complex Data Pipelines: Lessons from Enterprise Analytics Workflows All Research → 						 
+											 
+							 Events 
+							 Grafana Labs: ObservabilityCON 2025, London Securonix: Gartner’s Security and Risk Management Summit, London Uniphore: AI Leadership Summit ABBYY: AI SUMMIT SERIES, LONDON All Events → 						 
+					 						 
+							 Media Kit 
+													 
+									 
+			 
+		 
+	 
+
+	 
+	 
+		 
+			 
+			 
+		 
+		 
+							 Sign in 
+										 Dark mode 
+						 Topics AI & Technology Agentic Analytics Automation Blockchain Cloud Computer Vision Conversational AI Cyber Security Data Digital Transformation Ethics & Responsibility Future of AI IoT Machine Learning Metaverse Natural Language Processing (NLP) Responsible AI Robotics All AI & Technology → Sectors & Use Cases Automotive Education Energy Finance Gaming Healthcare Insurance Manufacturing Property & Real Estate Public Sector Retail Sports Supply Chain & Logistics Telecommunications All Sectors & Use Cases → AI Business Strategy Digital Transformation Environment & Sustainability Ethics & Responsibility HR, Workforce, and Skills Legal & Compliance Marketing & Customer Product & Revenue Policy & Regulation All AI Business Strategy → AI Leadership & Perspective Boardroom & Governance C-Suite Perspective Community Voices Founder & Investor Voices Innovation Spotlight Interview Leadership Vision Strategic Partnerships All AI Leadership & Perspective → Analysis Interview Community Voices C-Suite Perspective Boardroom & Governance Leadership Vision Founder & Investor Voices Innovation Spotlight CEO Conversations All Analysis → Columnists Control Layer by Victor Dey All Columnists → Research Research Data Analytics Machine Learning Responsible AI Ethics & Responsibility Policy & Regulation Natural Language Processing (NLP) All Research → Events Grafana Labs: ObservabilityCON 2025, London Securonix: Gartner’s Security and Risk Management Summit, London Uniphore: AI Leadership Summit ABBYY: AI SUMMIT SERIES, LONDON Adobe: Adobe MAX, Miami Ververica: Flink Forward, Berlin Schneider Electric: Wellcome Sanger Institute, Cambridge Splunk: .conf24, Las Vegas Weights & Biases: Fully Connected, London OpenText: OpenText World Conference, London All Events → Media Kit Newsletter Contact Us About About Us Branding Style Guide Help Centre Legal & Privacy Privacy Policy Terms of Service Copyright Policy Advertiser & Partner Policy Communications & Newsletter Policy Contributor Agreement Prohibited Content Policy Site Map Tiny Media Brands The AI Journal Silicon Valleys Journal World Lifestyler The Wall Street Banker The City Banker 		 
+	 
+
+	 
+		 
+			 
+				 
+					 
+					 
+				 
+				 
+					 Explore Topics 
+					 
+						 Latest 
+													 Agentic 
+													 Enterprise AI 
+													 Cyber Security 
+													 Policy & Regulation 
+													 Control Layer 
+													 Machine Learning 
+													 Data 
+											 
+				 
+				 
+			 
+		 
+	 
+	 
+	 
+
+ 
+
+	 
+
+		
+		 
+			
+ 
+	
+ 
+	 
+
+		
+		 
+			 
+				 Menu 
+		 
+
+			
+			 
+				
+				 
+					
+					 
+					 
+				 
+						 
+
+			
+		 
+
+		 
+				 
+					 
+					 Search for 
+				 
+			   
+				 
+					 
+					 Log In 
+				 
+			 			 
+		 
+
+		
+	 
+ 
+
+ 
+	 
+		 
+
+			 
+
+				
+				 
+
+					
+							 
+
+							
+
+							 
+							
+					 
+						 Topics 
+ 
+	 AI & Technology 
+	 
+		 Agentic 
+		 Analytics 
+		 Automation 
+		 Blockchain 
+		 Cloud 
+		 Computer Vision 
+		 Conversational AI 
+		 Cyber Security 
+		 Data 
+		 Digital Transformation 
+		 Ethics & Responsibility 
+		 Future of AI 
+		 IoT 
+		 Machine Learning 
+		 Metaverse 
+		 Natural Language Processing (NLP) 
+		 Responsible AI 
+		 Robotics 
+	 
+ 
+	 Sectors & Use Cases 
+	 
+		 Automotive 
+		 Education 
+		 Energy 
+		 Finance 
+		 Gaming 
+		 Healthcare 
+		 Insurance 
+		 Manufacturing 
+		 Property & Real Estate 
+		 Public Sector 
+		 Retail 
+		 Sports 
+		 Supply Chain & Logistics 
+		 Telecommunications 
+	 
+ 
+	 AI Business Strategy 
+	 
+		 Digital Transformation 
+		 Environment & Sustainability 
+		 Ethics & Responsibility 
+		 HR, Workforce, and Skills 
+		 Legal & Compliance 
+		 Marketing & Customer 
+		 Product & Revenue 
+		 Policy & Regulation 
+	 
+ 
+	 AI Leadership & Perspective 
+	 
+		 Boardroom & Governance 
+		 C-Suite Perspective 
+		 Community Voices 
+		 Founder & Investor Voices 
+		 Innovation Spotlight 
+		 Interview 
+		 Leadership Vision 
+		 Strategic Partnerships 
+	 
+ 
+ 
+ 
+ Columnists 
+ 
+	 The Control Layer By Victor Dey 
+ 
+ 
+ Learn 
+ 
+	 Events 
+	 Newsletter 
+	 Reports & Guides 
+	 Webinars 
+ 
+ 
+ Media Kit 
+ Premium 
+ Login 
+ Contact Us 
+ 					 
+
+					 			 
+				 
+					 
+					 Search for 
+				 
+			 
+			 
+				 
+			 
+		 
+
+			 
+ 
+
+ 
+
+
+			 
+				 
+ 
+
+	  Home / Press Release / New Diffblue Testing Agent Automatically Generates Comprehensive Regression Test Suites To Derisk Application Modernization 
+	 
+
+		 Press Release 
+		 
+			New Diffblue Testing Agent Automatically Generates Comprehensive Regression Test Suites To Derisk Application Modernization		 
+
+		 
+						 
+							 
+						 
+					 Business Wire 
+						 
+							 
+							 Send an email 
+						 
+					 24 March 2026  3 minutes read   	 
+
+	
+	
+ 
+
+
+				 
+			 
+		 
+
+ 
+
+	
+	 
+
+		
+
+		 
+
+			 
+ 
+			 
+ 
+ Published benchmark research from generative AI coding pioneer quantifies compelling advantages of new solution’s end-to-end process automation over stand-alone coding agents 
+ 
+ OXFORD, England–(BUSINESS WIRE)–Diffblue today announced the general availability of the Diffblue Testing Agent, an autonomous regression test generator that works with an enterprise’s existing AI coding platform — GitHub Copilot, Claude Code, and others — to generate verified unit tests across entire codebases without developer intervention. In benchmark testing across eight real-world Java projects, the Diffblue Testing Agent automatically delivered 81% average line coverage compared to just 32% achieved by a senior developer iterating with an AI coding agent alone – a 2.5x coverage advantage and major developer productivity upgrade. 
+ 
+Enterprise adoption of AI coding tools has accelerated dramatically, but the challenge of automatically generating large volumes of trustworthy code remains a persistent unsolved problem. This pain is particularly acute when attempting to create comprehensive regression unit test coverage – a foundational requirement for any production-ready code and application modernization initiatives. Until today, developers have struggled to coax even modest levels of test coverage from coding agents, often resorting to iterative prompting that delivers rapidly diminishing returns while incurring substantial token costs. 
+ 
+The Diffblue Testing Agent addresses this problem by delivering an orchestration and verification layer on top of the AI coding platforms enterprises have already deployed. Rather than replacing an organization’s existing tools, the Diffblue Testing Agent works alongside them delegating method- and class-level test creation to the underlying AI coding agent while orchestrating a comprehensive process that includes coverage analysis, build system configuration, test plan creation, parallelized test generation, output verification, project clean-up, and pull request preparation. The agent autonomously scopes the codebase, generates tests, verifies that every test compiles and passes, and rolls back any that don’t — across hundreds or thousands of classes in a single run, without developer intervention. The autonomous workflows implemented by the Diffblue Testing Agent are built on decades of software verification expertise and research originating from the University of Oxford. 
+ 
+The impact of this new approach is compelling. Newly published benchmark research quantifies the advantages delivered by the Diffblue Testing Agent by measuring its performance when used to generate test coverage for 8 real-world code repositories compared to the experience of a developer using just Claude Code to generate test coverage. Diffblue’s agent was deployed with a single prompt and ran autonomously on each project generating an average of 81% line coverage and 61% mutation coverage – both of which exceed typical enterprise standards. In contrast, an experienced, AI-savvy developer was only able to deliver an average of 32% line coverage and 24% mutation coverage after two hours of toil iterating with Claude Code to keep it on task and verify its output – a process that is painful and an outcome that is far short of target. The full benchmark study, including methodology, project-level results, and codebase details, is available at diffblue.com/benchmarks. 
+ 
+“The industry has spent two years proving that AI can write code. The question now is whether AI can do actual engineering work — reliably, at scale, without constant human supervision,” said Dr. Peter Schrammel, Diffblue co-founder and CTO. “Our benchmark data shows that the developer effort for driving even the best AI coding agents reaches unaffordable levels quickly. For writing regression tests at scale, diminishing returns make progress beyond 50% coverage difficult, whereas the Diffblue Testing Agent achieves 80%+ autonomously. That gap is the difference between an AI experiment and an AI-enabled engineering workforce. We built the orchestration layer that closes it.” 
+ 
+Diffblue’s Testing Agent is available immediately for enterprise evaluation. The initial release includes autonomous regression unit test generation for Java and Python. The product integrates with GitHub Copilot and Claude Code, with additional AI coding platform support planned based on customer demand. In the coming quarters, the company will extend its Diffblue Agents platform to additional software quality domains, including test quality assessment, code review automation, large-scale refactoring support, and requirements-driven test generation. Development teams interested in evaluating Diffblue Agents can contact  [email protected]  or visit diffblue.com/agents. 
+ 
+Diffblue makes AI coding agents reliable at enterprise scale. The company’s Diffblue Agents platform orchestrates autonomous software quality workflows on top of the AI coding platforms enterprises already use, starting with automated regression test generation for Java and Python codebases. Diffblue enables innovative development teams everywhere to innovate faster, modernize with confidence, and improve software quality. Founded by award-winning researchers from the University of Oxford, Diffblue is backed by leading investors including IP Group, Albion, Parkwalk, and Citi. 
+   Contacts   
+ 
+ Media Contact: Cassandra Locke 
+ [email protected] 
+ 
+
+                             
+        
+                     
+
+                    
+                     
+                                                 
+                         
+                                                                                                                                     
+                                      Author:                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                    
+                                                             
+                                                                 Business Wire                                                                                                                                                                                                 
+                                                                                                                                
+                                                                                                                             
+                                                                                                                                                                                                                                                                                                                                                                                             
+                                                                                                                         
+                         
+                                             
+                     
+                    
+                
+                            
+        
+			
+		 
+
+				 
+			 
+				 
+						 
+							 
+						 
+					 Business Wire 
+						 
+							 
+							 Send an email 
+						 
+					 24 March 2026  3 minutes read   
+			 
+		 
+
+		 
+		 
+
+	 
+
+	
+	 
+
+		
+	
+
+				 
+
+					 
+						 Related Articles 
+					 
+
+					 
+
+					
+							 
+
+								
+			 
+								 How AML/CTF Software Automates Transaction Monitoring and Alerts 
+
+								 21 October 2026 							 
+
+						
+							 
+
+								
+			 
+								 Smart Model Routing: Building a Cost-Aware LLM Gateway 
+
+								 21 October 2026 							 
+
+						
+							 
+
+								
+								 When Therapy Means Coming Home to Yourself: Insights from Debra Bailey, Ph.D. 
+
+								 20 October 2026 							 
+
+						
+							 
+
+								
+								 A Photo-Based Workflow for Tattoos, Line Drawings, and Meaningful Visual Keepsakes 
+
+								 19 October 2026 							 
+
+						
+					 
+				 
+
+			
+	 
+
+	
+ 
+
+ 
+ 
+
+	
+			 
+				 
+					
+		 
+			 
+
+									 
+						 About & Contact 			 
+		 About Us 
+ Branding Style Guide 
+ Contact Us 
+ Help Centre 
+ Media Kit 
+ Site Map 
+ 					 
+				
+									 
+						 Explore Content  			 
+		 Events 
+ Newsletter 
+ Premium 
+ Press Releases 
+ Reports & Guides 
+ Topics 
+ 					 
+				
+									 
+						 Legal & Privacy 			 
+		 Advertiser & Partner Policy 
+ Communications & Newsletter Policy 
+ Contributor Agreement 
+ Copyright Policy 
+ Privacy Policy 
+ Prohibited Content Policy 
+ Terms of Service 
+ 					 
+				
+									 
+						 Tiny Media Brands 			 
+		 Silicon Valleys Journal 
+ The AI Journal 
+ The City Banker 
+ The Wall Street Banker 
+ World Lifestyler 
+ 					 
+				
+			 
+		 
+
+						 
+			 
+			
+			 
+				 
+					 
+						 
+
+							 © Copyright 2026, All Rights Reserved  |    The AI Journal   X LinkedIn YouTube Instagram  
+
+						 
+					 
+				 
+			 
+			
+ 
+
+
+
+		 
+			 
+				
+				 
+					   Facebook 
+				 
+				 
+					   X 
+				 
+				 
+					   LinkedIn 
+				 
+				 
+					   Reddit 
+				 
+				 
+					   Messenger 
+				 
+				 
+					   Messenger 
+				 
+				 
+					   Share via Email 
+				 			 
+		 
+
+		
+
+		 
+			 
+				
+				 
+					   Facebook 
+				 
+				 
+					   X 
+				 
+				 
+					   LinkedIn 
+				 
+				 
+					   WhatsApp 
+				 			 
+		 
+
+		 
+		 
+			 
+			 Back to top button 
+		 
+	
+		 
+
+		
+	 
+		 
+
+			 
+				 Close 
+			 
+
+
+			
+				 
+
+											 
+							 
+				 
+					 Search for: 
+					 
+				 
+				 
+			 							 
+						
+					 
+											 
+
+											 
+							 X LinkedIn YouTube Instagram  
+						 
+						
+				 
+			
+
+			
+		 
+	 
+
+	
+	 
+ 
+
+                 
+                 
+ 		 
+			 
+				 Close 
+			 
+			 
+
+				 
+
+										 
+							 
+							 
+								 
+								 Search for 
+							 
+						 
+						
+				 
+
+			 
+		 
+				 
+			 
+				 Close 
+			 
+			 
+
+				 
+
+										 
+							 
+							 
+								 
+								 Search for 
+							 
+						 
+						
+				 
+
+			 
+		 
+			 
+		 
+			 Close 
+		 
+		 
+			 
+				 
+
+					 
+						 Log In  
+					 
+
+					 
+						
+	 
+
+		 
+			 
+			 
+				 
+				 Forget? 
+			 
+
+			 
+			 
+				  Remember me			 
+
+			
+			
+			 Log In 
+
+					 
+
+		
+	 
+						 
+				 
+			 
+		 
+	 
+				 
+			 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 

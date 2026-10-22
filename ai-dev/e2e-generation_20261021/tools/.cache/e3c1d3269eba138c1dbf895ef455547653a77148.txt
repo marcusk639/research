@@ -1,0 +1,826 @@
+__HTTP 200__
+                                                         Mutation-Guided LLM-based Test Generation at Meta
+                                                         Christopher Foster                                                Abhishek Gulati                                          Mark Harman
+                                                 Product Compliance and Privacy                                  Product Compliance and Privacy                         Product Compliance and Privacy
+                                                      team, Meta Platforms                                            team, Meta Platforms                                   team, Meta Platforms
+                                                        Menlo Park, USA                                                 Menlo Park, USA                                          London, UK
+
+                                                               Inna Harper                                                         Ke Mao                                           Jillian Ritchey
+                                              Developer Infrastructure team, Meta                               WhatsApp team, Meta Platforms                           Messenger team, Meta Platforms
+                                                           Platforms                                                    London, UK                                             New York, USA
+                                                          London, UK
+
+
+
+
+arXiv:2501.12862v1 [cs.SE] 22 Jan 2025
+                                                                                              Hervé Robert                                         Shubho Sengupta
+                                                                                 Product Compliance and Privacy                                   FAIR, Meta Platforms
+                                                                                      team, Meta Platforms                                          Menlo Park, USA
+                                                                                        Menlo Park, USA
+                                         ABSTRACT                                                                                        ACM Reference Format:
+                                         This paper1 describes Meta’s ACH system for mutation-guided                                     Christopher Foster, Abhishek Gulati, Mark Harman, Inna Harper, Ke Mao,
+                                                                                                                                         Jillian Ritchey, Hervé Robert, and Shubho Sengupta. 2024. Mutation-Guided
+                                         LLM-based test generation. ACH generates relatively few mutants
+                                                                                                                                         LLM-based Test Generation at Meta. In Companion Proceedings of the 33rd
+                                         (aka simulated faults), compared to traditional mutation testing. In-                           ACM International Conference on the Foundations of Software Engineering
+                                         stead, it focuses on generating currently undetected faults that are                            (FSE Companion ’25), 23 – 27, 2025, Trondheim, Norway. ACM, New York,
+                                         specific to an issue of concern. From these currently uncaught faults,                          NY, USA, 12 pages. https://doi.org/10.1145/3663529.3663839
+                                         ACH generates tests that can catch them, thereby ‘killing’ the mu-
+                                         tants and consequently hardening the platform against regressions.
+                                         We use privacy concerns to illustrate our approach, but ACH can                                 1     INTRODUCTION
+                                         harden code against any type of regression. In total, ACH was                                   In this paper, we report on Meta’s deployment of ACH2 , an agen-
+                                         applied to 10,795 Android Kotlin classes in 7 software platforms                                tic LLM-based tool for generating tests to target specific classes
+                                         deployed by Meta, from which it generated 9,095 mutants and                                     of faults. The paper focuses on automated privacy hardening: the
+                                         571 privacy-hardening test cases. ACH also deploys an LLM-based                                 problem of automatically generating unit tests to reduce the risk
+                                         equivalent mutant detection agent that achieves a precision of                                  of future regressions with respect to privacy issues. However, the
+                                         0.79 and a recall of 0.47 (rising to 0.95 and 0.96 with simple pre-                             approach can be applied to any issue and is not confined solely
+                                         processing). ACH was used by Messenger and WhatsApp test-a-                                     to tackling privacy issues. The paper reports results from the de-
+                                         thons where engineers accepted 73% of its tests, judging 36% to                                 ployment of ACH at Meta between 28th October 2024 and 31st
+                                         privacy relevant. We conclude that ACH hardens code against spe-                                December 2024.
+                                         cific concerns and that, even when its tests do not directly tackle the                             Although there has been a great deal of recent attention on LLM-
+                                         specific concern, engineers find them useful for their other benefits.                          based test generation [3, 18, 39, 52, 53], there has been little work
+                                                                                                                                         on developing tests for specific classes of fault. Many companies
+                                         CCS CONCEPTS                                                                                    have exposure to specific high impact faults related to important
+                                         • Software and its engineering → Software testing and debug-                                    issues such as security, integrity, and privacy. The importance of
+                                         ging.                                                                                           such issues makes it equally important to have test generation
+                                                                                                                                         techniques that can target these specific classes of faults.
+                                         KEYWORDS                                                                                            Organizations typically collect data about bugs found during de-
+                                         Unit Testing, Automated Test Generation, Large Language Models,                                 velopment. This provides a rich source of information with which
+                                         LLMs.                                                                                           to guide test generation. The challenge, therefore, is to find a way
+                                                                                                                                         to generate tests that target specific issues on the basis of this infor-
+                                         1 Author order is alphabetical. The corresponding author is Mark Harman.
+                                                                                                                                         mation. We believe mutation testing holds the key: our key insight
+                                                                                                                                         is to construct mutants that denote faults that are both relevant to
+                                         Permission to make digital or hard copies of all or part of this work for personal or           the issue of concern and also currently not caught (unkilled) by any
+                                         classroom use is granted without fee provided that copies are not made or distributed
+                                         for profit or commercial advantage and that copies bear this notice and the full citation       existing test case, and to use these as prompts to LLM-based test
+                                         on the first page. Copyrights for components of this work owned by others than the              generation. This results in an overall agenetic LLM-based workflow,
+                                         author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or
+                                         republish, to post on servers or to redistribute to lists, requires prior specific permission
+                                                                                                                                         in which agents essentially generate problem-specific ‘super bugs’
+                                         and/or a fee. Request permissions from permissions@acm.org.                                     and the tests that can catch them.
+                                         FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway
+                                         © 2024 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+                                         ACM ISBN 979-8-4007-0658-5/24/07                                                                2 ACH (Automated Compliance Hardener) is so-named because it is an automated
+                                         https://doi.org/10.1145/3663529.3663839                                                         test generation tool that ‘hardens’ compliance with respect to chosen issues of concern.
+FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway                                                                           Harman, Sengupta
+
+
+   At Meta, we have developed and deployed just such an approach        we have about potential issues our systems will face. Furthermore,
+and tool, ACH, for automated unit test generation. ACH’s work-          because ACH generates simulated faults as an intermediate stage
+flow is based on the principle of Assured LLM-based Software            in generating tests, we can use the distributions of simulated fault
+Engineering [7]. In Assured LLMSE, the goal is not merely to use        prevalence over the code base as a proxy for the risk exposure
+language models to tackle software engineering challenges, but to       of individual system components to the issue under test. Finally,
+automatically generate software engineering artifacts that come         through simulation [2], we can further assess the likely impact (or
+with assurances. In the case of ACH, the artifacts are tests and they   severity) of such faults, were they to manifest as field failures.
+come with the following assurances:                                        There are four primary contributions of the paper:
+   (1) Buildable: The proposed new tests build, so are free from        Empirical results: We report results from the application of
+       syntax errors and missing dependencies;                          ACH to 7 real world software platforms deployed by Meta. In total,
+   (2) Valid Regression Tests: The tests pass and do so consis-         ACH generated 4,660 candidate mutants (simulated privacy faults)
+       tently, so they are non-flaky [26] regression tests;             that it ‘believed’ to be potentially killable from 10,795 classes under
+   (3) Hardening: The new tests catch faults that no existing test      test. From these candidates, ACH was able to generate an additional
+       can catch;                                                       571 unit tests. Of these 571 tests, 277 would have been discarded
+   (4) Relevant: Many of the new tests are closely coupled to the       had we chosen to focus solely on the line coverage test adequacy
+       issue of concern;                                                criterion, underlining the importance of mutation testing over such
+   (5) Fashion Following: Most of the new tests respect the cod-        coverage.
+       ing style used by the existing tests available for the class     Deployment Experience: We report both qualitative and quanti-
+       under test; they are ‘fashion followers’ [3].                    tative outcomes from the development, deployment and evaluation
+                                                                        of ACH at Meta in 2024. Overall, the tests automatically generated
+   The first three assurances are boolean in nature; they are un-
+                                                                        by ACH achieved an acceptance rate of 73% from the engineers
+equivocal guarantees made by ACH about the tests it proposes
+                                                                        who reviewed them, with 36% being judged privacy relevant.
+to the engineer. The fourth and fifth are more aspirational and
+                                                                        Equivalent Mutant Detection: We present an evaluation of the
+probabilistic in nature, reflecting the underlying (LLM) technol-
+                                                                        ACH equivalent mutant detection agent’s ability to detect equiv-
+ogy used to construct tests. The degree to which tests are relevant
+                                                                        alent mutants, which yields precision and recall of 0.79 and 0.47
+and ‘fashion follow’ the existing tests is an inherently non-boolean
+                                                                        respectively. The figure for precision and recall rises to 0.95 and
+and subjective attribute. As such, while the boolean criteria are
+                                                                        0.96 respectively, when the agent is combined with simple pre-
+provided as verifiable guarantees that ACH promises to meet, the
+                                                                        processing.
+two more probabilistic assurances are best assessed through the
+                                                                        Lessons from Industrial Application: We detail the lessons
+standard code review process routinely undertaken by engineers.
+                                                                        learned, and open problems and research challenges raised by this
+Finally, when it finds that a newly-generated test adds coverage,
+                                                                        application of Assured LLMSE to mutation-based test generation.
+ACH also measures coverage achieved, including the result in the
+assurances provided to the engineer reviewing the test.
+   The newly generated tests need not extend coverage, since they       2    THE ACH SYSTEM
+may find faults simply by covering existing lines of code in some       Figure 1 presents the overall architectural pipeline of the ACH Sys-
+new way; the same path with different data, for example. It is          tem. ACH starts with free from text about an issue of concern. This
+well known [17] that mutation testing has this property, allowing       textual input could come from one or more of a variety of sources,
+mutation testing to claim superiority over structural coverage test     including (but not limited to):
+adequacy criteria such as line coverage. As shown in Section 6, our         (1) Previous faults found in development;
+findings further underscore the importance of mutation testing in           (2) User requirements;
+‘going beyond’ purely structural test adequacy criteria.                    (3) System technical constraints;
+   The paper focuses on privacy hardening, but we believe that              (4) Concerns raised by engineers, managers or organizational
+our approach will find many applications to software testing, more              leadership about undesirable system behaviours;
+generally. It combines existing well-known and widely-studied               (5) Regulatory requirements set by legislative bodies and com-
+approaches to mutation testing, assured LLMSE, and test generation.             pliance enforcement organizations.
+However, this new combination allows it to tackle a wide range of
+                                                                           This is the sense in which ACH is a ‘compliance hardener’: it
+other problems. The potential reach and impact of this approach
+                                                                        improves (‘hardens’) the ability of the deployed regression test in-
+derives from the fact that it answers a fundamental question for
+                                                                        frastructure to detect regressions that might lead to non-compliance
+automated software test generation:
+                                                                        with respect to the issue of concern.
+       How can we automatically transform vague, incom-                    The results presented in this paper were obtained by using pri-
+       plete and even contradictory textual narratives about            vacy hardening concerns from previous faults found in development.
+       software concerns, into unit tests that guard against            The single language model Llama 3.1 70Bn [42] was used in all the
+       bugs that, if introduced, may yield field failures that          agents reported on. The prompts used by the three LLM agents
+       manifest these concerns?                                         from Figure 1 can be found in Table 1.
+   This fundamental nature makes the approach very widely ap-              Our focus is the development, deployment and evaluation of
+plicable: we can use it in any situation where we have a way to         mutation-guided agenetic workflows. We have not yet felt the need
+capture, even in the most vague of textual descriptions, concerns       to extend to more sophisticated prompting, nor to use fine-tuning,
+Mutation-Guided LLM-based Test Generation at Meta                                                                                      FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway
+
+
+
+
+                                                                                                                                                 Remove
+    Current Issues               Issue                               Privacy                                              Yes
+                                                                                                                                               syntactically
+                                                                                  Builds     Yes       Passes                   Fault
+       from CI                 summary                                fault                                                                      identical
+                                                                                                                                                   faults
+                                                      LLM                                                                                                               LLM
+                                               Make a fault                         No                    no
+                                                                                                                                                                     Equivalence
+                                                                                                                                                                      detector
+
+
+                                                                                                                                 yes                                  Equivalent?
+                                      Existing test         Class under
+                                         class                  test
+                                                                                                      Discarded
+                                         Current code repository                                        faults
+
+                                                                                                               No
+
+
+
+
+                                                                                                                                                     Auto-generate
+                                                                                                      Passes on                 Passes on
+                                                                   New tests      Builds        Yes
+                                                                                                       original
+                                                                                                                          Yes
+                                                                                                                                  fault
+                                                                                                                                                No   diff summary
+                                                                                                                                                     and test plan
+                                                      LLM                                                                                                                      Onward
+                                                Make a test                                                                                                                     code
+                                               to catch fault                                No          No
+                                                                                                                                                                               review
+                                                                                                                    Yes                                                         in CI
+
+
+                                                                                                                Discarded
+                                                                                                                new tests
+                                            Dotted section is a version of the TestGen-LLM workflow
+
+Figure 1: Top level architecture of the principal ACH components. The dotted section denotes a (slightly modified) version
+of the TestGen-LLM tool, on which we previously reported [3]. The workflow preceding this, shown above in the figure, is
+the additional agenetic workflow for generating candidate faults to drive the generation of tests. Solid rectangles denote
+components that are fully automated but entirely rule-based (and therefore do not use LLMs).
+
+                                  Table 1: The three simple prompts used in the architecture diagram in Figure 1
+ Agent name                   Prompt Template, in which { · · · } denotes a parameter to the template
+ Make a fault                 CONTEXT: {context_about_concern} INSTRUCTION: Here is a Kotlin class and a test class with some unit tests for the class under test
+                              ‘‘‘{class_under_test}‘‘‘. ‘‘‘{existing_test_class}‘‘‘. Write a new version of the class under test in which each method is replaced by a new
+                              version of that method that contains a typical bug that introduces a privacy violation similar to {diff}. Delimit the mutated part using the
+                              comment-pair ‘// MUTANT <START>‘ and ‘// MUTANT <END>‘
+ Equivalence detector         I’m going to show you two slightly different versions of a Kotlin class. Here is the first version of the Kotlin class:‘‘‘class_version1‘‘‘.
+                              Here is the second version of the Kotlin class:‘‘‘class_version2‘‘‘. INSTRUCTION: If the first version of the class will always do exactly
+                              the same thing as the second version of the class, just respond with ‘{yes}‘. However, if the two versions of the class are not equivalent,
+                              respond with ‘{no}‘, and give an explanation of how execution of the first version can produce a different behaviour to execution of the
+                              second version.
+ Make a test to catch fault   What follows is two versions of a Kotlin class under test. An original correct class and a mutated version of that class that contains one
+                              mutant per method, each of which represents a bug. Each bug is delimited by the comment-pair ‘// MUTANT <START>‘ and ‘// MUTANT <END>‘. The
+                              original class and its mutant are followed by a test class that contains unit tests for the original correct class under test. This is the
+                              original version of the class under test:‘‘‘{original_class}‘‘‘. This is the mutated version of the class under test:‘‘‘{mutated_class}‘‘‘.
+                              Here is the existing test class:‘‘‘{existing_test_class}‘‘‘. Write an extended version of the test class that contains extra test cases that
+                              will fail on the mutant version of the class, but would pass on the correct version.
+
+
+
+nor to exploit language model ensembles [3], all of which would                             mutants [27]. To tackle this equivalent mutant problem, ACH uses
+improve on the results we report. Therefore, our results denote                             a further agent, the Equivalence Detector agent. This Equivalence
+only a baseline against which to measure futures developments.                              Detector agent uses the LLM-as-judge approach [24, 63]. The judge
+Nevertheless, despite these limitations, we believe the results clearly                     is instructed to determine whether the mutant is equivalent to
+highlight the potential for significant advances in test generation; its                    the original class under test. Although the underlying problem of
+applicability and effectiveness. We would be interested and excited                         mutant equivalence is undecidable [35], we found that this approach
+to collaborate with the wider research community, and hope this                             was surprisingly effective due to the properties of the mutants so-
+paper stimulates further work in this area.                                                 generated (Section 5 contains details).
+   In the ACH workflow depicted in Figure 1, the issue summary                                 The faults generated by the initial phase of the workflow are
+generates prompts that stimulate another LLM-based agent to gen-                            used to generate prompts for test generation. The test generation
+erate faults; walking the code base, using existing tests, classes                          phase shown in a dotted box is a slightly modified version of the
+under test, and the summary as prompt ingredients. The prompts                              previously published TestGen-LLM tool [3].
+instruct the LLM to generate simulated faults (aka mutants [35]).
+There is no guarantee that these mutants will change the code under
+test, because it may not be relevant to the issue being hardened.                           3         RESULTS FROM META’S ACH DEPLOYMENT
+   However, even when the fault generator does change the syntax,                           We applied ACH to the 7 Meta platforms Aloha, Facebook Feed,
+it may not change the semantics; the mutants could be equivalent                            Instagram, Messenger, Oculus, Wearables, and WhatsApp. Facebook
+FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway                                                                                               Harman, Sengupta
+
+
+Feed and Instagram are social media platforms. WhatsApp and
+Messenger are messaging platforms. Oculus is a set of virtual reality
+headsets. Wearables are platforms for augmented reality glasses and
+wrist controllers. We also included ‘cross-app’ software products
+that provide features affecting more than one of these platforms.
+   Table 2 presents top level summary statistics for the application
+of ACH to these platforms. Once a mutant is found that builds and
+passes, the workflow terminates3 for the current class under test.                         Figure 2: Likert scale instructions given to code reviewers to
+The number of candidate mutants reported in Table 2 is therefore                           score test cases according to their privacy relevance.
+bounded above by the number of classes under test.
+   By contrast with traditional rule-based mutation testing tools [19,                     technologies such as Oculus and Wearable Computing, and also
+33, 37, 54], ACH generates relatively few, highly specific mutants,                        code that spanned over multiple apps.
+by design. Furthermore, the generated mutants have a higher prob-                             Table 3 presents details of these 30 diffs. As can be seen, the
+ability of relevance to the issue of concern than can be achieved by                       overall acceptance rate is 90% accepted of those submitted (27 of 30),
+rule-based approaches.                                                                     and 93% of all diffs reviewed (27 of 29). Initial results for acceptance
+   As can be seen from Table 2, ACH generates 9,095 mutants that                           rate were deemed to be highly encouraging, so we proceeded to
+build and pass from 10,795 classes under test. Although the lan-                           build out the Minimal Viable Product (MVP) and use it in the test-
+guage model approach generates fewer and more specific mutants                             a-thons reported in Section 4.2.
+than rule-based approaches, we found that it also generates more                              The primary feedback from developers who reviewed these 30
+equivalent mutants. For example, as Table 2 reveals, 25% of the mu-                        diffs was as follows. Engineers reported that
+tants generated are trivially syntactically equivalent. This contrasts
+                                                                                               (1) Many of the tests added coverage, which they computed
+with overall equivalent mutant generation rates that are typically
+                                                                                                   themselves manually. They asked that coverage information
+around 10% to 15% for rule-based approaches [27, 45]. Fortunately,
+                                                                                                   be automatically computed and reported in the diff sum-
+as revealed in Section 5, the equivalent mutant problem is relatively
+                                                                                                   maries, as well as the faults found.
+unimportant for our use case.
+                                                                                               (2) Some of the tests were relevant to privacy, and could be
+   Of the 9,095 mutants that build and pass, 4,660 (51%) were deemed
+                                                                                                   useful in hardening against future privacy regressions. They
+to be non-equivalent by the workflow, and thus become the subject
+                                                                                                   also felt that having the specific example faults was very
+of each of the prompts used for test generation. The test generation
+                                                                                                   helpful in understanding the behavior of the tests.
+phase uses similar prompts to those reported previously [3], but
+                                                                                               (3) Even for those which were not clearly related to privacy, the
+based on covering the mutant rather than covering uncovered lines.
+                                                                                                   tests seemed to be adding value by tackling corner cases or
+                                                                                                   adding coverage.
+4     ENGINEERS’ EVALUATION OF ACH
+We followed the tried-and-tested formula [3] for the deployment                            4.2    Experience from Privacy Test-a-thons
+of a new software testing technology at Meta, starting with initial
+                                                                                           In the week of 9th December 2024, we conducted two test-a-thons,
+trials and moving onto to test-a-thons led by engineers, thereby
+                                                                                           focusing on the application of ACH to Meta’s two messaging plat-
+evaluating initial deployment.
+                                                                                           forms: WhatsApp and Messenger.
+                                                                                              As with the initial trial, test cases were submitted as diffs into
+4.1      Initial Trial                                                                     the normal continuous integration review process. However, the
+At Meta, a code change submitted to the Continuous Integration (CI)                        diff summary additionally claimed additional coverage, for those
+system is called a ‘diff’ (short for differential). In order to get initial                tests that did add coverage as well as finding currently uncatchable
+feedback from engineers on the tests generated by the first version                        faults. The engineers participating in the test-a-thons reviewed the
+of ACH, we used it to generate 30 new test cases, submitting each as                       diffs for usefulness in the normal way they would any other diff,
+a separate diff for review. The generated tests were recommended                           ultimately determining whether the diff is accepted, and thus lands
+to engineers in the same way as any other code modification, such                          into production.
+as those created by human engineers. That is, ACH submits tests,                              In order to evaluate the privacy relevance of each test, we ad-
+as diffs, through the normal review process. The ACH diff summary                          ditionally asked the software engineers to give each a score on
+explains the kind of fault caught by the test case giving, as a specific                   a Likert scale [32]. Figure 2 is a screen capture of the exact in-
+example, the mutant that ACH has already determined to be killed                           structions given to the engineers regarding this privacy relevance
+by the test case.                                                                          scoring procedure.
+   We wanted to obtain broad coverage of Meta’s platforms, so                              Procedure for Messenger two-phase test-a-thon: The Messen-
+included messaging apps like WhatsApp and Messenger, traditional                           ger test-a-thon was conducted in two phases. The same 6 reviewers
+social media platforms such as Facebook Feed, as well as hardware                          were used for both the first and the second phase. All Messenger
+                                                                                           reviewers had strong expertise in testing, and (at least a) basic
+3 This decision was motivated by the use case: we first want to establish whether a test
+                                                                                           experience with privacy engineering.
+is relevant. When we find a test that is relevant, we can choose to focus in on the code      In the first phase, 50 generated tests were selected from a ran-
+it tests, hoping that adjacent code will also have a higher likelihood of relevance.       domly selected pool of 60 tests. All 60 were prescreened manually
+Mutation-Guided LLM-based Test Generation at Meta                                                                   FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway
+
+
+Table 2: Meta platforms used to evaluate ACH and the numbers of simulated privacy faults ‘believed’ non-equivalent by the
+equivalence detector agent from Figure 1. Percentages in the final four columns are distributions of ACH’s equivalence ‘belief’
+over mutants that build and pass, while those in the fourth column report the percentage of all mutants that build and pass.
+           Platform        Number of Number of Number of              Number of mutants that build and pass and ...
+                               classes    mutants      mutants              are  the agent    for which      the agent
+                            under test  generated    generated syntactically       believes    the agent      believes
+                                           in total  that build       identical       to be     gives no to be non-
+                                                       and pass                 equivalent       answer equivalent
+           Facebook Feed           346       1,097    252 (23%)        50 (20%)   19 (7.5%)     19 (7.5%)    164 (65%)
+           Messenger             3,339       9,185 2,922 (32%)       742 (25%)   384 (13%)     401 (14%) 1,395 (48%)
+           Instagram             1,691       5,199 1,381 (27%)       277 (20%)   154 (11%)     208 (15%)     742 (54%)
+           Aloha                   175         576    144 (25%)        32 (22%)   16 (11%)         6 (4%)     90 (63%)
+           Wearables             2,841       8,592 2,468 (29%)       621 (25%)    207 (8%)     326 (13%) 1,314 (53%)
+           Cross-app               805       1,819    562 (31%)      146 (26%)    64 (11%)      82 (15%)     270 (48%)
+           Oculus                  325         997    279 (28%)        96 (34%)     17 (6%)      16 (6%)     150 (54%)
+           WhatsApp              1,273       4,212 1,087 (26%)       282 (26%)   155 (14%)     115 (11%)     535 (49%)
+                Totals                        10,795            31,677       9,095 (29%)     2,246 (25%)   1,016 (11%)    1,173 (13%)      4,660 (51%)
+
+
+Table 3: Results from initial trial ACH deployment on 6 plat-                                   Having completed the reviews of the initial 72 tests allocated,
+forms and cross-app products to gauge developers’ reactions,                                several of the engineers requested additional tests to review, hav-
+gain feedback and guide development.                                                        ing found the experience sufficiently rewarding. Additional tests
+  Platform        Number                 Status after human review is ...                   were therefore allocated at random from the remaining pool of 48
+                   of tests     Accepted Accepted Rejected                Not               available. Therefore, in total, 91 WhatsApp tests were reviewed for
+                                ‘as is’ by         with     by the reviewed                 usefulness, and 90 were reviewed for relevance.
+                                       the       simple engineer
+                                                                                            Results from the test-a-thons: Table 4 presents summary sta-
+                                engineer       changes
+  FB Feed                 4              4             0         0          0
+                                                                                            tistics for the two test-a-thons. The upper table gives the number
+  Messenger              12              8             3         1          0               of tests reviewed for usefulness and for privacy relevance and, of
+  Aloha                   2              2             0         0          0               these, the number that were accepted and rejected for usefulness,
+  Wearables               3              1             0         1          1               and scored for relevance. The lower table gives the proportions of
+  Cross-app               2              2             0         0          0               tests reviewed for usefulness that were accepted and rejected, and
+  Oculus                  3              3             0         0          0               the proportion of those reviewed for relevance that fall into each
+  WhatsApp                4              3             1         0          0               of the five categories of the Likert scale on which relevance was
+  Totals                 30             23               4             2              1     assessed by the software engineers. Percentages are rounded to the
+                                                                                            nearest whole number percentage point, and so may not quite total
+                                                                                            100% due to rounding.
+and, as a result, 10 were excluded because they concerned only                                  As Table 4 reveals, the overall acceptance rate was 73%. This is
+faults relating to Null Pointer Exceptions, two of which improved                           very similar to acceptance rates from previous test-a-thons that
+coverage, and eight of which did not. These were excluded because                           focused exclusively on elevating coverage [3]. Overall, about one
+we initially (wrongly, as it turned out) thought that such exception-                       third of the tests deemed definitely irrelevant to privacy. This makes
+catching tests would be rejected by engineers due to being irrelevant                       it all the more interesting that the rejection rate is much lower than
+to privacy. However, the pre-screening approach was abandoned                               this, at 27%. Indeed, only approximately 36% were deemed to be
+based on experience from this first phase: Engineers proved ready                           either possibly or definitely related to privacy. We therefore observe
+to accept tests, even when they were not directly relevant, because                         that the engineers are very willing to accept tests which may not
+they perceived other benefits. Therefore, in the second phase, a                            be relevant to their current concern, when they are found useful
+further 50 tests were selected at random, without pre-screening.                            for other reasons.
+Procedure for the WhatsApp test-a-thon: In the WhatsApp                                         In looking at the individual comments left by the engineers on
+test-a-thon, 72 tests4 were selected randomly from a pool of 120                            each of the 191 tests that were reviewed for usefulness, we observe,
+available and allocated to 6 engineers to review. No pre-screening                          more anecdotally, that the engineers were likely to accept tests for
+was performed. All 6 engineers had a background in both privacy                             two primary reasons:
+engineering and software testing and, as such, were well-placed                                (1) They add line or branch coverage of non-trivial code
+with relevant expertise and highly calibrated in their expectations                            (2) They covered a tricky corner case, such as handling special
+about privacy concerns.                                                                            values, even when this failed to add coverage
+
+4 The decision to use 72 tests was based on the initial request from the 6 engineers that
+                                                                                              Tests that were rejected tended not to add coverage, or to add
+they could reasonably review 12 tests; this number being deemed large enough for            coverage only of trivial code, such as one-line behavioral functions.
+calibration, yet small enough to avoid reviewer overload.                                   Tests were also rejected if they were written in a style that was
+FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway                                                                                      Harman, Sengupta
+
+
+  Table 4: Results from WhatsApp and Messenger Test-a-thons, where ACH was deployed and evaluated in December 2024.
+                                                        total number        total number            total number
+                                                              of tests         of tests             of tests                privacy relevance
+                                                            reviewed         that were ...          reviewed                scored at level ...
+   Test-a-thon                                        for usefulness     accepted rejected          for relevance       5      4      3       2     1
+   WhatsApp                                                        91          50          41       90                  6     29      8    24      23
+   Messenger Phase 1 (pre-screened)                                50          47           3       44                  5      8      5       4    22
+   Messenger Phase 2 (not pre-screened)                            50          43           7       41                  4     11      0       7    19
+   Overall Total                                                  191         140          51       175                15     48    13     35      64
+
+  Proportions of tests in each category for usefulness and relevance :-
+   Over all test-a-thons                                                      73%         27%                         9%    27%     7%    20%     37%
+   WhatsApp                                                                   56%         44%                         7%    32%     9%    26%     26%
+   Messenger Phases 1 and 2                                                   90%         10%                        11%    22%     6%    13%     48%
+   Messenger Phase 1 alone                                                    94%          6%                        11%    18%    11%     9%     50%
+   Messenger Phase 2 alone                                                    86%         14%                        10%    27%     0%    17%     46%
+
+
+deemed to be unsuitable, such as using a deprecated API, something                  5     THE EQUIVALENT MUTANT PROBLEM
+that was also observed in previous work [3].                                        All approaches to mutation testing need to tackle the problem of
+   In terms of the relevance of the tests, we believe that the find-                equivalent mutants [35]: the mutant may be syntactically different
+ing that 36% are deemed relevant to privacy is a positive overall                   to the original program, but we cannot guarantee it will be se-
+outcome. This is because we devoted so little of the overall process                mantically different, because the underlying program equivalence
+to weeding out tests that could be automatically determined to be                   problem is undecidable [27, 59].
+irrelevant. As such, the result for relevance can be considered a                      There are a number of techniques in the literature that can weed
+baseline for comparison with future work. We believe that with                      out some of the equivalent mutants [40]. However, the undecid-
+additional static analysis, and further LLM-as-judge agents in the                  ability of the problem means that some equivalent mutants will
+overall workflow, it could be considerably improved.                                inevitably remain, so engineers and automated test generators may
+   We also noticed that the comments about relevance for tests                      waste time trying to kill (unkillable) equivalent mutants.
+scored 4 and 2 were often quite similar, indicating uncertainty,
+and the belief that the test may be relevant to privacy, but the                    5.1    Equivalent Mutants Have no Impact on ACH
+engineer was not certain. Therefore, an upper bound on those
+                                                                                    For the application of mutation-guided test generation, the equiva-
+potentially relevant to privacy is approximately two thirds of those
+                                                                                    lent mutant problem has no direct impact on engineers. Our work-
+tests assessed. Given the 73% acceptance rate, we conclude that
+                                                                                    flow requires only that engineers review test cases, not mutants.
+ACH adds privacy hardening in about one third of the cases, and
+                                                                                    The only scenario in which an engineer might consider looking at a
+does not cause unnecessary developer friction in considering the
+                                                                                    mutant, would be to see an example of the kind of faults that can be
+remaining cases.
+                                                                                    caught by the test case they are reviewing. By construction, such
+   There is an interesting difference in the relevance score between
+                                                                                    mutants are non-equivalent, so the engineer will never see an equiv-
+the two phases of the Messenger test-a-thon results reported in
+                                                                                    alent mutant. This relegates the equivalent mutant problem to a
+Table 4. In the first phase, the engineers stated that they were
+                                                                                    relatively subordinate position in our overall use case for mutation
+unsure in 10% of the cases, but this percentage dropped to zero
+                                                                                    testing.
+in the second phase. This apparent growing scoring ‘confidence’
+                                                                                       Nevertheless, it would be inefficient to generate many equivalent
+indicates a potential ‘learning effect’, which has been seen in similar
+                                                                                    mutants, because ACH would waste computational resources trying
+empirical studies of software engineers during multiphase trials
+                                                                                    to kill the unkillable. We therefore incorporate, into the agentic
+[21].
+                                                                                    workflow, an LLM-based agent that checks for mutant equivalence.
+   Finally, looking at the differences between the acceptance rates
+                                                                                    The remainder of this section reports on the evaluation of the
+and relevance assessments for WhatsApp and Messenger, we also
+                                                                                    effectiveness of this agent.
+see interesting differences. WhatsApp engineers rated the tests
+to be at least as relevant to privacy (39% for WhatsApp vs. 33%
+for Messenger), yet accepted fewer tests (56% WhatsApp vs. 89%                      5.2    Detecting Equivalent Mutants
+for messenger). All tests that were acceptable for usefulness were                  To evaluate the performance of the equivalence detector agent from
+landed into production. We believe that the different acceptance                    Figure 1, we performed a manual study on a random selection of
+rates may simply denote different cultures between different teams;                 mutants drawn from the four platforms with the most mutants
+deciding to land a test into production is an inherently subjective                 available. The purpose of this manual analysis is to answer the
+judgment and may be influenced by team culture.                                     research question:
+                                                                                           How good is the Equivalence Detector Agent?
+Mutation-Guided LLM-based Test Generation at Meta                                                 FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway
+
+
+    We must manually analyze mutants to answer this research ques-           The reason that this category is so interesting, is that ACH could
+tion, because it requires a ground truth for equivalence. However, it     simply strip out any comments added when constructing a mutant
+is important to underline that it is never necessary for a practicing     before submitting it to the equivalence detector agent. This simple
+software engineer to manually evaluate any mutant.                        pre-processing step would render all cases of misleading comments
+    For each of the four platforms, we attempted to sample 100            syntactically identical. They would then be automatically discarded
+mutants that would still build and pass on the original code. The         without even needing to consult the Equivalence Detector Agent.
+actual number manually analyzed for each sample was slightly              Based on the evaluation reported here, we decided to incorporate
+different to the intended 100, because some code may have changed         this pre-processor into ACH’s workflow.
+since the mutants were constructed. This is the Mutant Relevance
+Problem [43]: previously generated mutants may no longer be
+relevant when the code changes after they were constructed.               5.3    Equivalence Detector Precision and Recall
+    Mutant relevance does not impact the deployment of ACH, since         Table 6 reports the overall precision and recall of the equivalence
+ACH generates mutants on the fly, discarding them once tests have         detector agent. The detailed results for each platform are shown
+been generated from them. However, it did have a minor impact             in Table 7. As Table 6 reveals, when we consider ‘unsure’ as the
+on our mutant sampling to evaluate the research question: Since           same as ‘equivalent’, the precision is good, at 0.79 over all platforms
+we cannot be sure mutants in changed code remain valid at man-            studied. However, recall is relatively low, at 0.47. If we wanted even
+ual inspection time, we discarded them from the human analysis            greater precision we could treat ‘unsure’ as ‘non-equivalent’, since
+sample.                                                                   this gives precision of 0.97 (and a recall of 0.44).
+    In our evaluation of equivalence detection, we are concerned only        Based on this precision and recall, we can have high confidence
+with so-called ‘weak’ mutation testing, not ‘strong’ mutation testing     that, when the detector determines a mutant to be equivalent, it is
+[35]. That is, because ACH is a unit test generation technology, we       very likely to be correct. However, it weeds out only approximately
+do not need to consider failed error propagation [9], which would be      half of the equivalent mutants. High precision means ACH will not
+required for strong mutation testing. Failed error propagation is the     discard many non-equivalent mutants. Not losing mutants means
+situation in which mutant execution changes the local computation         not losing the tests that ACH might generate from them. By contrast,
+state, yet this change is always masked along every path to an            higher recall would merely save some computational resource.
+observable output. In weak mutation testing, the mutant is non-              As such, high precision is generally more valuable than high
+equivalent if the local state is changed, irrespective of the whether     recall for our use case, because we are prepared to spend computa-
+the change propagates. Manually detecting failed error propagation        tional resources to automatically generate good unit tests. However,
+is a highly labor-intensive process, so we are fortunate that it is not   the lower the recall, the more often ACH will inefficiently seek to
+required.                                                                 ‘kill the unkillable’, so we still want the highest recall achievable
+    Table 5 describes the types of mutant, based on our manual anal-      without reducing precision.
+ysis. In this analysis, the terms ‘deletion’ and ‘injection’ each refer      As Table 2 shows, approximately 25% of all mutants are trivially
+to semantic changes where the sole change is, respectively, the           equivalent, being syntactically identical to the original. Further-
+addition of values or the removal of values. The term ‘Injection          more, Table 5 reveals that 61% of all equivalent mutants are almost
+and deletion’ refers to cases where the semantics are changed by          trivially equivalent, because they contain only a single ‘misleading’
+an independent combination of addition and removal. The cate-             comment. Syntactically identical mutants are removed by a simple
+gory ‘other’ covers cases where the change is more nuanced. For           lexical comparison, while a simple pre-processing transformation
+example replacing one variable name with another, which could be          to remove comments would remove the ‘misleading comments’
+counted as a deletion and an injection, but where the two are not         category. Therefore, we can combine the LLM-based detector with
+independent.                                                              a simple rule based pre-processor to yield an overall precision and
+    In Table 5, the column ‘equivalence is not obvious’ counts the        recall of 0.95 and 0.96 respectively (See Table 6).
+number of cases where the human assessor had to think noticeably             These figures for precision and recall are surprisingly high, given
+longer about whether the mutant was equivalent. For all other             that the underlying problem is undecidable. However, we cannot
+cases, the decision was obvious. As Table 5 reveals, the decision is      claim that these surprisingly good results arise because the mutant
+‘obvious’ for a surprisingly large number of mutants.                     equivalence detector agent is excellent at determining program
+    The category ‘Misleading comment’ is perhaps the most interest-       equivalence. Rather, they are more reflection of the kind of mutants
+ing category. These are cases where the mutant is clearly equivalent,     the detector needs to judge for equivalence. That is, the mutant
+because all the mutant generation agent has done is to insert com-        generation agent tends to make changes that either obviously intro-
+ments; no executable code has been added. An example of such a            duce semantic changes, or are obviously equivalent (such as those
+misleading injected comment is: “// Introduce a bug by not                that only change comments).
+checking if the user is inactivated before resetting
+their custom reactions”. Since language models are text-based
+predictive technologies that currently do not specifically distin-        6     THE IMPORTANCE OF MUTATION TESTING
+guish executable code from comments, such misleading comments             It is well known in the literature on testing, both theoretically
+are clearly problematic. They can easily mislead the equivalence          and empirically, that mutation adequacy criteria outperform tradi-
+detector agent into predicting that a mutant is not equivalent, when      tional structural criteria, such as line coverage and branch coverage
+it clearly is equivalent.                                                 [17, 46]. In this section, we present results that further underline
+FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway                                                                               Harman, Sengupta
+
+
+Table 5: Number of mutants of different semantic types generated. We used human analysis to determine ground truth
+equivalence, and the different types of semantic transformation used to generate a mutants.
+                                                 mutant equivalence                   semantic type of mutation transformation
+     Platform               Total        Ground     LLM agent Equivalence       Deletion Injection Deletion Misleading         Other
+                          mutants           truth        claims       is not                               and     comment
+                         analyzed      equivalent equivalence       obvious                           injection
+     Messenger                 91        38 (42%)     27 (30%)        2 (2%)    23 (25%) 32 (35%) 19 (21%)          11 (12%)   6 (7%)
+     Wearables                101        32 (32%)     11 (12%)        3 (3%)    26 (26%) 24 (24%) 20 (20%)          24 (24%)   7 (7%)
+     WhatsApp                  99        30 (30%)     16 (16%)        3 (3%)    29 (29%) 26 (26%) 16 (16%)          26 (26%)   2 (2%)
+     Instagram                 90        37 (41%)     12 (13%)        2 (2%)    27 (30%) 14 (16%) 11 (12%)          32 (36%)   6 (7%)
+     Overall Totals             381      137 (36%)    66 (17%)      10 (2.6%)   105 (28%)   96 (25%)     66 (17%)      93 (24%)     21 (6%)
+
+
+Table 6: Precision & recall for the equivalence detector agent             the existing literature and add weight to claims for the importance
+              when unsure is simply not counted                            of mutation testing, based on industrial practice and experience.
+          TP FP TN FN Precision                Recall                          It is also worth noting that 70% of the mutants left unkilled
+           56    2 205 72             0.97       0.44                      by TestGen-LLM reside in classes that do not have any TestGen-
+                 with unsure counted as equivalent                         LLM test, let alone one that kills the mutant. Combined with the
+            TP     FP TN FN Precision           Recall                     high proportion (51%) of ACH tests that do also raise coverage, we
+            65     17 205 72           0.79       0.47                     conclude that Mutation-Guided LLM-based Test Generation has
+                                                                           attractive side benefits on coverage.
+           with identical code counted as equivalent
+                                                                               Specifically, we may be able to adapt our ACH approach to target
+            TP FP TN FN Precision              Recall
+                                                                           coverage using mutants: Suppose we generate many mutants, of
+           161 17 205 72             0.90        0.69
+                                                                           all different kinds, and at all different levels of abstraction, for
+           with the stripping of all added comments                        a given method under test. We can then use each as a prompt
+            TP FP TN FN Precision             Recall                       to an LLM. In this way, mutants play a role similar to Retrieval
+           183    9 251      8         0.95     0.96                       Augmented Generation (RAG). Given our results and the fact that
+                                                                           RAG is known to improve LLM performance on other Software
+                                                                           Engineering tasks [22], we believe mutation-as-RAG for coverage
+these previous research findings with direct experience from the           is likely to prove attractive for coverage as well as for targeting
+deployment of mutation testing on large scale industrial systems.          specific faults.
+   Table 8 reports line coverage results for the tests that kill non-
+equivalent mutants. For Messenger, Instagram, Wearables and
+WhatsApp the ‘likely actual’ number is based on the ground truth
+equivalent proportion for these platforms in Table 5. For the other        7    RELATED WORK
+platforms, it is based on the overall average ground truth proportion      Given the strong empirical evidence for the predictability of code
+over all four platforms. The final three columns show the results          [10, 23, 28], it is unsurprising that predictive language models have
+for TestGen-LLM [3] generated tests, as proportions for compari-           proved effective at generating usable code. As a result, LLMs now
+son with the corresponding proportions for ACH generated tests.            play a code-generation role in a significant number of applications
+TestGen-LLM does not target specific faults, but merely attempts           across the spectrum of software engineering activity [22].
+to generate tests that will acquire extra coverage.                           Software engineers’ acceptance rates for LLM-generated code
+   As Table 8 shows, a large proportion (49%) of test cases that           have been widely studied. For example, researchers at Google fo-
+uniquely additionally kill a mutant, do not also add line coverage.        cussed on factors that may influence trust in AI-powered code
+Clearly, these tests have value, since they catch faults that would        completions [13], while it was recently reported that Copilot had
+otherwise go undetected. However, if we were to judge test cases           an acceptance rate of approximately 30% [55].
+solely on the basis of the coverage they add, then such valuable test         However, such studies concern the code completion use case,
+cases would be wrongly discarded.                                          which does not come with any assurances (the code completions
+   The results in Table 8 also reveal that, although TestGen-LLM           may not even compile). By contrast, ACH uses Assured LLM-Based
+generates tests for a higher proportion of classes compared to             Software Engineering (Assured LLMSE) [7]. That is, ACH provides
+ACH (32% vs. 5.3%), it nevertheless, succeeds in killing a far smaller     assurances about the semantics and usefulness of the tests it pro-
+proportion of mutants (2.4% vs 15%). This is because ACH specifi-          poses. Its proposals are also whole compilable code units (not merely
+cally targets the mutants, whereas TestGen-LLM does not.                   completion fragments), and it is deployed on-demand (to gener-
+   From these results, we conclude that targeting mutants can also         ate tests targeting classes of faults of particular interest), rather
+elevate coverage, but targeting coverage will be inadequate to kill        than opportunistically (to suggest code completions). The fact that
+mutants. Although this is already known from the research liter-           ACH provides these assurances, and its different deployment route,
+ature [17, 46], that literature is based on laboratory controlled ex-      mean that we can expect a higher overall acceptance rate from
+periments with non-industrial systems. Our findings thus augment           ACH, than we would for code completion technologies.
+Mutation-Guided LLM-based Test Generation at Meta                                                                                  FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway
+
+
+ Table 7: Precision (Prec.) and Recall achieved by the equivalence detector agent for the four platforms with most mutants
+               Messenger Mutants                               Wearables Mutants                             WhatsApp Mutants                              Instagram Mutants
+
+                                                   When the agent is ‘unsure’, this is simply not counted in determining precision and recall
+   TP     FP    TN    FN      Prec.     Recall      TP    FP   TN      FN       Prec.    Recall     TP   FP     TN    FN     Prec.   Recall     TP    FP    TN    FN     Prec.   Recall
+   17      2     50    19      0.89       0.47      11     0    55      18        1.0      0.38     16     0     51    11      1.0     0.59     12     0     49    24      1.0     0.33
+
+                                                 When the agent is ‘unsure’, this is counted as if it had determined the mutant to be equivalent
+   TP     FP    TN    FN      Prec.     Recall     TP     FP    TN     FN       Prec.    Recall       TP    FP   TN     FN    Prec.    Recall    TP   FP    TN    FN     Prec.   Recall
+   19      3     50    19      0.86       0.50      14     1     55     18       0.93      0.50       19     9    51     11    0.68      0.63    13    4     49    24     0.76     0.35
+
+                                      When we include mutants that are syntactically identical in the numbers counted as determined to be equivalent
+   TP     FP    TN    FN      Prec.    Recall     TP   FP    TN     FN     Prec.     Recall      TP    FP   TN    FN      Prec.  Recall     TP    FP        TN    FN     Prec.   Recall
+   41      3     50    19      0.93      0.58     42    1     55     18     0.98       0.70      47     9    51    11      0.84    0.81      31     4        49    24     0.86     0.56
+
+        When we additionally include, as determined to be equivalent, those mutants that are syntactically identical after stripping any comments added by the generation agent
+   TP    FP   TN     FN     Prec.    Recall     TP    FP    TN     FN      Prec.  Recall      TP    FP      TN    FN       Prec.   Recall   TP    FP    TN     FN     Prec.   Recall
+   41     3    67      2      0.93     0.95     42      1    69      4      0.93    0.91       47     1      66     0       0.99      1.0    53    4     49     2      0.93     0.96
+
+
+Table 8: The numbers of tests that add coverage as well as detecting mutated faults. This gives an upper bound on the number
+of faults we might miss by merely targeting new coverage alone. Approximately half of all tests generated, although finding
+faults missed by all existing tests, do not add line coverage. Had we used coverage as our sole test adequacy criterion, the
+platforms would thus have continued to be vulnerable to regressions denoted by up to approximately half of the faults.
+      Platform          Number of      Number of       %age         %age      Number        %age            %age      %age
+                        (believed;       mutant- of classes       mutant        (%age)   Classes        TestGen-   unkilled
+                      likely actual)      killing     with a      kill rate    of tests    with a       LLM kill   mutants
+                     non-equivalent          tests  mutant- on (believed;      that do TestGen-           rate on  with no
+                         mutants                      killing likely actual)   not add LLM test        (believed; TestGen-
+                                                         test                coverage              likely actual) LLM test
+      Facebook Feed      164; 133              15       4.3%      9%; 11%      9 (60%)       33%      3.0%; 3.7%       71%
+      Messenger        1,395; 1,155           196       5.9%     14%; 17%     84 (43%)       31%      2.0%; 2.4%       71%
+      Instagram          742; 687             122       7.2%     16%; 18%     77 (55%)       27%      2.9%; 3.1%       74%
+      Aloha               90; 74                 9      5.1%     10%; 12%      4 (44%)       27%      1.0%; 1.2%       76%
+      Wearables        1,314; 1,007            45       1.6%       3%; 4%     32 (71%)       31%      1.9%; 2.5%       70%
+      Cross-app          270; 275              35       4.3%     13%; 13%     20 (57%)       28%       2.8% 2.7%       75%
+      Oculus             150; 121              14       4.3%      9%; 12%      3 (21%)       35%      4.9%; 6.1%       70%
+      WhatsApp           535; 445             135      10.6%     25%; 30%     48 (36%)       44%      3.5%; 4.2%       55%
+      Totals           4,660; 3,897           571       5.3%     12%, 15%    277 (49%)       32%      2.0%; 2.4%       70%
+
+
+   While code completions are deployed directly into the IDE in                                     direction that additionally seeks to generate a set of faults, relevant
+real time (online), ACH is an offline technology that proposes code                                 to a chosen issue of concern.
+updates in exactly the same way that engineers would propose                                            Mutation testing has also been used as a way to evaluate lan-
+them: through Continuous Integration (CI) and standard code re-                                     guage models themselves [38] and to mutate compiler inputs to
+view. This has the advantage that the decision to accept machine-                                   test compilers [31]. In this work, the desirable property of mutants
+generated code has an audit trail, which is missing for LLM-based                                   is the way that they generate near neighborhoods of programs
+code completions. By contrast, LLM-based code completion sugges-                                    that are similar to the program that they mutate, both syntactically
+tions accepted by engineers are attributed to the engineer by the                                   and semantically. This allows researchers to explore properties of
+CI audit trail; details of the LLM’s role in constructing production                                language models when applied to code, such as their ability to
+code through completion suggestions is thus unavailable.                                            ‘understand’ the code. This ‘near neighborhood’ property has also
+   There is already a considerable body of literature on LLMSE [22].                                been used in combination with language models [14] to generate
+The subset of this literature devoted specifically to software testing                              mutants to help improve other software engineering technologies,
+is too large to survey in detail here. Instead, we refer readers to                                 such as Genetic Improvement [47].
+recent surveys [22, 61]. In this section, we focus specifically on the                                  The equivalent mutant problem has been widely studied [35, 40],
+application of LLMs to mutation testing.                                                            and we are not the first to consider using language models to tackle
+   Traditionally [35], mutation testing techniques have used sets of                                it. Tian et al. [56] recently studied the use of language models
+pre-defined rule-based operators to construct mutants. However, it                                  to detect equivalent mutants for traditional rule-based mutation
+has been widely observed [36, 51] that such pre-defined rule-based                                  testing operators on MutantBench. MutantBench [59] is a set of
+mutation operators are ill-suited to the task of generating realistic                               mutant-original-code pairs, written in C/C++ and Java, introduced
+faults. This has led researchers to consider ways to make more                                      in 2021 by van Hijfte and Oprescu. Tian et al. found that LLM-based
+realistic mutants [34], a problem to which language models have                                     equivalence detection outperformed traditional non-LLM-based
+recently been applied [57, 60]. ACH represents an extension of this                                 equivalence detection by 35% for F1 score (the harmonic mean
+FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway                                                                               Harman, Sengupta
+
+
+of precision and recall). In particular, they highlighted the high-       after some change if the test behaves the same before and after the
+performance of fine-tuned embeddings.                                     change. This allows us to protect against future regressions, but it
+   All the previous work on LLMs for mutation testing has con-            cannot detect existing faults residing in the code base. To do this
+cerned benchmark problems and empirical analysis under labora-            requires us to tackle the well known Oracle problem [11].
+tory conditions. The present paper is the first to report the deploy-        It would be very exciting if an approach can be found to infer
+ment of LLM-based mutation testing at scale in industry. Non-LLM-         oracles for Targeted LLM-based Mutation-Guided Test Generation.
+based mutation testing has previously been evaluated in industrial        Such an advance would be highly impactful because it would allow
+application settings, at Meta [12] and at Google [48–50]. However,        us to search for existing classes of faults. Although there has been
+in both these previous industrial deployments, there was no attempt       much previous work on oracle inference [30, 44, 58, 62], we need
+to automatically generate tests to kill the mutants. The challenging      higher precision to avoid wasting engineers’ time on false positives.
+task of constructing tests to kill mutants was left to engineers, who     Generating faults/tests for specific issues of concern, as ACH does,
+also therefore had to contend with the equivalent mutant problem.         may help oracle generation.
+Unlike these previous industrial deployments, ACH is also the first
+to automatically generate tests to kill mutants; a problem which has      9    CONCLUSIONS
+been studied in the research literature [16, 25], but not previously      Mutation testing has been the subject of research for five decades
+deployed at scale in industry.                                            [20, 29, 35, 46], so has clearly retained intellectual appeal and re-
+   The work on ACH reported here, follows a succession of auto-           searchers’ curiosity. Despite this, it has proved challenging to deploy
+mated analysis and testing work deployed at Meta. Our initial focus       mutation testing in industry [4, 6, 12].
+was end-to-end test generation tools such as Sapienz [5, 41], and            Traditionally, mutants have been constructed using simple rule-
+static analysis tools such as Infer [15], followed by simulation-based    based approaches in order to assess test suites, largely written by
+test generation for testing interacting user communities [1, 2, 58].      humans. However, software engineers need automatically gener-
+While much of this previous work has been concerned with system           ated tests, that are relevant to a specific pressing concern; their
+level testing, we have also worked on unit level test generation          time would be better spent articulating these pressing concerns,
+techniques using observations [8] and language models [3]. How-           rather than trying to construct test cases that should, instead, be
+ever, this previous unit test generation work was based on the sole       generated by a machine. Fortunately, two crucial recent advances,
+objective of increasing coverage, which meant it could not target         drawn together in ACH, make this possible: Automated test gen-
+specific classes of faults as ACH does.                                   eration to kill generated mutants, coupled with language models’
+                                                                          ability to generate highly-relevant mutants. In particular, we found
+                                                                          that LLMs help us to overcome existing barriers [12] to deployment
+8    OPEN PROBLEMS
+                                                                          of mutation testing. Specifically, they
+We outline directions for future work, hoping to stimulate the
+                                                                              (1) Allow us to generate highly realistic faults, using their ability
+research community with new open research questions.
+                                                                                  to convert text (the concern or issue) into code (simulated
+Mutant Equivalence: we found that the simulated privacy
+                                                                                  faults from which we generate tests);
+faults generated by language models tend to be bimodal, with the
+                                                                              (2) Provide an additional agent to weed out equivalent mutants,
+consequence that equivalent mutants are surprisingly easy to detect
+                                                                                  which is especially powerful when combined with simple
+(See Section 5). It is possible that these results are merely specific
+                                                                                  static analyses as a pre-processing step;
+to Kotlin, to Android, to Meta, or to simulated privacy faults.
+                                                                              (3) Provide a way to automatically generate unit tests to kill the
+    However, there is nothing in our approach that suggests that
+                                                                                  mutants.
+the results would fail to generalize. If they were to generalize, this
+would be an important finding for the mutation testing research              This paper presented results from deployment of ACH at Meta.
+agenda, given the significant impediment to deployment hitherto           Neither LLM-based test generation, nor LLM-based mutant genera-
+posed by mutant equivalence.                                              tion is new, but this paper is the first to report on their combined
+Mutant Relevance: We have been able to generate specific mutants          deployment on large scale industrial systems. We believe this form
+that capture similar faulty behaviors as those previously witnessed.      of automated test generation is highly aligned with modern soft-
+However, in some cases, anecdotally, looking at the faults generated,     ware development and deployment. It supports software engineers
+it seemed that the mutant was related to the general class of fault       who must contend with many competing and conflicting concerns,
+simulated, but was not an example of the specific instance. One           often expressed in natural language in vague, incomplete and even
+difficulty here is that we have no way to consistently and reliably       contradictory ways. Our results also suggest Mutation-as-RAG will
+measure problem similarity or relevance.                                  prove impactful in optimizing for structural coverage criteria.
+    More research is needed to define what it means for one fault to
+be similar to another. We also need approaches that use such similar-     ACKNOWLEDGMENTS
+ity metrics to guide agenetic LLM workflows, e.g., with fine-tuning,      We would like to thank the Meta’s Llama team and leadership of the
+prompt engineering, re-prompting, and/or Chain-of-Thought, to             Fundamental Artificial Intelligence Research (FAIR), Developer In-
+ensure that the mutants generated are relevant to the original fault.     frastructure (DevInfra) and Product Compliance and Privacy teams
+Detecting existing faults: our approach hardens against future            for supporting this work and the Meta Software Engineers who so
+regressions. This means that the current version of the system under      freely and kindly gave of their time, experience, and expertise in
+the test is used as the regression oracle [6]: a test is deemed to pass   reviewing the tests automatically generated by ACH.
+Mutation-Guided LLM-based Test Generation at Meta                                                                       FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway
+
+
+REFERENCES                                                                                      Software Engineering. 572–576.
+ [1] John Ahlgren, Maria Eugenia Berezin, Kinga Bojarczuk, Elena Dulskyte, Inna            [19] Henry Coles, Thomas Laurent, Christopher Henard, Mike Papadakis, and An-
+     Dvortsova, Johann George, Natalija Gucevska, Mark Harman, Maria Lomeli, Erik               thony Ventresque. 2016. Pit: a practical mutation testing tool for Java. In Pro-
+     Meijer, Silvia Sapora, and Justin Spahr-Summers. 2021. Testing Web Enabled                 ceedings of the 25th international symposium on software testing and analysis.
+     Simulation at Scale Using Metamorphic Testing. In International Conference on              449–452.
+     Software Engineering (ICSE) Software Engineering in Practice (SEIP) track. Virtual.   [20] Richard A. DeMillo, Richard J. Lipton, and Frederick G. Sayward. 1978. Hints on
+ [2] John Ahlgren, Kinga Bojarczuk, Sophia Drossopoulou, Inna Dvortsova, Johann                 test data selection: Help for the practical programmer. IEEE Computer 11 (1978),
+     George, Natalija Gucevska, Mark Harman, Maria Lomeli, Simon Lucas, Erik                    31–41.
+     Meijer, Steve Omohundro, Rubmary Rojas, Silvia Sapora, Jie M. Zhang, and Norm         [21] José Javier Dolado, Mark Harman, Mari Carmen Otero, and Lin Hu. 2003. An
+     Zhou. 2021. Facebook’s Cyber–Cyber and Cyber–Physical Digital Twins (keynote               empirical investigation of the influence of a type of side effects on program
+     paper). In 25th International Conference on Evaluation and Assessment in Software          comprehension. IEEE Transactions on Software Engineering 29, 7 (2003), 665–670.
+     Engineering (EASE 2021). Virtual.                                                     [22] Angela Fan, Beliz Gokkaya, Mitya Lyubarskiy, Mark Harman, Shubho Sengupta,
+ [3] Nadia Alshahwan, Jubin Chheda, Anastasia Finegenova, Mark Harman, Alexan-                  Shin Yoo, and Jie Zhang. 2023. Large Language Models for Software Engineering:
+     dru Marginean, Shubho Sengupta, and Eddy Wang. 2024. Automated unit test                   Survey and Open Problems. In ICSE Future of Software Engineering (FoSE 2023).
+     improvement using Large Language Models at Meta. In ACM International Con-            [23] Mark Gabel and Zhendong Su. 2010. A Study of the Uniqueness of Source Code.
+     ference on the Foundations of Software Engineering (FSE 2024) (Porto de Galinhas,          In FSE. 147–156.
+     Brazil, Brazil).                                                                      [24] Jiawei Gu, Xuhui Jiang, Zhichao Shi, Hexiang Tan, Xuehao Zhai, Chengjin Xu,
+ [4] Nadia Alshahwan, Andrea Ciancone, Mark Harman, Yue Jia, Ke Mao, Alexandru                  Wei Li, Yinghan Shen, Shengjie Ma, Honghao Liu, et al. 2024. A Survey on
+     Marginean, Alexander Mols, Hila Peleg, Federica Sarro, and Ilya Zorin. 2019.               LLM-as-a-Judge. arXiv preprint arXiv:2411.15594 (2024).
+     Some challenges for software testing research (keynote paper). In Proceedings of      [25] Mark Harman, Yue Jia, and William B. Langdon. 2011. Strong Higher Order
+     the 28th ACM SIGSOFT International Symposium on Software Testing and Analysis              Mutation-Based Test Data Generation. In 8𝑡ℎ European Software Engineering
+     (ISSTA 2019), Beijing, China, July 15-19, 2019, Dongmei Zhang and Anders Møller            Conference and the ACM SIGSOFT Symposium on the Foundations of Software
+     (Eds.). ACM, 1–3.                                                                          Engineering (ESEC/FSE ’11) (Szeged, Hungary). ACM, New York, NY, USA, 212–
+ [5] Nadia Alshahwan, Xinbo Gao, Mark Harman, Yue Jia, Ke Mao, Alexander Mols,                  222.
+     Taijin Tei, and Ilya Zorin. 2018. Deploying Search Based Software Engineering         [26] Mark Harman and Peter O’Hearn. 2018. From Start-ups to Scale-ups: Opportu-
+     with Sapienz at Facebook (keynote paper). In 10𝑡ℎ International Symposium                  nities and Open Problems for Static and Dynamic Program Analysis (keynote
+     on Search Based Software Engineering (SSBSE 2018). Montpellier, France, 3–45.              paper). In 18𝑡ℎ IEEE International Working Conference on Source Code Analysis
+     Springer LNCS 11036.                                                                       and Manipulation (SCAM 2018). Madrid, Spain, 1–23.
+ [6] Nadia Alshahwan, Mark Harman, and Alexandru Marginean. 2023. Software                 [27] Mark Harman, Xiangjuan Yao, and Yue Jia. 2014. A Study of Equivalent and
+     Testing Research Challenges: An Industrial Perspective (keynote paper). In 2023            Stubborn Mutation Operators Using Human Analysis of Equivalence. In 36𝑡ℎ
+     IEEE Conference on Software Testing, Verification and Validation (ICST 2023). IEEE,        International Conference on Software Engineering (ICSE 2014). Hyderabad, India,
+     1–10.                                                                                      919–930.
+ [7] Nadia Alshahwan, Mark Harman, Alexandru Marginean, Shubho Sengupta, and               [28] Abram Hindle, Earl Barr, Zhendong Su, Prem Devanbu, and Mark Gabel. 2012. On
+     Eddy Wang. 2024. Assured LLM-Based Software Engineering (keynote paper).                   the Naturalness of Software. In International Conference on Software Engineering
+     In 2𝑛𝑑 . ICSE workshop on Interoperability and Robustness of Neural Software               (ICSE 2012). Zurich, Switzerland.
+     Engineering (InteNSE) (Lisbon, Portugal).                                             [29] William E. Howden. 1985. Theory and Practice of Functional Testing. IEEE
+ [8] Nadia Alshahwan, Mark Harman, Alexandru Marginean, and Eddy Wang. 2024.                    Software 2, 5 (Sept. 1985), 6–17.
+     Observation-based unit test generation at Meta. In Foundations of Software Engi-      [30] Ali Reza Ibrahimzada, Yigit Varli, Dilara Tekinoglu, and Reyhaneh Jabbarvand.
+     neering (FSE 2024).                                                                        2022. Perfect is the enemy of test oracle. In Proceedings of the 30th ACM Joint
+ [9] Kelly Androutsopoulos, David Clark, Haitao Dan, Mark Harman, and Robert                    European Software Engineering Conference and Symposium on the Foundations of
+     Hierons. 2014. An Analysis of the Relationship between Conditional Entropy and             Software Engineering. 70–81.
+     Failed Error Propagation in Software Testing. In 36𝑡ℎ International Conference        [31] Davide Italiano and Chris Cummins. 2025. Finding missed code size optimizations
+     on Software Engineering (ICSE 2014). Hyderabad, India, 573–583.                            in compilers using LLMs. In Compiler Construction. To appear.
+[10] Earl T. Barr, Yuriy Brun, Premkumar Devanbu, Mark Harman, and Federica                [32] Andrew T Jebb, Vincent Ng, and Louis Tay. 2021. A review of key Likert scale
+                                                                                                development advances: 1995–2019. Frontiers in psychology 12, 637547 (2021).
+     Sarro. 2014. The Plastic Surgery Hypothesis. In 22𝑛𝑑 ACM SIGSOFT International
+                                                                                           [33] Yue Jia and Mark Harman. 2008. Milu: A Customizable, Runtime-Optimized
+     Symposium on the Foundations of Software Engineering (FSE 2014). Hong Kong,
+     China, 306–317.                                                                            Higher Order Mutation Testing Tool for the Full C Language. In 3𝑟𝑑 Testing
+[11] Earl T. Barr, Mark Harman, Phil McMinn, Muzammil Shahbaz, and Shin Yoo.                    Academia and Industry Conference - Practice and Research Techniques (TAIC
+     2015. The Oracle Problem in Software Testing: A Survey. IEEE Transactions on               PART’08). Windsor, UK, 94–98.
+     Software Engineering 41, 5 (May 2015), 507–525.                                       [34] Yue Jia and Mark Harman. 2009. Higher Order Mutation Testing. Journal of
+[12] Moritz Beller, Chu-Pan Wong, Johannes Bader, Andrew Scott, Mateusz Machalica,              Information and Software Technology 51, 10 (2009), 1379–1393.
+     Satish Chandra, and Erik Meijer. 2021. What it would take to use mutation testing     [35] Yue Jia and Mark Harman. 2011. An Analysis and Survey of the Development of
+     in industry—a study at Facebook. In 2021 IEEE/ACM 43rd International Conference            Mutation Testing. IEEE Transactions on Software Engineering 37, 5 (September–
+     on Software Engineering: Software Engineering in Practice (ICSE-SEIP). IEEE, 268–          October 2011), 649 – 678.
+     277.                                                                                  [36] Matthieu Jimenez, Thierry Titcheu Chekam, Maxime Cordy, Mike Papadakis,
+[13] Adam Brown, Sarah D’Angelo, Ambar Murillo, Ciera Jaspan, and Collin Green.                 Marinos Kintis, Yves Le Traon, and Mark Harman. 2018. Are mutants really
+     2024. Identifying the Factors that Influence Trust in AI Code Completion. In 1st           natural?: a study on how "naturalness" helps mutant selection. In Proceedings of
+     ACM International Conference on AI-powered Software (AIware 2024) (Porto de                the 12th ACM/IEEE International Symposium on Empirical Software Engineering
+     Galinhas, Brazil).                                                                         and Measurement, ESEM 2018, Oulu, Finland, October 11-12, 2018, Markku Oivo,
+[14] Alexander Brownlee, James Callan, Karine Even-Mendoza, Alina Geiger, Carol                 Daniel Méndez Fernández, and Audris Mockus (Eds.). ACM, 3:1–3:10.
+     Hanna, Justyna Petke, Federica Sarro, and Dominik Sobania. 2023. Enhancing            [37] René Just. 2014. The Major mutation framework: Efficient and scalable mutation
+     genetic improvement mutations using large language models. In International                analysis for Java. In Proceedings of the 2014 international symposium on software
+     Symposium on Search Based Software Engineering. Springer, 153–159.                         testing and analysis. 433–436.
+[15] C. Calcagno, D. Distefano, J. Dubreil, D. Gabi, P. Hooimeijer, M. Luca, P. W.         [38] Ziyu Li and Donghwan Shin. 2024. Mutation-based consistency testing for
+     O’Hearn, I. Papakonstantinou, J. Purbrick, and D. Rodriguez. 2015. Moving                  evaluating the code understanding capability of LLMs. In Proceedings of the
+     Fast with Software Verification. In NASA Formal Methods - 7th International                IEEE/ACM 3rd International Conference on AI Engineering-Software Engineering
+     Symposium. 3–11.                                                                           for AI. 150–159.
+[16] Francisco Carlos, Mike Papadakis, Vinícius Durelli, and Eduardo Márcio Dela-          [39] Kaibo Liu, Yiyang Liu, Zhenpeng Chen, Jie M Zhang, Yudong Han, Yun Ma, Ge
+     maro. 2014. Test data generation techniques for mutation testing: A systematic             Li, and Gang Huang. 2024. LLM-Powered Test Case Generation for Detecting
+     mapping. In Workshop on Experimental Software Engineering (ESELAW’14).                     Tricky Bugs. arXiv preprint arXiv:2404.10304 (2024).
+[17] Thierry Titcheu Chekam, Mike Papadakis, Yves Le Traon, and Mark Harman.               [40] Lech Madeyski, Wojciech Orzeszyna, Richard Torkar, and Mariusz Jozala. 2013.
+     2017. An empirical study on mutation, statement and branch coverage fault                  Overcoming the equivalent mutant problem: A systematic literature review and a
+     revelation that avoids the unreliable clean program assumption. In Proceedings             comparative experiment of second order mutation. IEEE Transactions on Software
+     of the 39th International Conference on Software Engineering, ICSE 2017, Buenos            Engineering 40, 1 (2013), 23–42.
+     Aires, Argentina, May 20-28, 2017. 597–608.                                           [41] Ke Mao, Mark Harman, and Yue Jia. 2016. Sapienz: Multi-objective Automated
+[18] Yinghao Chen, Zehao Hu, Chen Zhi, Junxiao Han, Shuiguang Deng, and Jianwei                 Testing for Android Applications. In International Symposium on Software Testing
+     Yin. 2024. Chatunitest: A framework for LLM-based test generation. In Compan-              and Analysis (ISSTA 2016). 94–105.
+     ion Proceedings of the 32nd ACM International Conference on the Foundations of
+FSE Companion ’25, 23 – 27, 2025, Trondheim, Norway                                                                                                           Harman, Sengupta
+
+
+[42] Meta. 2024. Introducing Llama 3.1: Our most capable models to date. https:            [53] Max Schäfer, Sarah Nadi, Aryaz Eghbali, and Frank Tip. 2023. An empirical
+     //ai.meta.com/blog/meta-llama-3-1/                                                         evaluation of using large language models for automated unit test generation.
+[43] Milos Ojdanic, Mike Papadakis, and Mark Harman. 2023. Keeping mutation test                IEEE Transactions on Software Engineering (2023).
+     suites consistent and relevant with long-standing mutants. In Proceedings of the      [54] David Schuler and Andreas Zeller. 2009. Javalanche: efficient mutation testing for
+     31st ACM Joint European Software Engineering Conference and Symposium on the               Java. In 7𝑡ℎ joint meeting of the European Software Engineering Conference and the
+     Foundations of Software Engineering. 2067–2071.                                            ACM SIGSOFT International Symposium on Foundations of Software Engineering
+[44] Rafael AP Oliveira, Upulee Kanewala, and Paulo A Nardi. 2014. Automated test               (ESEC/FSE 2009). 297–298.
+     oracles: State of the art, taxonomies, and trends. Advances in computers 95 (2014),   [55] Richard Speed. 2023. GitHub: 30% of Copilot coding suggestions are ac-
+     113–199.                                                                                   cepted. https://www.itpro.com/technology/artificial-intelligence/github-30-of-
+[45] Mike Papadakis, Yue Jia, Mark Harman, and Yves Le Traon. 2015. Trivial Com-                copilot-coding-suggestions-are-accepted?utm_source=chatgpt.com
+     piler Equivalence: A Large Scale Empirical Study of a Simple, Fast and Effective      [56] Zhao Tian, Honglin Shu, Dong Wang, Xuejie Cao, Yasutaka Kamei, and Junjie
+     Equivalent Mutant Detection Technique. In 37𝑡ℎ International Conference on                 Chen. 2024. Large Language Models for Equivalent Mutant Detection: How Far
+     Software Engineering (ICSE 2015). Florence, Italy, 936–946.                                Are We?. In Proceedings of the 33rd ACM SIGSOFT International Symposium on
+[46] Mike Papadakis, Marinos Kintis, Jie Zhang, Yue Jia, Yves Le Traon, and Mark                Software Testing and Analysis. 1733–1745.
+     Harman. 2019. Mutation Testing Advances: An Analysis and Survey. Advances             [57] Frank Tip, Jonathan Bell, and Max Schäfer. 2024. LLMorpheus: Mutation Testing
+     in Computers 112 (2019), 275–378.                                                          using Large Language Models. arXiv preprint arXiv:2404.09952 (2024).
+[47] Justyna Petke, Saemundur O. Haraldsson, Mark Harman, William B. Langdon,              [58] Shreshth Tuli, Kinga Bojarczuk, Natalija Gucevska, Mark Harman, Xiao-Yu Wang,
+     David R. White, and John R. Woodward. 2018. Genetic Improvement of Software:               and Graham Wright. 2023. Simulation-Driven Automated End-to-End Test and
+     a Comprehensive Survey. IEEE Transactions on Evolutionary Computation 22, 3                Oracle Inference. In 45th IEEE/ACM International Conference on Software Engi-
+     (June 2018), 415–432.                                                                      neering: Software Engineering in Practice, SEIP@ICSE 2023, Melbourne, Australia,
+[48] Goran Petrović and Marko Ivanković. 2018. State of mutation testing at Google. In          May 14-20, 2023. IEEE, 122–133.
+     Proceedings of the 40th international conference on software engineering: Software    [59] Lars van Hijfte and Ana Oprescu. 2021. Mutantbench: an equivalent mutant
+     engineering in practice. 163–171.                                                          problem comparison framework. In 2021 IEEE International Conference on Software
+[49] Goran Petrović, Marko Ivanković, Gordon Fraser, and René Just. 2021. Practical             Testing, Verification and Validation Workshops (ICSTW). IEEE, 7–12.
+     mutation testing at scale: A view from Google. IEEE Transactions on Software          [60] Bo Wang, Mingda Chen, Youfang Lin, Mike Papadakis, and Jie M Zhang. 2024.
+     Engineering 48, 10 (2021), 3900–3912.                                                      An Exploratory Study on Using Large Language Models xfor Mutation Testing.
+[50] Goran Petrovic, Marko Ivankovic, Bob Kurtz, Paul Ammann, and René Just. 2018.              arXiv preprint arXiv:2406.09843 (2024).
+     An industrial application of mutation testing: Lessons, challenges, and research      [61] Junjie Wang, Yuchao Huang, Chunyang Chen, Zhe Liu, Song Wang, and Qing
+     directions. In 2018 IEEE International Conference on Software Testing, Verification        Wang. 2023. Software Testing with Large Language Model: Survey, Landscape,
+     and Validation Workshops (ICSTW). IEEE, 47–53.                                             and Vision. arXiv:2307.07221.
+[51] Cedric Richter and Heike Wehrheim. 2022. Learning realistic mutations: Bug            [62] Jie Zhang, Junjie Chen, Dan Hao, Yingfei Xiong, Bing Xie, Lu Zhang, and Hong
+     creation for neural bug detectors. In 2022 IEEE Conference on Software Testing,            Mei. 2014. Search-based inference of polynomial metamorphic relations. In
+     Verification and Validation (ICST). IEEE, 162–173.                                         ACM/IEEE International Conference on Automated Software Engineering (ASE’14),
+[52] Gabriel Ryan, Siddhartha Jain, Mingyue Shang, Shiqi Wang, Xiaofei Ma, Mu-                  Ivica Crnkovic, Marsha Chechik, and Paul Gruenbacher (Eds.). Vasteras, Sweden,
+     rali Krishna Ramanathan, and Baishakhi Ray. 2024. Code-aware prompting: A                  701–712.
+     study of coverage-guided test generation in regression setting using LLM. Pro-        [63] Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu,
+     ceedings of the ACM on Conference on Foundations of Software Engineering 1, FSE            Yonghao Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric Xing, et al. 2023. Judg-
+     (2024), 951–971.                                                                           ing LLM-as-a-judge with MT-bench and chatbot arena. Advances in Neural
+                                                                                                Information Processing Systems (NeurIPS 2023) 36 (2023), 46595–46623.
+

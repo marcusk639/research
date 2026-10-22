@@ -1,0 +1,44 @@
+__HTTP 200__
+
+ 
+ 
+ 
+ 
+ Environment Setup | Detox 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  This project is created with substantial contributions from our Ukrainian colleagues.   #StandWithUkraine Skip to main content Detox Docs API Contribute Blog Showcase 20.x Next 20.x 19.x Search Introduction Getting Started Environment Setup Project Setup Your First Test How to Debug Preparing for CI Guides Pilot-Powered Detox Testing Troubleshooting Migration Guide Introduction Environment Setup Version: 20.x On this page Environment Setup The  Introduction section  walks you through setting up Detox in your project, one step at a time. You will find that some steps are longer than the others: some are a couple of paragraphs, while the others look like a dedicated multistep guide.
+Bear with us - it is all necessary, and once set up, it is easy to move forward with writing tests at a high pace. Please select type of your mobile application before you start the tutorial: React Native Expo Other Detox was built from the ground up to support "classic" React Native projects. Note While Detox should work out of the box with any React Native version of the latest minor releases,
+the  official  versions compatibility is provided according to the following: RN  v0.77.x  -  v0.84.x :  Fully compatible with React Native's  "New Architecture" .
+Newer RN versions might work with Detox, but they've not been thoroughly tested by the Detox team yet. Although we do not officially support older React Native versions, we do our best to keep Detox compatible with them. Also, in case of a problem with an unsupported version of React Native, please  submit an issue  or write us in our  Discord server  and we will do our best to help out. Note Expo integration with Detox is entirely a community-driven effort.
+There is no special support for Expo projects in Detox, and we do not maintain any Expo-specific code or documentation. There is a tutorial on how to set up Detox with Expo projects, which you can find on Expo official documentation site:  Running E2E tests on EAS Build . It is a great starting point for projects that are using Expo. For support on how to use Detox with Expo, you should contact the Expo team or the Expo community. If you are experiencing a bug, which you believe is a Detox issue, please  open an issue  on our GitHub repository. Note At the moment, Detox does not support non-React Native apps on  Android  due to the blocking issues: Restore support for pure-native/hybrid Projects cannot be cast to com.facebook.react.ReactApplication native android app Process crashes However, native iOS apps are expected to work fine with Detox, and if that's your case, this introduction will help you in equal measure. React Native CLI Quickstart ​ Your first step would be to complete the
+ 📚 React Native CLI Quickstart Guide  for iOS/Android/both (depending
+on your use case). Note Mind that for Android, we have an equivalent  environment setup guide , which is a bit different,
+but more comprehensive. Use your judgement and take what's most suitable for your environment from both guides. For
+example, there is more than one way to install the right Java Development Kit. Open the link above and switch there to  React Native CLI Quickstart  tab to see the interactive tutorial for  Development OS  and  Target OS  of your choice. Follow all the steps  (yes, even if you have a native app!)  and make sure you can create and run React Native apps on virtual testing devices. Detox Prerequisites ​ To complete the environment setup, you still have 2 steps ahead: installing  detox-cli  and  applesimutils . 1. Command Line Tools ( detox-cli ) ​ detox-cli  is merely a script that passes commands through to
+a local Detox executable located at  node_modules/.bin/detox ,
+making it easier to operate Detox from the command line, e.g.  detox test -c ios.sim.debug . It should be installed globally, enabling usage of the command line tools outside your npm scripts: npm   install  detox-cli --global On the other hand, if you are fine with running Detox commands with  npx detox ... , you may skip installing  detox-cli . 2.  [MacOS Only]   applesimutils ​ This tool is  required  by Detox to work with iOS simulators. The recommended way to install
+ applesimutils  is via  Homebrew : brew tap wix/brew brew  install  applesimutils Note Make sure to periodically update your version of  applesimutils  to the latest version. Now, when your environment is ready, let's move to the next section,  Project Setup . Edit this page Previous Getting Started Next Project Setup React Native CLI Quickstart Detox Prerequisites 1. Command Line Tools ( detox-cli ) 2. MacOS Only  applesimutils Docs Getting Started Contributing to Detox Support Ask a question on Stack Overflow Create new issue on Github More GitHub Twitter Discord 
+ 
+ 
+ 

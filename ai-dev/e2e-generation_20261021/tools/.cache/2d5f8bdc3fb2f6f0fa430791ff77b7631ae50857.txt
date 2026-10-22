@@ -1,0 +1,70 @@
+__HTTP 200__
+
+     Test frameworks and built-in tests in AWS Device Farm - AWS Device Farm   
+ View a markdown version of this page Test frameworks and built-in tests in AWS Device Farm - AWS Device Farm Documentation AWS Device Farm Developer Guide Testing frameworks Built-in test types Test frameworks and built-in tests in AWS Device Farm This section describes Device Farm support for testing frameworks and built-in test types. Device Farm runs automated tests by having you upload your app and tests to a secure Amazon S3
+    bucket managed by the service. Once uploaded, it spins up the underlying infrastructure,
+    including service-managed  test hosts , and executes the tests in
+    parallel on multiple devices. The test results are stored in a service managed S3 bucket. This
+    architecture is called  service-side execution , and is a fast
+    and efficient way to run tests on hosts that are physically close to the device, without needing
+    to manage the test host infrastructure yourself. This approach scales well for testing on many
+    devices independently, as well as testing from the context of a CI/CD pipeline. For more information about how Device Farm runs tests, see  Test environments in AWS Device Farm . Note For Appium testers, you may prefer to run your Appium tests from your local environment.
+      With a  remote access
+        session , you can run  client-side  Appium tests. For
+      more information, please see  client-side Appium testing . 
+     Testing frameworks 
+     Device Farm supports these mobile automation testing frameworks: 
+
+     
+       Android application testing frameworks 
+
+       
+         
+         
+       
+           Automatic Appium tests 
+         
+           Instrumentation 
+         
+     
+
+     
+       iOS application testing frameworks 
+
+       
+         
+         
+         
+       
+           Automatic Appium tests 
+         
+           XCTest 
+         
+           XCTest UI 
+         
+     
+
+     
+       Web application testing frameworks 
+       Web applications are supported using Appium. For more information on bringing your tests to Appium,
+      see  Automatically run Appium tests in Device Farm . 
+         
+     
+       Frameworks in a custom test environment 
+       Device Farm does not provide support for customizing the test environment for the XCTest framework. For more
+        information, see  Custom test environments in AWS Device Farm . 
+     
+     
+       Appium version support 
+       For tests running in a custom environment, Device Farm supports Appium version 1.  For more information, see  Test environments in AWS Device Farm . 
+     
+     
+       Built-in test types 
+       With built-in tests, you can test your application on multiple devices without having to write and maintain
+      test automation scripts. Device Farm offers one built-in test type: 
+       
+         
+       
+           Built-in: fuzz (Android and iOS) 
+         
+   Document Conventions Tagging in Device Farm Automatic Appium tests Did this page help you? - Yes Thanks for letting us know we're doing a good job! If you've got a moment, please tell us what we did right so we can do more of it. Did this page help you? - No Thanks for letting us know this page needs work. We're sorry we let you down. If you've got a moment, please tell us how we can make the documentation better.

@@ -1,0 +1,3768 @@
+__HTTP 200__
+
+
+
+
+
+  
+
+ 
+ 
+
+
+
+
+   
+     
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+
+   
+
+   
+
+     
+     
+     
+     
+   
+ 
+
+  
+
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+   Releases · wix/Detox · GitHub 
+
+
+
+   
+   
+   
+   
+
+    
+   
+
+
+   
+
+
+     
+
+
+   
+  
+
+   
+   
+
+     
+
+ 
+
+
+
+
+
+   
+
+  
+
+
+
+
+     
+
+  
+
+     
+
+    
+
+       
+
+       
+
+     
+     
+     
+
+       
+   
+  
+
+
+
+
+       
+
+
+
+         
+
+
+   
+   
+   
+   
+
+   
+
+       
+   
+   
+
+   
+  
+
+
+
+    
+
+     
+   
+
+
+   
+
+
+   
+
+   
+   
+
+   
+   
+   
+
+ 
+ 
+
+
+   
+
+   
+
+   
+     
+       
+      
+
+     
+       Skip to content 
+
+       
+     
+       
+       
+ 
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+
+
+
+      
+
+           
+ 
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+          
+
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge APPLICATION SECURITY GitHub Advanced Security Find and fix vulnerabilities Code security Secure your code as you build Secret protection Stop leaks before they start EXPLORE Why GitHub Documentation Blog Changelog Marketplace View all features Solutions BY COMPANY SIZE Enterprises Small and medium teams Startups Nonprofits BY USE CASE App Modernization DevSecOps DevOps CI/CD View all use cases BY INDUSTRY Healthcare Financial services Manufacturing Government View all industries View all solutions Resources EXPLORE BY TOPIC AI Software Development DevOps Security View all topics EXPLORE BY TYPE Customer stories Events & webinars Ebooks & reports Business insights GitHub Skills SUPPORT & SERVICES Documentation Customer support Community forum Trust center Partners View all resources Open Source COMMUNITY GitHub Sponsors Fund open source developers PROGRAMS Security Lab Maintainer Community GitHub Stars Archive Program REPOSITORIES Topics Trending Collections Enterprise ENTERPRISE SOLUTIONS Enterprise platform AI-powered developer platform AVAILABLE ADD-ONS GitHub Advanced Security Enterprise-grade security features Copilot for Business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Pricing Search / Sign in Sign up Appearance settings 
+ 
+
+
+
+       
+  
+         
+         You signed in with another tab or window.  Reload  to refresh your session. 
+         You signed out in another tab or window.  Reload  to refresh your session. 
+         You switched accounts on another tab or window.  Reload  to refresh your session. 
+
+        
+ Dismiss alert 
+
+
+  
+ 
+     
+
+   
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+   
+    
+ 
+   
+     
+       
+     
+     
+      
+       {{ message }} 
+
+     
+   
+ 
+   
+ 
+
+
+    
+
+
+
+
+
+
+   
+         
+     
+      
+  
+
+    
+    
+
+
+    
+
+
+
+
+
+
+
+
+  
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   wix Detox Repository navigation Code Issues 203  ( 203 ) Pull requests 20  ( 20 ) Discussions Actions Projects Security and quality Insights More  items 
+ 
+
+
+  
+
+
+
+ 
+     
+    
+
+
+
+    
+      
+ Releases: wix/Detox 
+ 
+   
+   
+     
+   Releases 
+   Tags 
+ 
+
+
+     
+
+   
+     
+       
+       
+       
+    
+ 
+
+   
+ 
+   Releases · wix/Detox 
+ 
+     
+       
+   Release list 
+   
+     
+  
+   
+     
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.51.3
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.51.1
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.50.2
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.50.1
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.50.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.48.1
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.48.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.47.0
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.46.3
+       
+ 
+  
+ 
+
+        
+          
+ 
+    
+    
+     
+      
+         
+          20.46.0
+       
+ 
+  
+ 
+
+    
+    
+
+       
+         Previous   Next 
+       
+ 
+
+ 
+   
+   
+        
+       
+         
+       
+     Jump to release 
+   
+     
+       
+     
+ 
+
+
+ 
+   
+    
+                  
+   
+     
+         
+    
+    
+     
+      
+         
+          20.51.3
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          20.51.1
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          20.50.2
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          20.50.1
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          20.50.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          20.48.1
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          20.48.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          20.47.0
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          20.46.3
+       
+ 
+  
+ 
+         
+    
+    
+     
+      
+         
+          20.46.0
+       
+ 
+  
+ 
+     
+ 
+
+
+ 
+      
+    
+ 
+     
+       Previous   Next 
+     
+ 
+
+
+       
+           
+     20.51.3 
+
+     
+       
+   
+  
+          
+   
+     
+         20.51.3 
+       
+         Latest 
+           
+              
+
+           
+       
+     
+
+     
+       Latest 
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       noomorph 
+
+    released this
+
+       
+        30 May 11:25
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.51.3
+               
+           
+         
+         
+           
+               6840228           
+         
+
+ 
+   
+         This release focuses on stability fixes across iOS, Android, synchronization reporting, and simulator tooling. 
+ iOS 
+ 
+ Fixed  element(...).atIndex(n).getAttributes()  so it now respects the requested index instead of returning attributes for all matching elements. 
+Thanks  @vazidmansuri005  in  #4912 
+ Fixed biometric simulation on iOS 26+ by using the newer  applesimutils --booted  biometric flags while preserving the previous behavior for older iOS versions. 
+Thanks  @SoaringEarth  in  #4932 
+ Updated the iOS attribute error formatting around indexed lookups. 
+Thanks  @markdevocht  in  #4947  and  #4948 
+ Bumped DetoxSync to include an upstream fix for a native iOS  NSURLSession  tracking race that could cause SIGSEGV crashes during network task teardown. The upstream fix makes URLSession untracking thread-safe and idempotent. 
+Upstream:  wix-incubator/DetoxSync#100  Bump:  #4952 
+ 
+ Android 
+ 
+ Wrapped Android WebView hierarchy injection in error handling so missing browser APIs, such as  XmlSerializer  in hardened JavaScript environments, do not leak unexpected errors into tests. 
+Thanks  @FrederikBolding  in  #4943 
+ Quoted ADB device serials in shell-built commands, fixing Wi-Fi and mDNS serials that contain shell-sensitive characters such as parentheses. 
+Thanks  @omribz156  in  #4950 
+ 
+ Synchronization 
+ 
+ Updated sync status parsing and formatting to accept  null  one-time event objects from iOS payloads. 
+Thanks  @omribz156  in  #4949 
+ 
+ New Contributors 
+ 
+ @SoaringEarth  made their first contribution in  #4932 
+ @FrederikBolding  made their first contribution in  #4943 
+ @omribz156  made their first contribution in  #4949 
+ 
+ Full Changelog :  20.51.1...20.51.3 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+ 
+
+   
+    FrederikBolding, SoaringEarth, and 3 other contributors
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             3 
+    Overtorment, Maschga, and mbieniek-brs reacted with thumbs up emoji 
+                ❤️ 
+             1 
+    asafkorem reacted with heart emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   3 reactions 
+               
+               
+                 ❤️ 
+                   1 reaction 
+               
+           
+         
+       
+     
+      4 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     20.51.1 
+
+     
+       
+   
+  
+          
+   
+     
+         20.51.1 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       markdevocht 
+
+    released this
+
+       
+        03 May 11:28
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.51.1
+               
+           
+         
+         
+           
+               1b46ddb            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         What's Changed 
+ 
+ fix of screenshots of the navigation bar on iOS 26 by  @markdevocht  in  #4938 
+ CI publish script update for correct version handling by  @markdevocht  in  #4939 
+ 
+ Full Changelog :  20.50.2...20.51.1 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+ 
+
+   
+    markdevocht
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                🎉 
+             1 
+    Overtorment reacted with hooray emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 🎉 
+                   1 reaction 
+               
+           
+         
+       
+     
+      1 person reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     20.50.2 
+
+     
+       
+   
+  
+          
+   
+     
+         20.50.2 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       markdevocht 
+
+    released this
+
+       
+        21 Apr 08:45
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.50.2
+               
+           
+         
+         
+           
+               bb13942            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         What's Changed 
+ 
+ RN0.84 by  @markdevocht  in  #4926 
+ 
+ Full Changelog :  20.50.1...20.50.2 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+ 
+
+   
+    markdevocht
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                🎉 
+             2 
+    Overtorment and Maschga reacted with hooray emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 🎉 
+                   2 reactions 
+               
+           
+         
+       
+     
+      2 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     20.50.1 
+
+     
+       
+   
+  
+          
+   
+     
+         20.50.1 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       markdevocht 
+
+    released this
+
+       
+        23 Mar 22:47
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.50.1
+               
+           
+         
+         
+           
+               a97e9b4            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         What's Changed 
+ 
+ fix by  @markdevocht  in  #4925 
+ 
+ Full Changelog :  20.50.0...20.50.1 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+ 
+
+   
+    markdevocht
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                🎉 
+             1 
+    Overtorment reacted with hooray emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 🎉 
+                   1 reaction 
+               
+           
+         
+       
+     
+      1 person reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     20.50.0 
+
+     
+       
+   
+  
+          
+   
+     
+         20.50.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       markdevocht 
+
+    released this
+
+       
+        23 Mar 13:48
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.50.0
+               
+           
+         
+         
+           
+               ffd6f3d            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         What's Changed 
+ 
+ iOS 26.1 implementation of liquidGlass overlay by  @markdevocht  in  #4921 
+ version bump by  @markdevocht  in  #4922 
+ 
+ Full Changelog :  20.48.1...20.50.0 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+ 
+
+   
+    markdevocht
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+           
+         
+       
+     
+      
+ 
+           
+ 
+ 
+     
+   
+   
+     20.48.1 
+
+     
+       
+   
+  
+          
+   
+     
+         20.48.1 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       noomorph 
+
+    released this
+
+       
+        21 Mar 15:37
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.48.1
+               
+           
+         
+         
+           
+               84dc1de            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         What's Changed 
+ 
+ fix(ios): ignore --arch flag on simulators running iOS < 26 by  @noomorph  in  #4917 
+ 
+ Full Changelog :  20.48.0...20.48.1 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+ 
+
+   
+    noomorph
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                ❤️ 
+             3 
+    d4vidi, monzter50, and Overtorment reacted with heart emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 ❤️ 
+                   3 reactions 
+               
+           
+         
+       
+     
+      3 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     20.48.0 
+
+     
+       
+   
+  
+          
+   
+     
+         20.48.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       noomorph 
+
+    released this
+
+       
+        21 Mar 09:38
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.48.0
+               
+           
+         
+         
+           
+               b51d2b8            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         What's Changed 
+ 
+ feat(ios): support simulator launch architecture (iOS 26+) by  @noomorph  in  #4916 
+ fix(ios): items in scrollview should be 75% visible before detecting by  @markdevocht  in  #4915 
+ 
+ Full Changelog :  20.47.0...20.48.0 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+ 
+
+   
+    noomorph and markdevocht
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             2 
+    Maschga and d4vidi reacted with thumbs up emoji 
+                🎉 
+             2 
+    d4vidi and monzter50 reacted with hooray emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   2 reactions 
+               
+               
+                 🎉 
+                   2 reactions 
+               
+           
+         
+       
+     
+      3 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     20.47.0 
+
+     
+       
+   
+  
+          
+   
+     
+         20.47.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       markdevocht 
+
+    released this
+
+       
+        26 Jan 11:30
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.47.0
+               
+           
+         
+         
+           
+               2d17371            
+     
+       
+     
+
+     
+       
+
+         
+           
+             
+           
+           
+                This commit was created on GitHub.com and signed with GitHub’s  verified signature .
+           
+         
+
+
+         
+             GPG key ID:  B5690EEEBB952194 
+             
+             
+             Verified
+               
+             
+           Learn about vigilant mode .
+         
+       
+     
+ 
+
+         
+
+ 
+   
+         What's Changed 
+ 
+ #4891  - Support React Native 0.83 by  @gosha212  in  #4891 
+ #4894  - iOS 26 compatibility by  @markdevocht  in  #4894 
+ #4793  - Semantic matching basics in  by.type()   #4788  by  @markdevocht  in  #4793 
+ #4875  - feat(session): add ignoreUnexpectedMessages configuration option by  @cunhabruno  in  #4875 
+ #4844  - fix(android): grant all permissions after resetting app state by  @noomorph  in  #4844 
+ 
+ New Contributors 
+ 
+ @cunhabruno  made their first contribution in  #4875 
+ 
+ Full Changelog :  20.46.3...20.47.0 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+ 
+
+   
+    noomorph, gosha212, and 2 other contributors
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             3 
+    Maschga, d4vidi, and Overtorment reacted with thumbs up emoji 
+                🎉 
+             2 
+    d4vidi and DigitalZebra reacted with hooray emoji 
+                ❤️ 
+             1 
+    DigitalZebra reacted with heart emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   3 reactions 
+               
+               
+                 🎉 
+                   2 reactions 
+               
+               
+                 ❤️ 
+                   1 reaction 
+               
+           
+         
+       
+     
+      4 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     20.46.3 
+
+     
+       
+   
+  
+          
+   
+     
+         20.46.3 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       noomorph 
+
+    released this
+
+       
+        27 Dec 20:53
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.46.3
+               
+           
+         
+         
+           
+               f762b81           
+         
+
+ 
+   
+         What's Changed 
+ Fixes 
+ 
+ Android: System-UI glitches (e.g. notifications) by  @d4vidi  in  #4878 
+ iOS: Notification flakiness on iOS 18 fix by  @markdevocht  in  #4890 
+ 
+ Internal 
+ 
+ build: move to yarn 4 by  @noomorph  in  #4881 
+ build: Limit Genymotion cloud compatibility testing by  @d4vidi  in  #4889 
+ Fixes missing binaries in  20.46.1  due to change in publishing process ( .npmignore  →  files: [...] ). 
+ 
+ Full Changelog :  20.46.0...20.46.3 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+     
+       
+         
+       
+     
+ 
+
+   
+    noomorph, d4vidi, and markdevocht
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             1 
+    Maschga reacted with thumbs up emoji 
+                🎉 
+             1 
+    DigitalZebra reacted with hooray emoji 
+                ❤️ 
+             1 
+    DigitalZebra reacted with heart emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   1 reaction 
+               
+               
+                 🎉 
+                   1 reaction 
+               
+               
+                 ❤️ 
+                   1 reaction 
+               
+           
+         
+       
+     
+      2 people reacted 
+ 
+           
+ 
+ 
+     
+   
+   
+     20.46.0 
+
+     
+       
+   
+  
+          
+   
+     
+         20.46.0 
+       
+        
+           
+              
+
+           
+       
+     
+
+     
+      
+     
+         
+          
+
+         
+   
+   
+                           
+   
+        
+     Compare 
+       
+           
+       
+   
+ 
+
+     
+       
+   
+     
+       
+        Choose a tag to compare
+       
+        
+     
+     
+       
+     
+   
+                
+               
+   
+       
+         
+       
+     
+       
+                   Sorry, something went wrong. 
+ 
+              
+             
+                 
+       
+        Filter
+     
+   
+       
+         
+           
+        Loading 
+ 
+       
+    
+       
+ 
+       
+   
+   
+   
+ 
+    
+ 
+ 
+        
+         
+           
+           
+             
+                 
+  
+                   
+                     
+                       
+   
+                     
+                     
+                         
+                           
+                           Sorry, something went wrong. 
+                         
+                     
+ 
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+              
+             
+               No results found 
+             
+          
+                         
+                   View all tags 
+                 
+ 
+    
+ 
+
+   
+ 
+
+   
+     
+   
+       
+       d4vidi 
+
+    released this
+
+       
+        16 Nov 14:31
+       
+   
+
+  
+
+
+         
+           
+               
+               
+                20.46.0
+               
+           
+         
+         
+           
+               992fb39           
+         
+
+ 
+   
+         What's Changed 
+ Android 
+ Configurable system UI (status bar, keyboard, navigation bar) on device allocation, for Android ( @d4vidi ,  #4863 ) 
+Read about the new  systemUI  configuration option here:  https://wix.github.io/Detox/docs/config/devices 
+ Examples: 
+ Explicit configuration 
+ "detox" : {
+   "devices" : {
+       "android.emulator" : {
+         "type" :  " android.emulator " ,
+         "device" : {
+           "avdName" :  " Pixel_API_35 " 
+        },
+
+         "systemUI" : {
+           "pointerLocationBar" :  " hide " ,
+           "touches" :  " show " ,
+           "navigationMode" :  " 3-button " ,
+           "statusBar" : {
+             "notifications" :  " hide " ,
+             "clock" :  " 1200 " ,
+             "wifiSignal" :  " none " ,
+             "mobileSignal" :  " none " ,
+             "battery" :  " full " ,
+             "charging" :  false 
+          }
+        }
+      }
+
+  }
+} 
+ 
+ 
+ Extending a configuration preset - align google emulators to Genymotion's 
+ (See preset options  here ) 
+    "systemUI" : {
+     "extends" :  " genymotion " ,
+     "pointerLocationBar" :  " show " ,
+     "touches" :  " show " ,
+     "navigationMode" :  " 3-button " ,
+     "statusBar" : {
+       "clock" :  " 1948 " ,
+    }
+  } 
+ 
+ 
+ Full Changelog :  20.45.1...20.46.0 
+ 
+              
+             Contributors 
+             
+     
+       
+         
+       
+     
+ 
+
+   
+    d4vidi
+   
+
+           
+
+         
+           
+     
+            
+       Assets 
+       2 
+     
+ 
+              
+  
+         
+        Loading 
+ 
+
+   
+     
+   
+     
+      
+
+               Uh oh!
+ 
+                There was an error while loading.  Please reload this page . 
+ 
+
+    
+    
+ 
+ 
+
+         
+
+
+           
+               
+   
+     
+     
+                👍 
+             6 
+    Maschga, cleathley, d4vidi, Overtorment, Hesowcharov, and sliangreal reacted with thumbs up emoji 
+       
+         
+              
+     All reactions 
+   
+ 
+
+           
+               
+                 👍 
+                   6 reactions 
+               
+           
+         
+       
+     
+      6 people reacted 
+ 
+           
+ 
+ 
+     
+   
+
+       
+     
+
+     
+   Previous   1   2   3   4   5   …   40   41   Next 
+ 
+
+ 
+   Previous   Next 
+ 
+
+ 
+
+ 
+
+
+   
+
+ 
+
+
+     
+   
+
+   
+
+           
+   Footer 
+
+  
+
+
+   
+     
+       
+         
+ 
+       
+        © 2026 GitHub, Inc.
+       
+     
+
+     
+       Footer navigation 
+
+       
+
+
+           
+             Terms 
+           
+
+           
+             Privacy 
+           
+
+
+             
+               Security 
+             
+
+             
+               Status 
+             
+
+           
+             Community 
+           
+
+           
+             Docs 
+           
+
+           
+             Contact 
+           
+
+          
+ 
+   
+     
+      Manage cookies
+     
+   
+ 
+
+   
+     
+       
+        Do not share my personal information
+       
+     
+   
+
+       
+     
+   
+ 
+
+
+
+     
+
+
+
+
+   
+     
+     
+       
+     
+    You can’t perform that action at this time.
+   
+
+     
+   
+     
+     
+       
+         
+       
+       
+     
+   
+ 
+
+     
+   
+   
+ 
+
+     
+   
+     
+       
+       
+     
+   
+ 
+ 
+   
+     
+       
+       
+     
+   
+ 
+
+
+
+
+     
+     
+     
+   
+ 
+

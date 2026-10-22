@@ -1,0 +1,69 @@
+__HTTP 200__
+How Momentic works - Momentic Documentation Index Fetch the complete documentation index at:   /docs/llms.txt Use this file to discover all available pages before exploring further. Skip to main content Momentic  home page Search... ⌘ K Get started Welcome to Momentic What is AI-native testing? How Momentic works Quickstart Building with AI Overview MCP Skills Author Local app Test structure Best practices Advanced Run Command line Hosted test environments CI/CD AI test selection AI test maintenance Reliability Performance Results and reporting Learn Knowledge base App graph Memory Runtime agent skills Platforms Web iOS Android Integrations Overview Email SMS Files Slack Devin GitHub GitLab Account API keys and team settings Privacy and security AI data use and retention Common problems Get help Book a demo Support Log in Documentation Mo Guides Configuration CLI reference Steps reference API reference Changelog Momentic  home page Search... ⌘ K Ask Assistant ⌘ I Book a demo Support Log in Log in Search... Navigation Get started How Momentic works Documentation Mo Guides Configuration CLI reference Steps reference API reference Changelog Get started How Momentic works Copy page Copy page How Momentic combines preset steps, AI actions, modules, execution, CLI-based agents, and context from past runs. Copy page Copy page Momentic tests combine exact, reviewable steps with goal-driven AI execution in
+one YAML file. This page covers how a test is assembled, where it runs, and how
+runs provide context for later tests. 
+ For exploratory testing,  Mo  starts from a brief and a running app instead
+of a YAML test. A session plans cases and records verdicts, coverage gaps, and
+reproduced bugs in a  report . Use a Mo session to investigate a
+product area, then turn selected cases into repository tests for repeatable
+checks. See  when to use Mo . 
+ ​ Anatomy of a test 
+ A Momentic test is a sequence of steps. Three step types mix in one test: preset
+steps, AI actions, and modules. Some rely on AI, while others can be configured
+deterministically or execute code. 
+ ​ Human in the loop  and  agentic 
+ Step type Behavior Examples Preset step Executes one configured action. It can use AI or be fully deterministic. Click, Type, JavaScript, AI extract, and Drag and drop AI action A runtime agent determines and executes the sequence needed to reach a goal. Complete checkout or configure an account Module Runs a reusable sequence of preset steps or AI actions. Log in, create an account, or seed a cart 
+ Mix preset steps, AI actions, and module calls within one test. Modules can also
+combine preset steps and AI actions. Use preset steps when the path needs exact,
+reviewable control and AI actions when the goal matters more than the path.
+Preset steps can still use AI to locate elements, evaluate assertions, or
+extract data while keeping the sequence explicit. 
+ See  File format ,  Steps ,
+ Variables , and  Modules  for
+the authoring syntax. See  AI action  for
+goal-driven flows. 
+ ​ Code integration 
+ Use preset steps for common interactions, then drop to code when a flow needs
+it: 
+ 
+ JavaScript steps  run custom code in a sandboxed
+Node environment or the current browser page. 
+ appium  steps  execute an Appium script
+on the current device. 
+ Modules  and  variables 
+connect reusable setup, application state, and data across the flow. 
+ 
+ See  Test portability and migration  for where
+your YAML lives and how to move a suite in or out. 
+ ​ Run locally and in CI 
+ A test provides immediate feedback during development and repeatable
+verification after a change leaves a developer’s machine. The same test files
+and CLI work in both loops: 
+ Environment Value Local development Run focused tests while you code, inspect artifacts immediately, and let a coding agent verify its own changes before a pull request. CI Gate pull requests and deployments, select the most relevant tests based on a code change, parallelize larger suites, and publish results for the whole team. 
+ Use  momentic run  locally or in your
+ CI system .  AI test selection 
+keeps pull-request feedback focused, while
+ AI test maintenance  turns eligible failures
+into recovery, diagnosis, and reviewable repairs. 
+ ​ CLI-based agents 
+ The web CLI exposes these AI commands so they can be composed in CI, scripts,
+and custom agent loops: 
+ Command Role momentic ai select Choose representative tests for a code change momentic ai classify Explain and route failed runs momentic ai triage Investigate, repair, and verify failing tests 
+ Commands can emit structured output and operate on repository files or saved
+results, so your orchestrator decides when they run and what happens next. See
+the  momentic ai  reference  and
+ MCP server . 
+ ​ Self-learning system 
+ Momentic reuses context across runs: 
+ 
+ The  step cache  reuses successful element
+resolutions for fast, deterministic replay. 
+ Memory  retrieves relevant decisions from earlier runs for
+locator and assertion agents. 
+ The  App graph  turns run traces into product journeys and
+coverage, powering  AI test selection  and product risk analysis. 
+ The  Knowledge base  adds your terminology, rules, and
+known flows. Your team can customize it from the dashboard. 
+ 
+ See  What is AI-native testing?  for the
+development loop. Was this page helpful? Yes No Previous Web Set up Momentic for a web app and run your first test. Next ⌘ I On this page Anatomy of a test Human in the loop and agentic Code integration Run locally and in CI CLI-based agents Self-learning system Momentic  home page linkedin website x Company Blog Careers Y Combinator Trust Center Legal Terms of Service Privacy Policy linkedin website x Powered by This documentation is built and hosted on Mintlify, a developer documentation platform Assistant Responses are generated using AI and may contain mistakes.

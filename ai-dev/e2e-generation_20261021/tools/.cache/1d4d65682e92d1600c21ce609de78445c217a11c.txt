@@ -1,0 +1,7174 @@
+__HTTP 200__
+
+
+
+
+
+
+
+
+
+ 
+ 
+   
+     
+     
+     
+     
+    
+
+     
+     
+     
+     
+       
+      
+         
+       
+     
+       App Testing agent (Android)  |  Firebase App Distribution 
+
+ 
+   
+  
+
+  
+
+  
+
+  
+
+  
+
+
+     
+   
+  
+     
+  
+  
+     
+      
+      Skip to main content
+     
+     
+       
+         
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+   
+     
+       
+         
+         
+        
+ 
+
+   
+  
+   
+    
+     
+    
+     
+   
+  
+ 
+
+
+
+ 
+         
+           
+            
+              
+              
+   
+
+     
+      
+        
+           
+  
+     
+    Build
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+                 Build 
+              
+              
+                 Get to market quickly and securely with products that can scale globally
+ 
+              
+              
+                 
+                   
+                    
+                     
+                      Go to Build
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+                 Build Products 
+              
+              
+              
+                 
+                   
+                    
+                     
+                      App Check
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      App Hosting
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Authentication
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Functions
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Storage
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      SQL Connect
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Extensions
+                     
+                    
+                   
+                 
+              
+             
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Firestore
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Hosting
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Phone Number Verification
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Realtime Database
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Firebase AI Logic
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Generative AI
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    Run
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+                 Run 
+              
+              
+                 Run your app with confidence and deliver the best experience for your users
+ 
+              
+              
+                 
+                   
+                    
+                     
+                      Go to Run
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+                 Run Products 
+              
+              
+              
+                 
+                   
+                    
+                     
+                      A/B Testing
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      App Distribution
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Messaging
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Crashlytics
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Google Analytics
+                     
+                    
+                   
+                 
+              
+             
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      In-App Messaging
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Performance Monitoring
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Remote Config
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Test Lab
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+            
+     
+    Solutions
+  
+     
+    
+  
+           
+        
+      
+        
+           
+            
+     
+    Pricing
+  
+     
+    
+  
+           
+        
+      
+        
+           
+  
+     
+    Docs
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Overview
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Fundamentals
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      AI
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Build
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Run
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Reference
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Samples
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    Community
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Learn
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Stories
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+            
+     
+    Support
+  
+     
+    
+  
+           
+        
+      
+     
+
+   
+
+            
+            
+          
+ 
+   
+     
+       
+       
+         
+           
+            
+               
+            
+           
+           
+             / 
+           
+       
+     
+   
+   
+ 
+
+         
+
+        
+
+          
+
+          
+
+          
+
+           
+
+          
+ 
+   
+    
+    
+     
+       English 
+     
+    
+     
+       Deutsch 
+     
+    
+     
+       Español – América Latina 
+     
+    
+     
+       Français 
+     
+    
+     
+       Indonesia 
+     
+    
+     
+       Italiano 
+     
+    
+     
+       Polski 
+     
+    
+     
+       Português – Brasil 
+     
+    
+     
+       Tiếng Việt 
+     
+    
+     
+       Türkçe 
+     
+    
+     
+       Русский 
+     
+    
+     
+       עברית 
+     
+    
+     
+       العربيّة 
+     
+    
+     
+       فارسی 
+     
+    
+     
+       हिंदी 
+     
+    
+     
+       বাংলা 
+     
+    
+     
+       ภาษาไทย 
+     
+    
+     
+       中文 – 简体 
+     
+    
+     
+       中文 – 繁體 
+     
+    
+     
+       日本語 
+     
+    
+     
+       한국어 
+     
+    
+   
+ 
+
+
+          
+             
+  Blog
+ 
+          
+             
+  Go to console
+ 
+          
+
+        
+
+        
+           
+            
+              
+               Sign in 
+            
+           
+        
+        
+        
+       
+     
+   
+
+
+
+   
+     
+      
+        
+           
+             
+              
+                
+                 
+                  
+                  
+                  
+                     
+  
+   
+    
+    
+    
+      
+        
+   
+    
+          Documentation
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          App Distribution
+        
+   
+  
+      
+    
+   
+  
+ 
+                 
+                
+              
+              
+             
+            
+           
+          
+        
+      
+      
+         
+          
+          
+            
+            
+   
+
+     
+      
+        
+           
+            
+     
+    Overview
+  
+     
+    
+  
+           
+        
+      
+        
+           
+  
+     
+    Fundamentals
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Apple platforms (iOS+)
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Android
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Web
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Flutter
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - C++
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Unity
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Add Firebase - Server environments
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Manage Firebase projects
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Supported platforms & frameworks
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    AI
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+                 Develop with AI assistance 
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Overview
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Gemini in Firebase
+                     
+                    
+                     
+                      Streamline development with an AI-powered assistant in Firebase interfaces and tools.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      AI tools, skills, & MCP
+                     
+                    
+                     
+                      Access agentive development tools, like our agent skills and MCP server.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Firebase Studio (deprecated)
+                     
+                    
+                     
+                      Build and ship full-stack AI-infused apps right from your browser.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+                 Build AI-powered apps 
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Firebase AI Logic
+                     
+                    
+                     
+                      Build genAI features and securely access Gemini models directly from your mobile & web apps.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    Build
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Authentication
+                     
+                    
+                     
+                      Simplify user authentication and sign-in on a secure, all-in-one identity platform.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Phone Number Verification
+                     
+                    
+                     
+                      Obtain the phone number of a device directly from the carrier, without SMS.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      App Check
+                     
+                    
+                     
+                      Protect your backend resources from abuse and unauthorized access.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Security Rules
+                     
+                    
+                     
+                      Define granular, server-enforced rules to protect your database and storage data.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      SQL Connect
+                     
+                    
+                     
+                      Build and scale your apps using a fully-managed PostgreSQL relational database service.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Firestore
+                     
+                    
+                     
+                      Store and sync data using a scalable NoSQL cloud database with rich data models and queryability.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Realtime Database
+                     
+                    
+                     
+                      Store and sync data in realtime with a NoSQL cloud database.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Storage
+                     
+                    
+                     
+                      Store and serve content like images, audio, video with a secure cloud-hosted solution.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      App Hosting
+                     
+                    
+                     
+                      Deploy your modern, full-stack web apps with server-side rendering and AI features.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Hosting
+                     
+                    
+                     
+                      Deploy your static and single-page web apps to a global CDN with a single command.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Functions
+                     
+                    
+                     
+                      Run backend code in response to events without provisioning or managing a server.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Extensions (deprecated)
+                     
+                    
+                     
+                      Deploy pre-built integrations and solutions for common tasks.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Emulator Suite
+                     
+                    
+                     
+                      Test your app in real-world conditions without affecting live data.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+  
+     
+    Run
+  
+     
+    
+       
+    
+  
+   
+     
+      
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Test Lab (deprecated)
+                     
+                    
+                     
+                      Test your Android and iOS apps on a wide range of real and virtual devices, all in the cloud.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      App Distribution
+                     
+                    
+                     
+                      Streamline delivery of pre-release Android and iOS apps to trusted testers.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Crashlytics
+                     
+                    
+                     
+                      Track, prioritize, and fix app stability issues.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Performance Monitoring
+                     
+                    
+                     
+                      Gain real-time insight into your app's performance and fix issues.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Remote Config
+                     
+                    
+                     
+                      Instantly change your app's behavior and appearance, without publishing an update.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      A/B Testing
+                     
+                    
+                     
+                      Test variants to make data-driven decisions about changes, features, and campaigns.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Cloud Messaging
+                     
+                    
+                     
+                      Send notifications and messages to your users on Android, iOS, and the Web.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      In-App Messaging
+                     
+                    
+                     
+                      Engage your active users with targeted, contextual messages within your app.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+         
+          
+             
+              
+              
+              
+                 
+                   
+                    
+                     
+                      Google Analytics
+                     
+                    
+                     
+                      Gain insights into user behavior, and optimize your app's marketing and performance.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Google AdMob
+                     
+                    
+                     
+                      Monetize your app, gain user insights, and tailor the ad experience.
+
+                     
+                    
+                   
+                 
+              
+                 
+                   
+                    
+                     
+                      Google Ads
+                     
+                    
+                     
+                      Run smarter campaigns, find high-value users, and measure in-app conversions.
+
+                     
+                    
+                   
+                 
+              
+             
+          
+         
+      
+     
+   
+ 
+        
+      
+        
+           
+            
+     
+    Reference
+  
+     
+    
+  
+           
+        
+      
+        
+           
+            
+     
+    Samples
+  
+     
+    
+  
+           
+        
+      
+     
+
+   
+
+          
+          
+         
+      
+     
+   
+
+ 
+
+
+
+  
+
+  
+ 
+         
+          
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+   
+   
+  
+   
+ 
+
+ 
+   
+     
+     
+     
+
+   
+  
+   
+    
+     
+    
+     
+   
+  
+ 
+
+
+ 
+   
+
+   
+     
+      
+         
+          
+             
+              
+  
+   
+  
+     
+      Build
+    
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Run
+    
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Solutions
+    
+    
+  
+   
+  
+
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Pricing
+    
+    
+  
+   
+  
+
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Docs
+    
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+              
+                 
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Overview
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Fundamentals
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      AI
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Build
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Run
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Reference
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                    
+                    
+                    
+                     
+                      
+  
+   
+  
+     
+      Samples
+    
+    
+  
+   
+  
+
+  
+                     
+                  
+                 
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Community
+    
+    
+     
+     
+    
+  
+   
+  
+
+  
+     
+      
+ 
+
+  
+   
+  
+     
+      More
+    
+    
+     
+     
+    
+  
+   
+  
+
+ 
+
+     
+  
+              
+             
+          
+             
+              
+  
+   
+  
+     
+      Support
+    
+    
+  
+   
+  
+
+  
+              
+             
+          
+          
+    
+    
+ 
+
+  
+   
+  
+     
+      Blog
+    
+    
+  
+   
+  
+
+ 
+
+  
+    
+    
+ 
+
+  
+   
+  
+     
+      Go to console
+    
+    
+  
+   
+  
+
+ 
+
+  
+          
+         
+      
+     
+    
+       
+        
+          
+           
+             Overview 
+
+   
+         Release 
+       
+
+   
+       
+         Test Lab 
+       Introduction Migrate to Developer Device Platform Migration FAQ Integration testing with Flutter 
+       
+         iOS+ 
+       Get started Run a Robo test Run a Robo script Run a Game Loop test Run an XCTest Test with the Firebase console Test with the gcloud CLI Test on available devices Analyze test results 
+       
+         Android 
+       Get started Run an instrumentation test Run a Robo test Run a Robo script Run a Game Loop test Test with the Firebase console Test with the gcloud CLI Test with Android Studio Test on available devices Test with virtual devices Analyze test results Usage, quotas, & pricing Test with CI systems Extend with Cloud Functions 
+         Android Device Streaming 
+       Test with Android Device Streaming Cloud Audit Logging 
+         Reference 
+       Robo scripts reference guide 
+       
+         REST API reference 
+       Testing (submit test & monitor) ToolResults (retrieve results) Test Lab IAM permissions reference guide FAQ and troubleshooting 
+
+   
+       
+         App Distribution 
+       Introduction 
+         Distribute iOS apps 
+       Use the Firebase console Use the Firebase CLI Use fastlane 
+         Distribute Android apps 
+       Use the Firebase console Use the Firebase CLI Use fastlane Use Gradle Use the App Testing agent (Android) Use Automated tester 
+         Manage testers 
+       Add, remove, and search for testers Import testers from CSV files Register additional iOS devices Create invite links 
+         Install & test apps 
+       Get set up as a tester Collect feedback from testers Notify testers about new builds 
+         Solutions 
+       Best practices for distributing Apple apps to QA testers using CI/CD and fastlane Best practices for distributing Android apps to QA testers using CI/CD FAQ and troubleshooting 
+
+   
+         Monitor 
+       
+
+   
+       
+         Crashlytics 
+       Introduction Get started Customize crash reports 
+         AI assistance 
+       Overview of options AI insights in dashboard AI assistance via MCP 
+         Data & reports in dashboard 
+       Monitor your latest release Understand crash-free metrics Debug ANRs in Android apps Filter events by Play track 
+         Alerting 
+       Overview of options Alerts by email or in-console Basic integrations with Slack, Jira, and PagerDuty Custom alerts and notification channels 
+         Data export & analysis 
+       Overview of options 
+       
+         BigQuery 
+       Set up export Run SQL queries Build custom dashboards Dataset schema 
+       
+         Cloud Logging 
+       Set up export What can you do with data? Filtering & log-based metrics Build custom dashboards Set up custom alerts & notification channels Log schema 
+         FAQ and troubleshooting 
+       Test your implementation Get readable crash reports FAQ and troubleshooting for setup 
+
+   
+       
+         Performance Monitoring 
+       Introduction 
+       
+         Get started 
+       iOS+ Android Web Flutter 
+         Learn about automatically collected data 
+       App start, foreground, background (iOS+ & Android) Screen rendering (iOS+ & Android) Page loading (web) HTTP/S network requests 
+         Customize data collection and aggregation 
+       Add monitoring for specific code Add monitoring for specific network requests Customize network request data aggregation Disable Performance Monitoring 
+         Track, view, and filter data 
+       Overview of the console Filter data using attributes Set up alerts for performance issues Export data to BigQuery FAQ and troubleshooting 
+
+   
+         Iterate 
+       
+
+   
+       
+         Remote Config 
+       Introduction Get started 
+       
+         Real-time Remote Config 
+       Understand real-time Remote Config Real-time best practices 
+       
+         Explore use cases 
+       Overview Launch new features with percentage rollouts Define platform and locale-specific promo banners Provide custom experiences based on first-time app use Test new functionality on a limited testing group Use JSON to configure complex entities Send notifications on template updates Enforce a minimum app version 
+       
+         Understand parameters and conditions 
+       Overview Client templates Server templates 
+       
+         Manage Remote Config templates 
+       Overview Client templates Server templates Modify Remote Config programmatically Explore loading strategies Optimize fetch frequency Use Remote Config with Analytics Extend with Cloud Functions Case studies 
+       
+         Rollouts 
+       Introduction Get started About Remote Config rollouts 
+       
+         Personalization 
+       Introduction Get started About Remote Config personalization 
+       
+         Explore use cases 
+       Overview Optimize for ad impression revenue Select the best ad placement for each user Optimize for ad frequency Determine difficulty selection to maximize engagement Export to BigQuery Case studies 
+       
+         Server environments 
+       Use Remote Config in server environments 
+       
+         Pricing, quotas, and limits 
+       Pricing Quotas and limits 
+         Solutions 
+       Use server-side Remote Config with Cloud Functions and Vertex AI Dynamically update your Firebase AI Logic app with Remote Config 
+       
+         API reference 
+       REST API reference Conditional expression reference Android SDK reference Swift SDK reference Obj-C SDK reference Flutter reference Unity reference C++ reference Web modular reference Web namespaced reference FAQ and troubleshooting 
+
+   
+       
+         A/B Testing 
+       Introduction About Firebase A/B tests Create Remote Config Experiments with A/B Testing Create Messaging Experiments with A/B Testing Create In-App Messaging Experiments with A/B Testing Export to BigQuery Case studies FAQ and troubleshooting 
+
+   
+         Engage 
+       
+
+   
+       
+         Analytics 
+       Introduction Get started 
+         Set up Analytics in your app 
+       Log events Set user properties Set a user ID Configure data collection and usage 
+         Implement common measurement scenarios 
+       Measure screenviews Measure ecommerce Measure ad revenue Measure in-app purchases 
+         View and analyze data 
+       Understand your reports Monitor events and user properties 
+         Implement special cases 
+       Use in a WebView Extend with Cloud Functions 
+         FAQ and troubleshooting 
+       Error codes General FAQ and troubleshooting 
+
+   
+       
+         Cloud Messaging 
+       Introduction FCM architectural overview Get started 
+         Send messages to devices 
+       Set up your server environment 
+       
+         Send a message 
+       Use the FCM v1 API Use the Admin SDK Use the Firebase console Receive messages 
+       
+         Customize message behavior 
+       Set message type Set message priority Set message lifespan Non-collapsible and collapsible message types Localize messages Customize a message across platforms iOS Live Activity Android direct-boot 
+         Target user groups 
+       Introduction to topic messaging Manage topic subscriptions Send messages to topics Send messages to device groups Migrate off device groups 
+         Advanced use cases 
+       
+       
+         Optimize and scale message delivery 
+       Scale message delivery Manage FCM registration tokens Throttling and quotas Understand message delivery Message encryption Message deprioritization on Android Configure your network for FCM 
+         Using AI with FCM 
+       Get AI insights for messaging campaigns Analyze FCM BigQuery data using AI 
+         Reference 
+       Send API reference Data API reference Error codes Codelabs FCM status dashboard FAQ and troubleshooting 
+
+   
+       
+         In-App Messaging 
+       Introduction Get started Explore use cases Compose a campaign Modify message behavior Customize messages 
+
+   
+       
+         Google AdMob 
+       Introduction Get started for iOS Get started for Android Use Analytics and Firebase with AdMob apps 
+         Use AdMob in a game 
+       
+       
+         C++ 
+       Get started AdMob Migration Guide 
+       
+         Unity 
+       Get started 
+         Solutions 
+       
+       
+         Test adoption of new ad formats 
+       Solution overview Solution tutorial 
+       
+         Optimize ad frequency 
+       Solution overview Solution tutorial 
+       
+         Optimize hybrid monetization 
+       Solution tutorial FAQ and troubleshooting 
+
+   
+       
+         Google Ads 
+       Introduction 
+         Solutions 
+       
+       
+         Measure iOS Ads conversions 
+       Using iOS on-device conversion measurement solutions First-party solution tutorial Event-driven solution tutorial 
+
+   
+       
+         Dynamic Links 
+       Introduction Operating system integrations 
+       
+         Create Dynamic Links 
+       Introduction iOS Android Flutter C++ Unity REST Manual URL Construction 
+       
+         Receive Dynamic Links 
+       iOS Android Flutter C++ Unity Use a custom domain Allow specific URL patterns View analytics data Debug Dynamic Links Generate link previews & social metadata 
+
+   
+         Related products 
+       
+
+   Authentication 
+
+   Extensions 
+           
+        
+        
+          
+    
+      
+       
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Build
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Go to Build
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Build Products
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      App Check
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      App Hosting
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Authentication
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Functions
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Storage
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      SQL Connect
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Extensions
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Firestore
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Hosting
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Phone Number Verification
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Realtime Database
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Firebase AI Logic
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Generative AI
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Run
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Go to Run
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Run Products
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      A/B Testing
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      App Distribution
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Messaging
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Crashlytics
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Google Analytics
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      In-App Messaging
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Performance Monitoring
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Remote Config
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Test Lab
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+  
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Overview
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Fundamentals
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      AI
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Build
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Run
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Reference
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Samples
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Learn
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Stories
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+  
+        
+        
+          
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Apple platforms (iOS+)
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Android
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Web
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Flutter
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - C++
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Unity
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Add Firebase - Server environments
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Manage Firebase projects
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Supported platforms & frameworks
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Develop with AI assistance
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Overview
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Gemini in Firebase
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      AI tools, skills, & MCP
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Firebase Studio (deprecated)
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+              
+ 
+
+  
+   
+  
+     
+      Build AI-powered apps
+    
+    
+  
+   
+  
+
+ 
+
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Firebase AI Logic
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Authentication
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Phone Number Verification
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      App Check
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Security Rules
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      SQL Connect
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Firestore
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Realtime Database
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Storage
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      App Hosting
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Hosting
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Functions
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Extensions (deprecated)
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Emulator Suite
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+      
+       
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Test Lab (deprecated)
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      App Distribution
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Crashlytics
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Performance Monitoring
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Remote Config
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      A/B Testing
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Cloud Messaging
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      In-App Messaging
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+          
+            
+            
+              
+ 
+
+  
+   
+  
+     
+      Google Analytics
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Google AdMob
+    
+    
+  
+   
+  
+
+ 
+
+            
+              
+ 
+
+  
+   
+  
+     
+      Google Ads
+    
+    
+  
+   
+  
+
+ 
+
+            
+          
+        
+       
+    
+  
+    
+  
+    
+  
+        
+       
+    
+   
+ 
+          
+         
+      
+       
+         
+           
+             
+                
+                 
+                 
+                 
+             
+           
+           
+            
+              
+
+
+
+
+
+
+
+
+
+
+ 
+  
+  
+  
+  
+  
+
+   
+    
+    
+     
+  
+   
+    
+    
+    
+      
+        
+   
+    
+          Firebase
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Documentation
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          App Distribution
+        
+   
+  
+      
+    
+   
+  
+   
+    
+      
+       
+    
+    
+    
+      
+        
+   
+    
+          Run
+        
+   
+  
+      
+    
+   
+  
+ 
+    
+      
+     
+     
+  
+    
+   
+  
+     
+
+   
+  
+    
+    Send feedback
+  
+   
+ 
+  
+     
+      App Testing agent (Android) 
+
+    
+    
+       
+    
+
+     
+      
+      Stay organized with collections
+     
+     
+      
+      Save and categorize content based on your preferences.
+     
+   
+     
+  
+      
+     
+   
+  
+
+   
+   
+   
+
+  
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+ The App Testing agent feature is a  preview 
+release. A preview release is not subject to any SLA or deprecation policy and
+may receive limited or no support.   In order to use the App Testing agent,
+you will need to opt-in to the feature from the  Firebase  console .
+For information, see
+ 
+Accessing the App Testing agent preview . 
+
+ The App Testing agent is a test case generation, management, and execution agent
+powered by Gemini in  Firebase . You define test goals in natural language,
+and the agent uses AI to understand and navigate your app, simulate user
+interactions, and provide detailed test results. 
+
+ How App Testing agent uses your data 
+
+ App Testing agent is provided by
+ Gemini in  Firebase  and is governed under the
+same terms. See  How Gemini in  Firebase  uses your
+data  for more
+information about how Gemini in  Firebase  uses your data. 
+
+ Before you begin 
+
+ If you haven't already,  register your app with
+Firebase . 
+
+ If you aren't using any other Firebase products, you only have to create a
+project and register your app. You don't need to add any SDKs to your app.
+However, if you decide to use additional products in the future, be sure to
+complete all of the steps in  Add Firebase using the
+ Firebase  console . 
+ Caution:  When you register your app with Firebase, make sure to enter the same
+package name as the app you're distributing. The package name value is
+case-sensitive and cannot be changed for your app in Firebase after it's
+registered with your Firebase project. 
+ Create a test case 
+
+ To run AI-guided tests, the App Testing agent uses your natural language test
+cases to execute tests against your app. 
+
+ Each test case is broken down into steps, which will be executed in sequence.
+Steps allow you to break up your test case into phases, each with their own
+assertion. The agent may take many actions during any one step. 
+
+ There are two ways to create a test case: using a YAML file or using the
+Firebase console. YAML files let you manage the test cases
+yourself, typically in a versioned source code repository. Alternatively, the
+Firebase console can store your test cases remotely along with your App
+Distribution data. 
+
+ Using YAML files 
+
+ The following example shows a YAML file that defines two test cases: 
+ tests : 
+ -   displayName :   Login as guest 
+    id :   login-as-guest 
+    steps : 
+    -   goal :   Log in as a guest 
+      finalScreenAssertion :   The home screen is visible 
+ -   displayName :   View biography card birth date 
+    prerequisiteTestCaseId :   login-as-guest 
+    steps : 
+    -   goal :   Open the article on "Bob Dylan" 
+      hint :   Use the search function to find it 
+      finalScreenAssertion :   > - 
+        The article is opened and the title "Bob Dylan" is visible. 
+    -   goal :   Find Bob Dylan's birthday in the article 
+      hint :   > - 
+        Look for the "Born" section in the infobox on the right side of the page. 
+      finalScreenAssertion :   > - 
+        The text "May 24, 1941" is visible on the screen. 
+ 
+ You can organize groups of tests in a single file and separate these test suites
+in multiple files. You can add a prerequisite test case by adding an ID to the
+test and then referencing that ID using  prerequisiteTestCaseId . 
+
+ Using the  App Distribution  console 
+
+ Alternatively, you can create and manage your test cases in the Firebase
+Console. To create a test case, open the  App Distribution  page of the
+ Firebase  console  and take
+the following steps: 
+
+ 
+ On the  Test Cases  tab, click  New test case . If you don't want to
+create your own test case, you can modify or use the provided  example test
+case . 
+ In the  Add test case  dialog, give the test case a name. This is used to
+identify the test, but is ignored by the agent. 
+ (Optional) Select a  Prerequisite test case  that contains set-up steps to
+run before the main test. If the prerequisite test fails, the entire test
+will be marked as a failure. Steps and outcomes from the prerequisite and
+main tests will be shown together in the test results. 
+ Consider breaking your test into multiple steps, by clicking the  Add
+another step  button. 
+ Give each step a  Goal  that describes what the App Testing agent should
+do during that step. 
+ (Optional) Add a  Hint  to provide additional information to help the App
+Testing agent understand and navigate your app during that step. 
+ Add  Final screen assertion  to help the App Testing agent determine when
+the step has been successfully completed. This assertion should only refer
+to what's visible on the screen. 
+ Click  Save  once you're done customizing your test. 
+ 
+
+ Example test case 
+
+ The following is an example of how to create a test case using the App Testing
+agent: 
+
+ 
+   
+   
+       
+         Test title 
+       
+       
+         Home page loads 
+       
+     
+     
+       
+         Goal 
+       
+       
+         Load the home page 
+       
+     
+     
+       
+         Hint 
+       
+       
+         Navigate past any onboarding screens. Dismiss any popups. Don't sign in. 
+       
+     
+     
+       
+         Final screen assertion 
+       
+       
+         The main app home page is visible on screen, all images have loaded, and no errors are displayed. 
+       
+     
+   
+ 
+
+ Run a test 
+
+ How you run your tests depends on how you create and manage your test cases. If
+you define test cases using YAML files, you will run those tests using the
+Firebase CLI. If you create your test cases in the App Distribution console, you
+will run them from the console or through one of the App Distribution CLI tools. 
+
+ Using YAML files 
+
+ Test cases defined in YAML files can be executed using the Firebase CLI. 
+
+ 
+ Install or update to the latest version of the  Firebase
+CLI . We recommend downloading the
+standalone binary for the CLI specific to your OS. 
+ Sign in  and test that you can access your
+projects. Note that if you're using the Firebase CLI in a CI environment, you
+can also authenticate with a  service
+account 
+or by using  login:ci . 
+ Run the  apptesting:execute  command. For example: 
+ firebase   apptesting:execute   \ 
+    --app = 1 :1234567890:android:0a1b2c3d4e5f67890   \ 
+    --test-dir = ./mytests   \ 
+    ./app/build/outputs/apk/debug/app-debug.apk
+ 
+ 
+
+ 
+   
+     
+       apptesting:execute [options] [/path/to/app/binary] 
+     
+   
+   
+     
+       
+         --app 
+       
+       
+         Required:  Your app's Firebase App ID. You can find the App ID in the  Firebase  console, on the  General Settings  page. 
+         --app 1:1234567890:android:0a1b2c3d4e5f67890 
+       
+     
+     
+       
+         --test-dir 
+       
+       
+         Path to a directory that contains test case YAML files. The command
+        will search recursively under this directory, so the files can
+        optionally be organized into subdirectories. If unset, "./tests" is used
+        by default. 
+       
+     
+   
+       
+         --test-devices  or  
+         --test-devices-file 
+       
+       
+         The devices to execute the tests on. 
+         You can specify the test devices as a semicolon-separated list of device specifications: 
+         --test-devices
+        "model=tokay,version=36,locale=en,orientation=portrait;model=b0q,version=33,locale=en,orientation=portrait" 
+         Or, you can specify the path to a plain text file containing a
+        semicolon-separated list of device specifications:   --test-devices-file
+        "/path/to/test-devices.txt"   You can look up the available
+        device models using the  gcloud
+        CLI . 
+       
+     
+     
+       
+         --test-username 
+       
+       
+         The username for automatic login to be used during the tests. 
+       
+     
+     
+       
+         --test-password  or  
+         --test-password-file 
+       
+       
+         The password for automatic login to be used during the tests. 
+         Or, you can specify the path to a plain text file containing a password: 
+         --test-password-file: "/path/to/test-password.txt" 
+       
+     
+     
+       
+         --test-non-blocking 
+       
+       
+         If set, the command will start the tests and then return immediately
+          instead of waiting for them to complete. To see the test results,
+          visit the Firebase console. If this flag is not set, the command will
+          block until the tests are complete, and exit with a failure code if
+          any of the tests fail. 
+       
+     
+     
+       
+         --results-bucket 
+       
+       
+         A custom Google Cloud Storage (GCS) bucket where test results are
+          stored. If left blank, the default bucket is used. The bucket must
+          be owned by a billing-enabled project, and specifying a bucket
+          results in billing charges for the storage used. 
+       
+     
+     
+       
+         --test-file-pattern 
+       
+       
+         A  regular
+        expression  pattern. Only tests contained in files that match this
+        pattern will be executed. 
+       
+     
+     
+       
+         --test-name-pattern 
+       
+       
+         A  regular expression  pattern. Only tests with display names that match this pattern will be executed. 
+       
+     
+     
+       
+         /path/to/app/binary 
+       
+       
+         Optional:  The path to your app's binary. If omitted, the agent
+        will use the last release uploaded to  App Distribution  for the
+        specified app. 
+       
+     
+   
+ 
+
+ Using the  App Distribution  console 
+
+ To run test cases stored in App Distribution, you can use the
+ Firebase  console, the Firebase CLI, or  App Distribution 's Gradle or fastlane
+plugins. 
+
+ 
+ Run tests the  Firebase  console 
+
+ The App Testing agent lets you run  AI-guided tests  in the console by
+clicking the  Run tests  button from either the Releases or Test Cases
+page. This opens the App Testing agent customization screen, where you can
+choose one or more of your existing test cases for the agent to execute. You can
+also choose the devices you want to test against, provide any login credentials,
+and optionally specify a custom Google Cloud Storage bucket to store your test
+results. Note that running from the console only supports tests that were
+created using the console. 
+
+ When a test run is successful, the App Testing agent will cache the actions
+taken for each device. These actions can be replayed during the future test runs
+to improve test repeatability. When  replayed actions  are used, the agent
+will still use AI to confirm the actions have succeeded, using any final screen
+assertions you have defined. If a test fails when using replayed actions, the
+App Testing agent will fall back to using AI for all actions. 
+
+ You can also choose to run a  Random crawl test  by changing the test
+type. Random crawl tests use the  Automated
+Tester  feature. 
+
+ Note: You can add a system variable to your app
+behavior to modify the way that it behaves when being run by the App Testing
+agent. For more information, see  Run
+tests with Android Studio . 
+
+ 
+
+ 
+ Run tests stored in App Distribution from the Firebase CLI 
+
+ You must specify at least one test device and one test case ID to use the App
+Testing agent feature. Test case IDs can be found and downloaded on the Test
+Cases page of the  Firebase  console. For more information on getting started
+with the Firebase CLI and different ways to configure your distribution, see
+ Distribute Android apps to testers using the Firebase
+CLI . 
+
+ Run the  appdistribution:distribute  command to upload your app,
+and use the following parameters to configure your distribution to the App
+Testing agent feature: 
+
+ 
+   
+     
+       appdistribution:distribute options 
+     
+   
+   
+   
+       
+         --test-devices  or  
+         --test-devices-file 
+       
+       
+         The devices to execute the tests on. 
+         You can specify the test devices as a semicolon-separated list of device specifications: 
+         --test-devices "model=tokay,version=36,locale=en,orientation=portrait;model=b0q,version=33,locale=en,orientation=portrait" 
+         Or, you can specify the path to a plain text file containing a semicolon-separated list of device specifications: 
+         --test-devices-file "/path/to/test-devices.txt" 
+         You can look up the available device models using the  gcloud CLI . 
+       
+     
+     
+       
+         --test-username 
+       
+       
+         The username for automatic login to be used during tests. 
+       
+     
+     
+       
+         --test-password  or  
+         --test-password-file 
+       
+       
+         The password for automatic login to be used during tests. 
+         Or, you can specify the path to a plain text file containing a password: 
+         --test-password-file "/path/to/test-password.txt" 
+       
+     
+     
+       
+         --test-non-blocking 
+       
+       
+         Run tests asynchronously. Visit the Firebase console for the automatic test results. 
+       
+     
+     
+       
+         --results-bucket 
+       
+       
+         A custom Google Cloud Storage (GCS) bucket where test results are
+          stored. If left blank, the default bucket is used. The bucket must
+          be owned by a billing-enabled project, and specifying a bucket
+          results in billing charges for the storage used. 
+       
+     
+     
+       
+         --test-case-ids  or  
+         --test-case-ids-file 
+       
+       
+         A comma-separated list of the test case IDs to run: 
+         --test-case-ids "load-app,play-the-first-level" 
+         Or, you can specify the path to a plain text file containing a comma or newline separated list of test case IDs: 
+         --test-case-ids-file "/path/to/test-case-ids.txt" 
+       
+     
+   
+ 
+
+ 
+
+ 
+ Run tests stored in App Distribution with Gradle 
+
+ You must specify at least one test device and one test case ID to use the App
+Testing agent feature. Test case IDs can be found and downloaded on the Test
+Cases page of the  Firebase  console. For more information on getting started
+with Gradle and different ways to configure your distribution, see  Distribute
+Android apps to testers using
+Gradle . 
+
+ You can configure  App Distribution  by adding at least one  firebaseAppDistribution 
+section and use the following parameters to configure the distribution to the
+App Testing agent feature: 
+
+ 
+   
+     
+       App Distribution  Build Parameters 
+     
+   
+   
+   
+       
+         testDevices  or  
+         testDevicesFile 
+       
+       
+         The devices to execute the tests on. 
+         You can specify the test devices as a semicolon-separated list of device specifications: 
+         testDevices="model=tokay, version=36, locale=en, orientation=portrait;model=b0q, version=33, locale=en, orientation=portrait" 
+         Or you can specify the path to a file containing a semicolon-separated list of device specifications: 
+         testDevicesFile="/path/to/testDevices.txt" 
+         You can look up the available device models using the  gcloud CLI . 
+       
+     
+     
+       
+         testUsername 
+       
+       
+         The username for automatic login to be used during the tests. 
+       
+     
+      
+       
+         testPassword  or  
+         testPasswordFile 
+       
+       
+         The password for automatic login to be used during the tests. 
+         Or, you can specify the path to a plain text file containing a password: 
+         testPasswordFile="/path/to/testPassword.txt" 
+       
+     
+     
+       testNonBlocking 
+       
+         Run tests asynchronously. Visit the FIrebase console for the automatic test results. 
+       
+     
+     
+       resultsBucket 
+       
+         A custom Google Cloud Storage (GCS) bucket where test results are
+          stored. If left blank, the default bucket is used. The bucket must
+          be owned by a billing-enabled project, and specifying a bucket
+          results in billing charges for the storage used. 
+       
+     
+     
+       
+       testCases  or  
+       testCasesFile 
+       
+       
+          A comma-separated list of the test case IDs to run: 
+     testCases: "load-app,play-the-first-level" 
+          Or, you can specify the path to a plain text file containing a comma or newline separated list of test case IDs: 
+     testCasesFile: "/path/to/test-case-ids.txt" 
+    
+   
+   
+ 
+
+ 
+
+ 
+ Run tests stored in App Distribution with fastlane 
+
+ You must specify at least one test device and one test case ID to use the App
+Testing agent feature. Test case IDs can be found and downloaded on the Test
+Cases page of the  Firebase  console. For more information on getting started
+with fastlane and different ways to configure your distribution, see  Distribute
+Android apps to testers using
+fastlane . 
+
+ In a  ./fastlane/Fastfile  lane, add a
+ firebase_app_distribution  block. Use the following parameters to
+configure your distribution to the App Testing agent feature: 
+
+ 
+   
+     
+       firebase_app_distribution parameters 
+     
+   
+   
+   
+       
+         test_devices  or  
+         test_devices_file 
+       
+       
+         The devices to execute the tests on. 
+         You can specify the test devices as a semicolon-separated list of device specifications: 
+         test_devices: "model=tokay, version=36, locale=en, orientation=portrait;model=b0q, version=33, locale=en, orientation=portrait" 
+         Or, you can specify the path to a plain text file containing a semicolon-separated list of device specifications: 
+         test_devices_file: "/path/to/test-devices.txt" 
+         You can look up the available device models using the  gcloud CLI . 
+       
+     
+     
+       
+         test_username 
+       
+       
+         The username for automatic login to be used during tests. 
+       
+     
+     
+       
+         test_password  or  
+         test_password_file 
+       
+       
+         The password for automatic login to be used during tests. 
+         Or, you can specify the path to a plain text file containing a password: 
+         test_password_file: "/path/to/test-password.txt" 
+       
+     
+     
+       test_non_blocking 
+       
+         Run tests asynchronously. Visit the Firebase console for the automatic test results. 
+       
+     
+      
+       
+         test_case_ids  or  
+         test_case_ids_file 
+       
+       
+         A comma-separated list of the test case IDs to run: 
+         test_case_ids: "load-app,play-the-first-level" 
+         Or, you can specify the path to a plain text file containing a comma or newline separated list of test case IDs: 
+         test_case_ids_file: "/path/to/test-case-ids.txt" 
+       
+     
+   
+ 
+
+ 
+
+ Import & export test cases with YAML files 
+
+ Importing test cases from YAML files is useful when you want to manage test
+cases outside of the  Firebase  console. It can also be useful to export test
+cases to move them between projects. You can use an LLM to refine existing test
+cases or create new test cases. You can import and export test cases from the
+Test Cases page in the  Firebase  console or programmatically using the
+Firebase CLI. For an example of a YAML test case, see  Create a YAML test
+case . 
+
+ View your test results 
+
+ You can view the results of your tests from the  Releases  page in the
+ App Testing agent  tab of a release. The  View details  button will open
+the Test Results dialog and show you any issues, screenshots of the app, and the
+actions that Gemini took during the test. 
+
+ If a test includes replayed actions, you can view the original AI-guided test
+run or clear the cache. 
+
+ To learn more about your test results, use the following table: 
+
+ 
+     
+         
+             Icon 
+             Name 
+             Description 
+         
+     
+     
+          
+             spark 
+             AI action 
+             Indicates that the App Testing agent used Gemini to decide to take an action or end the step. 
+         
+         
+             replay 
+             Replayed action 
+             Indicates that the App Testing agent replayed an action from a previous successful run of the test. 
+         
+         
+             spark 
+             AI assertion 
+             Indicates that the App Testing agent used Gemini to validate a final screen assertion, after replaying actions from a previous successful run of the same test. 
+         
+     
+ 
+
+ Debug your test results 
+
+ If your test results are different from what you expected, you can debug your
+test using the  Show agent view  toggle under  View details  on the Test
+Results page. The agent view shows you the on screen elements that the App
+Testing agent was able to detect when using the app's accessibility information.
+If you would like to take a closer look at what the agent saw, you can download
+that information from the action overflow menu. 
+
+ You can also use the  View artifacts  button on the Test Results page to look
+at all of the videos, logs, and other Cloud artifacts for your test results. 
+
+ Known issues and limitations 
+
+ The App Testing agent preview has some known limitations: 
+
+ 
+ AI-guided tests have a timeout of 5 minutes. After a test starts it must
+succeed within that time or it will end early and be counted as a test
+failure. 
+ Because the App Testing agent uses generative AI to test your app, it will
+sometimes take different actions while still following the same
+instructions. 
+ The App Testing agent only supports the following actions: tap, enter text,
+swipe up/down/left/right, long press, drag-and-drop, back, and wait. 
+ The App Testing agent has trouble executing tests containing only a single
+step that takes many actions to accomplish. It performs better when complex
+ tasks are broken up into multiple shorter steps. 
+ The App Testing agent sometimes won't scroll to expose other elements off
+screen. This happens more often when there is no visual indication of
+scrollability. As a workaround, the "hints" field can be used to suggest
+scrolling. 
+ The App Testing agent sometimes has trouble counting, for example performing
+an action a specific number of times. 
+ The App Testing agent cannot navigate your app if  FLAG_SECURE 
+is enabled. Instead of screenshots of your app, it will only see a blank
+screen. 
+ 
+
+ Testing quotas 
+
+ During the preview, the AI-guided tests will be offered at no cost within a
+quota limit. The default quota limit is 200 tests per month, per Firebase
+project. 
+
+ Note that if you choose to run multiple test cases, or run the same test case,
+on multiple devices, this counts as multiple tests. For example, if you run 2
+test cases on 2 devices, this counts as a total of 4 tests. 
+
+ To increase your quota above the default limit, contact  Firebase
+Support  with your use case. 
+ 
+  
+
+  
+     
+  
+ 
+
+  
+    
+    
+      
+     
+     
+  
+       
+          
+
+   
+  
+    
+    Send feedback
+  
+   
+ 
+       
+    
+    
+  
+
+   
+
+
+ 
+   Except as otherwise noted, the content of this page is licensed under the  Creative Commons Attribution 4.0 License , and code samples are licensed under the  Apache 2.0 License . For details, see the  Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates. 
+   Last updated 2026-10-21 UTC. 
+ 
+
+
+ 
+ 
+
+
+  
+ 
+  
+    
+    
+     
+       
+
+   
+  
+    Need to tell us more?
+  
+   
+ 
+     
+  
+  
+     
+      [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2026-10-21 UTC."],[],[]]
+     
+  
+ 
+            
+           
+         
+         
+          
+            
+          
+         
+         
+          
+            
+ 
+  
+   
+    
+     
+     Learn 
+       
+        
+         
+          
+           
+            
+          
+            Developer guides
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            SDK & API reference
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Samples
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Libraries
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            GitHub
+          
+           
+          
+          
+         
+        
+       
+     
+    
+     
+     Stay connected 
+       
+        
+         
+          
+           
+            
+          
+            Check out the blog
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Find us on Reddit
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Follow on X
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Subscribe on YouTube
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            Attend an event
+          
+           
+          
+          
+         
+        
+       
+     
+    
+     
+     Support 
+       
+        
+         
+          
+           
+            
+          
+            Contact support
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Stack Overflow
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Google group
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Release notes
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+          
+            Brand guidelines
+          
+           
+          
+          
+         
+        
+         
+          
+           
+            
+              
+              
+            
+          
+            FAQs
+          
+           
+          
+          
+         
+        
+       
+     
+    
+   
+  
+ 
+          
+         
+         
+          
+            
+
+ 
+  
+  
+   
+     
+       
+        
+         
+        
+         
+       
+     
+     
+      
+       
+         
+          Android
+         
+       
+      
+       
+         
+          Chrome
+         
+       
+      
+       
+         
+          Firebase
+         
+       
+      
+       
+         
+          Google Cloud Platform
+         
+       
+      
+       
+         
+          All products
+         
+       
+      
+     
+   
+  
+
+  
+   
+    
+     
+      
+       
+        
+        
+         
+          Terms
+         
+        
+       
+      
+       
+        
+        
+         
+          Privacy
+         
+        
+       
+      
+       
+        
+        
+         
+          Manage cookies
+         
+        
+       
+      
+     
+    
+    
+ 
+   
+    
+    
+     
+       English 
+     
+    
+     
+       Deutsch 
+     
+    
+     
+       Español – América Latina 
+     
+    
+     
+       Français 
+     
+    
+     
+       Indonesia 
+     
+    
+     
+       Italiano 
+     
+    
+     
+       Polski 
+     
+    
+     
+       Português – Brasil 
+     
+    
+     
+       Tiếng Việt 
+     
+    
+     
+       Türkçe 
+     
+    
+     
+       Русский 
+     
+    
+     
+       עברית 
+     
+    
+     
+       العربيّة 
+     
+    
+     
+       فارسی 
+     
+    
+     
+       हिंदी 
+     
+    
+     
+       বাংলা 
+     
+    
+     
+       ภาษาไทย 
+     
+    
+     
+       中文 – 简体 
+     
+    
+     
+       中文 – 繁體 
+     
+    
+     
+       日本語 
+     
+    
+     
+       한국어 
+     
+    
+   
+ 
+
+   
+ 
+          
+         
+         
+          
+         
+        
+           
+ 
+        
+       
+       
+     
+     
+     
+     
+     
+      
+         
+ 
+      
+     
+    
+       
+    
+    
+    
+     
+
+   
+
+ 
+
+   
+
+    
+ 
+
+     
+   

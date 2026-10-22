@@ -1,0 +1,461 @@
+__HTTP 200__
+
+ 
+ 
+ 
+     
+     
+     
+
+    
+     1,319 Maestro Issues: Data-Driven Dev | DeviceLab 
+     
+     
+     
+     
+
+    
+     
+     
+     
+
+    
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+
+    
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+    
+
+    
+     
+     
+     
+     
+     
+     
+     
+
+    
+     
+     
+     
+     
+
+    
+     
+     
+     
+
+    
+     
+
+    
+     
+
+    
+    
+     
+    
+
+    
+
+    
+     
+     
+     
+     
+
+    
+     
+     
+     
+     
+
+    
+     
+    
+    
+
+ 
+ 
+     
+         
+             
+                 
+                DeviceLab
+             
+             
+                 
+                Back to Blog
+             
+         
+         
+             
+                 
+                 
+             
+         
+     
+
+     
+         
+
+         
+             
+                 engineering 
+                 1,319 Maestro Issues: Data-Driven Dev 
+                 We scraped every open Maestro issue and built the entire project around what we found. Two architectural decisions cause most of the pain. 
+
+                 
+                     
+                         
+                             
+                         
+                         
+                             
+                                 Om Narayan 
+                                 
+                             
+                             Co-founder, DeviceLab 
+                         
+                     
+                     
+                         
+                             
+                            Jan 27, 2026
+                         
+                         
+                             
+                            8 min read
+                         
+                        
+                     
+                 
+             
+
+            
+             
+                 
+             
+            
+
+             
+                 Most open-source projects start with an idea. We started with a spreadsheet. 
+ Before maestro-runner had a repository, a Go module, or even a name, we scraped every open issue from  Maestro’s GitHub tracker  – all 1,319 of them – and built the entire project around what we found. Not around what we thought mobile testers needed. Around what they told us, in their own words, with reproduction steps attached. 
+ The Pattern Nobody Talks About 
+ Here is the finding that shaped everything we built. 
+ When you read the  top 100 most-discussed issues  as a group instead of as individual bugs, most of them trace back to just two architectural decisions: 
+ 1.  gRPC for Android communication .  Issues #395, #1570, #1573, #1647, #2757. Dropped keystrokes. Connection failures mid-test. Screenshot corruption. Memory pressure on CI runners. All of them stem from the gRPC channel between Maestro’s JVM process and the on-device server. 
+ Every command must serialize into a protobuf message, travel through the gRPC channel, deserialize on the device, execute, serialize the response, and travel back. Six potential failure points for every single tap, swipe, or assertion. Under CI resource constraints – limited CPU, shared memory, throttled I/O – this pipeline fails regularly. Not always in the same place, which is why the bugs are so hard to reproduce. 
+ 2.  XCUITest server lifecycle management .  Issues #1585, #1257, #1299, #2138. The XCTest process crashes during initialization, times out on slow CI machines, or returns stale hierarchy data after a long pause. Managing an XCTest process from a JVM across a USB connection introduces fragility at every boundary. The JVM starts an XCTest runner, which spawns a subprocess, which communicates back over USB, which the JVM monitors via polling. If any link in that chain stalls – a slow Xcode build, a USB reconnect, a CI machine under memory pressure – the whole stack enters an undefined state. The resulting error is  IOSDriverTimeoutException , which tells you nothing about which boundary failed or why. 
+ These are not isolated bugs. They are a pattern. Two foundational choices create a disproportionate share of all the pain in the issue tracker. Read individual issues, you see individual bugs. Read all of them together, you see architecture. 
+ You do not fix architectural problems with patches. You fix them by choosing a different architecture. The data showed us which architecture to choose. 
+ Five Issues That Tell the Whole Story 
+ If you only have time to read five issues from the tracker, these five capture the full range of what goes wrong and how we addressed each one: 
+ 
+ 
+ 
+ Issue 
+ Comments 
+ Problem 
+ Our Fix 
+ 
+ 
+ 
+ 
+ #395 
+ 48 
+ inputText  skips characters 
+ Direct ADB input with full Unicode support 
+ 
+ 
+ #1585 
+ 53 
+ IOSDriverTimeoutException 
+ WDA driver with retry logic and health checks 
+ 
+ 
+ #686 
+ 24 
+ No real iOS device support 
+ WebDriverAgent driver with  --team-id 
+ 
+ 
+ #1303 
+ 12 
+ hideKeyboard  presses Back button 
+ Dedicated  /appium/device/hide_keyboard  endpoint 
+ 
+ 
+ #2480 
+ 8 
+ Regex taps wrong element 
+ Proper  textMatches()  with  looksLikeRegex()  guard 
+ 
+ 
+ 
+ #395  is the most telling. Users type “Hello World” and get “HloWrd” because keystrokes get dropped in the gRPC pipeline under load. Our fix bypasses gRPC entirely – direct ADB shell  input text  with proper escaping handles every Unicode character without serialization overhead. 
+ #1585  is the iOS equivalent. The XCTest runner times out during startup, and Maestro throws  IOSDriverTimeoutException  with no recovery path. Our WDA driver monitors the XCTest process health, retries initialization on failure, and reports exactly which stage stalled. 
+ #686  has been open since 2022 – the single most requested feature. Real iOS device testing requires code signing and a provisioning profile. maestro-runner’s WDA driver handles the entire lifecycle: build, sign, deploy, launch, connect. 
+ #1303  is a design error. Maestro’s  hideKeyboard  sends a Back button press, which on some Android devices navigates away from the current screen instead of dismissing the keyboard. maestro-runner calls the dedicated keyboard dismissal endpoint. 
+ #2480  shows a subtle matching bug. A regex pattern like  .*Submit.*  matches the first element containing “Submit” anywhere in its text, which might be a label instead of the button. maestro-runner’s  looksLikeRegex()  function detects regex patterns and routes them through  textMatches()  UiAutomator selectors that respect element boundaries. 
+ Why Issues, Not Surveys 
+ GitHub issues are better data than user interviews or feature surveys. Nobody fills out a survey when their CI pipeline is broken at 2 AM. They file an issue. They paste stack traces. They argue in comments about whether it is a bug or expected behavior. They try workarounds and report back when they half-work. 
+ The comment count on an issue is a remarkably honest signal. An issue with zero comments might be a one-off edge case. An issue with 53 comments is a shared wound – dozens of engineers hitting the same wall, posting workarounds that sometimes work, waiting months for a fix that never ships. 
+ Nobody leaves 53 comments on a mild inconvenience. Stars tell you what people like. Comments tell you what is hurting them. Comment count became our ranking function. Pain, measured in frustration. 
+ The Filter 
+ Not all 1,319 issues were relevant. Maestro has expanded well beyond mobile – macOS desktop automation, browser testing, AI features, cloud workflows, the Studio IDE. We were building a mobile test runner. So we cut everything that was not core mobile testing: Android emulators, iOS simulators, real devices, YAML flow execution, element finding, input handling, reporting. 
+ Then we sorted by comment count and took the top 100. 
+ Comments in that top 100 ranged from 53 down to 5. Five is still significant – five engineers cared enough to find the issue, read the thread, and add context. That represents dozens, possibly hundreds, who hit the problem silently, added a  sleep(5000) , and moved on. 
+ The Scrape 
+ We used the GitHub REST API v3 to pull every open issue from  mobile-dev-inc/Maestro . For each issue we captured: title, full body text, all labels, creation date, comment count, and the complete comment thread including timestamps and authors. The comment threads mattered more than the issue descriptions – that is where you find the workarounds, the “me too” reports, the frustrated follow-ups, and the occasional maintainer response explaining why a fix is hard. 
+ We then filtered to mobile-only issues. Anything tagged or primarily about macOS desktop automation, browser testing, AI features, cloud-specific workflows, or the Studio IDE was excluded. We were building a mobile test runner. Desktop screenshot diffing and browser WebDriver quirks are different problem domains. 
+ After filtering, we sorted by comment count and took the top 100. The range: 53 comments at the top down to 5 at the bottom. Every one of those 100 issues was read in full – not just the description, but every comment, every linked PR, every workaround somebody posted at midnight. 
+ One thing became clear quickly: the most painful issues were not the most recently filed. Some of the highest-comment-count bugs had been open for over two years. That told us which problems the Maestro team considered fixable within their current architecture – and which ones they did not. 
+ The Scorecard 
+ We classified each of the top 100 into three buckets: 
+ 
+ 
+ 
+ Status 
+ Count 
+ What it means 
+ 
+ 
+ 
+ 
+ FIXED 
+ 47 
+ We wrote specific code to solve the problem 
+ 
+ 
+ AVOIDED 
+ 31 
+ Our architecture makes the issue structurally impossible 
+ 
+ 
+ NOT ADDRESSED 
+ 22 
+ Out of scope, deliberate omission, or feature request 
+ 
+ 
+ 
+ 78 out of 100. That number was not a target. It is where the data led us. 
+ The distinction between FIXED and AVOIDED matters. FIXED means we looked at the bug and wrote code to handle it – proper WDA startup retries for iOS timeout crashes (#1585),  --wait-for-idle-timeout  for teams who need faster execution (#1528), direct ADB input for character-dropping bugs (#395). 
+ AVOIDED means our architecture makes the bug impossible. You cannot get a gRPC connection drop if you do not use gRPC. You cannot get JVM memory pressure if you do not have a JVM. These 31 issues did not require 31 fixes. They required choosing the right foundation. 
+ We chose  Go instead of JVM ,  direct ADB instead of gRPC , WebDriverAgent with proper lifecycle management instead of raw XCUITest. That single set of decisions made 31 of the top 100 issues structurally impossible. Not by writing 31 workarounds. By making the failure modes cease to exist. 
+ What We Deliberately Skipped 
+ The 22 unaddressed issues are not gaps. They are scope boundaries we drew on purpose. 
+ 
+ 
+ 
+ Category 
+ Count 
+ Examples 
+ 
+ 
+ 
+ 
+ Feature requests 
+ 12 
+ Biometrics simulation, broadcastReceivers, Google Maps markers, shake simulation 
+ 
+ 
+ Video recording 
+ 3 
+ Reduce iOS video size, failed video on test failure, empty video recording 
+ 
+ 
+ JS engine compat 
+ 3 
+ require()  support, GraalJS modules,  setTimeout  in scripts 
+ 
+ 
+ Java/Maven ecosystem 
+ 2 
+ Maven Central publishing, Rhino JS deprecation 
+ 
+ 
+ Not yet implemented 
+ 2 
+ onFlowFailure  hook,  setTime  command 
+ 
+ 
+ 
+ The 12 feature requests are capabilities beyond core test execution that require deep platform-specific APIs varying across OS versions. Valid requests, but additive features, not bugs. 
+ The 3 JS engine issues deserve a note. Maestro has cycled through Rhino and GraalJS with compatibility problems at each transition. We use  goja , a Go-native JS engine, and sidestep the entire category. 
+ The Architecture Tax 
+ Here is the distinction that matters most in the scorecard: 31 of the 78 addressed issues were not “fixed.” They were made structurally impossible. 
+ Writing a fix means you identified a bug, understood the failure mode, and wrote code to handle it. We did that 47 times. Proper Unicode handling for  inputText . Retry logic for WDA startup. A dedicated keyboard dismissal endpoint. Real code solving real bugs. 
+ But 31 issues required no fix at all because the failure mode cannot exist in our architecture. No gRPC means no gRPC connection drops, no protobuf serialization failures, no channel exhaustion under CI memory pressure. No JVM means no 358 MB memory footprint, no garbage collection pauses mid-test, no classpath conflicts. No raw XCUITest process management means no  IOSDriverTimeoutException  from a stalled subprocess three layers deep. 
+ This is the architecture tax that Maestro pays on every release. Each of those 31 issues will continue to generate new bug reports, new workarounds, and new “me too” comments – because the root cause is structural, not incidental. You cannot patch your way out of an architecture decision. You can only choose a different one. 
+ We chose differently. That single decision – Go binary, direct protocols, no middleware – resolved 40% of the top 100 issues before we wrote a single line of feature code. 
+ The Data Is Public 
+ The addressed issues are concentrated at the top of the engagement ranking – the problems that affect the most people, break the most  CI pipelines , and generate the most workaround-laden threads. The unaddressed 22% is almost entirely feature requests, not bugs you will hit during normal test execution. 
+ The complete analysis – all 100 issues with links, comment counts, status, and our specific approach to each – is here: 
+ maestro-issues-analysis.md 
+ Every claim is verifiable against the source issues on Maestro’s GitHub. We built the tool to match the data, and the data is public. 
+
+             
+
+             
+                 
+                    
+                     maestro-runner 
+                    
+                     maestro 
+                    
+                     github-issues 
+                    
+                     data-driven 
+                    
+                     mobile-testing 
+                    
+                     architecture 
+                    
+                 
+             
+
+            
+             
+                 
+                     
+                    Continue Reading
+                 
+                 
+                    
+                     
+                         announcement 
+                         Introducing maestro-runner 
+                         
+                             
+                            5 min read
+                         
+                     
+                    
+                     
+                         engineering 
+                         Maestro's Open GitHub Issues: 47 Flakiness 
+                         
+                             
+                            10 min read
+                         
+                     
+                    
+                 
+             
+            
+         
+
+         
+             On this page 
+             
+                 
+                    
+                     
+                         The Pattern Nobody Talks About 
+                     
+                    
+                     
+                         Five Issues That Tell the Whole Story 
+                     
+                    
+                     
+                         Why Issues, Not Surveys 
+                     
+                    
+                     
+                         The Filter 
+                     
+                    
+                     
+                         The Scrape 
+                     
+                    
+                     
+                         The Scorecard 
+                     
+                    
+                     
+                         What We Deliberately Skipped 
+                     
+                    
+                     
+                         The Architecture Tax 
+                     
+                    
+                     
+                         The Data Is Public 
+                     
+                    
+                 
+             
+         
+     
+
+    
+
+ 
+     
+         
+             DeviceLab 
+             Turn your devices into a globally accessible testing lab. Built by the RobusTest team with 10+ years of mobile testing expertise. 
+         
+         
+             Product 
+             
+                 How It Works 
+                 Pricing 
+                 Documentation 
+                 Certified Hardware 
+                 Save $19k/Year 
+                 Open Source 
+             
+         
+         
+             Compare 
+             
+                 vs BrowserStack 
+                 vs LambdaTest 
+                 vs Sauce Labs 
+                 vs HeadSpin 
+             
+         
+         
+             Company 
+             
+                 Blog 
+                 Privacy Policy 
+                 Terms of Service 
+                 Contact 
+             
+         
+     
+     
+         © 2025 DeviceLab. All rights reserved. 
+         Made with ❤️ by engineers who believe quality mobile testing shouldn't require enterprise budgets. 
+     
+ 
+
+
+     
+ 
+ 

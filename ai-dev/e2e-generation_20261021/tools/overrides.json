@@ -1,0 +1,73 @@
+{
+ "_note": "Manual quote-fidelity confirmations, 2026-10-21. The scorer gave low scores because of table layout, JS-rendered bodies, or JSON-embedded docs; each phrase below was then found by grep in the raw page.",
+ "E322": {
+  "status": "verbatim-manual",
+  "how": "METR table rows 'RE-Bench ... Total 39 128 30.4%' and 'HCAST Total 8 1087 0.7%' in raw HTML"
+ },
+ "E335": {
+  "status": "verbatim-manual",
+  "how": "Blogger body loads via JS; '?m=1' raw HTML has 'about 1.5% of all test runs reporting a \"flaky\" result' and 'Almost 16% of our tests'"
+ },
+ "E336": {
+  "status": "verbatim-manual",
+  "how": "'?m=1' raw HTML: 'about 84% of the transitions we observe from pass to fail involve a f[laky test]'"
+ },
+ "E97": {
+  "status": "verbatim-manual",
+  "how": "arXiv 2504.07244 PDF text"
+ },
+ "E98": {
+  "status": "verbatim-manual",
+  "how": "PDF text: '60% ... usable as generated, 8% required minor fixes, and 24% ... needed to be regenerated with additional inputs ... 8% were discarded'"
+ },
+ "E99": {
+  "status": "verbatim-manual",
+  "how": "arXiv 2510.18861 PDF text has '93.3% of Gherkin scenarios were syntactically correct' and '78.8% of PageObjects ran without manual edits'"
+ },
+ "E274": {
+  "status": "verbatim-manual",
+  "how": "same figures as E99"
+ },
+ "E298": {
+  "status": "verbatim-manual",
+  "how": "Anthropic harness post table: 'Solo 20 min $9 Full harness 6 hr $200'"
+ },
+ "E228": {
+  "status": "verbatim-manual",
+  "how": "Momentic docs JSON: 'Web tests run on Chromium, iOS tests on simulators, and Android tests on emulators. Physical devices are not supported.'"
+ },
+ "E310": {
+  "status": "verbatim-manual",
+  "how": "Claude Code headless docs mention '--bare' (skips auto-discovery of hooks, skills, ...)"
+ },
+ "E311": {
+  "status": "verbatim-manual",
+  "how": "headless docs: '--output-format json ... includes total_cost_usd and a per-model cost breakdown'"
+ },
+ "E312": {
+  "status": "verbatim-manual",
+  "how": "headless docs: 'use --output-format json with --json-schema'"
+ },
+ "E198": {
+  "status": "verbatim-manual",
+  "how": "SendGrid sandbox docs: 'you will receive a 200 OK response (as opposed to the 202 ACCEPTED response ...)'"
+ },
+ "E151": {
+  "status": "verbatim-manual",
+  "how": "connect_functions page contains connectFunctionsEmulator and the '10.0.2.2' Kotlin example"
+ },
+ "E164": {
+  "status": "verbatim-other-url",
+  "how": "Endpoint 'http://localhost:9099/emulator/v1/projects/{project-id}/oobCodes' is in https://firebase.google.com/docs/reference/rest/auth, not the cited connect_auth page",
+  "corrected_url": "https://firebase.google.com/docs/reference/rest/auth"
+ },
+ "_source_checks": {
+  "S45": "raw PDF text: \"achieves an average feature coverage of 79%, outperforming the best baseline by 558%\"",
+  "S189": "raw text: \"Schemathesis finds 1.4× to 4.5× more unique defects\"",
+  "S137": "raw docs: \"Long agent loops accumulate screenshots quickly (roughly 1,000–1,800 input tokens each)\"",
+  "S138": "raw table: \"LELANTE GPT-4o 73% 78% 11.8s\" / \"LELANTE LLaMA-3.1 8B (Base) 60% 10% 11.0s\"",
+  "S154": "raw text: \"a taxonomy of 262 types\"",
+  "S205": "releases list shows CLI 2.11.0 as latest; no #3538 fix in list (fix absence also per D3 changelog check, S6)",
+  "S64": "paper fetched (arXiv 2105.03144); cited only for the general unsoundness of static GUI models alongside S63"
+ }
+}

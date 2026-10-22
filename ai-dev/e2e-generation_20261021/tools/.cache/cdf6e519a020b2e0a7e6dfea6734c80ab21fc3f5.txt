@@ -1,0 +1,678 @@
+__HTTP 200__
+                                                                       AppAgent: Multimodal Agents as Smartphone Users
+
+                                                              Chi Zhang∗                             Zhao Yang∗ Jiaxuan Liu∗                                           Yucheng Han                Xin Chen
+                                                                                                        Zebiao Huang Bin Fu                                            Gang Yu†
+                                                                                                                    Tencent
+                                        {johnczhang, jayzyang, jiaxuanliu, yuchenghan, shingxchen, zebiaohuang, brianfu, skicyyu}@tencent.com
+                                                                                                     https://appagent-official.github.io/
+
+                                                                                  Chat with the user                                           Search music video song                                     Send an email to
+                                                                                  Agent Liu and                                                Wonderful Tonight and                                       janedoe@email.com to
+                                                                                  answer his question                                          leave a praising comment                                    ask her about her new job
+
+
+
+
+arXiv:2312.13771v3 [cs.CV] 5 Jul 2026
+                                                 Observation: The screenshot shows the Telegram app,            Observation: The screenshot shows a YouTube search           Observation: The screenshot shows a smartphone's
+                                                 a conversation from "Agent Liu" with a message...              result for "Wonderful Tonight" ...                           email application ...
+                                                 Thought: To complete this task, I should input the text with   Thought: To complete this task, I should insert a            Thought: To complete this task, I should type the
+                                                 this answer into the input field labeled with the tag ‘7’      praising comment into the text input field labeled ‘2’.      content of the email asking Jane Doe about her new job.
+                                                 Action: text("The Toronto Raptors won the 2019 NBA ... ")      Action: text(“This is such a timeless piece...")             Action: text(“Dear Jane Doe,\n\nI am writing to ...")
+
+
+
+
+                                                                                                                      Clock                                                        TEMU
+                                                                                   Improve the quality of                                      Set an alarm at 12:30 pm                                     Search for a gaming
+                                                                                   this image until it looks                                   every Friday and Sunday,                                     headset and add it to my
+                                                                                   good to you                                                 and disable the vibration                                    shopping cart.
+
+
+
+
+                                                 Observation: The screenshot shows a photo editing app on       Observation: The image shows a screenshot of an               Observation: The screenshot displays a shopping app
+                                                 a smartphone with an image displayed on the screen...          alarm application on a smartphone...                          with a variety of headsets listed ...
+                                                 Thought: To complete this task, I should adjust the noise      Thought: To complete this task, I should disable the          Thought: To complete this task, I should add the
+                                                 reduction level using the slider.                              vibration feature by tapping on the UI element.               selected headset into my shopping cart.
+                                                 Action: Action: swipe(23, "right", "medium")                   Action: tap(17)                                               Action: tap(14)
+
+
+
+                                         Figure 1: Diverse applications of our multimodal agent framework for smartphone App operation. We
+                                         evaluate the effectiveness of our agent model on 50 tasks across 10 different Apps, highlighting its adaptability and
+                                         effectiveness in a real-world context.
+
+                                                                                   Abstract                                                              tions through a simplified action space, mim-
+                                                                                                                                                         icking human-like interactions such as tapping
+                                             Recent advancements in large language models
+                                                                                                                                                         and swiping. This novel approach bypasses
+                                             (LLMs) have led to the creation of intelligent
+                                                                                                                                                         the need for system back-end access, thereby
+                                             agents capable of performing complex tasks.
+                                                                                                                                                         broadening its applicability across diverse apps.
+                                             This paper introduces a novel LLM-based mul-
+                                                                                                                                                         Central to our agent’s functionality is its in-
+                                             timodal agent framework designed to operate
+                                                                                                                                                         novative learning method. The agent learns
+                                             smartphone applications. Our framework en-
+                                                                                                                                                         to navigate and use new apps either through
+                                             ables the agent to operate smartphone applica-
+                                                                                                                                                         autonomous exploration or by observing hu-
+                                             * Equal contributions.
+                                                                                                                                                         man demonstrations. This process generates
+                                             †
+                                                 Corresponding Author.
+
+
+                                                                                                                                          1
+    a knowledge base that the agent refers to for           ing application that builds an agent to operate any
+    executing complex tasks across different appli-         smartphone application (App) in the mobile oper-
+    cations. To demonstrate the practicality of our         ating system. Our approach differs significantly
+    agent, we conducted extensive testing over 50           from existing intelligent phone assistants like Siri,
+    tasks in 10 different applications, including so-
+                                                            which operate through system back-end access and
+    cial media, email, maps, shopping, and sophis-
+    ticated image editing tools. The results affirm         function calls. Instead, our agent interacts with
+    our agent’s proficiency in handling a diverse           smartphone apps in a human-like manner, using
+    array of high-level tasks.                              low-level operations such as tapping and swiping
+                                                            on the graphical user interface (GUI). The proposed
+1   Introduction                                            agent offers multiple advantages. Firstly, it elimi-
+                                                            nates the need for system back-end access, making
+The emergence of large language models (LLMs),              our agent universally applicable across various ap-
+such as ChatGPT (OpenAI, 2021) and GPT-4 (Ope-              plications. Additionally, this approach enhances
+nAI, 2023), marks a significant milestone in the            security and privacy, as the agent does not require
+field of artificial intelligence and natural language       deep system integration. Furthermore, by operating
+processing. These advanced models represent a               on the GUI level, our agent can adapt to changes
+fundamental change in how machines understand               in app interfaces and updates, ensuring long-term
+and generate human language, exhibiting a level of          applicability and flexibility.
+sophistication and versatility previously unattain-
+                                                               However, creating a multimodal agent capable
+able. One of the most exciting developments in
+                                                            of operating diverse smartphone apps presents sig-
+this field is the capability of LLMs to function not
+                                                            nificant challenges. Existing research indicates that
+just as language processors, but as agents capable
+                                                            adapting current models for embodied tasks ne-
+of performing complex tasks. This evolution is ev-
+                                                            cessitates extensive training data, and collecting a
+ident in initiatives such as AutoGPT (Yang et al.,
+                                                            large dataset of app demonstrations for training is
+2023a) and MetaGPT (Hong et al., 2023), which
+                                                            a formidable task. Moreover, different apps have
+showcase the practical applications of LLMs in
+                                                            unique GUIs with varying icon meanings and op-
+tasks requiring advanced cognitive functions like
+                                                            erational logic, and it remains uncertain whether
+reasoning, planning, and collaboration. The signifi-
+                                                            these adapted models can effectively generalize to
+cance of these developments cannot be overstated,
+                                                            unseen apps.
+as they extend the utility of LLMs beyond simple
+language tasks, revolutionizing various aspects of             In this paper, we introduce a multimodal agent
+technology and daily life.                                  framework aimed at operating any smartphone app
+   However, a key limitation of these LLM-based             like human users. The learning of our framework
+agents has been their reliance solely on text-based         involves an exploration phase where the agent in-
+information. This restriction has historically cur-         teracts autonomously with apps through a set of
+tailed their perception and interaction with their          pre-defined actions and learns from their outcomes.
+environment. The introduction of models equipped            These interactions are documented, which assists
+with vision capabilities, such as the latest itera-         the agent in navigating and operating the apps. This
+tion of GPT-4, marks a pivotal breakthrough. By             learning process can be accelerated by observing
+integrating the ability to process and interpret vi-        a few human demonstrations. Following this ex-
+sual information, these models can now understand           ploratory phase, the agent can operate the app by
+aspects of their surroundings that are difficult or         consulting the constructed document based on its
+impossible to convey through text alone. This ex-           current state, eliminating the need to adapt the pa-
+tended capability enables LLMs to interpret con-            rameters of the LLMs or collect extensive training
+text, recognize patterns, and respond to visual cues,       data for each app.
+thus providing a more holistic and interactive expe-          To validate its effectiveness, we tested our agent
+rience with the world.                                      on 50 tasks across 10 different apps, ranging from
+   In our work, we focus on building a multimodal           social media and messaging to email, maps, shop-
+agent leveraging the vision capabilities of multi-          ping, and even complex image editing apps. Both
+modal large language models to undertake tasks              quantitative results and user studies underscore the
+previously unachievable by text-only agents. In             advantages of our design, particularly its adapt-
+particular, we explore an interesting but challeng-         ability, user-friendliness, and efficient learning and
+
+                                                        2
+operating capabilities across a wide range of appli-        2023b,a), ChartLlama (Han et al., 2023), and Sta-
+cations. This underlines the potential of our agent         bleLLaVA (Li et al., 2023), also demonstrate vision
+as a versatile and effective tool in the realm of           understanding capabilities akin to those of GPT-4V.
+smartphone app operation.                                   Nevertheless, a performance gap persists between
+   In summary, this paper makes the following con-          these open-source models and GPT-4V, suggesting
+tributions:                                                 potential areas for further development.
+    • We open-source a multimodal agent frame-
+      work, focusing on operating smartphone ap-            2.2   LLMs as agents
+      plications with our developed action space.           The use of LLMs as agents for executing com-
+                                                            plex tasks has gained increasing attention. Ini-
+    • We propose an innovative exploration strategy,
+                                                            tiatives like AutoGPT (Yang et al., 2023a), Hug-
+      which enables the agent to learn to use novel
+                                                            gingGPT (Shen et al., 2023), and MetaGPT (Hong
+      apps.
+                                                            et al., 2023) illustrate this trend, and many projects
+    • Through extensive experiments across multi-           demonstrate impressive capabilities, moving be-
+      ple apps, we validate the advantages of our           yond basic language tasks to engaging in activi-
+      framework, demonstrating its potential in the         ties requiring higher cognitive functions, such as
+      realm of AI-assisted smartphone app opera-            software development (Qian et al., 2023; Chen
+      tion.                                                 et al., 2021) and gaming (FAIR et al., 2022; Park
+                                                            et al., 2023; Xu et al., 2023). In this context,
+2     Related Work                                          Yao et al. (Yao et al., 2023) introduce an innova-
+                                                            tive approach that synergizes reasoning and acting
+2.1    Large language models                                in LLMs, significantly enhancing their decision-
+The development of ChatGPT (OpenAI, 2021) and               making and interactive capabilities. LLM-based
+GPT-4 (OpenAI, 2023) represents a crucial ad-               agents are designed to utilize the advanced lan-
+vancement in natural language processing. Unlike            guage and reasoning skills of LLMs to interact
+earlier large language models (LLMs), these new             with and manipulate their environment (Liu et al.,
+models (Touvron et al., 2023a,b; Zeng et al., 2022;         2023c; Gur et al., 2023; Xie et al., 2023). This in-
+Taori et al., 2023; Zheng et al., 2023) enable multi-       cludes performing tasks that require understanding
+round conversations and have the impressive ability         context, making decisions, and learning from inter-
+to follow complex instructions. The integration of          actions (Xi et al., 2023; Hu and Shu, 2023). Such
+vision capabilities in GPT-4V (Yang et al., 2023b)          agents are pivotal in applications where human-like
+is a further milestone, enabling the language model         cognitive abilities are essential.
+to process and interpret visual data. This addition            The emergence of multimodal LLM
+has broadened the scope of potential AI applica-            agents (Wang et al., 2023; Furuta et al., 2023;
+tions, allowing GPT-4 to undertake diverse tasks            Brohan et al., 2022, 2023; Reed et al., 2022),
+such as problem-solving, logical reasoning, tool            capable of processing various inputs including text,
+usage, API calls, and coding. Recent studies (Yang          images, audio, and video, has further broadened
+et al., 2023c; Yan et al., 2023) have shown that            the scope of LLM applications. This versatility
+GPT-4V can understand various types of images,              is particularly beneficial for LLM-based agents,
+including simple user interfaces (UIs) in popular           enabling them to interact more effectively with
+smartphone apps. However, challenges arise when             their environment and complete more complex
+the apps are new and their UIs are less typical,            tasks, be it completing household tasks in a
+which highlights a major problem that our work              physical world (Ahn et al., 2022), generating 3D
+aims to address. Among open-source efforts from             assets via procedural tool use (Sun et al., 2023), or
+the industry and research community, the LLaMA              mastering over 600 tasks across different domains
+series (Touvron et al., 2023a,b) are the most pop-          at the same time (Reed et al., 2022). Our research
+ular equivalents and have been fine-tuned to ac-            contributes to this area by focusing on an agent
+quire conversational abilities, employing a decoder-        designed to operate smartphone applications. This
+only architecture similar to ChatGPT (Taori et al.,         agent’s ability to interpret screenshots from the
+2023; Zheng et al., 2023). Building upon LLaMA,             operating system demonstrates its flexibility and
+many multimodal LLMs, such as LLaVA (Liu et al.,            adaptability, making it a valuable tool in a wide
+
+                                                        3
+       Exploration Phase                                                                                 Deployment Phase: “beautify this photo for me…”
+
+
+
+              …
+                                 Tap                             Swipe
+                                                                                               …     …                                              …
+
+
+
+                                   👀                                👀
+
+          🤔
+                     “Tapping this UI element opens      “Swiping this UI element allows the
+                      the color settings to adjust the        user to adjust the color
+                           color of the image.”             temperature of the image.”
+
+
+
+
+                                                     Doc for App                                               Observe, Think, Act, and Summarize
+
+
+
+Figure 2: Overview of our multimodal agent framework designed to operate smartphone applications. The
+figure illustrates the two-phase approach of our framework. In the exploration phase, the agent interacts with a
+smartphone application and learns from their outcomes to create a comprehensive reference document. In the
+deployment phase, the agent utilizes the information compiled in this document to operate and navigate the apps
+effectively.
+range of applications.                                                                         This helps the agent to interact accurately without
+                                                                                               needing to specify exact positions on the screen
+3     Method                                                                                   and enhances the agent’s precision in controlling
+                                                                                               the phone.
+This section details the methodology behind our in-
+                                                                                                  Action Space: Our agent’s action space mir-
+novative multimodal agent framework. This frame-
+                                                                                               rors common human interactions with smartphones:
+work enables an agent to interact with smartphone
+                                                                                               taps and swipes. We designed four basic functions:
+applications in a manner akin to human behavior.
+We first describe the experimental environment and                                                 • Tap(element : int) : This function simu-
+action space, which are foundational elements of                                                     lates a tap on the UI element numbered on
+our system. Next, we discuss the exploration phase,                                                  the screen. For example, tap(5) would tap
+where the agent learns app functionalities either                                                    the element labeled ‘5’.
+through autonomous interactions or by observing
+                                                                                                   • Long_press(element : int) : This func-
+human demonstrations. Finally, we outline the de-
+                                                                                                     tion emulates a long press (for 1 second) on a
+ployment phase, explaining how the agent applies
+                                                                                                     UI element.
+its acquired knowledge to execute high-level tasks.
+                                                                                                   • Swipe ( element : int, direction : str,
+3.1    Environment and Action Space                                                                  dist : str): It allows the agent to swipe on
+Experimental Environment: Our experimental                                                           an element in a specified direction (up, down,
+environment is built on a command-line interface                                                     left, right) and distance (short, medium, long).
+(CLI), allowing the agent to interact with smart-                                                    For instance, swipe(21, “up”, “medium”)
+phone apps. We chose the Android operating sys-                                                      would swipe up on element ‘21’ for a medium
+tem for our experiments. The agent receives two                                                      distance.
+key inputs: a real-time screenshot showing the
+                                                                                                   • Text(text : str) : To bypass inefficient vir-
+app’s interface and an XML file detailing the in-
+                                                                                                     tual keyboard typing, this function inputs
+teractive elements. To enhance the agent’s ability
+                                                                                                     text directly into an input field when a
+to identify and interact with these elements seam-
+                                                                                                     virtual keyboard is visible.    For exam-
+lessly, we assign each element a unique identifier.
+                                                                                                     ple, text(“Hello, world!”) inputs the string
+These identifiers are derived either from the re-
+                                                                                                     “Hello, world!".
+source ID in the XML file (if provided) or are con-
+structed by combining the class name, size, and                                                    • Back() : A system-level function that helps
+content of the element. These elements are over-                                                     the agent return to the previous UI page, espe-
+laid as semi-transparent numbers on the screenshot.                                                  cially useful for exiting irrelevant pages.
+
+                                                                                          4
+   • Exit() : A specialized function is employed              This strategy narrows down the exploration space
+     to conclude processes, typically invoked upon            and prevents the agent from engaging with irrele-
+     successful task completion.                              vant app pages, making it a more streamlined and
+                                                              efficient approach compared to autonomous inter-
+   These predefined actions are designed to sim-              actions.
+plify the agent’s interactions, particularly by elim-
+inating the need for precise screen coordinates,              3.3    Deployment Phase
+which can pose challenges for language models                 Following the exploration phase, the agent is well-
+in accurately predicting.                                     equipped to execute complex tasks based on its
+3.2   Exploration Phase                                       accrued experience. The agent adheres to a step-
+                                                              by-step approach when given a task, with each step
+Exploring by autonomous interactions. The Ex-                 encompassing access to a screenshot of the current
+ploration Phase is central to our framework. Here,            UI and a dynamically generated document detail-
+the agent learns about the functionalities and fea-           ing the functions of UI elements and the actions’
+tures of smartphone apps through trial and error. In          effects on the current UI page. The prompts also
+this phase, the agent is assigned a task and starts           provide detailed explanations of all available ac-
+interacting autonomously with the UI elements. It             tions. In each step, the agent is first tasked with
+uses different actions and observes the resulting             providing its observations of the current UI, fol-
+changes in the app interface to understand how                lowed by articulating its thought process concern-
+it works. The agent, driven by a large language               ing the task and current observations. Subsequently,
+model, attempts to figure out the functions of UI             the agent proceeds to execute actions by invoking
+elements and the effects of specific actions by an-           available functions. After each action, the agent
+alyzing screenshots before and after each action.             summarizes the interaction history and the actions
+This information is compiled into a document that             taken during the current step. This information is
+records the effects of actions applied to different el-       incorporated into the next prompt, which provides
+ements. When a UI element is acted upon multiple              the agent with a form of memory. This meticulous
+times, the agent will update the document based               approach enhances the reliability and interpretabil-
+on past documents and current observations to im-             ity of the agent’s actions, thereby facilitating more
+prove quality. To make exploration more efficient,            informed decision-making. The deployment phase
+the agent stops further exploring UI elements if the          stops when the agent determines that the task has
+current UI page seems unrelated to the main tasks             been accomplished, at which point it can exit the
+of the app, like advertisement pages. In such cases,          process by taking the Exit() action.
+it uses the Android system’s Back() function to
+return to the previous UI page. Compared with                 4     Experiments
+random exploration, such as Depth-First Search
+and Breadth-First Search, this goal-oriented explo-           In this section, we will present our evaluation of
+ration approach ensures that the agent focuses on             the multimodal agent framework through a combi-
+elements crucial for the effective operation of the           nation of quantitative and qualitative experiments.
+app. The agent also utilizes the LLM’s existing               Our primary goal is to assess the agent’s perfor-
+knowledge about user interfaces to improve explo-             mance and its ability to operate a diverse set of
+ration efficiency. The exploration stops when the             smartphone applications effectively.
+agent completes the assigned task.
+   Exploring by watching demos. An alternative                4.1    Experimental Setup
+and often more effective exploration method in-               To comprehensively evaluate our method, we con-
+volves the agent observing human demonstrations.              struct a benchmark that includes 10 popular appli-
+These demonstrations provide the agent with ex-               cations, each serving various purposes. These ap-
+amples of efficient app usage, especially for un-             plications include Google Maps, Twitter, Telegram,
+derstanding complex functionalities that might be             YouTube, Spotify, Yelp, Gmail, TEMU, Clock, and
+challenging to discover through autonomous inter-             Lightroom. We have intentionally chosen this di-
+actions. In this method, a human user operates                verse set of apps to test the agent’s adaptability
+the apps while the agent observes, recording only             across various functions and interfaces. In particu-
+the elements and actions employed by the human.               lar, to gain a more comprehensive insight into the
+
+                                                          5
+   Google Maps: navigate to Tencent Shanghai Branch
+
+
+                                   Observation                                              Observation                                                        Observation
+                                       The search field is focused and a keyboard is            A keyboard and a search result for "Tencent Shanghai              The screenshot shows a map application with the
+                                       present on the lower half of the screen. UI              Branch" with address details and a distance measurement           location "Tencent Shanghai Branch" pinpointed
+                                       element labeled '6' appears to be the search input       are displayed.                                                    with a red marker. There are two buttons at the
+                                       field where text can be input to find locations,                                                                           bottom of the screen, one labeled "Directions" and
+                                       addresses, or points of interest.                                                                                          the other labeled "Start", with numeric tags 1 and
+                                                                                                                                                                  3 respectively.
+
+
+                                     Thought                                                  Thought                                                            Thought
+                                       To complete the given task, I should enter the           To complete the given task, I should confirm the search           To complete the given task, which is to
+                                       text "Tencent Shanghai Branch" in the search             for "Tencent Shanghai Branch". In this screenshot, the            navigate to Tencent Shanghai Branch, I should
+                                       field to proceed with the search for the                 search confirm button is represented by the blue button           tap the "Directions" button to initiate the
+                                       destination.                                             with the text “\u641c\u7d22” (“Search” in Chinese) on it.         route finding process.
+
+
+
+
+                                      Action                                                   Action                                                            Action
+                                       text("Tencent Shanghai Branch")                          tap(1)                                                            tap(2)
+
+
+
+
+  Gmail: send an email to janedoe@email.com to ask her about her new job
+
+                                                                                                                                                               Observation
+                                   Observation                                              Observation
+                                                                                                                                                                  The email body is typed with a message asking
+                                       The recipient's email address is already filled         The recipient's email address is already filled in as              Jane Doe about her recent job and expressing
+                                       in, and the subject line reads "Inquiry About           janedoe@email.com and the subject line is "Inquiry                 eagerness to hear from her. There is a send
+                                       Your New Position." The body of the email is            About Your New Position." The cursor is blinking in                button labeled with the numeric tag '3’.
+                                       not visible, and there's a UI element labeled           the main body area of the email, indicating that it is
+                                       '11' which is used to collapse the keyboard.            ready to receive text input. The on-screen keyboard is
+                                                                                               also visible.
+
+                                                                                                                                                                Thought
+                                     Thought                                                 Thought
+                                                                                                                                                                  To complete the given task, the next step I
+                                       To complete the task, the next step should be           To complete the given task, the next step I should do is           should take is to send the email by tapping
+                                       to collapse the keyboard so that I can access           to type the content of the email asking Jane Doe about             the send button.
+                                       the body of the email to type the message to            her new job.
+                                       Jane Doe asking about her new job.
+
+
+
+                                                                                                                                                                 Action
+                                      Action                                                  Action
+                                                                                                                                                                  tap(3)
+                                       tap(11)                                                 text("Dear Jane Doe,\n\nI am writing to inquire
+                                                                                               about your new position that you recently started…")
+
+
+
+
+  Lightroom: improve the quality of this image until it looks good to you
+
+                                                                                                                                                               Observation
+                                   Observation                                              Observation
+                                                                                                                                                                  The exposure and contrast sliders are visible,
+                                      The screenshot shows a photo editing application         The exposure level has been increased, as indicated by the         with the exposure increased to +2.20 and the
+                                      interface with various adjustment settings for           slider tagged with number 20 being to the right. The               contrast increased to +24. The highlights and
+                                      exposure, contrast, highlights, and shadows.             contrast, highlights, and shadows are yet to be adjusted,          shadows sliders are at 0, indicating no
+                                      These adjustments have numeric tags 20, 21, 22,          with their sliders at the neutral position. There are also         adjustment has been made to them.
+                                      and 23 respectively. The settings are currently at       other adjustment options available, such as color and detail,
+                                      their default values, and the image appears              which could further improve the image quality if needed.
+                                      underexposed, needing improvement in lighting.
+                                                                                                                                                                Thought
+                                     Thought                                                 Thought
+                                                                                                                                                                  Since I have previously increased the exposure
+                                      To improve the image quality and correct the             The next step to improve the quality of the image could be         and adjusted the contrast slightly, the next step
+                                      underexposure, I need to increase the                    to adjust the contrast, as increasing contrast can often           could be to adjust the highlights or shadows to
+                                      exposure. The slider for the exposure setting            make an image appear more vivid and can complement                 further improve the image quality. Adjusting
+                                      is labeled with numeric tag 20, which I can              the increased exposure. Based on the documentation,                the highlights might help in bringing out more
+                                      interact with to adjust the exposure level. I will       interacting with UI element labeled 21 will adjust the             detail in the brighter parts of the image
+                                      swipe right on this slider to increase the               contrast level of the image.                                       without affecting the overall exposure too much.
+                                      exposure.
+                                                                                                                                                                 Action
+                                      Action                                                  Action
+                                                                                                                                                                  tap(22)
+                                      swipe(20, "right", "medium")                             swipe(21, "right", "short")
+
+
+
+
+Figure 3: Qualitative Task Evaluation Across Three Apps. This figure presents qualitative results for three
+distinct tasks conducted on Google Maps, Gmail, and Lightroom. It showcases AppAgent’s ability to accurately
+perceive, reason, and execute tasks, demonstrating its competence in various application contexts. Due to space
+constraints, some less critical details have been omitted from the description.
+vision capabilities of our agent, we conducted an                                                             4.2              Design and Analysis
+in-depth case study using Adobe Lightroom, an
+                                                                                                             Baselines. To comprehensively evaluate our mul-
+image-editing application. This specific case study
+                                                                                                             timodal agent framework, we considered various
+allowed us to evaluate the agent’s proficiency in
+                                                                                                             design choices and their impact on performance.
+handling visual tasks and its ability to interpret
+                                                                                                             We conducted experiments using different configu-
+and manipulate images within the app. For the
+                                                                                                             rations to provide valuable insights into the agent’s
+exploration phase, we capped the maximum num-
+                                                                                                             behavior. We started with GPT-4 without any ref-
+ber of steps at 40. During testing, we limited the
+                                                                                                             erence documents during testing and examined its
+maximum number of steps to 10. For these experi-
+                                                                                                             performance both with the raw action API and
+ments, we utilized the state-of-the-art multimodal
+                                                                                                             our simplified action space. Next, we explored
+large language model, GPT-4. GPT-4 is equipped
+                                                                                                             different ways to generate guiding documents for
+to process interleaved image-and-text inputs effec-
+                                                                                                             the agent. These included documents generated
+tively. This unique capability enables our agent to
+                                                                                                             through autonomous exploration, watching human
+interpret and interact with both visual and textual
+                                                                                                             demonstrations, and the manually crafted docu-
+information seamlessly within the applications.
+                                                                                                             ment as an oracle benchmark.
+                                                                                                                To effectively compare the performance of dif-
+
+                                                                                                       6
+       Method                Document                 Action Space         SR ↑      Reward ↑       Avg. Steps
+                             None                     Raw                  2.2%      0.6            4.0
+       GPT4 (Baseline)
+                             None                     Ours                 48.9%     3.5            6.9
+                             Auto. Exploration        Ours                 73.3%     5.1            4.4
+       AppAgent              Watching Demos           Ours                 84.4%     4.7            5.1
+                             Manually Crafted         Ours                 95.6%     5.5            5.5
+
+Table 1: Evaluating Design Choices in AppAgent Performance. This table contrasts different design elements
+within AppAgent. Key findings include: our custom-developed action space surpasses the raw action space in effi-
+ciency; the exploration phase, incorporating both autonomous interaction and observation of human demonstrations,
+significantly enhances agent performance; and the auto-generated documentation yields outcomes on par with those
+derived from manually crafted documents.
+
+          Method               Document                    Action Space      Avg. Rank ↓      Num. Tools
+          GPT4 (Baseline)      None                        Ours              2.30             2.4
+                               Watching Demos              Ours              1.95             5.8
+          AppAgent
+                               Manually Crafted            Ours              1.75             4.0
+
+Table 2: Case study on image editing tasks with Lightroom App. We conduct a user study to rank the image
+editing results of different methods. Our agents produce better results than the GPT-4 baseline.
+
+
+ferent methods, we employed three key metrics:                 ing human demonstrations proved to be highly ef-
+Successful Rate (SR): This metric measures the                 fective. Their results consistently outperformed the
+average rate at which the agent successfully com-              GPT-4 baseline and are comparable to the results
+pletes tasks within an app. If the agent fails to              of human-written documents, which highlights the
+finish the task in 10 steps, it is considered a failure.       efficacy of our design in enhancing the agent’s per-
+Reward: To provide a more fine-grained measure-                formance across a diverse set of applications.
+ment, we developed a reward model to assess per-                  Qualitative results. In Fig. 3, we provide ex-
+formance. For each task within an app, we scored               amples showcasing the agent’s execution process
+different UI pages. The closer the UI page was to              for various tasks. This qualitative analysis serves
+the objective, the higher the score received. This             to demonstrate the agent’s capacity to accurately
+means that even if the agent failed to complete the            perceive, reason, and act in response to given tasks.
+task, it would still receive credit based on its final         For a more comprehensive understanding of our
+state.                                                         agent’s capabilities, please refer to our project page,
+Average Steps: We also reported the average num-               which includes additional demonstration videos.
+ber of steps required to successfully finish tasks
+across the selected applications.                              4.3   Case Study
+   Results. The comparison of our experimental re-             To gain deeper insights into the vision capabili-
+sults is presented in Table 1. We report the average           ties of our agent, we conducted an extensive case
+performance of 45 tasks on 9 of the 10 previously              study using Adobe Lightroom, an image-editing
+described apps. Notably, we excluded Lightroom                 application. This specific case study allowed us
+from this evaluation, as assessing task completion             to evaluate the agent’s proficiency in handling vi-
+in this application presented inherent ambiguities.            sual tasks, which was previously impossible for
+As demonstrated, our simplified action space sig-              text-only agent models. Lightroom, as an image-
+nificantly improves the performance of the GPT-4               editing app with various editing tools, demands a
+baseline. Our observations indicate that LLM strug-            wide range of operations, such as selecting appro-
+gles with producing accurate xy coordinates, while             priate tools and manipulating image parameters.
+our simplified action space eliminates this challeng-          This case study provides a robust evaluation of the
+ing requirement. Additionally, documents gener-                agent’s overall capabilities. Additionally, the open-
+ated through autonomous exploration and observ-                ended nature of image editing tasks allows us to
+
+                                                           7
+assess the agent’s problem-solving abilities. We               Hausman, Alex Herzog, Daniel Ho, Jasmine Hsu,
+prepared five images with visual issues, such as               Julian Ibarz, Brian Ichter, Alex Irpan, Eric Jang,
+                                                               Rosario Jauregui Ruano, Kyle Jeffrey, Sally Jes-
+low contrast and overexposure. Various variants
+                                                               month, Nikhil Joshi, Ryan Julian, Dmitry Kalash-
+of our model, as previously illustrated, were used             nikov, Yuheng Kuang, Kuang-Huei Lee, Sergey
+to edit these images. A user study was conducted               Levine, Yao Lu, Linda Luu, Carolina Parada, Pe-
+to rank the editing results produced by different              ter Pastor, Jornell Quiambao, Kanishka Rao, Jarek
+methods. We also reported the average number of                Rettinghouse, Diego Reyes, Pierre Sermanet, Nico-
+                                                               las Sievers, Clayton Tan, Alexander Toshev, Vincent
+tools used for image editing, providing an addi-               Vanhoucke, Fei Xia, Ted Xiao, Peng Xu, Sichun Xu,
+tional reference to the editing process’s complexity.          Mengyuan Yan, and Andy Zeng. 2022. Do as i can
+All models were assigned the task of “fix this image           and not as i say: Grounding language in robotic af-
+until it looks good to you” without specifying the             fordances. In arXiv preprint arXiv:2204.01691.
+image’s problems. The comparison of the results              Anthony Brohan, Noah Brown, Justice Carbajal, Yevgen
+is presented in Table 2. As we can see, our agent              Chebotar, Xi Chen, Krzysztof Choromanski, Tianli
+model with documents yields consistently better                Ding, Danny Driess, Avinava Dubey, Chelsea Finn,
+results than the GPT-4 baseline, which emphasizes              et al. 2023. Rt-2: Vision-language-action models
+                                                               transfer web knowledge to robotic control. arXiv
+the influence of documents in our design. The gen-             preprint arXiv:2307.15818.
+erated documents by watching the demonstration
+produced comparable results with the results of              Anthony Brohan, Noah Brown, Justice Carbajal, Yev-
+manually crafted documents, which suggests the                 gen Chebotar, Joseph Dabis, Chelsea Finn, Keerthana
+                                                               Gopalakrishnan, Karol Hausman, Alex Herzog, Jas-
+effectiveness of the exploration phase. We also                mine Hsu, et al. 2022. Rt-1: Robotics transformer
+find that with a document, the agent tends to use              for real-world control at scale. arXiv preprint
+various tools to improve the image quality, while              arXiv:2212.06817.
+the GPT-4 baseline uses fewer tools.
+                                                             Mark Chen, Jerry Tworek, Heewoo Jun, Qiming
+5   Conclusion                                                Yuan, Henrique Ponde de Oliveira Pinto, Jared Ka-
+                                                              plan, Harri Edwards, Yuri Burda, Nicholas Joseph,
+In this paper, we have introduced a novel multi-              Greg Brockman, et al. 2021. Evaluating large
+                                                              language models trained on code. arXiv preprint
+modal agent framework that leverages the vision               arXiv:2107.03374.
+capabilities of large language models to operate
+smartphone applications in a human-like manner.              Meta FAIR, Anton Bakhtin, Noam Brown, Emily Di-
+Our approach eliminates the need for system back-             nan, Gabriele Farina, Colin Flaherty, Daniel Fried,
+                                                              Andrew Goff, Jonathan Gray, Hengyuan Hu, et al.
+end access and offers security, adaptability, and
+                                                              2022. Human-level play in the game of diplomacy
+flexibility advantages. Our exploration-based learn-          by combining language models with strategic reason-
+ing strategy allows the agent to quickly adapt to             ing. Science, 378(6624):1067–1074.
+new applications with unfamiliar user interfaces,
+making it a versatile tool for various tasks. Our            Hiroki Furuta, Kuang-Huei Lee, Ofir Nachum, Yutaka
+                                                               Matsuo, Aleksandra Faust, Shixiang Shane Gu, and
+extensive experiments across various apps high-                Izzeddin Gur. 2023. Multimodal web navigation with
+light our agent’s ability to handle diverse high-level         instruction-finetuned foundation models.
+tasks and underscore its adaptability and learning
+efficiency.                                                  Izzeddin Gur, Hiroki Furuta, Austin Huang, Mustafa
+                                                                Safdari, Yutaka Matsuo, Douglas Eck, and Aleksan-
+   Limitation. We have adopted a simplified action              dra Faust. 2023. A real-world webagent with plan-
+space for smartphone operations, which means that               ning, long context understanding, and program syn-
+advanced controls such as multi-touch and irregu-               thesis.
+lar gestures are not supported. This limitation may
+                                                             Yucheng Han, Chi Zhang, Xin Chen, Xu Yang, Zhibin
+restrict the agent’s applicability in some challeng-           Wang, Gang Yu, Bin Fu, and Hanwang Zhang. 2023.
+ing scenarios. Nevertheless, we recognize this as              Chartllama: A multimodal llm for chart understand-
+an avenue for future research and development.                 ing and generation.
+
+                                                             Sirui Hong, Mingchen Zhuge, Jonathan Chen, Xiawu
+References                                                      Zheng, Yuheng Cheng, Ceyao Zhang, Jinlin Wang,
+                                                                Zili Wang, Steven Ka Shing Yau, Zijuan Lin, Liyang
+Michael Ahn, Anthony Brohan, Noah Brown, Yev-                   Zhou, Chenyu Ran, Lingfeng Xiao, Chenglin Wu,
+  gen Chebotar, Omar Cortes, Byron David, Chelsea               and Jürgen Schmidhuber. 2023. Metagpt: Meta pro-
+  Finn, Chuyuan Fu, Keerthana Gopalakrishnan, Karol             gramming for a multi-agent collaborative framework.
+
+
+                                                         8
+Zhiting Hu and Tianmin Shu. 2023. Language mod-               Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier
+  els, agent models, and world models: The law for              Martinet, Marie-Anne Lachaux, Timothée Lacroix,
+  machine reasoning and planning. arXiv preprint                Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal
+  arXiv:2312.05230.                                             Azhar, Aurelien Rodriguez, Armand Joulin, Edouard
+                                                                Grave, and Guillaume Lample. 2023a. Llama: Open
+Yanda Li, Chi Zhang, Gang Yu, Zhibin Wang, Bin                  and efficient foundation language models.
+  Fu, Guosheng Lin, Chunhua Shen, Ling Chen, and
+  Yunchao Wei. 2023. Stablellava: Enhanced visual             Hugo Touvron, Louis Martin, Kevin Stone, Peter Al-
+  instruction tuning with synthesized image-dialogue            bert, Amjad Almahairi, Yasmine Babaei, Nikolay
+  data.                                                         Bashlykov, Soumya Batra, Prajjwal Bhargava, Shruti
+                                                                Bhosale, Dan Bikel, Lukas Blecher, Cristian Canton
+Haotian Liu, Chunyuan Li, Yuheng Li, and Yong Jae
+                                                                Ferrer, Moya Chen, Guillem Cucurull, David Esiobu,
+  Lee. 2023a. Improved baselines with visual instruc-
+                                                                Jude Fernandes, Jeremy Fu, Wenyin Fu, Brian Fuller,
+  tion tuning.
+                                                                Cynthia Gao, Vedanuj Goswami, Naman Goyal, An-
+Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae             thony Hartshorn, Saghar Hosseini, Rui Hou, Hakan
+  Lee. 2023b. Visual instruction tuning.                        Inan, Marcin Kardas, Viktor Kerkez, Madian Khabsa,
+                                                                Isabel Kloumann, Artem Korenev, Punit Singh Koura,
+Xiao Liu, Hao Yu, Hanchen Zhang, Yifan Xu, Xuanyu               Marie-Anne Lachaux, Thibaut Lavril, Jenya Lee, Di-
+  Lei, Hanyu Lai, Yu Gu, Hangliang Ding, Kaiwen                 ana Liskovich, Yinghai Lu, Yuning Mao, Xavier Mar-
+  Men, Kejuan Yang, Shudan Zhang, Xiang Deng, Ao-               tinet, Todor Mihaylov, Pushkar Mishra, Igor Moly-
+  han Zeng, Zhengxiao Du, Chenhui Zhang, Sheng                  bog, Yixin Nie, Andrew Poulton, Jeremy Reizen-
+  Shen, Tianjun Zhang, Yu Su, Huan Sun, Minlie                  stein, Rashi Rungta, Kalyan Saladi, Alan Schelten,
+  Huang, Yuxiao Dong, and Jie Tang. 2023c. Agent-               Ruan Silva, Eric Michael Smith, Ranjan Subrama-
+  Bench: Evaluating LLMs as agents. arXiv preprint              nian, Xiaoqing Ellen Tan, Binh Tang, Ross Tay-
+  arXiv: 2308.03688.                                            lor, Adina Williams, Jian Xiang Kuan, Puxin Xu,
+                                                                Zheng Yan, Iliyan Zarov, Yuchen Zhang, Angela Fan,
+OpenAI. 2021. Chatgpt.         https://openai.com/              Melanie Kambadur, Sharan Narang, Aurelien Ro-
+  research/chatgpt.                                             driguez, Robert Stojnic, Sergey Edunov, and Thomas
+                                                                Scialom. 2023b. Llama 2: Open foundation and
+OpenAI. 2023. Gpt-4 technical report.                           fine-tuned chat models.
+Joon Sung Park, Joseph O’Brien, Carrie Jun Cai, Mered-
+                                                              Zihao Wang, Shaofei Cai, Anji Liu, Yonggang Jin, Jin-
+  ith Ringel Morris, Percy Liang, and Michael S Bern-
+                                                                bing Hou, Bowei Zhang, Haowei Lin, Zhaofeng He,
+  stein. 2023. Generative agents: Interactive simulacra
+                                                                Zilong Zheng, Yaodong Yang, Xiaojian Ma, and
+  of human behavior. In Proceedings of the 36th An-
+                                                                Yitao Liang. 2023. Jarvis-1: Open-world multi-
+  nual ACM Symposium on User Interface Software
+                                                                task agents with memory-augmented multimodal lan-
+  and Technology, pages 1–22.
+                                                                guage models.
+Chen Qian, Xin Cong, Cheng Yang, Weize Chen,
+  Yusheng Su, Juyuan Xu, Zhiyuan Liu, and Maosong             Zhiheng Xi, Wenxiang Chen, Xin Guo, Wei He, Yiwen
+  Sun. 2023. Communicative agents for software de-              Ding, Boyang Hong, Ming Zhang, Junzhe Wang,
+  velopment. arXiv preprint arXiv:2307.07924.                   Senjie Jin, Enyu Zhou, et al. 2023. The rise and
+                                                                potential of large language model based agents: A
+Scott Reed, Konrad Zolna, Emilio Parisotto, Ser-                survey. arXiv preprint arXiv:2309.07864.
+  gio Gomez Colmenarejo, Alexander Novikov,
+  Gabriel Barth-Maron, Mai Gimenez, Yury Sulsky,              Tianbao Xie, Fan Zhou, Zhoujun Cheng, Peng Shi, Lu-
+  Jackie Kay, Jost Tobias Springenberg, et al. 2022. A           oxuan Weng, Yitao Liu, Toh Jing Hua, Junning Zhao,
+  generalist agent. arXiv preprint arXiv:2205.06175.             Qian Liu, Che Liu, Leo Z. Liu, Yiheng Xu, Hongjin
+                                                                 Su, Dongchan Shin, Caiming Xiong, and Tao Yu.
+Yongliang Shen, Kaitao Song, Xu Tan, Dongsheng Li,               2023. Openagents: An open platform for language
+  Weiming Lu, and Yueting Zhuang. 2023. Hugging-                 agents in the wild.
+  gpt: Solving ai tasks with chatgpt and its friends
+  in huggingface. In Advances in Neural Information
+                                                              Yuzhuang Xu, Shuo Wang, Peng Li, Fuwen Luo, Xi-
+  Processing Systems.
+                                                                aolong Wang, Weidong Liu, and Yang Liu. 2023.
+Chunyi Sun, Junlin Han, Weijian Deng, Xinlong Wang,             Exploring large language models for communica-
+  Zishan Qin, and Stephen Gould. 2023. 3d-gpt: Proce-           tion games: An empirical study on werewolf. arXiv
+  dural 3d modeling with large language models. arXiv           preprint arXiv:2309.04658.
+  preprint arXiv:2310.12945.
+                                                              An Yan, Zhengyuan Yang, Wanrong Zhu, Kevin Lin,
+Rohan Taori, Ishaan Gulrajani, Tianyi Zhang, Yann               Linjie Li, Jianfeng Wang, Jianwei Yang, Yiwu Zhong,
+  Dubois, Xuechen Li, Carlos Guestrin, Percy Liang,             Julian McAuley, Jianfeng Gao, Zicheng Liu, and
+  and Tatsunori B. Hashimoto. 2023. Stanford alpaca:            Lijuan Wang. 2023. Gpt-4v in wonderland: Large
+  An instruction-following llama model. https://                multimodal models for zero-shot smartphone gui nav-
+  github.com/tatsu-lab/stanford_alpaca.                         igation. arXiv preprint arXiv: 2311.07562.
+
+
+                                                          9
+Hui Yang, Sifu Yue, and Yunzhong He. 2023a. Auto-
+  gpt for online decision making: Benchmarks and
+  additional opinions.
+Zhengyuan Yang, Linjie Li, Kevin Lin, Jianfeng
+  Wang, Chung-Ching Lin, Zicheng Liu, and Lijuan
+  Wang. 2023b. The dawn of lmms: Preliminary
+  explorations with gpt-4v (ision). arXiv preprint
+  arXiv:2309.17421.
+Zhengyuan Yang, Linjie Li, Kevin Lin, Jianfeng Wang,
+  Chung-Ching Lin, Zicheng Liu, and Lijuan Wang.
+  2023c. The dawn of lmms: Preliminary explo-
+  rations with gpt-4v(ision). arXiv preprint arXiv:
+  2309.17421.
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak
+  Shafran, Karthik Narasimhan, and Yuan Cao. 2023.
+  ReAct: Synergizing reasoning and acting in language
+  models. In ICLR.
+Aohan Zeng, Xiao Liu, Zhengxiao Du, Zihan Wang,
+  Hanyu Lai, Ming Ding, Zhuoyi Yang, Yifan Xu,
+  Wendi Zheng, Xiao Xia, et al. 2022. Glm-130b:
+  An open bilingual pre-trained model. arXiv preprint
+  arXiv:2210.02414.
+Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan
+  Zhuang, Zhanghao Wu, Yonghao Zhuang, Zi Lin,
+  Zhuohan Li, Dacheng Li, Eric. P Xing, Hao Zhang,
+  Joseph E. Gonzalez, and Ion Stoica. 2023. Judging
+  llm-as-a-judge with mt-bench and chatbot arena.
+
+
+
+
+                                                        10
+

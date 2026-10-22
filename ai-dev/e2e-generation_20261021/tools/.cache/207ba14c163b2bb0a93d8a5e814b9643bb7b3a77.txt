@@ -1,0 +1,596 @@
+__HTTP 200__
+                                               Deriving Semantics-Aware Fuzzers from Web API Schemas
+                                                                Zac Hatfield-Dodds                                                          Dmitry Dygalo
+                                                            Australian National University                                                 schemathesis.io
+                                                                  Canberra, Australia                                                   Prague, Czech Republic
+                                                            zac.hatfield.dodds@anu.edu.au                                                 dmitry@dygalo.dev
+
+                                         ABSTRACT
+                                         Fuzzing—whether generating or mutating inputs—has found many             The main contributions of this paper are to:
+                                         bugs and security vulnerabilities in a wide range of domains. State-           • describe Schemathesis, a property-based testing library to
+                                         ful and highly structured web APIs present significant challenges                automatically derive customisable web API fuzzers from
+
+
+
+
+arXiv:2112.10328v1 [cs.CR] 20 Dec 2021
+                                         to traditional fuzzing techniques, as execution feedback is usually              OpenAPI or GraphQL schemas;
+                                         limited to a response code instead of code coverage and vulnerabil-            • demonstrate that Schemathesis discovers more defects and
+                                         ities of interest include silent information-disclosure in addition to           handles more real schemas than previous tools; and
+                                         explicit errors.                                                               • provide a large evaluation suite of real web services, schemas,
+                                             Our tool, Schemathesis, derives structure- and semantics-aware               and fuzzers as reusable containers for use in future research.
+                                         fuzzers from web API schemas in the OpenAPI or GraphQL formats,
+                                         using property-based testing tools [23]. Derived fuzzers can be          1.1     Property-based testing
+                                         incorporated into unit-test suites or run directly, with or without      Property-based testing (PBT) originated with the Haskell library
+                                         end-user customisation of data generation and semantic checks.           QuickCheck [6], which emphasised testing algebraic properties of
+                                             We construct the most comprehensive evaluation of web API            functions by generating many random inputs to a test function.
+                                         fuzzers to date, running eight fuzzers against sixteen real-world        PBT generally differs from fuzzing more in workflow and the affor-
+                                         open source web services. OpenAPI schemas found in the wild              dances of tooling than fundamental concept (typically focussing
+                                         have a long tail of rare features and complex structures. Of the         on highly-structured and always-valid data, along with integrated
+                                         tools we evaluated, Schemathesis was the only one to handle more         shrinking). The definitive PBT library for Python is Hypothesis
+                                         than two-thirds of our target services without a fatal internal error.   [23], with an estimated five hundred thousand users and dozens of
+                                         Schemathesis finds 1.4× to 4.5× more unique defects than the             third-party extensions. Hypothesis is explicitly designed as a library
+                                         respectively second-best fuzzer for each target, and is the only         of tools to construct fuzzable tests—which can detect errors that di-
+                                         fuzzer to find defects in four targets.                                  rect fuzzing would not—and a non-user-visible bytestring-oriented
+                                                                                                                  fuzzing backend for them1 .
+                                         1   INTRODUCTION                                                            This abstraction has been very successful. The Hypothesis back-
+                                         Much modern software communicates over the internet, and each            end includes integrated shrinking and error-deduplication [24],
+                                         service therefore defines some kind of web API - often via a REST        targeted property-based testing [2, 21, 22], swarm testing [14], and
+                                         [9] or more recently GraphQL [10] architecture. Many services also       optionally coverage-guided fuzzing. Structured inputs are defined
+                                         provide machine-readable schemas or specifications which describe        using parser-combinators (‘strategies’2 ); and only the primitives
+                                         their input and output contracts and their semantics within the          supplied by Hypothesis have any knowledge of the backend. Such
+                                         REST or GraphQL architecture.                                            separation of concerns has made it practical for third-party develop-
+                                            Such API schemas can be used to derive a service-specific fuzzer      ers to write functions which take some formal description of a set
+                                         that can use the known structure of valid inputs and sequences of ac-    of values—examples include type annotations, regular or context-
+                                         tions to focus effort on interesting parts of an otherwise intractably   free grammars, validation callbacks, and JSONschema or GraphQL
+                                         large search space. Derived fuzzers can also check for otherwise         schemas—and return a strategy which generates examples.
+                                         silent semantic errors such as non-conforming responses, missing            Several projects have chosen to fuzz web APIs with Hypothesis
+                                         headers, or silent information-disclosure vulnerabilities, based on      because of the ease and effectiveness of sophisticated input gener-
+                                         standard schema and HTTP semantics.                                      ation, including swagger-fuzzer [8] swagger-conformance [28],
+                                            In practice OpenAPI [16] or GraphQL schemas are often un-             Yelp’s [3]-inspired fuzz-lightyear [20] for insecure direct object
+                                         sound, permitting inputs or actions not handled by the service. This     reference vulnerabilities, and finally Schemathesis itself.
+                                         may be due to errors in the schema or the service implementation,
+                                         because working with sound schemas is uneconomical, or because           1.2     Web API standards
+                                         of application-level constraints—such as database constraints, or-
+                                                                                                                  The REST architecture was described in 2000 [9], with the Swag-
+                                         der of event timestamps, relations between endpoints, etc.—which
+                                                                                                                  ger/OpenAPI schema format subsequently invented in 2011. While
+                                         cannot be expressed in the schema. We therefore see an ongoing
+                                                                                                                  OpenAPI is far from the only specification format for REST APIs,
+                                         role for human judgement in customising automatically derived
+                                                                                                                  it is by far the most common. Thanks to the shared architecture
+                                         fuzzers, analysing failures, detecting over-restrictive schemas, and
+                                         hand-coding additional or more precise tests.                            1 https://hypothesis.works/articles/what-is-property-based-testing/
+                                                                                                                  2 Most PBT libraries call their description of possible values “generators”. Because
+                                                                                                                  generators are a builtin type in Python, Hypothesis instead names them “strategies”.
+                                                                                                                                    Zac Hatfield-Dodds and Dmitry Dygalo
+
+
+and semantics, schemas in other formats3 can be quickly and often                             • Slow responses, i.e. time to first (or last) byte of response
+automatically translated into the OpenAPI format.                                             • Request amplification measured in number of requests, or
+   The GraphQL architecture and schema format were designed to-                                 total response size, or amplification ratio
+gether at Facebook from 2012, and released in 2015 [10]. Motivated
+                                                                                        Hypothesis’ support for targeted property-based testing [21, 22]
+by performance considerations, GraphQL uses a fundamentally
+                                                                                        is particularly valuable for threshold tests [15], and targets may
+different data and request model to RESTful APIs, but the same
+                                                                                        be reported either by Schemathesis derived fuzzers, or in user-
+property-based testing techniques are applicable to each.
+                                                                                        supplied hooks. Anecdotally, we have found that multi-objective
+   While system state and highly structured inputs make fuzzing
+                                                                                        optimisation—e.g., targeting response size and amplification ratio—
+challenging, OpenAPI or GraphQL schemas make it practical to
+                                                                                        is remarkably effective.
+exploit this structure. Combined with HTTP’s clear client/service
+interface and common properties arising from the standardised
+semantics, schema-based fuzzing has an enduring attraction.                             1.4     Prior art in schema-based web API fuzzing
+                                                                                        Property-based testing provides the most common framing for
+1.3     Standards imply semantic properties                                             schema-based web API fuzzing, with early work such as [11, 13]
+In addition to input structure, schemas constrain application se-                       focused on derived input generators (structure) and others [5, 19,
+mantics. Wherever standards documents impose requirements on                            26], additionally deriving test oracles (semantics).
+implementations, semantics-aware fuzzers can treat “requirements                           QuickREST [17] aims to free up human effort by automating API
+not violated” as a testable property—including RFC 7231’s universal                     exploration with Clojure.spec. Their tool tests for response con-
+and relatively simple constraints on HTTP services, such as:                            formance and known HTTP status codes, with further properties
+      • 200 OK responses must have a non-empty body                                     specifiable by the user.
+      • 204 No Content and 205 Reset Content responses must                                RestTestGen [30] proposes heuristics to statically recover an
+        have an empty body                                                              ‘operation dependency graph’ which describes the relationship
+      • 302 Found responses to a POST request must allow the sub-                       between response data and subsequent request to other endpoints -
+        sequent response to use either POST or GET methods                              and enables far more efficient testing with sequences of requests.
+      • 405 Method Not Allowed responses must have an Allow                             They also comment on the importance of testing error handling, i.e.
+        header listing supported methods                                                negative testing, using the property that nonconforming requests
+      • 500 Internal Server Error responses are always errors                           should receive HTTP 4xx instead of 2xx responses.
+      • GET fails after successful DELETE (use-after-free rule) [4]                        RESTler [3, 4] is a security testing tool in the tradition of greybox
+      • GET fails after unsuccessful POST (resource-leak rule) [4]                      fuzzing, which infers dependencies between request types, gener-
+                                                                                        ates sequences of requests satisfying those dependencies, and learns
+In addition to input structure, API schemas document the expected                       to predict sequence validity based on the responses to these test
+content and structure of API responses and the relationship between                     sequences. Their evaluation finds that all these features are required
+endpoints. OpenAPI schemas extend HTTP semantics to include                             for effective testing of web APIs.
+further schema-specific testable properties, including:                                    EvoMaster [1] frames the problem as one of Evosuite-style [12]
+      • Response has undeclared status code                                             test-case generation, using JVM instrumentation to evolve a high-
+      • Response has undeclared content-type                                            coverage set of test cases. A blackbox mode supports non-JVM
+      • Response body matches the schema                                                services, albeit with reduced performance. [7] also generates JUnit
+      • Response has wrong headers or missing required headers4                         test suites, based on a model of schema and test semantics rather
+      • Non-conforming requests are rejected (negative testing) [30]                    than execution feedback.
+      • No information leaks from unauthorised requests [4, 20]                            We are unaware of prior work on GraphQL schema-based testing
+Information disclosure vulnerabilities such as insecure direct object                   beyond Karlsson et al [18], who demonstrate a proof-of-concept
+references can be detected by making two sequences of requests.                         property-based testing tool and a method for evaluating the schema
+The “victim” sequence creates and then retrieves a private resource;                    coverage achieved.
+then the “attacker” creates their own resource but attempts to                             To summarise, an ideal feature set might include:
+retrieve the victim resource5 . While in principle this could be done
+                                                                                              • Deriving input generators and test oracles from API schemas,
+purely on the basis of OpenAPI’s security and securitySchemes
+                                                                                                for both valid and invalid actions and data
+keywords, it is typically customised on a per-service basis.
+                                                                                              • Some kind of feedback to enable search-based testing, ideally
+   Finally, we might wish to check for performance problems which
+                                                                                                available in the blackbox HTTP-only setting
+could be exploited to mount a denial-of-service attack. These checks
+                                                                                              • A way to make sequences of requests, and exploit the data in
+are typically disabled by default, because failure consists of exceed-
+                                                                                                responses to make further semantically-meaningful requests
+ing a subjective and configurable threshold rather than a binary
+                                                                                              • A way to learn or discover relationships between endpoints
+success/failure state:
+                                                                                                for more efficient sequence-of-requests testing6
+3 such as RAML, WSDL, or API Blueprint
+4 Schemathesis seems to be the only fuzzer to check if required headers are missing.
+5 A property relating multiple input-output pairs is known as a metamorphic relation.
+[25] propose twenty-two such relations relevant to web application security, which      6 e.g. [30]’s operation dependency graph. Schemathesis relies on OpenAPI 3.0 “links”
+are often easier to check than one-shot properties. See also §2.1.                      for this purpose, which are often omitted from schemas despite their value to tools.
+Deriving Semantics-Aware Fuzzers from Web API Schemas
+
+
+
+
+                                                                                                                                                                                                request_baskets                            age_of_empires
+2     SCHEMATHESIS
+
+
+
+                                                                                                                          covid19_japan   disease_sh   jupyter_server   jupyterhub                                restler_demo
+Schemathesis is a tool for automated blackbox or whitebox ran-
+
+
+                                                                                                              cccatalog                                                              open_fec                                    worklog
+domised testing of web APIs, deriving structure- and semantics-
+aware fuzzers from OpenAPI or GraphQL schemas.
+   Derived fuzzers use Hypothesis’ [23] mature and sophisticated
+toolkit for creating test inputs—including hybrid random genera-                      State-machine               3             0            0               8              3        78                0             4              1            1
+tion, feedback-guided structured mutation, and explicit examples—                     Hand-written                              0            0               9              1        80                0             4              1            1
+plus a variety of test functions and oracles for both individual
+                                                                                     Table 1: Switching to Hypothesis’ state-machines made
+endpoints and sequences of requests to multiple endpoints. Both
+                                                                                     Schemathesis considerably faster and improved the quality
+data-generation and test oracles can easily be customised by the
+                                                                                     of reported failures. In this evaluation on schemas we augu-
+end user.
+                                                                                     mented with OpenAPI ‘links’, state-machine tests detected
+   Schemathesis can be used via a command-line interface or a
+                                                                                     a similar number of defects the old hand-written approach.
+Python API, in either case to fuzz services written in any lan-
+                                                                                     See Section 3.2 for details.
+guage via HTTP. If the service under test is also written in Python,
+Schemathesis can communicate in-process using the WSGI and
+ASGI7 conventions rather than over the network. This is often con-
+siderably faster, and supports coverage-guided fuzzing with tools                    2.2      Hypothesis-Jsonschema
+such as HypoFuzz8 , or Atheris9 via Hypothesis’ fuzz_one_input
+                                                                                     Schemathesis converts schemas into data generators using the
+interface.
+                                                                                     hypothesis-jsonschema14 library, whose from_schema() func-
+   With thousands of downloads every week, Schemathesis is a
+                                                                                     tion takes an arbitrary JSON Schema15 and returns a Hypothesis
+thriving open-source project. It has already been widely adopted,
+                                                                                     strategy to generate valid instances. JSONschema is something of
+integrated into Microsoft’s REST API Fuzz Testing project10 , train-
+                                                                                     a lingua franca for web related schemas; Swagger and OpenAPI
+ing from Red Hat11 , and is the basis for the IBM Service Validator
+                                                                                     use it directly, while others are easy to convert into JSONschemas.
+[29].
+                                                                                     Simple schemas admit simple translations:
+                                                                                          {"type": "integer", "minimum": 0, "maximum": 10}
+2.1     Single requests or sequences?                                                     -> st.integers(min_value=0, max_value=10)
+Internally, Schemathesis distinguishes single-request tests from                     while others, especially if they involve the oneOf or allOf16 combi-
+those which make a sequence of requests to multiple endpoints,                       nators, defy easy or efficient translation. We therefore ‘canonicalise’
+using the data from past responses. In 2020, we converted the                        schemas by defining a suite of rewrite rules which preserve schema
+latter from special-purpose logic to a thin wrapper around Hy-                       semantics while reducing the need for rejection sampling, and iter-
+pothesis’ RuleBasedStateMachine, a generic system defined in                         ate them to a fixpoint. Consider for example:
+terms of transition rules between states12 . Comparing these im-
+                                                                                          {"type": "object", "allOf": [
+plementations gives us some basis to discuss the advantages of
+                                                                                                 {"additionalProperties": false},
+property-based testing.
+                                                                                                 {"properties": {"a": {"type": "string"}}},
+   The new state-machine tests tend to report fewer bugs per run,
+                                                                                            ]}
+because they test the whole system rather than individual end-
+points, but are correspondingly faster to run. The difference is                     containing intersecting constraints - the value must be an object,
+fundamentally a property-based testing vs. a fuzzing workflow: the                   must not contain any items if it is an object, and if the value is an
+new style is designed for interactive use in a run-fix-rerun cycle,                  object with key "a", the corresponding value must be a string. Our
+rather than long-running testing campaigns.                                          rewrite rules combine these constraints into a single schema:
+   We believe that the heuristics built into Hypothesis, including                        {"additionalProperties": False,
+swarm testing [14], make a substantial contribution to Schemathe-                           "properties": {"a": False},
+sis’ performance. While such techniques can be added to standalone                          "type": "object",
+tools, our experience is that the implementation effort is best shared                      "maxProperties": 1}
+and tuned in dedicated property-based testing libraries which ben-                   and further simplify that schema into a minimal form:
+efit from synergies between techniques. 13                                                {'type': 'object', 'maxProperties': 0}
+                                                                                        Such nonlocal constraints are common in real-world schemas
+                                                                                     even before accounting for widespread use of the $ref keyword. We
+                                                                                     therefore inline non-recursive references, merge overlapping sub-
+7 Web Server Gateway Interface and Asynchronous Server Gateway Interface             schemas, and canonicalise the results before converting the schema
+8 https://hypofuzz.com/
+9 https://github.com/google/atheris                                                  14 https://pypi.org/project/hypothesis-jsonschema/
+10 https://github.com/microsoft/rest-api-fuzz-testing                                15 https://json-schema.org/
+11 https://appdev.consulting.redhat.com/tracks/contract-first/                       16 anyOf is trivially satisfied by taking the union of the generators for sub-schemas.
+12 Similar to [5]’s use of QuiviQ state machines
+                                                                                        oneOf admits a quadratically-large translation to allOf, not, and anyOf—e.g.
+13 For example, Hypothesis is to our knowledge the only tool to support both swarm
+                                                                                     oneOf: [a, b, ...] → anyOf: [{a, {not: {anyOf: [b, ...]}}}, ...]—
+testing and targeted property-based testing [14, 21, 22].                            but linear-size rewrites and rejection sampling are usually much faster in practice.
+                                                                                                                               Zac Hatfield-Dodds and Dmitry Dygalo
+
+
+to a Hypothesis strategy, which makes hypothesis-jsonschema                              Category                                     Number       Should work?
+considerably faster than naïve translators such as Jsongen [13]
+                                                                                         Total OpenAPI directory endpoints              66,925           —
+with an otherwise similar design.
+                                                                                         Schemathesis correctly handles                 65,195           —
+   As well as generating valid inputs with no relation to ordinary
+production traffic, this logic gives us an elegant way to synthesise                     With unhandled recursive refs                    1,254         yes
+subtly invalid examples for ‘negative testing’ to check that noncon-                     With Python-incompatible regex                     170         opt
+forming requests are rejected by the API: create a set of variant                        With too complex schemas                            26         yes
+schemas, e.g. “an invalid instance of a valid type”, and then use                        With un-inlined remote refs                          8         yes
+each of the variants to generate input:                                                  With YAML parsing issues                           168          no
+      schema = ...                                                                       With invalid enums                                  45          no
+      gen_invalid = from_schema(                                                         With path parameters including /                    33          no
+          {"type": schema["type"], "not": schema}                                        With logically unsatisfiable schemas                26          no
+      )                                                                                 Table 2: OpenAPI Directory endpoints, with detailed break-
+This generator will be as efficient as anything we could write by                       down of those Schemathesis does not handle.
+hand17 , guaranteeing that instances are invalid with a minimum
+of rejection sampling. By contrast, RESTTESTGEN [30] generates
+data for negative testing by applying relatively crude mutations to
+valid instances.                                                                        The JSONschema specification requires implementations to ignore
+                                                                                        unknown format keys, so Schemathesis allows the user to supply
+2.3     Customising Schemathesis                                                        a strategy that will be used to generate values for this format:
+One of Schemathesis’ strengths is ease of customisation via our                              def luhn_ok(card_number: str) -> bool:
+command-line interface or from Python. The four main ways to                                     """Validate check digit for the card number."""
+customise tests for a specific API are hooks, checks, serialisers, and
+format strategies.                                                                            schemathesis.register_string_format(
+                                                                                                  "payment_card",
+  Hooks. call user-defined functions to customise Schemathesis’                                   st.from_regex(r"^4[0-9]{15}$").filter(luhn_ok)
+behaviour at different steps of the testing process:                                          )
+      • Hooks such as before_process_path allow you change the
+        API schema for certain endpoints, working around incom-                         2.4    The limits of specification support
+        patibilities or changing the data that will be generated                        hypothesis-jsonschema correctly, and almost always efficiently,
+      • Hooks like before_generate_query allow you to replace                           handles every construct from draft-04 to draft-07 of the JSON-
+        Hypothesis strategies that are inferred from API schemas,                       schema specification except for recursive references. It’s tested
+        for example by adding a filter to reject undesired test cases                   against every schema in the official JSONschema compatibility test
+      • Network request hooks allow you to send additional custom                       suite, the hundreds of real-world schemas from schemastore.org,
+        test cases, or to adjust generated data before sending it to                    and fuzzed with a custom schema generator—to the point of finding
+        the application under test                                                      bugs in Python’s jsonschema validator library and omissions from
+      • Custom targets, for e.g. performance tests as in §1.3                           the standard-compliance test suite.18
+   Checks. are custom test oracles, which allow verification of user-                      Schemathesis supports almost everything in the OpenAPI spec,
+defined properties of responses received from the application under                     covering the subset in common use and including user-defined
+test. Because checks are decoupled from data generation, they can                       extensions. Of the more than three thousand schemas in the Ope-
+be run for both known-valid and known-invalid test cases.                               nAPI directory, we successfully parse a higher proportion than are
+                                                                                        actually valid—and can generate data for some endpoints of many
+   Serialisers. Generated data must be serialised before transmis-                      invalid schemas. Table 2 shows a detailed breakdown of the end-
+sion to to the application under test. Schemathesis supplies default                    points we do not support; aside from (some) recursive references,
+serialisers for common media types such as application/json,                            more endpoints are invalid than unsupported.
+multipart/form-data, and text/plain. Custom serialisers can                                Schemathesis currently handles recursive references by unrolling
+overide these defaults, or add support for less common media types                      and inlining the schema up to a reasonable depth. This is sufficient
+expected by the application.                                                            for more than 98% of endpoints in the OpenAPI directory; but also
+                                                                                        the most common reason we fail to generate data. We’d prefer to
+   Format strategies. Many Open API schemas use custom format
+                                                                                        leverage property-based testing by expressing recursive schemas
+keywords to describe the input data. For example, if the API under
+                                                                                        directly with Hypothesis’ deferred() generator, but modifying
+test consumes data that is expected to contain a payment card
+                                                                                        hypothesis-jsonschema’s rewrite rules to be reference-aware is
+number, this might be expressed as:
+                                                                                        a tricky engineering challenge—and unrolling works well enough
+      {"type": "string", "format": "payment_card"}                                      that to date other features have always taken priority.
+17 we designed comprehensive rewrite rules based on our knowledge of the spec, and      18 See Julian/jsonschema/issues?q=author%3AZac-HD+label%3ABug
+update or expand them when inefficiencies are reported, e.g. by Reviewer #2 (really!)   and json-schema-org/JSON-Schema-Test-Suite/pulls?q=author%3AZac-HD
+Deriving Semantics-Aware Fuzzers from Web API Schemas
+
+
+                                                                Issue     Description
+                    django-rest-framework#7134 and #7448                  Crash on SQLite integer overflow due to validator order
+                            django-rest-framework-jwt#70                  Internal server error when token is invalid unicode
+                               tfranzel/drf-spectacular#186               Generated schema is too permissive
+                               satellite-passes-api#2 and #4              Internal server errors on missing attribute, missing cache key
+                                      tournesol-backend#17                Checking HTTP status codes found “a lot of bugs”
+                                          OfficiumDivinum#4               Eleven failing tests with Schemathesis
+                              python-restx/flask-restx#303                Non-matching X- fields filter out all results instead of no results
+                                       http-rs/async-h1#144               Numerous client-side failures, causes unclear
+                                         tiangolo/fastapi#240             Invalid schema (following wrong version of specification)
+                                       tiangolo/fastapi#3790              Nonconforming response when reporting validation errors
+                                         goadesign/goa#2840               Schema is missing known HTTP status codes
+                                optimade-python-tools#763                 Schema is missing known HTTP status codes
+                           marshmallow-code/apispec#614                   Invalid schema attempting to bound datetime strings
+                              django-action-framework#14                  Internal server error on unexpected URL fragment
+                                           jupyter-server#518             Schemathesis motivates and rewards comprehensive schemas
+                                Table 3: A sample of GitHub issues reporting independent use of Schemathesis.
+
+
+
+   We hypothesize that OpenAPI schemas found in the wild have                             Name                     Version       Language         Supported schemas
+a long tail of rare features and complex structures, such that most
+                                                                                          Schemathesis             3.9.0         Python           Open API, GraphQL
+non-trivial schemas include at least one which breaks naïve fuzzers.
+                                                                                          Restler                  7.1.0         Python, F#       Open API 2 / 3
+                                                                                          Cats                     5.2.3         Java             Open API 2 / 3
+3     EVALUATION                                                                          TnT-Fuzzer               2.3.1         Python           Open API 2
+We experimentally evaluate Schemathesis’—and previous web API                             Got-Swag                 1.3.0         JavaScript       Open API 2
+fuzzers—defect detection, runtime, and consistency of reporting.                          APIFuzzer                b786c1b       Python           Open API 2
+These experiments are restricted to containerised open-source ser-                        Fuzz-lightyear           0.0.9         Python           Open API 2
+vices, ensuring that they are representative, reproducible, and do                        Swagger-conform          0.2.5         Python           Open API 2
+not attack live systems.                                                                  Fuzzy Swagger            0.1.11        Python           Open API 2
+   Since Schemathesis was open-sourced in August 2019, a range                            Swagger fuzzer           0.1.0         Python           Open API 2
+of bug reports on GitHub have been attributed to Schemathesis.                                 Table 4: Evaluated schema-based web API fuzzers.
+A representative sample is shown in Table 3 to contextualize our
+experiments.
+   Users evidently value detection of server errors (caused by con-
+forming inputs or not), as well as reporting of invalid, incomplete,                       For ease of analysis, we parse the 250GB of raw logs into a JSON
+or overly-permissive schemas. Almost all of these results require                       summary, and further reduce this dataset to report the duration,
+the fuzzer to understand schema semantics, in addition to the struc-                    number of events, and per-run reports of each unique defect.
+ture of inputs and possible actions, to a higher degree than “HTTP                         Manual defect triage and deduplication is impractical for such a
+500 means failure”.                                                                     large and extensible evaluation. Instead, where possible we mon-
+                                                                                        itor the fuzzing process using Sentry20 , a widely-used platform
+3.1     Experiment design                                                               for error tracking and performance monitoring. This gives us a
+We run three configurations of Schemathesis, and seven other                            cross-language notion of unique defects, i.e. internal server errors
+fuzzing tools in their default configurations 19 (Table 4), on six-                     deduplicated by code location—regardless of triggering endpoint
+teen open-source web APIs (Table 5), for thirty runs each.                              or what the fuzzer was attempting to check at the time.
+   To our knowledge, this is the most comprehensive evaluation                             We add semantic errors21 to our defect count by counting each
+of web API fuzzers to date. Our scripts make it easy to add further                     kind of bug report parsed from saved logs only once per endpoint,
+fuzzing tools or targets in Docker containers, and will be maintained                   regardless of variations or how many times it was observed. This
+as a standard benchmark suite for the community.                                        matches our experience of users’ tend to group reports which are
+   The full set of containers to reproduce our work, or use it in evalu-                consistently either fixed or ignored.
+ating future fuzzers, is available from github.com/schemathesis/web-                       This typically works well, with the notable exception of TnT-
+api-fuzzing-project, along with both raw and processed data.                            Fuzzer—which reports more than a thousand 404 Not Found re-
+                                                                                        sponses for randomly-generated paths:
+
+                                                                                        20 https://sentry.io/
+19 mostly - following [27], we avoided fuzzing e.g. Jupyter’s /shutdown endpoint        21 unexpected status code, schema non-conformance, information disclosure, etc.
+                                                                                                                 Zac Hatfield-Dodds and Dmitry Dygalo
+
+
+       Service                            Language     Framework        Endpoints     Schema type       Schema source
+       aalises/age-of-empires-II-api      Python       Flask 1.1.2          8         Open API 3.0.0    Static
+       creativecommons/cccatalog-api      Python       Django 2.2.13        8         Swagger 2.0       Dynamic, drf-yasg 1.17.1
+       ryo-ma/covid19-japan-web-api       Python       Flask 1.1.2          4         Swagger 2.0       Dynamic, flasgger 0.9.4
+       disease-sh/api                     JavaScript   Express 4.17.1      34         Swagger 2.0       Static
+       postmanlabs/httpbin                Python       Flask 1.0.2         73         Swagger 2.0       Dynamic, flasgger 0.9.0
+       jupyter-server/jupyter_server      Python       Tornado 6.1.0       29         Swagger 2.0       Static
+       jupyterhub/jupyterhub              Python       Tornado 6.1.0       35         Swagger 2.0       Static
+       mailhog/MailHog                    Go           Net/HTTP             2         Swagger 2.0       Static
+       fecgov/openFEC                     Python       Flask 1.1.1         85         Swagger 2.0       Dynamic, flask-apispec 0.7.0
+       ajnisbet/opentopodata/             Python       Flask 1.1.2          2         Open API 3.0.2    Static
+       rtyler/otto                        Rust         Tide 0.14.0          2         Open API 3.0.3    Static
+       fossasia/pslab-webapp              Python       Flask 1.1.2          3         Swagger 2.0       Dynamic, flasgger 0.9.5
+       pulp/pulpcore                      Python       Django 2.2.17       67         Open API 3.0.3    Dynamic, drf-spectacular 0.11.0
+       darklynx/request-baskets           Go           Net/HTTP            20         Swagger 2.0       Static
+       microsoft/restler-fuzzer           Python       Flask 1.1.2          6         Swagger 2.0       Static
+       IBM/worklog                        Python       Flask 1.0.2          9         Swagger 2.0       Dynamic, flasgger 0.9.1
+Table 5: Tested web services, chosen to represent a variety of programming languages, schema formats (OpenAPI and
+GraphQL), and sources (generated or hand-written) across a realistic range of sizes, structures, and API complexity.
+
+
+
+       "result": {"type": "failure",                                                                         open_fec
+                  "kind": "unexpected_status_code",                              30
+                  "status_code": 404},                                           20
+      "path": "/haugixqhzhjcgdwjqluktpxtzuerizamqmhqsu...                 runs
+                                                                                 10
+We therefore count any number of “unexpected 404” reports as a                   0
+single unique defect per target, ignoring the path.                                                       jupyter_server
+                                                                                 30
+                                                                                 20
+3.2     Defect-detection experiment                                       runs
+                                                                                 10
+In all-checks mode, Schemathesis reports a total of 755 bugs across
+                                                                                 0
+fourteen out of our sixteen targets, including 111 HTTP 500 re-
+                                                                                                            cccatalog
+sponses, 436 unexpected status codes, 52 non-schema-conforming                   30
+responses, and 152 responses with a wrong or missing content type.
+                                                                                 20
+Schemathesis finds 1.4× to 4.5× more defects than the respectively        runs
+second-best fuzzer for each target, and is the only fuzzer to find               10
+defects in four targets.                                                         0
+   Schemathesis was the only one of the tools we evaluated to                                                pulpcore
+handle all–or more than two-thirds of–our targets without a fatal                30
+internal error. Surprisingly, this appears unrelated to our pairing              20
+                                                                          runs
+of OpenAPI 3 targets with fuzzers which do not claim to support                  10
+OpenAPI 3.
+   Table 6 shows a summary of identified defects by fuzzer and                   0
+target, some of which might be resolved by making the schema more                                         pslab_webapp
+                                                                                 30
+permissive, particularly the unexpected status codes. We argue that
+                                                                                 20
+                                                                          runs
+such mismatches between specified and actual behaviour are still
+reasonably described as bugs - the schema being no less important                10
+than the implementation of the service. The issues listed in Table 3             0
+indicates that at least some of our users agree.                                                    distinct identifiable defect
+   To support clear comparisons to fuzzers which check fewer se-
+mantic properties, Table 7 shows only HTTP 500 internal server
+                                                                          Figure 1: Sorting unique defects by the number of runs de-
+errors. We see a rich understanding of application semantics, includ-
+                                                                          tecting them, we see that Schemathesis (black) is less consis-
+ing over request sequences, as a key contribution of our research.
+                                                                          tent but discovers more than other fuzzers. Defect IDs are
+Nonetheless, Schemathesis detected more unique errors than the
+                                                                          consistent between runs but not between fuzzers.
+respectively second-best fuzzer for each target.
+Deriving Semantics-Aware Fuzzers from Web API Schemas
+
+
+
+
+                                  cccatalog   covid19_japan      disease_sh      httpbin   jupyter_server        jupyterhub   mailhog        open_fec    pslab_webapp     request_baskets   restler_demo   worklog   age_of_empires     opentopodata   otto_parser      pulpcore
+ OpenAPI version                      2             2            2               2          2                    2               2           2                2           2                    2              2            3                 3              3           3
+ Endpoints                            8             4           34              73         29                   35               2          85                3          20                    6              9            8                 2              2          67
+ api_fuzzer                                         0               0           36                                               0          17                2          16                                   6            4                 0                         11
+ cats                                               0               0                            5                               0          10                2           0                                                                  0                          6
+ fuzz_lightyear                                                                                                                              2                0
+ got_swag                         3                                                                                                         32                                               0                             0                                           13
+ restler                          2                 0                                       1                                    0           3                2           0                  0                0            0                 0
+ schemathesis:AllChecks          13                 0           11             316         32                   12               1         184                7          39                 14                3            7                 1              0          24
+ schemathesis:Default             3                 0            0              66         10                    1               0          80                2           0                  4                1            1                 0              0           5
+ schemathesis:Negative            3                 0            0              13          8                   40               0          73                2           0                  1                3            1                 0              0           9
+ swagger_fuzzer                                                                                                                             16
+ tnt_fuzzer                                                                                                                                                                                                                                                            10
+ Table 6: Total number of unique defects across all 30 runs, regardless of triggering endpoint, using Sentry to determine
+ ‘ground truth’ for internal server errors and custom log parsing to group property violations.
+
+ api_fuzzer                                         0               0           13                                               0          17                2                  0                            1            0                 0                             0
+ cats                                               0               0                            2                               0          10                2                  0                                                           0                             2
+ fuzz_lightyear                                                                                                                              1                0
+ got_swag                             2                                                                                                      5                                                 0                           0                                               0
+ restler                              2             0                                       1                                    0           3                2                  0             0              0            0                 0
+ schemathesis:AllChecks               6             0               0           15         15                        2           0          78                4                  0             6              2            0                 0              0              8
+ schemathesis:Default                 3             0               0           10          9                        1           0          80                2                  0             4              1            0                 0              0              5
+ schemathesis:Negative                3             0               0           11          7                        6           0          73                2                  0             1              3            0                 0              0              9
+ swagger_fuzzer                                                                                                                              0
+ tnt_fuzzer                                                                                                                                                                                                                                                                0
+ Table 7: Total unique HTTP 500 server errors, for comparison between tools which check different semantic properties.
+
+ api_fuzzer                                         3         23:32           13:25                                              2        11:01         23               12                                31              3                 4                       15:56
+ cats                                               5          6:45                        11                                    4         1:42          8                5                                                                  4                        1:42
+ fuzz_lightyear                                                                                                                              11          1
+ got_swag                         1                                                                                                          16                                              1                             1                                               1
+ restler                          5            3                                            5                                  3        4:28:06               3           10                 4             17              3             3
+ schemathesis:AllChecks          12            2               2:49           25:51        16                    20            2          10:32               4            7                 9             37              6          5:48                  2         4:16
+ schemathesis:Default            29            2               9:41           42:29        28                  1:06            3           8:18               2           37                49             35              5             3                  2         8:52
+ schemathesis:Negative           53           16               4:36           11:38        50               1:40:50           15        6:48:18               3         3:12                33             41              8            15                  6        42:32
+ swagger_fuzzer                                                                                                                               6
+ tnt_fuzzer                                                                                                                                                                                                                                                                3
+         Table 8: Mean runtime, showing a clear but noisy correlation to number of endpoints and detected defects.
+
+ api_fuzzer                                                                     34                                                          15          130                      3                         44              1                                         1,276
+ cats                                                                                      44                                               15           81                                                                                                              2
+ fuzz_lightyear                                                                                                                              6
+ got_swag                             1                                                                                                      1                                                                                                                             1
+ restler                              2                                                          2                                           2                2
+ schemathesis:AllChecks               1                             7               1            1                   1           1           1                1                  1             1              1            1                 1                             1
+ schemathesis:Default                 1                                             1            1                   1                       1                1                                1              1            1                                               1
+ schemathesis:Negative                1                                             1            1                   1                       1                1                                1              1            1                                               1
+ swagger_fuzzer                                                                                                                              1
+ tnt_fuzzer                                                                                                                                                                                                                                                                1
+ Table 9: Mean number of reports per unique defect, of those reported in a given run. Hypothesis’ shrinking allows
+ Schemathesis to report a single easy-to-understand example for each defect, easing triage.
+                                                                                                                                     Zac Hatfield-Dodds and Dmitry Dygalo
+
+
+    Property-based testing workflows also outperform fuzzing when                       data from one response can be used to make further requests. Inves-
+it comes to actionable reporting. Table 9 shows the mean number                         tigating [3, 30]-style heuristics or ways to learn links from traffic
+of reports per unique defect, averaged over each independent run.                       records could substantially improve performance.
+Schemathesis reports a single minimal triggering input or action-
+                                                                                           Recommend schema improvements. Tools could suggest improve-
+sequence for each, with the exception of a few cases where our
+                                                                                        ments to API schemas, whether to resolve basic type confusions
+evaluation harness uses additional information from server logs to
+                                                                                        or refine their semantics. This would be particularly valuable in
+deduplicate internal errors.
+                                                                                        combination with learned links between endpoints.
+    Figure 1 shows the consistency of defect-detection between runs.
+For most tools, detection is binary: if they do not discover a defect                       Embed property checks into web frameworks. Web frameworks
+on the first run, they are unlikely to ever do so. APIFuzzer, Cats,                     which dynamically generate the application schema from code
+and Schemathesis are less consistent for all but the easiest defects.                   could also check conformance with the schema at runtime. Even
+    In Schemathesis, we attribute this effect to the property-based                     if limited to a debug mode for performance, such automatic test
+testing workflow! Because the user is expected to fix each failing                      oracles could improve the effectiveness of property-naïve fuzzers
+test by changing either the service or the test harness, Hypothesis                     and other forms of testing
+stops looking shortly after finding the first failing input. When
+there are multiple defects which may be discovered in different                         5    CONCLUSION
+orders, this early stopping also reduces consistency compared to                        Building on mature and versatile property-based testing tools makes
+long-running fuzzing workflows (Table 8).                                               Schemathesis easily adaptable to specific services or workflows and
+    If inconsistency is driven by low detection probabilities instead                   remarkably effective. Working with Hypothesis offers a integrated
+of early stopping, this is also good news for users: they can simply                    and growing suite of useful techniques which we would not other-
+run these fuzzers for longer and discover more defects—and in the                       wise have implemented.
+absence of a run reporting zero defects, they are likely to do so.                         Schemathesis is the only fuzzer in our comprehensive evaluation
+                                                                                        to handle every real-world schema and web service, and consis-
+4     DIRECTIONS FOR FUTURE RESEARCH                                                    tently reports more defects than the previous state-of-the-art.
+   Expand and share benchmark suite. Our evaluation suite is de-                           We hope that future work on web API fuzzing will reuse—and
+signed to be reused, and will be maintained as an open source                           perhaps extend—our summary of testable properties and our evalu-
+project by the Schemathesis developers. Adding and updating REST                        ation corpus of tools and services.
+and GraphQL fuzzers 22 and targets, improving our understanding
+of the ‘ground truth’ by manually identifying defects or better auto-                   REFERENCES
+                                                                                         [1] Andrea Arcuri. 2018. EvoMaster: Evolutionary Multi-context Automated System
+mated tools for triage, and collaboration among fuzzer developers                            Test Generation. In 2018 IEEE 11th International Conference on Software Testing,
+would all be valuable contributions.                                                         Verification and Validation (ICST). 394–397. https://doi.org/10.1109/ICST.2018.
+                                                                                             00046
+   Build defect analysis into fuzzers. A single HTTP 500 internal                        [2] Cornelius Aschermann, Sergej Schumilo, Ali Abbasi, and Thorsten Holz. 2020.
+                                                                                             IJON: Exploring Deep State Spaces via Fuzzing. In 2020 IEEE Symposium on
+error should be reported once, not once-per-triggering-endpoint—                             Security and Privacy (SP). 1597–1612. https://doi.org/10.1109/SP40000.2020.00117
+and automatic defect analysis works well enough in our evaluation                        [3] Vaggelis Atlidakis, Patrice Godefroid, and Marina Polishchuk. 2019. REST-ler:
+that we think this is within reach, at least when running in-process                         Automatic Intelligent REST API Fuzzing. In Proceedings of the 41st International
+                                                                                             Conference on Software Engineering. IEEE Press. https://www.microsoft.com/en-
+or with an existing monitoring solution23 .                                                  us/research/uploads/prod/2018/04/restler.pdf
+                                                                                         [4] Vaggelis Atlidakis, Patrice Godefroid, and Marina Polishchuk. 2020. Checking
+   Support the long tail of schema features. Schemathesis has gone                           Security Properties of Cloud Service REST APIs. In 2020 IEEE 13th International
+further down this path than previous fuzzers, and outperforms ac-                            Conference on Software Testing, Validation and Verification (ICST). IEEE. https:
+                                                                                             //doi.org/10.1109/icst46399.2020.00046
+cordingly. What further gains are locked behind support for rare                         [5] Clara Benac Earle, Lars-Åke Fredlund, Ángel Herranz, and Julio Mariño. 2014.
+features such as ECMA-specific regex syntax, non-unrollable recur-                           Jsongen: A Quickcheck Based Library for Testing JSON Web Services. In Proceed-
+                                                                                             ings of the Thirteenth ACM SIGPLAN Workshop on Erlang (Gothenburg, Sweden)
+sive references, or niche content-types?                                                     (Erlang ’14). Association for Computing Machinery, New York, NY, USA, 33–41.
+                                                                                             https://doi.org/10.1145/2633448.2633454
+   Investigate code-coverage-guided fuzzing for web APIs. While                          [6] Koen Claessen and John Hughes. 2000. QuickCheck: A Lightweight Tool for
+coverage-guided fuzzing has been highly successful for native code,                          Random Testing of Haskell Programs. Proceedings of the Fifth ACM SIGPLAN
+                                                                                             International Conference on Functional Programming (2000). https://doi.org/10.
+to date it has been impractical to evaluate the value of coverage feed-                      1145/357766.351266
+back for web API fuzzing. Schemathesis’ support for ASGI/WSGI                            [7] Hamza Ed-douibi, Javier Luis Cánovas Izquierdo, and Jordi Cabot. 2018. Auto-
+in-process fuzzing, and EvoMaster’s JVM instrumentation, allow                               matic Generation of Test Cases for REST APIs: A Specification-Based Approach.
+                                                                                             In 2018 IEEE 22nd International Enterprise Distributed Object Computing Conference
+measuring the value of coverage feedback24 in present systems.                               (EDOC). 181–190. https://doi.org/10.1109/EDOC.2018.00031
+                                                                                         [8] Boris Feld. 2016. Swagger Fuzzer. https://github.com/Lothiraldan/swagger-fuzzer
+   Improved request-sequence testing without “links”. Schemathesis                       [9] Roy Thomas Fielding. 2000. REST: Architectural Styles and the Design of Network-
+is often limited by the absence of OpenAPI “links” describing how                            based Software Architectures. Doctoral dissertation. University of California,
+                                                                                             Irvine. http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm
+                                                                                        [10] The GraphQL Foundation. 2021. GraphQL. https://graphql.org/
+                                                                                        [11] Miguel A. Francisco, Macías López, Henrique Ferreiro, and Laura M. Castro.
+22 e.g. RESTest [26], EvoMaster [1], and Karlsson et al [18]
+                                                                                             2013. Turning Web Services Descriptions into Quickcheck Models for Automatic
+23 respectively e.g. Schemathesis ASGI/WSGI support, or Sentry
+                                                                                             Testing. In Proceedings of the Twelfth ACM SIGPLAN Workshop on Erlang (Boston,
+24 as distinct from the client-observable notions of behavioural coverage that can be
+                                                                                             Massachusetts, USA) (Erlang ’13). Association for Computing Machinery, New
+explored using e.g. Schemathesis targets.                                                    York, NY, USA, 79–86. https://doi.org/10.1145/2505305.2505306
+Deriving Semantics-Aware Fuzzers from Web API Schemas
+
+
+[12] Gordon Fraser and Andrea Arcuri. 2011. EvoSuite: Automatic Test Suite Gen-               3092703.3092711
+     eration for Object-Oriented Software. In Proceedings of the 19th ACM SIGSOFT        [22] Andreas Löscher and Konstantinos Sagonas. 2018. Automating Targeted Property-
+     Symposium and the 13th European Conference on Foundations of Software Engi-              Based Testing. In 2018 IEEE 11th International Conference on Software Testing,
+     neering (Szeged, Hungary) (ESEC/FSE ’11). Association for Computing Machinery,           Verification and Validation (ICST). 70–80. https://doi.org/10.1109/ICST.2018.00017
+     New York, NY, USA, 416–419. https://doi.org/10.1145/2025113.2025179                 [23] David MacIver, Zac Hatfield-Dodds, and Many Contributors. 2019. Hypothesis:
+[13] Lars Ake Fredlund, Clara Benac Earle, Angel Herranz, and Julio Marino. 2014.             A new approach to property-based testing. Journal of Open Source Software 4, 43
+     Property-Based Testing of JSON Based Web Services. In 2014 IEEE International            (2019), 1891. https://doi.org/10.21105/joss.01891
+     Conference on Web Services. IEEE. https://doi.org/10.1109/icws.2014.110             [24] David R. MacIver and Alastair F. Donaldson. 2020. Test-Case Reduction via Test-
+[14] Alex Groce, Chaoqiang Zhang, Eric Eide, Yang Chen, and John Regehr. 2012.                Case Generation: Insights from the Hypothesis Reducer (Tool Insights Paper). In
+     Swarm Testing. In Proceedings of the 2012 International Symposium on Software            34th European Conference on Object-Oriented Programming (ECOOP 2020) (Leibniz
+     Testing and Analysis (ISSTA 2012). Association for Computing Machinery, New              International Proceedings in Informatics (LIPIcs), Vol. 166). 13:1–13:27. https:
+     York, NY, USA, 78–88. https://doi.org/10.1145/2338965.2336763                            //doi.org/10.4230/LIPIcs.ECOOP.2020.13
+[15] Zac Hatfield-Dodds. 2020. Falsify your Software: validating scientific code with    [25] Phu X. Mai, Fabrizio Pastore, Arda Goknil, and Lionel Briand. 2020. Metamorphic
+     property-based testing. In Proceedings of the 19th Python in Science Conference.         Security Testing for Web Systems. In 2020 IEEE 13th International Conference on
+     https://doi.org/10.25080/majora-37cdd580-016                                             Software Testing, Validation and Verification (ICST). 186–197. https://doi.org/10.
+[16] The OpenAPI Initiative. 2021. OpenAPI. https://www.openapis.org/                         1109/ICST46399.2020.00028
+[17] Stefan Karlsson, Adnan Causevic, and Daniel Sundmark. 2019.               Quick-    [26] Alberto Martin-Lopez, Sergio Segura, and Antonio Ruiz-Cortés. 2021. RESTest:
+     REST: Property-based Test Generation of OpenAPI-Described RESTful APIs.                  Automated Black-Box Testing of RESTful Web APIs. In Proceedings of the 30th
+     arXiv:1912.09686 [cs.SE]                                                                 ACM SIGSOFT International Symposium on Software Testing and Analysis. Associ-
+[18] Stefan Karlsson, Adnan Čaušević, and Daniel Sundmark. 2020. Automatic                    ation for Computing Machinery, New York, NY, USA. https://doi.org/10.1145/
+     Property-based Testing of GraphQL APIs. arXiv:2012.07380 [cs.SE]                         3460319.3469082
+[19] Leonidas Lampropoulos and Konstantinos Sagonas. 2012. Automatic WSDL-               [27] Barton P. Miller, Mengxiao Zhang, and Elisa R. Heymann. 2020. The Relevance
+     guided Test Case Generation for PropEr Testing of Web Services. Electronic               of Classic Fuzz Testing: Have We Solved This One? arXiv:2008.06537 [cs.SE]
+     Proceedings in Theoretical Computer Science 98 (Oct 2012), 3–16. https://doi.org/   [28] Oli Pratt. 2017. Swagger-conformance.           https://pypi.org/project/swagger-
+     10.4204/eptcs.98.3                                                                       conformance/
+[20] Aaron Loo, Joey Lee, and Victor Zhou. 2020. Automated IDOR Discovery through        [29] Barrett Schonefeld. 2020. IBM-service-validator. https://pypi.org/project/ibm-
+     Stateful Swagger Fuzzing. https://engineeringblog.yelp.com/2020/01/automated-            service-validator/
+     idor-discovery-through-stateful-swagger-fuzzing.html                                [30] Emanuele Viglianisi, Michael Dallago, and Mariano Ceccato. 2020. RESTTEST-
+[21] Andreas Löscher and Konstantinos Sagonas. 2017. Targeted Property-Based                  GEN: Automated Black-Box Testing of RESTful APIs. In 2020 IEEE 13th Interna-
+     Testing. In Proceedings of the 26th ACM SIGSOFT International Symposium on               tional Conference on Software Testing, Validation and Verification (ICST). 142–152.
+     Software Testing and Analysis (Santa Barbara, CA, USA) (ISSTA 2017). Association         https://doi.org/10.1109/ICST46399.2020.00024
+     for Computing Machinery, New York, NY, USA, 46–56. https://doi.org/10.1145/
+

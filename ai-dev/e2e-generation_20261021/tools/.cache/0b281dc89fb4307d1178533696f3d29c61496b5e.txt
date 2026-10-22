@@ -1,0 +1,1132 @@
+__HTTP 200__
+                                                                                                                                                                                          1
+
+
+
+
+                                         Mutation-Guided Unit Test Generation with a Large
+                                                         Language Model
+                                                 Guancheng Wang , Member, IEEE, Qinghua Xu , Member, IEEE, Lionel Briand , Fellow, IEEE, Kui
+                                                                                  Liu , Member, IEEE,
+
+
+
+                                            Abstract—Unit tests play a vital role in uncovering potential               mutation score is a more reliable and meaningful metric for
+                                         faults in software. While tools like EvoSuite focus on maximizing              evaluating the effectiveness of test cases. Mutation testing
+                                         code coverage, recent advances in large language models (LLMs)                 introduces artificial faults, known as mutants, into the program
+                                         have shifted attention toward LLM-based test generation. How-
+
+
+
+
+arXiv:2506.02954v8 [cs.SE] 15 Apr 2026
+                                         ever, code coverage metrics—such as line and branch coverage—                  by applying syntactic changes using mutation operators. The
+                                         remain overly emphasized in reported research, despite being                   generated test cases are executed against the mutants, and if
+                                         weak indicators of a test suite’s fault-detection capability. In               a test causes a mutant to fail (i.e., “kills” it), it is considered
+                                         contrast, mutation score offers a more reliable and stringent                  effective. The mutation score is the ratio of killed mutants to
+                                         measure, as demonstrated in our findings where some test suites                the total number of generated mutants.
+                                         achieve 100% coverage but only 4% mutation score. Although a
+                                         few studies consider mutation score, the effectiveness of LLMs                    Recent efforts have begun exploring mutation-based evalu-
+                                         in killing mutants remains underexplored.                                      ation for LLM-generated test cases. For example, Foster et
+                                            In this paper, we propose M UT G EN, a mutation-guided,                     al. [21] investigate regression testing scenarios in privacy-
+                                         LLM-based test generation approach that incorporates mutation
+                                                                                                                        critical Kotlin applications such as WhatsApp and Instagram.
+                                         feedback directly into the prompt. Evaluated on 204 subjects
+                                         from two benchmarks, M UT G EN significantly outperforms both                  They focus on generating test cases from existing ones and
+                                         EvoSuite and vanilla prompt-based strategies in terms of mu-                   generating mutants using LLMs, which introduces challenges
+                                         tation score. Furthermore, M UT G EN introduces an iterative                   such as detecting equivalent mutants that no test can kill.
+                                         generation mechanism that pushes the limits of LLMs in killing                 Another work by Dakhel et al. [22] targets Python benchmarks
+                                         additional mutants. Our study also provides insights into the
+                                                                                                                        and proposes a prompt-based approach to improve mutation
+                                         limitations of LLM-based generation, analyzing the reasons for
+                                         live and uncovered mutants, and the impact of different mutation               score. However, they iteratively add a single mutant until they
+                                         operators on generation effectiveness.                                         cannot kill the new mutant. Therefore, they do not attempt
+                                                                                                                        to converge towards a maximum mutation score to maximize
+                                           Index Terms—Unit Test Generation, Mutation Testing, Large
+                                         Language Models                                                                fault detection. Moreover, their study does not analyze why
+                                                                                                                        live mutants remain undetected, nor does it consider uncovered
+                                                                                                                        mutants, both of which are challenges we address in our
+                                                                   I. I NTRODUCTION                                     research.
+
+                                         U      NIT test generation is a fundamental task in software en-
+                                                gineering, crucial for ensuring code quality and reducing
+                                         manual testing effort [1]–[4]. With the rapid advancement of
+                                                                                                                           While these efforts represent promising first steps, the use
+                                                                                                                        of mutation testing as a core evaluation and improvement
+                                                                                                                        strategy for LLM-generated test cases remains underexplored.
+                                         Large Language Models (LLMs), research has shifted from                        To address this gap, we propose M UT G EN, a mutation-guided
+                                         traditional techniques—such as random testing [5]–[9] and                      LLM-based approach that explicitly maximizes the mutation
+                                         search-based methods [10]–[13]—to LLM-based approaches                         score. Specifically, a key feature of M UT G EN is that we
+                                         for generating unit tests [14]–[16].                                           incorporate mutation feedback (i.e., live and uncovered mutant
+                                            However, most existing work evaluates generated test cases                  information) into prompt construction to guide the LLM in
+                                         primarily based on code coverage metrics, such as line or                      generating more effective test cases. Further, as discussed in
+                                         branch coverage. According to prior studies [17]–[19], high                    prior studies [23]–[25], incorporating a fixing step is crucial
+                                         code coverage does not necessarily imply strong fault detection                for improving test generation effectiveness. While prior work
+                                         capability. Other research [17], [20], [21] suggests that the                  primarily focuses on improving metrics such as code coverage
+                                                                                                                        or test passing rate, our work explicitly targets the fault
+                                            Guancheng Wang is with the Research Ireland Lero Centre for Soft-           detection capability of test cases, measured by the mutation
+                                         ware, University of Limerick, V94 T9PX Limerick, Ireland (e-mail:
+                                         guancheng.wang@ul.ie).                                                         score. To this end, our approach introduces a fixing step that
+                                            Qinghua Xu is with the Research Ireland Lero Centre for Software, Uni-      specifically addresses assertion failures in the generated test
+                                         versity of Limerick, V94 T9PX Limerick, Ireland (e-mail: qinghua.xu@ul.ie).    cases, caused by incorrect use of assertion functions, including
+                                            Lionel Briand is with the University of Ottawa, Ottawa, ON K1N 6N5,
+                                         Canada, and also with the Research Ireland Lero Centre for Software, Univer-   erroneous invocations and inappropriate parameter values.
+                                         sity of Limerick, V94 T9PX Limerick, Ireland (e-mail: lbriand@uottawa.ca,         Moreover, we observe that comments in the target code
+                                         lionel.briand@lero.ie).
+                                            Kui Liu is with Software Engineering Application Technology Lab Huawei,     can mislead LLMs into producing irrelevant or incorrect
+                                         Hangzhou, China (e-mail: brucekuiliu@gmail.com).                               tests. To address this, we introduce a code summarization
+                                                                                                     0000–0000/00$00.00 © 2021 IEEE
+                                                                                                                                    2
+
+
+
+step during preprocessing that replaces misleading comments                                 II. M ETHODOLOGY
+with concise summaries, which are then embedded into the
+                                                                        This section presents our approach M UT G EN through a
+prompt. Lastly, since achieving the maximum mutation score
+                                                                     motivating example and a formal description. We first illustrate
+is inherently difficult, we introduce an iterative test-generation
+                                                                     the limitations of standard LLM-based test generation using a
+strategy to push LLMs toward killing more live mutants. Once
+                                                                     running example. We then precisely describe and formalize
+the mutation score converges, we analyze both uncovered
+                                                                     our methodology, including the complete set of user prompts
+and live mutants, as well as specific mutation operators that
+                                                                     employed in our approach. To save space and focus on the
+remain particularly challenging for the LLM. Like many
+                                                                     essential context, we omit the system prompts and the standard
+recent studies [26]–[28], our approach focuses on function-
+                                                                     formatting rules widely used in existing open-source tools [34]
+level testing. While this prior work also generates test cases
+                                                                     and test generation research [21], [27], [35], which are also
+for functions from complex datasets such as Defects4J [29],
+                                                                     available in our open-source implementation.
+it handles cross-module dependencies explicitly by simply
+providing them in the prompts. In contrast, our work does not
+aim to address dependency resolution at this stage; instead,         A. Motivating Example and Intuition
+it focuses on improving mutation scores for function-level
+                                                                        This subsection goes through a simple example to illustrate
+testing. Nevertheless, as discussed below, one of our datasets
+                                                                     the limitations of standard prompting and to motivate our
+includes solutions to challenging algorithmic problems with
+                                                                     approach. The example Java code under test shown in Figure 1,
+complex program structures, providing a more complex dataset
+                                                                     which validates a date format, includes descriptive comments
+for evaluating the effectiveness of M UT G EN in generating test
+                                                                     and input-output examples. For clarity and to save space, we
+cases.
+                                                                     retain only the most relevant parts of the comments in the
+   To evaluate M UT G EN, we use two datasets: HumanEval-
+                                                                     figure. Most LLM-based techniques prompt LLMs using the
+Java, widely adopted in prior work [22], [23], [30], and a
+                                                                     following standard prompt:
+new LeetCode-Java corpus containing 100 randomly selected
+algorithmic problems with ground-truth solutions. The ex-                 “Generate JUnit tests for the following method to
+perimental results show that test cases generated by M UT-                achieve high branch and line coverage.”
+G EN outperform both E VO S UITE, a state-of-the-art search-
+based technique, and a vanilla LLM-based method in terms              1 package original;
+of mutation score. M UT G EN achieves mutation scores of              2 class ValidDate {
+                                                                      3     /** You have to write a function ......
+89.5% and 89.1% on HumanEval-Java and LeetCode-Java,                  4       * The date is valid if all of the following rules
+respectively, across a total of 1,144 and 1,900 mutants. In                        are satisfied:
+                                                                      5       * 1-3. ......
+addition, although some generated test cases may initially            6       * 4. The date should be in the format: mm-dd-yyyy
+fail, M UT G EN is able to repair around 50% of them, which           7       * for example:
+                                                                      8       * validDate("03-11-2000") => True
+is comparable to strong results reported in recent software           9       * validDate("06/04/2020") => False
+repair literature [31]–[33]. We further analyze the causes of        10       * MORE EXAMPLES ...... **/
+                                                                     11     public static Boolean validDate(String date) {
+the remaining failures through a manual inspection of 50             12          if (date.length() != 10) {
+randomly sampled cases, together with the analyses of live           13              return false;
+                                                                     14          }
+and uncovered mutants and the impact of different mutation           15          String[] dateArr = date.split("-");
+operators, to better understand the strengths and limitations of     16          if (dateArr.length != 3) return false;
+                                                                     17          int month = Integer.parseInt(dateArr[0]);
+LLM-based test generation.                                           18          int day = Integer.parseInt(dateArr[1]);
+   To understand the contribution of each component in M UT-         19          int year = Integer.parseInt(dateArr[2]);
+                                                                     20          if (month < 1 || month > 12) { return false; }
+G EN, we conduct an ablation study using three variants:             21          if (month == 2) {
+M UT G EN -S (without summarization), M UT G EN -F (without          22              if (day < 1 || day > 29) { return false; }
+                                                                     23          } else if (month == 4 || month == 6 || month == 9
+the fixing step), and M UT G EN -MF (without mutation feed-                            || month == 11) {
+back). The results confirm the importance of each component          24              if (day < 1 || day > 30) { return false; }
+                                                                     25          } else {
+in improving the overall mutation score.                             26              if (day < 1 || day > 31) { return false; }
+   In summary, this paper makes the following contributions:         27          }
+                                                                     28          return true;
+   • We propose a mutation-guided, LLM-based approach                29     }
+      (M UT G EN) for automatically generating test cases with       30 }
+
+      high fault detection capability (i.e., mutation score), in-
+      cluding an iterative generation process guided by mu-          Fig. 1. Example code under test
+      tation feedback to push the limits of LLMs in killing
+      mutants.                                                         When combined with the example code (including com-
+   • We evaluate our approach on a widely used benchmark             ments), LLMs can generate test cases that achieve high line
+      dataset and a new dataset we created to increase diversity.    and branch coverage. However, as demonstrated in prior
+   • We analyze the effectiveness of M UT G EN across different      work [17], [20], [21], high coverage does not necessarily
+      mutation operators and investigate the reasons behind the      imply strong fault-detection capability when measured by
+      presence of live and uncovered mutants when M UT G EN          the mutation score. For instance, in our experiments, LLMs
+      reaches its maximum mutation score.                            generate tests for the subject id_81 from HumanEval-Java
+                                                                                                                                       3
+
+
+
+with 100% line and branch coverage, yet the corresponding           B. Formal Overview of M UT G EN
+mutation score is only 4%.                                            Let M = {m1 , m2 , . . . , mn } denote the set of mutants
+   Listing 1 shows a representative test function generated         generated from the program under test. The mutation score
+by Llama-3.3. In practice, multiple such test functions may         µ(T ) of a test suite T is defined as:
+be generated, often with a variety of data inputs aimed at
+maximizing code coverage. However, we observe that most of                                   |{m ∈ M | T kills m}|
+                                                                                   µ(T ) =
+these inputs fail to cover corner cases, such as February 29th                                      |M|
+in leap years, likely because such examples are absent from            We aim to generate a test suite T such that µ(T ) is maxi-
+the provided comment block. The comments in the target code         mized. To achieve this, we propose a two-stage process based
+may also introduce additional issues. For example, the com-         on prompting an LLM, namely preprocessing and generation.
+ment begins with “You have to write a function. . . ”, which,          The preprocessing stage prepares information to guide test
+when included as part of the prompt, may mislead the LLM            case generation, including code summarization and mutation
+into replicating the target code logic rather than generating a     feedback, as detailed in Section II-C. In the generation stage,
+meaningful test function. Additionally, Llama-3.3 occasionally      the LLM is prompted with mutation feedback, such as de-
+produces dates in incorrect formats, such as dd-mm-yyyy,            scriptions of mutation operators and diff-like representations
+likely due to ambiguity or insufficient specification of the        of mutants, to generate test cases.
+expected format in the program’s comments.                             Let R = {r1 , r2 , . . . , rk } denote the set of mutation
+   Furthermore, when relying on mutation rather than code           feedback entries (i.e., killed, live, uncovered), where each ri is
+coverage, the generated inputs often fail to effectively kill       a tuple ⟨idi , mi , si , opi ⟩, respectively representing the mutant
+mutants. For example, when the ConditionalsBoundary                 identifier, the mutated statement, the mutant status, and the
+mutation operator in PITest replaces < with <=, it changes the      applied mutation operator. M UT G EN first generates an initial
+conditional boundary and modifies line 24 as follows:               test suite T :
+if (day <= 1 || day > 30) return false;                                                  T = LLM(Promptmut (R))
+                                                                       Here, as further described in the following sections,
+This change introduces a fault: the original code accepts day
+                                                                    Promptmut is a structured prompt that encodes details of the
+== 1 as valid, while the mutant incorrectly rejects it. We
+                                                                    mutation operators and specific mutant instances, as illustrated
+observe that LLM-generated test cases, when prompted with
+                                                                    in the example Promptmut shown in Figure 5.
+the original code, tend to focus on representative invalid inputs
+                                                                       After executing T , M UT G EN collects a set F = {f1 , ..., fq }
+(e.g., day = 0) and on valid values far from the boundary
+                                                                    consisting of all test cases that encountered execution failures
+(e.g., day = 2 or higher). For instance, the model commonly
+                                                                    and corresponding error messages. For each fi , M UT G EN
+produces a test such as:
+                                                                    constructs a second prompt Promptfail (as illustrated in the
+assertFalse(validDate("04-00-2025"));                               example shown in Figure 6) and invokes the LLM to generate
+                                                                    a set of fixed test cases Tf ix :
+which fails in both the original function and the mutant.
+However, it frequently fails to generate:                                       Tf ix = {LLM(Promptfail (fi )) | fi ∈ F}
+assertTrue(validDate("04-01-2025"));                                  The final test suite comprises all passing test cases obtained
+                                                                    by combining the filtered and fixed tests. We denote this using
+which is essential to kill the boundary-mutated version of the      the function ExeFilter, as follows:
+code.
+                                                                                 Tfinal = ExeFilter((T \ F ) ∪ Tfix )
+Listing 1. Example test function generated by Llama-3.3
+@Test
+                                                                    This process will be detailed in Section II-E.
+public void testDayBoundaryInApril() {                                Our objective is to maximize the mutation score:
+   String date = "04-01-2025";
+   assertTrue(ValidDate.validDate(date));
+}                                                                                         T ∗ = arg max µ(T )
+                                                                                                       T
+
+  In summary, test cases generated using the standard prompt           Our assumption, as reported in the mutation testing liter-
+exhibit the following limitations:                                  ature [17], [18], is that by maximizing the mutation score,
+                                                                    we also maximize fault detection effectiveness. In any case,
+ 1) Comments in the target code can mislead LLMs, resulting         achieving mutation coverage is known to be a more stringent
+    in the generation of ineffective or irrelevant test cases.      criterion than line or branch coverage [21] and therefore
+ 2) Given the presence of code mutants, LLMs struggle to            enables the generation of more effective test suites. However,
+    understand how to generate tests that kill them effectively.    as revealed in recent work [36], finding an optimal prompt
+   To address these issues, we propose M UT G EN, an approach       for LLMs remains a significant challenge, and we introduce
+that improves the fault detection capability of LLM-generated       an approximate and iterative solution, detailed in Section II-F,
+test cases via a two-stage process: preprocessing and genera-       which we investigate empirically and whose limitations we
+tion, which are detailed in Section II-C and Sections II-D-II-F,    analyze, for example, in terms of mutation operators that are
+respectively.                                                       difficult to kill.
+                                                                                                                                                                4
+
+
+
+
+                                                                 Comments
+    Program                                                      Removed       src
+                  Summarization
+   Under Test
+                                               Summary
+                                                 desc
+                  Llama-3.3 70B                             Test Generation                                     𝐹 = 𝑡) , 𝑒) ,…, 𝑡" , 𝑒"
+                  Prompt in Fig. 3                                             Generated Tests T                    Failure Set                  Fixing
+                                                                                                    Error
+                                       Mutation Feedback                                            Filter
+                                                         Llama-3.3 70B                                                                       Llama-3.3 70B
+  Empty              Mutation           R= {𝑟! ,…,𝑟" }
+ Test Suite          Testing                                                                                 Filtered Tests                  Prompt in Fig. 6
+                                                            Prompt in Fig. 5                                     𝑇\𝐹
+                                                                                                   Execution                  Fixed Tests
+                                                                                                                                      𝑇#$(
+         During iterative execution,                           Final Test Suite
+         the initial test suite is replaced.             𝑇#$%&' = 𝐸𝑥𝑒𝐹𝑖𝑙𝑡𝑒𝑟((𝑇\𝐹) ∪ 𝑇#$( )
+
+
+
+Fig. 2. M UT G EN Overview
+
+
+
+   Figure 2 shows an overview of M UT G EN. M UT G EN takes                         Mutation Feedback. To address the second issue, we lever-
+a program under test as input and returns test cases aimed at                    age mutation feedback to guide the LLM in generating
+improving its fault-detection effectiveness by maximizing the                    test cases with greater fault-detection capability. Before the
+test suite’s mutation score. We highlight all data flows in red                  generation stage, M UT G EN extracts mutation feedback from
+in the figure.                                                                   mutation reports produced by mutation testing tools. In this
+                                                                                 example, we use PITest [37] to generate a mutation report, as
+C. Preprocessing Stage                                                           shown in Figure 4. From the report, M UT G EN retrieves key
+   The preprocessing stage prepares information to guide the                     information, including the mutation location (line number), the
+test case generation.                                                            mutant status (killed, survived, or uncovered), and the mutation
+   Code Summarization. To address the first limitation above,                    operator applied to create the mutant. M UT G EN then integrates
+M UT G EN removes comments from the target code and uses a                       this feedback with the source code, forming a prompt (shown
+prompt (shown in Figure 3) to instruct the LLM to summarize                      in Figure 5) that guides the LLM in generating more effective
+the method’s purpose and input format. The prompt used is as                     test cases during the generation stage.
+follows:                                                                            For example, the mutation feedback extracted from the
+                                                                                 report for the mutant shown in Listing II-A is as follows:
+        Prompt Used for Summarizing
+                                                                                      21. conditional boundary at line 24, uncovered:
+        Summarize the following Java source code in 1-3                               if (day<=1||day>30) return false;
+        sentences, including its purpose and input format (if
+        applicable).
+                                                                                 This indicates that the existing tests do not cover the 21st
+                       {{ source code }}                                         mutant, generated by applying a conditional boundary change
+                                                                                 at line 24, specifically by replacing < with <=, as shown in
+                                                                                 the second line. Formally, this mutation feedback entry can be
+Fig. 3. Prompt used for summarizing                                              represented as:
+   For the target code shown in Figure 1, Llama-3.3 returns                           r21 = ⟨21,
+the following summary:                                                                     if (day ≤ 1||day > 30) returnf alse;,
+     “This Java function, ‘validDate’, validates a given                                   uncovered,
+     date string in the format “mm-dd-yyyy” and returns                                    change conditional boundary at line 24 ⟩
+     ‘true’ if the date is valid according to specific
+     rules regarding month and day ranges, and ‘false’
+     otherwise. The input date string must be non-empty                          D. Prompting with Mutation Feedback
+     and follow the exact specified format. If any of
+     these conditions are not met, the function will return                         To maximize the mutation score, M UT G EN augments the
+     ‘false’.”                                                                   prompt with mutation feedback collected during the prepro-
+Since our work focuses on improving the fault-detection                          cessing stage and uses it to guide Llama-3.3 in generating
+capability of generated tests through mutation feedback, we                      test cases. Figure 5 illustrates the resulting prompt for the
+directly use the summaries produced by the LLM without                           HumanEval-Java subject shown in Figure 1. With a single
+further optimization. Investigating how the size and quality                     invocation of M UT G EN, the generated test suite contains 13
+of generated summaries affect test generation effectiveness is                   test cases and achieves a mutation score of 70% over 30
+a promising direction for future work.                                           mutants.
+                                                                                                                                                   5
+
+
+
+                          Mutations
+                         12       1. negated conditional -> KILLED
+                         13       1. replaced Boolean return with True for original/ValidDate::validDate -> KILLED
+                         16       1. negated conditional -> KILLED
+                                  2. replaced Boolean return with True for original/ValidDate::validDate -> KILLED
+                         20       1. negated conditional -> SURVIVED Covering tests
+                                  2. changed conditional boundary -> SURVIVED Covering tests
+                                  3. changed conditional boundary-> SURVIVED Covering tests
+                                  4. replaced Boolean return with True for original/ValidDate::validDate -> SURVIVED Covering tests
+                                  5. negated conditional-> SURVIVED Covering tests
+                         21       1. negated conditional -> SURVIVED Covering tests
+                         22       1. negated conditional -> SURVIVED Covering tests
+                                  2. changed conditional boundary -> SURVIVED Covering tests
+                                  3. changed conditional -> SURVIVED Covering tests
+                                  4. replaced Boolean return with True for original/ValidDate::validDate -> SURVIVED Covering tests
+                                  5. changed conditional boundary-> SURVIVED Covering tests
+                         23       1. negated conditional -> SURVIVED Covering tests
+                                  2. negated conditional -> SURVIVED Covering tests
+                                  3. negated conditional -> SURVIVED Covering tests
+                                  4. negated conditional -> SURVIVED Covering tests
+                         24       1. negated conditional -> NO COVERAGE
+                                  2. changed conditional boundary -> NO COVERAGE
+                                  3. changed conditional boundary -> NO COVERAGE
+                                  4. replaced Boolean return with True for original/ValidDate::validDate -> NO COVERAGE
+                                  5. negated conditional -> NO COVERAGE
+                         26       1. changed conditional boundary -> NO COVERAGE
+                                  2. negated conditional -> NO COVERAGE
+                                  3. changed conditional boundary -> NO COVERAGE
+                                  4. replaced Boolean return with True for original/ValidDate::validDate -> NO COVERAGE
+                                  5. negated conditional -> NO COVERAGE
+                         28       1. replaced Boolean return with False for original/ValidDate::validDate -> NO COVERAGE
+
+Fig. 4. Example mutation report
+
+
+
+  We define the prompt construction function as follows:                            example shown in Figure 5.
+             Promptmut : R → String,
+                                                          [                         E. Fixing Execution Errors
+         Promptmut (R) = Format(desc, src,                       ri ).
+                                                                                       After the initial generation stage, some test cases may fail
+                                                         ri ∈R
+                                                                                    due to execution errors. M UT G EN introduces a fixing step
+   The function Format(·) organizes the given parameters                            that leverages a structured prompt, as illustrated in Figure 6,
+into a structured prompt suitable for the LLM.                                      to guide the LLM in repairing these failures. In the example
+   As illustrated in Figure 2 and the example in Section II-A,                      shown, two generated test cases initially fail to execute due
+the prompt constructed by M UT G EN includes three com-                             to runtime errors. By applying the fixing step, M UT G EN
+ponents: a natural language code summarization (desc), the                          successfully repairs one of the failing test cases, resulting in
+source code excluding comments (src), and the associated                            a 13% increase in mutation score.
+mutation feedback (R). In Figure 5, the former two correspond                          We categorize execution failures into two types:
+to the prompt variables: desc is represented as {{summary}},                           • Assertion Failures: Test cases that compile successfully
+and src as {{source code without comments}}.                                             but fail at runtime due to violated assertions or incorrect
+   Regarding the content under ## Mutation Feedback, we                                  outputs.
+first provide a sentence-level instruction to the LLM. The LLM                         • Compilation Errors: Test cases that fail to compile due
+is provided with live mutants and is prompted to generate                                to syntax errors, missing types, unresolved references, or
+tests that are more diverse for each mutant. Following this                              similar issues.
+sentence-level prompt, the set of mutation feedback entries,
+                                                                                       To address these failures, M UT G EN constructs a structured
+R, is provided as defined in Section II-C.
+                                                                                    prompt for each failing test case:
+   In addition, M UT G EN explicitly specifies the expected
+output format from the LLM, as illustrated in the prompt                                               Promptfail (fi ) = Format(ti , ei ),
+                                                                                                                                          6
+
+
+
+       Prompt Used for Generation                                        This prompt-based fixing strategy ensures that the LLM
+                                                                       systematically addresses different types of execution failures,
+       # Unit Test Generator for Java using Junit4                     improving test execution success and contributing to higher
+       ## Source Code Summary {{summary}}
+                                                                       mutation scores.
+       ## Source File
+           {{source code without comments}}                                   Prompt Used for Fixing
+       ## Mutation Feedback
+                                                                              ## Failed Test
+       Analyze the live mutant to identify the defects; the
+                                                                              The following test failed in the test suite:
+       generated test cases must look very different from the
+       existing ones.                                                          {{ failed_test with error message }}
+       ...
+                                                                              You are processing execution failures. Please match
+       21. conditional boundary at line 24, uncovered:
+                                                                              only one of these guidelines and then try to correct
+       if (day<=1||day>30) return false;
+                                                                              the failed tests according to the given error messages.
+       ...
+                                                                              1. Direct Invocation:
+       ## Output Format in YAML
+                                                                              • Always use assertion functions directly (e.g., assertE-
+       new tests:
+                                                                              quals(value1, value2)) instead of prefixed calls like
+           - test behavior: ...
+                                                                              Assert.assertEquals(value1, value2).
+                 test name: ...
+                                                                              2. Handling assertEquals Mismatches:
+                 test code: ...
+                                                                              • If an error follows the pattern:
+                 new imports: ...
+                                                                              • test file name:line number: expected:error value
+                                                                              but was:correct value
+Fig. 5. Prompt used for generation                                            • And involves assertEquals, replace the expected value
+                                                                              with the correct one.
+                                                                              • Example: assertEquals(error value, xxx); → assertE-
+where ti is the original test case and ei is the associated                   quals(correct value, xxx);
+compiler or runtime error message. The prompt explicitly                      3. Fixing assertTrue / assertFalse Errors:
+                                                                              • If an error follows the pattern:
+instructs the LLM:
+                                                                              • classname:line number:null
+   ”You are processing execution failures. Please match only                  • And involves assertTrue or assertFalse, swap the
+one of these guidelines and then try to correct the failed tests              function name while keeping all parameters un-
+according to the given error messages.”                                       changed.
+   The prompt then enumerates six targeted fix strategies:                    • Example: assertTrue(xxx); → assertFalse(xxx);
+  1) Direct invocation errors: to address incorrect invocation                4. Handling ambiguous
+                                                                              • If an error has the pattern:
+     of assertion functions.                                                  • reference to assertEquals is ambiguous
+  2) assertEquals mismatches: to address oracle value                         • And involves assertEquals, add type casts to both
+     inconsistencies in assertEquals assertions.                              parameters based on their respective types.
+  3) assertTrue/assertFalse errors: to address                                • Example: assertEquals(expectedValue, actualValue);
+     binary oracle inconsistencies in assertTrue or                           → assertEquals((long) expectedValue, (long) actual-
+     assertFalse assertions.                                                  Value);
+  4) Ambiguous assertion references: to address ambiguity in                  5. Method name conflicts
+                                                                              • If an error follows the pattern: method is already
+     assertEquals calls; explicit type casts are applied to
+                                                                              defined in the class,
+     clarify the parameter types.                                             • only append a number to the method name.
+  5) Method name conflicts: to address duplicate method                       • Example: public void test null() → public void
+     names within the test class.                                             test null1();
+  6) Other runtime or compilation errors: to address errors not               6. Other errors
+     covered by the above strategies.                                         • Try to fix the errors according to the error messages.
+Detailed instructions for these strategies, along with a fixing               ## Output Format in YAML
+                                                                              The same applied as in Figure 5.
+example, are provided in Figure 6.
+   We define specialized fix functions for each failure type:
+                                                                       Fig. 6. Prompt used for fixing
+    Fixcomp (fi ) = LLM(Promptfail (fi ))         for fi ∈ Fcomp ,
+    Fixassert (fi ) = LLM(Promptfail (fi ))       for fi ∈ Fassert .
+  The outputs of these functions are the repaired test sets:           F. Pushing the Limit: Iterative Generation
+                                                                          We propose an iterative generation process that leverages
+                 T ′ = {Fixcomp (fi ) | fi ∈ Fcomp },
+                                                                       mutation feedback and failed test cases to progressively en-
+                T ′′ = {Fixassert (fi ) | fi ∈ Fassert },              hance the quality and effectiveness of the generated tests. At
+and the final set of fixed test cases is:                              each iteration i, M UT G EN obtains a working test suite Ti .
+                                                                       Before proceeding to the next iteration, M UT G EN evaluates Ti
+                           Tfix = T ′ ∪ T ′′ .                         to obtain mutation feedback Ri . The LLM is re-invoked with
+                                                                                                                                    7
+
+
+
+Promptmut (Ri ) to generate an initial set of new test cases.        A. Experiment Setup
+The failing cases are filtered as Fi and, for each fj ∈ Fi , the
+LLM is subsequently invoked with Promptf ail (fj ) to fix them.         Subjects. In our study, we primarily focus on method-level
+M UT G EN obtains ∆Ti as the set of test cases that successfully     subjects, where each subject is a single Java class containing
+execute. The updated test suite Ti+1 is defined as:                  only one target method. We generate unit test cases specifically
+                                                                     for this method. We use a widely adopted benchmark dataset
+                       Ti+1 = Ti ∪ ∆Ti ,                             that has been used in prior publications [23], [30], [40], [41],
+                                                                     and we also create an additional dataset to enable a more
+   The process continues until convergence (i.e., no significant     diverse evaluation. More specifically, we include the following
+improvement in mutation score) or until a predefined iteration       subjects:
+limit is reached. Once convergence is reached, the remaining
+                                                                           a) HumanEval-Java: Following prior work [23], [30],
+live and uncovered mutants provide insights into mutation
+                                                                     [40], [41], we adopt the HumanEval dataset [42], [43] as one
+operators and program constructs that remain challenging for
+                                                                     of our evaluation benchmarks. Specifically, we utilize all 160
+the LLM, which we analyze in Section III-B.
+                                                                     Java subjects from the dataset. For each subject, we apply
+   To illustrate the effectiveness of this iterative process, we
+                                                                     E VO S UITE with its default configuration to automatically
+revisit the running example introduced earlier. After two
+                                                                     generate a test suite. We then evaluate the mutation score
+iterations, for the running example, M UT G EN achieves a 100%
+                                                                     of the generated test suite using PITest [37]. Subjects where
+mutation score. In contrast, as demonstrated in Section III, for
+                                                                     M UT G EN and E VO S UITE both achieved a 100% mutation
+this subject in HumanEval-Java, using the vanilla prompt intro-
+                                                                     score are discarded, resulting in 104 Java subjects for our
+duced at the beginning of this section, the LLM produces a test
+                                                                     evaluation. Indeed, these subjects do not help us distinguish
+suite with a 53% mutation score, which remains unchanged
+                                                                     the two approaches.
+after four iterations.
+                                                                           b) Leetcode-Java: We search GitHub using the keyword
+                                                                     "Leetcode Java" and select the top two repositories
+                       III. E VALUATION
+                                                                     based on the Best match sorting criterion. These repositories
+   As previously discussed, M UT G EN is designed to enhance         contain Java solutions to algorithmic problems from Leet-
+the fault-detection capability of LLMs in automated test             Code [44], which are categorized into three difficulty levels:
+generation by incorporating mutation feedback. To evaluate           Easy, Medium, and Hard. We exclude all solutions corre-
+its effectiveness, we compare M UT G EN with three baselines:        sponding to Easy problems. We collect all Java source files
+E VO S UITE, the state-of-the-art search-based technique; E VO -     for the remaining Medium and Hard problems and organize
+S UITEmut , a variant that replaces coverage-based fitness func-     them into a unified package structure following the convention
+tions with strong mutation as described in [38]; and G ENvanilla ,   used in HumanEval-Java. We use the Maven build system to
+a prompting-based approach that utilizes an LLM without              compile the project and remove any subjects that failed to
+incorporating mutation feedback and leveraging the comments          compile. For each valid subject, we apply E VO S UITE with its
+provided in the program under test through summarization             default settings to generate a test suite. Subjects for which
+(as illustrated in Figure 5). We adopt Llama-3.3 70B as              the generated test suite achieved a 100% mutation score by
+the base model in our evaluation due to its recent release,          M UT G EN and E VO S UITE are once again discarded. Finally,
+strong effectiveness on code-related tasks [39], and open-           for computational feasibility, we randomly select 50 subjects
+source accessibility, which ensures reproducibility and ease         from each of the Medium and Hard sets, resulting in a total
+of deployment in both research and practical scenarios.              of 100 Leetcode-Java subjects used in our evaluation.
+   In addition to effectiveness comparisons, we analyze the             The average number of lines of code in HumanEval-Java
+limitations of LLM-based test generation by examining killing        methods is 41, with an average cyclomatic complexity (CC)
+ratios across different mutation operators. This allows us to        of 4.90, which is close to the average CC of 5.46 reported for
+identify which mutant types are particularly challenging for         typical Java methods [45]. This indicates that HumanEval-Java
+LLMs to kill and to offer insights into potential areas for          exhibits representative control-flow complexity for standard
+improvement.                                                         Java methods. In contrast, methods in Leetcode-Java are
+   Finally, we conduct an ablation study to evaluate the con-        generally more complex, with an average CC of 7.88. These
+tribution of each component within M UT G EN to the overall          statistics demonstrate that Leetcode-Java contains methods
+effectiveness.                                                       with complexity levels comparable to or exceeding those found
+   In sum, our evaluation addresses the following research           in real-world Java code [46], making it both representative and
+questions.                                                           more challenging than HumanEval-Java.
+   • RQ1: How does M UT G EN perform in generating test                 Metrics. Since our work focuses on enhancing the effec-
+      cases with high fault detection capability (i.e., muta-        tiveness of LLM-generated test cases, we adopt the mutation
+      tion score) compared to E VO S UITE, E VO S UITEmut , and      score, calculated as the ratio of killed mutants to the total
+      G ENvanilla ?                                                  number of mutants, as the primary evaluation metric (see
+   • RQ2: Which mutation operators remain challenging for            Equation 1).
+      LLM-based test generation and for what reasons?
+   • RQ3: What is the individual contribution of each com-
+                                                                                                 # killed mutants
+      ponent of M UT G EN to the overall effectiveness?                       Mutation Score =                    × 100%          (1)
+                                                                                                 # total mutants
+                                                                                                                                       8
+
+
+
+   A mutant is considered killed if at least one generated            allows us to identify which mutation operators tend to produce
+test case causes a behavioral difference between the original         mutants that are difficult or easy for LLM-generated test cases
+program and its mutated version, typically resulting in a failed      to kill. In our evaluation, mutation testing is conducted using
+assertion or exception. In addition to the mutation score, we         PITest, which employs 11 mutation operators as described
+also report branch coverage and line coverage, in line with           in [53]. For mutation operators with low killing ratios, we
+previous work [35], [47].                                             investigate why LLMs struggle to kill these mutants. Due
+   Process. To address RQ1, we use all subjects from both             to space constraints, we do not present a detailed analysis
+datasets. We begin by generating test cases with both G ENvanilla     for each mutation operator or for all live and uncovered
+and M UT G EN through a single end-to-end execution, record-          mutants. Instead, we analyze a subset of cases and identify
+ing the execution time and the number of tokens consumed.             several factors that contribute to LLMs’ inability to kill certain
+We then apply E VO S UITE and E VO S UITEmut to generate test         mutants. Nevertheless, our findings offer valuable insights and
+cases for each subject, setting their time budget to the larger       highlight important directions for future research in this area.
+average processing times of M UT G EN on the two datasets.               To address RQ3, we conduct an ablation study to evalu-
+It is important to note that, unlike prior work [21], our             ate the contribution of each core component in M UT G EN.
+approach generates tests entirely from scratch, without relying       Specifically, M UT G EN consists of three main components: (1)
+on any existing test cases. We evaluate each test suite using         extracting and incorporating code summarization into prompts,
+two structural coverage metrics, branch coverage and line             (2) applying the fixing step to repair invalid test cases, and (3)
+coverage, measured by the JaCoCo tool [48]. Additionally,             extracting and incorporating mutation feedback into prompts.
+we use PITest [37] with its DEFAULTS mutation operator                In this study, we disable one component at a time, yielding
+group to measure the mutation score of each test suite. The           three variants: M UT G EN -S (using the original code comments
+DEFAULTS group provides a set of operators commonly used              instead of summarization), M UT G EN -F (omitting the fixing
+in the literature [38], [49] and, according to the PITest official    step), and M UT G EN -MF (excluding mutation feedback). For
+documentation [37], are not easy to detect and minimize the           each variant, we perform four iterations of test case generation
+number of equivalent mutants. While PITest also offers a              and measure mutation score to assess the impact of each
+STRONGER operator group, it differs from DEFAULTS by                  component on the effectiveness of M UT G EN.
+only two additional mutation operators, whose applicability is           Implementation. We describe important implementation
+rather limited. For example, the Remove Conditionals operator         details of M UT G EN and our evaluation setup. All subjects used
+only targets equality checks. For the ALL group provided by           in the evaluation are built using the Maven build system. We
+PITest, the additional mutation operators generally generate          follow official guidelines to integrate E VO S UITE, JaCoCo, and
+mutants that are relatively easy to kill, making them less            PITest into the Maven pipeline for automated test generation,
+informative for our evaluation. Note that although PITest is          code coverage measurement, and mutation testing, respec-
+designed for Java, its mutation operators can be applied to           tively. Our approach, M UT G EN, is implemented in Python
+other languages as well [37], [49], [50]. To assess the statistical   and built on top of the Mutahunter framework [34]. Specif-
+significance of the improvements achieved by our approach in          ically, we reuse components from Mutahunter for prompt
+terms of effectiveness, we performed non-parametric hypoth-           handling, LLM interfacing, and response processing. We use
+esis testing using Vargha and Delaney’s A12 statistic [51],           Ollama [54] to locally deploy the Llama-3.3 70B model [39]
+[52]. The A12 effect size was computed from the mutation              with the default configuration, setting the temperature to 0.0
+score, which ranges from 0 to 1: a value of 0.5 indicates             for more deterministic outputs. As our main baseline, E VO -
+no difference (i.e., results are due to chance), whereas a            S UITE officially and stably supports JUnit 4, while its support
+value greater than 0.5 indicates that M UT G EN is more likely        for JUnit 5 is currently limited and experimental. Therefore,
+to outperform the compared approach. Conversely, a value              JUnit 4 remains the recommended choice for reliable test
+less than 0.5 indicates the opposite. We also conducted a             generation. To ensure a fair comparison, we adopt JUnit 4
+paired-sample Wilcoxon signed-rank test on both coverage              in all experimental settings.
+and mutation score to evaluate whether M UT G EN achieves                The evaluation is conducted on a Linux server equipped
+statistically significant improvements on these metrics.              with a 56-core CPU, 125 GB of RAM, a single
+   To address RQ2, we analyze the mutation operators in-              NVIDIA RTX 6000 Ada GPU, and running Ubuntu Linux
+volved in the evaluation. As a preliminary experiment, we first       24.04.1 LTS. Our tool and benchmarks can be found at:
+randomly select 10 subjects from each dataset and perform             https://github.com/Amocy-Wang/MUTGEN.
+seven rounds of end-to-end test generation. In each round,
+M UT G EN generates additional test cases from previously
+generated ones. By tracking mutation scores across iterations,        B. Results and Analysis
+we observe that they tend to converge after the fourth iteration.          a) Comparison with E VO S UITE, E VO S UITEmut , and
+Therefore, we set the maximum number of repetitions to four           G ENvanilla : Table I presents the overall results of E VO S UITE,
+in our experiments. We collect results at the fourth iteration,       E VO S UITEmut , G ENvanilla , and our approach M UT G EN on the
+and analyze the distribution of mutation operators across all         two datasets: HumanEval-Java and Leetcode-Java. The best
+generated mutants and compute the killing ratio for each              results for each metric and dataset are highlighted.
+operator, that is, the proportion of killed mutants relative to          On HumanEval-Java, for both line coverage and branch
+the total number of mutants produced by that operator. This           coverage, M UT G EN outperforms E VO S UITE, E VO S UITEmut
+                                                                                                                                    9
+
+
+
+                                                                   TABLE I
+S UMMARY OF R ESULTS : C OMPARISON OF M UT G EN AND BASELINE APPROACHES ON DIFFERENT DATASETS . F OR EACH APPROACH AND DATASET, WE
+   REPORT THE AVERAGE PER - SUBJECT LINE COVERAGE (L INE C OV ), BRANCH COVERAGE (B RANCH C OV ), MUTATION SCORE (M UTATION S CORE ),
+NUMBER OF MUTANTS PER SUBJECT (#M UTANTS PER S UBJECT ), VARGHA AND D ELANEY ’ S A12 EFFECT SIZE (A12 EFFECT SIZE ), TOTAL RUNTIME IN
+        SECONDS (T IME ( SECS )), AND THE TOTAL NUMBER OF TOKENS CONSUMED (#T OKENS ). “*” DENOTES CASES WHEN M UT G EN ACHIEVES
+                                         SIGNIFICANTLY BETTER RESULTS THAN THE COMPARED BASELINES .
+   Approach           Dataset         Line Cov   Branch Cov   Mutation Score #Mutants per Subject A12 effect size Time (secs) #Tokens
+                 HumanEval-Java        95.6%       93.4%          69.5%              11               0.759           150      1240
+  E VO S UITE
+                   Leetcode-Java       99.0%       98.9%          58.9%              19               0.899           150       956
+                 HumanEval-Java        95.4%       93.4%          67.4%              11               0.744           150      1232
+ E VO S UITEmut
+                   Leetcode-Java       98.1%       98.7%          58.1%              19               0.889           150       940
+                 HumanEval-Java        96.2%       92.8%          77.9%              11               0.650           74.1      846
+   G ENvanilla
+                   Leetcode-Java       96.3%       92.7%          69.9%              19               0.734           76.3     1232
+                 HumanEval-Java        98.3%       95.8%         89.5%*              11                 –            125.9      899
+   M UT G EN
+                   Leetcode-Java       98.4%       94.8%         89.1%*              19                 –            149.4     1629
+
+
+
+and G ENvanilla . On Leetcode-Java, we see the opposite: E VO -     difference in coverage, as most subjects already achieve near
+S UITE achieves the highest coverage scores, surpassing both        100% coverage across all approaches.
+LLM-based techniques. For both datasets, however, differ-              In terms of overhead, M UT G EN consumes fewer tokens
+ences are relatively small, with values below 3 percentage          on HumanEval-Java but more tokens on Leetcode-Java. The
+points. Although M UT G EN is primarily designed to improve         LeetCode-Java subjects consist of solutions to medium- and
+mutation score, the results also demonstrate that it consistently   hard-level algorithmic problems, with more complex logic
+outperforms G ENvanilla in terms of line and branch coverage.       than those in HumanEval-Java. As a result, PITest generates
+This supports previous observations [21] that improvements          more mutants for them (19 vs. 11), and Llama-3.3 requires
+in mutation score can also lead to enhanced code coverage.          more test cases to kill all mutants. Compared with G ENvanilla ,
+   Regarding the mutation score, PITest generates an average        E VO S UITE, and E VO S UITEmut , in Leetcode-Java, M UT G EN
+of 11 and 19 mutants per subject on HumanEval-Java and              consumes more tokens while achieving higher mutation scores
+Leetcode-Java, respectively, resulting in a total of 1,144 and      as well as better line and branch coverage. In contrast,
+1,900 mutants across the two datasets. M UT G EN achieves           on HumanEval-Java, M UT G EN consumes fewer tokens than
+mutation scores of 89.5% and 89.1% on the two datasets.             E VO S UITE and E VO S UITEmut while still achieving superior
+Compared to E VO S UITE, this represents large improvements         performance in both coverage and mutation score. For the
+of 28.8% and 51.3%, respectively, corresponding to around 20        baseline approaches (i.e., E VO S UITE and E VO S UITEmut ), a
+and 30 percentage points. Compared to G ENvanilla , M UT G EN       possible explanation for their higher token consumption on
+also significantly improves the mutation score, though to a         HumanEval-Java is that these programs contain more lines
+lesser extent. Additionally, M UT G EN also surpasses E VO -        of code on average, whereas LeetCode-Java programs exhibit
+S UITEmut , which specifically aims to maximize the mutation        higher cyclomatic complexity. Longer programs tend to yield
+score, to an even larger extent. Indeed, surprisingly, we ob-       larger, more verbose test suites generated by these search-
+serve that E VO S UITE slightly outperforms E VO S UITEmut . This   based techniques, resulting in increased token usage at the
+might be due to the latter being developed 10 years ago [2]         test level. Interestingly, we observe an opposite trend for our
+and receiving no further maintenance. For example, we found         LLM-based approach. On LeetCode-Java, M UT G EN consumes
+that the mutation operators used by E VO S UITEmut are limited,     more tokens than on HumanEval-Java, despite the latter having
+resulting in poor performance of the generated test cases when      longer programs on average. We hypothesize that this behavior
+evaluated by PITest. Another tentative explanation is that, to      is related to the use of mutation feedback in the prompt.
+ensure fair comparisons, recall that we set the time budget to      Specifically, LeetCode-Java has more mutants per subject,
+the maximum used by M UT G EN, but a larger budget may be           resulting in more uncovered or live mutants included in the
+necessary for E VO S UITEmut .                                      mutation feedback provided to the LLM. As a consequence,
+   Furthermore, we report the A12 effect size [51] on mutation      the prompt becomes richer and more informative, encouraging
+scores in the third-to-last column of Table I. For the compar-      the LLM to generate more extensive test cases to kill these
+ison between E VO S UITE and M UT G EN, the A12 values are          mutants, which, in turn, leads to higher token consumption.
+0.759 and 0.899, indicating that M UT G EN has a 75.9% and          However, differences of that scale in the number of tokens do
+89.9% probability of achieving higher mutation scores than          not have practical implications.
+E VO S UITE on HumanEval-Java and Leetcode-Java, respec-               Overall, the results suggest that M UT G EN significantly
+tively. Similarly, compared with G ENvanilla , the A12 values       improves mutation scores relative to alternatives, with large
+are 0.650 and 0.734, indicating that M UT G EN outperforms          differences, at the expense of slightly lower code coverage than
+G ENvanilla with probabilities of 65.0% and 73.4% on the same       E VO S UITE for the most complex subject (Leetcode-Java). This
+datasets. Additionally, based on the results of the paired-         is expected, as E VO S UITE is designed to maximize coverage.
+sample Wilcoxon signed-rank test, we found that M UT G EN           For the other subject (HumanEval-Java), the reverse trend is
+achieves statistically significant improvements (α = 0.05) in       observed. Even when E VO S UITE is specifically configured as
+mutation scores compared with E VO S UITE, E VO S UITEmut ,         E VO S UITEmut to maximize mutation scores [2], it performs
+and G ENvanilla . However, there is no statistically significant    slightly worse than E VO S UITE on both datasets. Therefore,
+                                                                                                                                           10
+
+
+
+to optimize mutation scores and, thus, fault detection, we
+recommend using M UT G EN, though the impact on coverage
+is unclear and likely negligible in practice.
+
+  Answer to RQ1
+  M UT G EN consistently achieves higher mutation scores
+  than the baselines, demonstrating its superior fault de-
+  tection capability. While this may result in a slight de-
+  crease in code coverage for more complex subjects (e.g.,
+  Leetcode-Java), the difference is practically negligible.
+                                                                                        (a) Results on HumanEval-Java
+                            TABLE II
+   M UTANT S TATUS C OUNTS PER O PERATOR ON H UMAN E VAL -JAVA
+                       (S ORTED BY T OTAL )
+
+ Operator                K     L    NoCOV     Total   Killing ratio
+ NegateConditionals     398     7     3       408        97.5%
+ Math                   209    11     3       223        93.7%
+ ConditionalsBoundary   186    18     4       208        89.4%
+ EmptyReturns            71     1     4        76        93.4%
+ TrueReturns             45     7     2        54        83.3%
+ Increments              50     2     1        53        94.3%
+ PrimitiveReturns        29     4     1        34        85.3%
+ FalseReturns            26     0     1        27        96.3%                            (b) Results on Leetcode-Java
+ VoidMethodCalls         18     7     1        26        69.2%
+ NullReturns             19     0     0        19       100.0%        Fig. 7. Mutation Score Changes over 4 Iterations: Ablation Study on Both
+ InvertNegatives         16     0     0        16       100.0%        Datasets.
+ Summary                1067   57     20      1144       93.3%
+
+                                                                      M UT G EN demonstrates consistently high effectiveness across
+                            TABLE III                                 most mutation operators. For example, after four iterations, the
+M UTANT S TATUS C OUNTS PER O PERATOR ON L EETCODE -JAVA (S ORTED     killing ratio for Math reaches 97.2% on LeetCode-Java; the
+                           BY T OTAL )
+                                                                      remaining mutants are predominantly uncovered, indicating
+                                                                      that they are not exercised by the generated test cases.
+ Operator                K     L    NoCOV     Total   Killing ratio
+                                                                         In contrast, several other mutation operators, includ-
+ Math                   766    8      14      788       97.2%
+ NegateConditionals     474     5     14      493        96.1%
+                                                                      ing VoidMethodCalls and TrueReturns, exhibit
+ ConditionalsBoundary   288    11      1      301        95.7%        lower effectiveness. For example, VoidMethodCalls
+ PrimitiveReturns        97    14      2      113        85.8%        shows a killing ratio of 69.2% on HumanEval-Java, and
+ VoidMethodCalls         58     2      7       67        86.6%
+ Increments              46     7      0       53        86.8%
+                                                                      TrueReturns achieves only 57.7% on Leetcode-Java. No-
+ EmptyReturns            24     0      2       26        92.3%        tably, although these operators differ in their occurrence
+ TrueReturns             15     0     11       26        57.7%        frequency, our correlation analysis indicates no strong and
+ NullReturns             17    0       2       19       89.5%
+ FalseReturns            13     0      0       13       100.0%
+                                                                      consistent monotonic relationship between operator frequency
+ InvertNegatives          1     0      1        2        50.0%        and killing ratio. The Spearman correlation is −0.214 on
+ Summary                1799   47     54      1900       94.7%        HumanEval-Java and 0.36 on LeetCode-Java. These results
+                                                                      suggest that frequency alone does not explain the observed
+     b) Effectiveness of M UT G EN on Different Mutation Op-          differences in effectiveness and that other factors, such as
+erators: To evaluate the effectiveness and limitations of             oracle difficulty or semantic complexity, may play a more
+M UT G EN in killing mutants, we analyze the killing ratio            important role.
+across different mutation operators (described in [53]) af-              We further analyze the reasons behind live and uncovered
+ter running M UT G EN for four iterations. Tables II and III          mutants, with a particular focus on why certain operators
+present the mutant status counts for each mutation operator           exhibit relatively low killing ratios.
+on HumanEval-Java and Leetcode-Java, respectively. In both               For live mutants, most mutation operators alter the original
+tables, Column K indicates the number of killed mutants for           program logic. For example, the MATH operator may mutate a
+each corresponding mutation operator. Column L shows the              statement a = b + c; to a = b - c;, thereby changing
+number of live mutants (covered but not killed), while Column         the value of variable a. If a is not critical to the program’s
+NoCOV represents the number of mutants that are not covered           behavior, the LLM may fail to recognize the impact of the
+by any test cases. Column killing ratio denotes the proportion        mutation and thus generate test cases that do not expose the
+of killed mutants relative to the total number of mutants.            fault. This observation underscores the need for finer-grained
+   M UT G EN achieves overall killing ratios of 93.3% and             semantic information to guide LLMs in identifying and target-
+94.7% on HumanEval-Java and Leetcode-Java, respectively.              ing meaningful behavioral changes, thereby improving their
+                                                                                                                                     11
+
+
+
+ability to detect live mutants.                                      [33]. We further manually inspected 50 randomly selected
+   Similarly, on HumanEval-Java, the VoidMethodCalls                 unfixed test cases from the remaining failures. We found that
+operator achieves a killing ratio of 69.2%, producing 26             74% are caused by incorrect oracles (e.g., wrong assertion
+mutants, of which 7 remain live. This operator removes calls         functions or erroneous expected outputs), while 26% are due
+to void methods, which may alter program behavior in subtle          to runtime exceptions triggered by invalid inputs (e.g., null
+ways that are difficult for the LLM to capture, especially when      pointer parameters). This suggests that most remaining failures
+the side effects of these calls are not explicitly reflected in      stem from oracle-level semantic issues, which warrants further
+the output. Addressing such cases requires better modeling of        work on more advanced fixing strategies.
+implicit side effects, which may further improve the killing            Lastly, mutation feedback also enhances effectiveness. As
+ratio.                                                               revealed in RQ2, although many mutants generated by com-
+   In addition to live mutants, a portion of mutants remain          mon mutation operators are relatively easy for LLMs to kill,
+uncovered (denoted as NoCOV in our tables), meaning they             mutation feedback still yields significant gains in effectiveness
+are not exercised by any generated test cases. Note that             by guiding the model. Future work may further investigate how
+these uncovered mutants are distinct from live mutants. The          mutation feedback can be tailored to help LLMs kill harder-
+primary cause is dead code and the inability of generated test       to-detect mutants and which mutation operators benefit most
+cases to reach mutated statements, even after incorporating          from such guidance. We leave this exploration as a direction
+mutation feedback. This suggests that further improvements           for future research.
+in mutation score require more fine-grained information and
+targeted guidance.                                                     Answer to RQ3
+                                                                       Among MUTGEN’s components, code summarization
+  Answer to RQ2
+                                                                       has the greatest impact on effectiveness by providing
+  M UT G EN achieves overall high killing ratios (93.3%                clear guidance to the LLM; the fixing stage increases the
+  on HumanEval-Java and 94.7% on Leetcode-Java), indi-                 number of test cases that execute successfully, thereby
+  cating strong effectiveness across most mutation opera-              improving the mutation score; and mutation feedback
+  tors. While the majority of operators achieve very high              further improves performance by guiding the LLM to
+  killing ratios, a few, such as VoidMethodCalls and                   target harder-to-kill mutants.
+  TrueReturns, remain challenging. These exceptions
+  are primarily due to dead code, uncovered statements, or
+  subtle semantic changes that are difficult for the LLM             C. Threats to Validity
+  to capture, highlighting the need for more fine-grained               The primary threat to internal validity lies in the correctness
+  semantic guidance.                                                 of the implementation of M UT G EN and the experimental
+                                                                     scripts. To reduce this threat, we have carefully reviewed our
+      c) Ablation Study: Figure 7 presents the mutation scores       code. Another potential threat to internal validity concerns the
+achieved by the ablation variants—M UT G EN -S, M UT G EN -          configuration of the employed LLM, as variations in param-
+F, M UT G EN -MF—and our approach M UT G EN across four              eters such as temperature, top-p, and maximum generation
+iterations. Specifically, Figure 7(a) shows the results on           length may lead to different outcomes. In our experiments, as
+HumanEval-Java, while Figure 7(b) reports the results on             described in Section IV.A (Implementation), we deploy Llama-
+Leetcode-Java. The horizontal axis represents the number of          3.3 70B locally using Ollama with its default configuration and
+iterations, and the vertical axis denotes the mutation score.        set the temperature to 0.0 to obtain more deterministic outputs,
+   Based on the mutation scores obtained at the fourth itera-        keeping all other parameters fixed across all experimental
+tion, code summarization appears to have the most significant        settings to mitigate this threat.
+impact on the effectiveness of M UT G EN. As discussed in               Randomness may also affect the effectiveness of M UT G EN.
+Section II-A, code comments can sometimes mislead LLMs or            However, using three repetitions in our experiments is suffi-
+omit essential details—such as input formats—that are crucial        cient to account for the stochasticity of LLM outputs. Em-
+for guiding test case generation.                                    pirical observations from RQ1 support this: on HumanEval-
+   The fixing stage has a notable impact on effectiveness, par-      Java, M UT G EN achieves average mutation scores of 89.9%,
+ticularly on the LeetCode-Java dataset, where many generated         90.2%, and 88.5% across three runs (a range of 1.7%), while
+test cases initially fail to execute. Prior work reports that LLM-   on Leetcode-Java, the scores are 88.2%, 88.0%, and 91.1% (a
+generated tests often suffer from low execution success rates.       range of 2.1%). Such differences do not affect our conclusions.
+Our results provide quantitative evidence of improvement from        For the baseline generation tool, E VO S UITE, we observed
+fixing, based on the failed test cases generated across all itera-   very similar mutation scores across three runs and all subjects
+tions of MUTGEN. On HumanEval-Java, MUTGEN produces                  in both datasets, with almost no variation. Since method-
+1,254 failed test cases, of which 52.08% are successfully            level subjects have a limited search space (around 40 lines
+repaired, leaving 601 unfixed test cases. On LeetCode-Java,          of code per subject, as reported in Section IV.A), the evolu-
+47.29% of the 2,742 failed test cases are fixed, leaving 1,445       tionary search guided by coverage converges quickly toward
+unfixed tests. These repaired tests substantially improve muta-      similar solutions across runs. Observations for E VO S UITEmut ,
+tion scores. Note that a repair rate of around 50% is considered     a variant of E VO S UITE that maximizes mutation score, are
+a strong result in the recent software repair literature [31]–       consistent with those of E VO S UITE, for the same reasons.
+                                                                                                                                      12
+
+
+
+Overall, these small differences indicate stable results across       unknown training data of the LLMs. Since the information
+runs. Therefore, performing three repetitions is sufficient to        about their training corpora is not publicly available, we
+obtain reproducible results. Reporting the average over three         cannot exclude the possibility that certain mutation patterns
+runs is also consistent with prior work on evaluating LLM-            or code structures have been seen during pre-training. This
+based approaches [26], [55], [56], including test generation.         may introduce biases, where the models perform worse on
+This description has been clarified in Section IV.C.                  specific mutation operators that are less represented in their
+   The threat to external validity mainly lies in the subjects        training data. To mitigate this concern, we use widely adopted,
+and the target approaches. For subject selection, we reused           general-purpose LLMs rather than models specifically trained
+benchmarks from existing publications and further enhanced            for mutation testing or program repair. Nevertheless, we ac-
+subject diversity by evaluating our approach on 100 additional        knowledge that the influence of training data can neither be
+subjects. These were randomly sampled from a corpus of                confirmed nor ruled out and leave the investigation of this
+LeetCode algorithm solutions. In the future, we will evaluate         factor to future work.
+M UT G EN on more complicated subjects, e.g., Defects4J. No-
+tably, Defects4J contains real-world defects, which can provide
+                                                                                           IV. R ELATED W ORK
+a stronger assessment of the practical effectiveness of our
+approach than synthetic defects simulated via mutation testing           Mutation-Guided Test Generation. Recent studies have
+in this study.                                                        questioned the sufficiency of coverage as an evaluation crite-
+   Regarding the baseline approaches, we selected two repre-          rion. As shown in [17]–[19], and pointed in recent work from
+sentative methods: (1) E VO S UITE, a widely-used state-of-the-       Meta [20], [21], high coverage does not necessarily correlate
+art search-based testing tool, and (2) G ENvanilla , a vanilla LLM-   with strong defect detection capability. Mutation testing offers
+based prompt approach. These baselines allow us to evaluate           a more rigorous alternative by assessing how well tests detect
+whether incorporating mutation feedback in M UT G EN signif-          injected faults (mutants) [17]. Although some prior work [21],
+icantly improves fault detection capability, as measured by           [22] has attempted to improve mutation scores during test
+mutation score. In addition to the above compared methods,            generation, it does not fully explore the underlying limitations
+we also compared M UT G EN with a variant of E VO S UITE.             of LLMs in detecting and killing live mutants. Our work
+Following published guidelines [38], we enabled the fitness           aims to address this gap by incorporating mutation feedback
+function for strong mutation testing in E VO S UITE. We con-          into the prompt design process for LLMs, thereby enhancing
+ducted experiments on the two datasets using only the strong          the effectiveness of the generated test cases. In addition, we
+mutation fitness function. The average mutation scores for            introduce an iterative generation process to push the limits of
+both datasets were 67.4% and 58.1%, respectively, which               LLMs in killing mutants, providing insights into their current
+are similar to the results reported in our paper using the            capabilities and boundaries. This exploration also highlights
+E VO S UITE default setting. Although we use Llama-3.3 as the         opportunities for future work to guide LLMs in generating
+base LLM in this study, our approach is not tied to any specific      test cases with stronger defect-detection capabilities.
+model. M UT G EN is model-agnostic by design, and evaluating             Other techniques. Automatic unit test generation has long
+its performance relative to other LLMs is left for future work.       been a central research topic in software engineering. Tra-
+   Several factors may affect the construct validity of our           ditional efforts have primarily focused on search-based and
+evaluation.                                                           random testing techniques, with tools such as E VO S UITE [10]
+Equivalent Mutants. Our approach uses the PITest mutation             and Randoop [5] significantly reducing the developers’ manual
+testing framework, which includes mechanisms to reduce                testing burden. While E VO S UITE was originally designed to
+the creation of equivalent mutants. While this mitigates the          maximize code coverage, prior work [38] has investigated
+problem to some extent, the remaining equivalent mutants can          enhancing mutation scores by modifying its fitness functions,
+reduce M UT G EN’s efficiency and prevent it from achieving a         an objective closely related to ours. We conducted experiments
+100% mutation score. Since equivalent mutants affect all tech-        along these lines and discuss the results in Section IV.B. In
+niques equally, they do not affect our comparisons; addressing        short, results are not significantly different from those of the
+this well-known issue requires further investigation, which we        default setting of E VO S UITE.
+leave for future work.                                                   With the advent of large language models (LLMs), a new
+Oracle Problem. We assume the original code is correct and            paradigm has emerged in test generation. Numerous recent
+only address assertion errors that cause Maven build failures.        surveys have summarized the rapid advancements in this
+This simplification can lead to incorrect test oracles and false      area [14]–[16]; however, due to the large volume of related
+positives.                                                            work, we only highlight a selection of representative examples
+Data Leakage. While some public code in benchmark datasets            in this section. Early research explored fine-tuning LLMs
+may appear in the LLM’s training data (e.g., Llama-3.3), the          for code-related tasks. As LLMs became more powerful and
+specific mutants we generate are unlikely to be memorized             general-purpose, however, prompt-based approaches gained
+by the LLM. Moreover, we compare M UT G EN with a vanilla             traction, enabling test generation without task-specific training.
+prompting baseline, and the observed performance gains sug-           Several studies [26], [30], [57]–[60] have investigated prompt
+gest that our improvements stem from prompt engineering and           engineering strategies and mechanisms to improve test case
+strategy design rather than memorization.                             generation effectiveness using commercial LLMs, notably
+   Another potential threat to construct validity stems from the      OpenAI’s GPT series [61]–[63].
+                                                                                                                                   13
+
+
+
+   Given the high cost of commercial LLMs, and the increasing       killing hard-to-detect mutants, but fail due to issues such as
+availability of high-quality open-source alternatives such as       incorrect assertions or incomplete oracles. As analyzed in
+the Llama and DeepSeek series [39], [64], recent research           Section III.B(c), 74% of the unfixed test cases are caused by
+has shifted toward optimizing prompt-based effectiveness for        incorrect or incomplete oracles, while the remaining 26% fail
+open-source models [24], [65]–[69]. These models are becom-         due to runtime exceptions (e.g., invalid inputs). This indicates
+ing popular due to their accessibility and effectiveness in code-   that these unfixed tests warrant more complex oracle repair
+related tasks.                                                      strategies. In addition, an important avenue for future work
+   LLM-based test generation has been applied across a wide         is to more efficiently characterize the upper bound of LLM
+range of testing scenarios. Some studies focus on multilingual      mutation scores across diverse target programs. In particular,
+test generation across languages such as Python [23], [24],         identifying how quickly an LLM approaches its performance
+[70], [71], Java [24], [35], [58], [72], and others [24], [70],     limit and how this limit varies across program sizes, mutation
+[73]–[75]. Other works target specific testing goals, such as       operators, and code structures remains an open problem.
+detecting particular bugs [21], [70], API testing [69], [76]–
+[78], or generating test oracles [79]–[81]. LLMs have also                                VI. C ONCLUSION
+been integrated with traditional testing techniques, including
+                                                                       In this paper, we propose M UT G EN, a mutation-guided,
+mocking [82], [83], evolutionary algorithms [84], and program
+                                                                    LLM-based approach for automatically generating unit tests
+analysis [25], [27], [28], [85]. Evaluation in these works
+                                                                    with high fault detection capability. The core innovation of
+typically emphasizes code coverage metrics, such as branch
+                                                                    M UT G EN lies in incorporating mutation feedback into the
+and line coverage.
+                                                                    prompt to help LLMs generate tests that kill more mutants.
+   Unlike prior work, our approach focuses on automatically
+                                                                    In addition, two components—code summarization and code
+improving the mutation score with LLMs, based on mutation
+                                                                    fixing—further enhance the approach’s effectiveness.
+testing feedback, since such a score better reflects the fault-
+                                                                       We evaluated M UT G EN on 104 subjects from the widely-
+detection capability of test cases than code coverage [17],
+                                                                    used HumanEval-Java dataset and 100 subjects from Leetcode-
+[21]. As discussed in Section II-A, high code coverage does
+                                                                    Java, which we constructed from LeetCode algorithmic prob-
+not necessarily imply strong fault detection [17]. However, as
+                                                                    lem solutions. Experimental results show that M UT G EN sig-
+demonstrated in our experiments (Section III-B), improving
+                                                                    nificantly outperforms both E VO S UITE and Llama-3.3 using
+mutation score often leads to increased code coverage as a
+                                                                    a vanilla prompting strategy, achieving mutation scores of
+by-product.
+                                                                    89.5% and 89.1% on HumanEval-Java and Leetcode-Java,
+                                                                    respectively. Since M UT G EN aims to maximize the mutation
+                       V. D ISCUSSION                               score of generated test cases, we also compare it with a variant
+   We briefly discuss the limitations of our current work and       of E VO S UITE (E VO S UITEmut ), where the fitness function of
+outline directions for future research.                             maximizing coverage is replaced with one that maximizes
+                                                                    mutation score. The results show that E VO S UITEmut performs
+   As described in Section III and IV, our experiments were
+                                                                    similarly to E VO S UITE, but both are outperformed by M UT-
+conducted on independent, method-level subjects. This setup
+                                                                    G EN.
+demonstrated how well LLMs perform at killing mutants when
+                                                                       Moreover, M UT G EN employs an iterative generation pro-
+not confounded by broader program structures or dependen-
+                                                                    cess to push the limits of LLMs in killing mutants. While
+cies. However, when transitioning to more complex datasets
+                                                                    M UT G EN may produce some failing test cases, it is able to
+such as Defects4J, additional challenges arise, particularly in
+                                                                    successfully repair around 50% of them, which is considered
+resolving dependencies to generate executable and meaningful
+                                                                    a strong result in the recent software repair literature. We
+test suites. We leave the investigation of such datasets for
+                                                                    further analyze the causes of remaining failures, as well as the
+future work.
+                                                                    characteristics of live and uncovered mutants and the impact
+   In addition, while we use Llama-3.3 as the base model in
+                                                                    of different mutation operators, offering insights and directions
+this study, M UT G EN is inherently model-agnostic and does not
+                                                                    for future research.
+rely on any specific LLM. Although our results demonstrate
+the effectiveness of the approach, other models may yield
+even better results. A more comprehensive evaluation across                         VII. ACKNOWLEDGEMENTS
+different LLMs is also left as future work.                           We sincerely thank the anonymous reviewers for their
+   Finally, although M UT G EN achieves high mutation scores        valuable comments and suggestions, which have greatly helped
+on the selected subjects, there remain open challenges in           improve the quality of this paper.
+further improving these scores. For example, guiding LLMs             This publication has emanated from research jointly
+to effectively kill mutants produced by certain mutation op-        funded by Taighde Éireann – Research Ireland under Grant
+erators, such as VoidMethodCalls, remains difficult. In             No. 13/RC/2094 2 and by Huawei Technologies Co., Ltd.
+our evaluation on HumanEval-Java, this operator achieved            Lionel Briand is also supported by the Natural Sciences and
+only a 69.2% kill ratio. Developing strategies to better han-       Engineering Research Council of Canada.
+dle such challenging mutants is an important direction for            For the purpose of Open Access, the authors have applied
+future research. We also observe that some generated test           a CC BY public copyright licence to any Author Accepted
+cases that are not repaired by the fixing stage are close to        Manuscript version arising from this submission.
+                                                                                                                                                               14
+
+
+
+                               R EFERENCES                                          [22] A. M. Dakhel, A. Nikanjam, V. Majdinasab, F. Khomh, and M. C.
+                                                                                         Desmarais, “Effective test generation using pre-trained large language
+ [1] K. Naik and P. Tripathy, Software testing and quality assurance: theory             models and mutation testing,” Information and Software Technology, vol.
+     and practice. John Wiley & Sons, 2011.                                              171, p. 107468, 2024.
+ [2] G. Fraser and A. Arcuri, “A large-scale evaluation of automated unit test      [23] Z. Tian, J. Chen, and X. Zhang, “Fixing large language models’ specifi-
+     generation using evosuite,” ACM Transactions on Software Engineering                cation misunderstanding for better code generation,” in 2025 IEEE/ACM
+     and Methodology (TOSEM), vol. 24, no. 2, pp. 1–42, 2014.                            47th International Conference on Software Engineering (ICSE). IEEE
+ [3] F. Corno, E. Sánchez, M. S. Reorda, and G. Squillero, “Automatic test              Computer Society, 2025, pp. 645–645.
+     program generation: a case study,” IEEE Design & Test of Computers,            [24] Y. Wang, C. Xia, W. Zhao, J. Du, C. Miao, Z. Deng, P. S. Yu, and
+     vol. 21, no. 2, pp. 102–109, 2004.                                                  C. Xing, “Projecttest: A project-level unit test generation benchmark and
+ [4] S. Anand, E. K. Burke, T. Y. Chen, J. Clark, M. B. Cohen,                           impact of error fixing mechanisms,” arXiv preprint arXiv:2502.06556,
+     W. Grieskamp, M. Harman, M. J. Harrold, P. McMinn, A. Bertolino                     2025.
+     et al., “An orchestrated survey of methodologies for automated software        [25] R. Pan, M. Kim, R. Krishna, R. Pavuluri, and S. Sinha, “Multi-language
+     test case generation,” Journal of systems and software, vol. 86, no. 8,             unit test generation using llms,” arXiv preprint arXiv:2409.03093, 2024.
+     pp. 1978–2001, 2013.                                                           [26] Z. Yuan, M. Liu, S. Ding, K. Wang, Y. Chen, X. Peng, and Y. Lou,
+ [5] C. Pacheco and M. D. Ernst, “Randoop: feedback-directed random                      “Evaluating and improving chatgpt for unit test generation,” Proceedings
+     testing for java,” in Companion to the 22nd ACM SIGPLAN conference                  of the ACM on Software Engineering, vol. 1, no. FSE, pp. 1703–1726,
+     on Object-oriented programming systems and applications companion,                  2024.
+     2007, pp. 815–816.                                                             [27] S. Gu, N. Nashid, and A. Mesbah, “Llm test generation via iterative
+ [6] R. Hamlet, “Random testing,” Encyclopedia of software Engineering,                  hybrid program analysis,” arXiv preprint arXiv:2503.13580, 2025.
+     vol. 2, pp. 971–978, 1994.                                                     [28] G. Ryan, S. Jain, M. Shang, S. Wang, X. Ma, M. K. Ramanathan,
+ [7] J. H. Andrews, T. Menzies, and F. C. Li, “Genetic algorithms for                    and B. Ray, “Code-aware prompting: A study of coverage-guided test
+     randomized unit testing,” IEEE Transactions on Software Engineering,                generation in regression setting using llm,” Proceedings of the ACM on
+     vol. 37, no. 1, pp. 80–94, 2011.                                                    Software Engineering, vol. 1, no. FSE, pp. 951–971, 2024.
+ [8] C. Oriat, “Jartege: a tool for random generation of unit tests for             [29] R. Just, D. Jalali, and M. D. Ernst, “Defects4j: A database of existing
+     java classes,” in International Conference on the Quality of Software               faults to enable controlled testing studies for java programs,” in Pro-
+     Architectures. Springer, 2005, pp. 242–256.                                         ceedings of the 2014 international symposium on software testing and
+ [9] C. Pacheco, S. K. Lahiri, M. D. Ernst, and T. Ball, “Feedback-directed              analysis, 2014, pp. 437–440.
+     random test generation,” in 29th International Conference on Software          [30] M. L. Siddiq, J. C. Da Silva Santos, R. H. Tanvir, N. Ulfat, F. Al Rifat,
+     Engineering (ICSE’07). IEEE, 2007, pp. 75–84.                                       and V. Carvalho Lopes, “Using large language models to generate junit
+[10] G. Fraser and A. Arcuri, “Evosuite: automatic test suite generation for             tests: An empirical study,” in Proceedings of the 28th International
+     object-oriented software,” in Proceedings of the 19th ACM SIGSOFT                   Conference on Evaluation and Assessment in Software Engineering,
+     symposium and the 13th European conference on Foundations of soft-                  2024, pp. 313–322.
+     ware engineering, 2011, pp. 416–419.                                           [31] B. Yang, Z. Cai, F. Liu, B. Le, L. Zhang, T. F. Bissyandé, Y. Liu, and
+[11] J. M. Rojas, G. Fraser, and A. Arcuri, “Seeding strategies in search-               H. Tian, “A survey of llm-based automated program repair: Taxonomies,
+     based unit test generation,” Software Testing, Verification and Reliability,        design paradigms, and applications,” arXiv preprint arXiv:2506.23749,
+     vol. 26, no. 5, pp. 366–401, 2016.                                                  2025.
+[12] J. M. Rojas, J. Campos, M. Vivanti, G. Fraser, and A. Arcuri, “Com-            [32] C. S. Xia and L. Zhang, “Automated program repair via conversation:
+     bining multiple coverage criteria in search-based unit test generation,”            Fixing 162 out of 337 bugs for $0.42 each using chatgpt,” 2024, pp.
+     in Search-Based Software Engineering: 7th International Symposium,                  819–831.
+     SSBSE 2015, Bergamo, Italy, September 5-7, 2015, Proceedings 7.                [33] S. Gu, Q. Zhang, K. Li, C. Fang, F. Tian, L. Zhu, J. Zhou, and Z. Chen,
+     Springer, 2015, pp. 93–108.                                                         “Testart: Improving llm-based unit testing via co-evolution of automated
+[13] M. Vivanti, A. Mis, A. Gorla, and G. Fraser, “Search-based data-flow test           generation and repair iteration,” arXiv preprint arXiv:2408.03095, 2024.
+     generation,” in 2013 IEEE 24th International Symposium on Software             [34] “Mutahunter,” Accessed: 2025. [Online]. Available: https://github.com/
+     Reliability Engineering (ISSRE). IEEE, 2013, pp. 370–379.                           codeintegrity-ai/mutahunter
+[14] A. Fan, B. Gokkaya, M. Harman, M. Lyubarskiy, S. Sengupta, S. Yoo,
+                                                                                    [35] Y. Chen, Z. Hu, C. Zhi, J. Han, S. Deng, and J. Yin, “Chatunitest: A
+     and J. M. Zhang, “Large language models for software engineering: Sur-
+                                                                                         framework for llm-based test generation,” in Companion Proceedings of
+     vey and open problems,” in 2023 IEEE/ACM International Conference
+                                                                                         the 32nd ACM International Conference on the Foundations of Software
+     on Software Engineering: Future of Software Engineering (ICSE-FoSE).
+                                                                                         Engineering, 2024, pp. 572–576.
+     IEEE, 2023, pp. 31–53.
+                                                                                    [36] S. Gao, C. Wang, C. Gao, X. Jiao, C. Y. Chong, S. Gao, and M. Lyu,
+[15] J. Wang, Y. Huang, C. Chen, Z. Liu, S. Wang, and Q. Wang, “Software
+                                                                                         “The prompt alchemist: Automated llm-tailored prompt optimization for
+     testing with large language models: Survey, landscape, and vision,” IEEE
+                                                                                         test case generation,” arXiv preprint arXiv:2501.01329, 2025.
+     Transactions on Software Engineering, 2024.
+[16] X. Hou, Y. Zhao, Y. Liu, Z. Yang, K. Wang, L. Li, X. Luo, D. Lo,               [37] “Pitest,” Accessed: 2025. [Online]. Available: https://pitest.org
+     J. Grundy, and H. Wang, “Large language models for software engi-              [38] G. Fraser and A. Arcuri, “Achieving scalable mutation-based generation
+     neering: A systematic literature review,” ACM Transactions on Software              of whole test suites,” Empirical Software Engineering, vol. 20, no. 3,
+     Engineering and Methodology, vol. 33, no. 8, pp. 1–79, 2024.                        pp. 783–812, 2015.
+[17] T. T. Chekam, M. Papadakis, Y. Le Traon, and M. Harman, “An                    [39] A. Grattafiori, A. Dubey, A. Jauhri, A. Pandey, A. Kadian, A. Al-Dahle,
+     empirical study on mutation, statement and branch coverage fault                    A. Letman, A. Mathur, A. Schelten, A. Vaughan et al., “The llama 3
+     revelation that avoids the unreliable clean program assumption,” in 2017            herd of models,” arXiv preprint arXiv:2407.21783, 2024.
+     IEEE/ACM 39th International Conference on Software Engineering                 [40] Q. Zheng, X. Xia, X. Zou, Y. Dong, S. Wang, Y. Xue, L. Shen,
+     (ICSE). IEEE, 2017, pp. 597–608.                                                    Z. Wang, A. Wang, Y. Li et al., “Codegeex: A pre-trained model
+[18] J. H. Andrews, L. C. Briand, Y. Labiche, and A. S. Namin, “Using                    for code generation with multilingual benchmarking on humaneval-x,”
+     mutation analysis for assessing and comparing testing coverage criteria,”           in Proceedings of the 29th ACM SIGKDD Conference on Knowledge
+     IEEE Transactions on Software Engineering, vol. 32, no. 8, pp. 608–624,             Discovery and Data Mining, 2023, pp. 5673–5684.
+     2006.                                                                          [41] M. A. Islam, M. E. Ali, and M. R. Parvez, “Mapcoder: Multi-agent code
+[19] L. Inozemtseva and R. Holmes, “Coverage is not strongly correlated                  generation for competitive problem solving, 2024,” URL https://arxiv.
+     with test suite effectiveness,” in Proceedings of the 36th international            org/abs/2405, vol. 11403.
+     conference on software engineering, 2014, pp. 435–445.                         [42] M. Chen, J. Tworek, H. Jun, Q. Yuan, H. P. D. O. Pinto, J. Kaplan,
+[20] N. Alshahwan, J. Chheda, A. Finegenova, B. Gokkaya, M. Harman,                      H. Edwards, Y. Burda, N. Joseph, G. Brockman et al., “Evaluating large
+     I. Harper, A. Marginean, S. Sengupta, and E. Wang, “Automated unit test             language models trained on code,” arXiv preprint arXiv:2107.03374,
+     improvement using large language models at meta. corr abs/2402.09171                2021.
+     (2024),” arXiv preprint arXiv:2402.09171, vol. 10, 2024.                       [43] B. Athiwaratkun, S. K. Gouda, Z. Wang, X. Li, Y. Tian, M. Tan, W. U.
+[21] C. Foster, A. Gulati, M. Harman, I. Harper, K. Mao, J. Ritchey,                     Ahmad, S. Wang, Q. Sun, M. Shang et al., “Multi-lingual evaluation of
+     H. Robert, and S. Sengupta, “Mutation-guided llm-based test generation              code generation models,” arXiv preprint arXiv:2210.14868, 2022.
+     at meta,” arXiv preprint arXiv:2501.12862, 2025.                               [44] “Leetcode,” Accessed: 2025. [Online]. Available: https://leetcode.com
+                                                                                                                                                               15
+
+
+
+[45] T. Organization, “Which programming language produces the                      [69] M. Kim, S. Sinha, and A. Orso, “Llamaresttest: Effective rest api testing
+     most complex code?” https://www.tiobe.com/knowledge/article/                        with small language models,” arXiv preprint arXiv:2501.08598, 2025.
+     which-programming-language-produces-the-most-complex-code/,                    [70] K. Liu, Y. Liu, Z. Chen, J. M. Zhang, Y. Han, Y. Ma, G. Li, and
+     2025, accessed: 22 Nov, 2025.                                                       G. Huang, “Llm-powered test case generation for detecting tricky bugs,”
+[46] M. Stavtsev and Y. Bugayenko, “Evaluating the dependency be-                        arXiv preprint arXiv:2404.10304, 2024.
+     tween cyclomatic complexity and response for class,” arXiv preprint            [71] J. Xu, B. Pang, J. Qu, H. Hayashi, C. Xiong, and Y. Zhou, “Clover:
+     arXiv:2410.06416, 2024.                                                             A test case generation benchmark with coverage, long-context, and
+[47] S. Alagarsamy, C. Tantithamthavorn, and A. Aleti, “A3test: Assertion-               verification,” arXiv preprint arXiv:2502.08806, 2025.
+     augmented automated test case generation,” Information and Software            [72] S. Gu, C. Fang, Q. Zhang, F. Tian, J. Zhou, and Z. Chen, “Improving
+     Technology, vol. 176, p. 107565, 2024.                                              llm-based unit test generation via template-based repair,” arXiv preprint
+[48] “Jacoco,” Accessed: 2025. [Online]. Available: https://www.jacoco.org               arXiv:2408.03095, 2024.
+[49] B. Wang, M. Chen, M. Deng, Y. Lin, M. Harman, M. Papadakis, and                [73] Y. Zhang, Q. Lu, K. Liu, W. Dou, J. Zhu, L. Qian, C. Zhang, Z. Lin,
+     J. M. Zhang, “A comprehensive study on large language models for                    and J. Wei, “Citywalk: Enhancing llm-based c++ unit test generation via
+     mutation testing,” arXiv preprint arXiv:2406.09843, 2024.                           project-dependency awareness and language-specific knowledge,” arXiv
+[50] Y. Jia and M. Harman, “An analysis and survey of the development of                 preprint arXiv:2501.16155, 2025.
+     mutation testing,” IEEE transactions on software engineering, vol. 37,         [74] X. Cheng, F. Sang, Y. Zhai, X. Zhang, and T. Kim, “Rug: Turbo llm
+     no. 5, pp. 649–678, 2010.                                                           for rust unit test generation,” in 2025 IEEE/ACM 47th International
+[51] A. Arcuri and L. Briand, “A practical guide for using statistical tests to          Conference on Software Engineering (ICSE). IEEE Computer Society,
+     assess randomized algorithms in software engineering,” in Proceedings               2025, pp. 634–634.
+     of the 33rd international conference on software engineering, 2011, pp.        [75] W. Wang, X. Xie, Y. Huang, R. Wang, A. R. Chen, and L. Ma, “Fine-
+     1–10.                                                                               grained testing for autonomous driving software: a study on autoware
+[52] A. Vargha and H. D. Delaney, “A critique and improvement of the cl                  with llm-driven unit testing,” arXiv preprint arXiv:2501.09866, 2025.
+     common language effect size statistics of mcgraw and wong,” Journal            [76] C. Cao, A. Panichella, and S. Verwer, “Automated test-case generation
+     of Educational and Behavioral Statistics, vol. 25, no. 2, pp. 101–132,              for rest apis using model inference search heuristic,” arXiv preprint
+     2000.                                                                               arXiv:2412.03420, 2024.
+[53] “Description on mutation operators,” Accessed: 2025. [Online].                 [77] S. Deng, R. Huang, M. Zhang, C. Cui, D. Towey, and R. Wang,
+     Available: https://pitest.org/quickstart/mutators                                   “Lrasgen: Llm-based restful api specification generation,” arXiv preprint
+[54] “Ollama,” Accessed: 2025. [Online]. Available: https://ollama.com                   arXiv:2504.16833, 2025.
+[55] R. Falcão, S. Schweitzer, J. Siebert, E. Calvet, and F. Elberzhager, “Eval-   [78] J. Li, J. Shen, Y. Su, and M. R. Lyu, “Llm-assisted mutation for whitebox
+     uating the effectiveness of llm-based interoperability,” arXiv preprint             api testing,” arXiv preprint arXiv:2504.05738, 2025.
+     arXiv:2510.23893, 2025.                                                        [79] S. M. Khandaker, F. Kifetew, D. Prandi, and A. Susi, “Augmentest: En-
+                                                                                         hancing tests with llm-driven oracles,” arXiv preprint arXiv:2501.17461,
+[56] P. Gao, Z. Tian, X. Meng, X. Wang, R. Hu, Y. Xiao, Y. Liu, Z. Zhang,
+                                                                                         2025.
+     J. Chen, C. Gao et al., “Trae agent: An llm-based agent for software
+                                                                                    [80] E. Dinella, G. Ryan, T. Mytkowicz, and S. K. Lahiri, “Toga: A
+     engineering with test-time scaling,” arXiv preprint arXiv:2507.23370,
+                                                                                         neural method for test oracle generation,” in Proceedings of the 44th
+     2025.
+                                                                                         International Conference on Software Engineering, 2022, pp. 2130–
+[57] L. Yang, C. Yang, S. Gao, W. Wang, B. Wang, Q. Zhu, X. Chu, J. Zhou,
+                                                                                         2141.
+     G. Liang, Q. Wang et al., “On the evaluation of large language models in
+                                                                                    [81] S. Binta Hossain and M. Dwyer, “Togll: Correct and strong test oracle
+     unit test generation,” in Proceedings of the 39th IEEE/ACM International
+                                                                                         generation with llms,” arXiv e-prints, pp. arXiv–2405, 2024.
+     Conference on Automated Software Engineering, 2024, pp. 1607–1619.
+                                                                                    [82] Z. Nan, Z. Guo, K. Liu, and X. Xia, “Test intention guided llm-based
+[58] Q. Zhang, Y. Shang, C. Fang, S. Gu, J. Zhou, and Z. Chen, “Testbench:               unit test generation,” in 2025 IEEE/ACM 47th International Conference
+     Evaluating class-level test case generation capability of large language            on Software Engineering (ICSE). IEEE Computer Society, 2025, pp.
+     models,” arXiv preprint arXiv:2409.17561, 2024.                                     779–779.
+[59] T.-O. Li, W. Zong, Y. Wang, H. Tian, Y. Wang, S.-C. Cheung, and                [83] H. ZHU, V. TERRAGNI, L. WEI, S.-C. CHEUNG, J. WU, and Y. LIU,
+     J. Kramer, “Nuances are the key: Unlocking chatgpt to find failure-                 “Understanding and characterizing mock assertions in unit tests,” 2025.
+     inducing tests with differential prompting,” in 2023 38th IEEE/ACM             [84] H. Taherkhani, M. Sepindband, H. V. Pham, S. Wang, and H. Hemmati,
+     International Conference on Automated Software Engineering (ASE).                   “Epic: Cost-effective search-based prompt engineering of llms for code
+     IEEE, 2023, pp. 14–26.                                                              generation,” arXiv preprint arXiv:2408.11198, 2024.
+[60] J. A. Pizzorno and E. D. Berger, “Coverup: Coverage-guided llm-based           [85] R. Pan, M. Kim, R. Krishna, R. Pavuluri, and S. Sinha, “Aster: Natural
+     test generation,” arXiv preprint arXiv:2403.16218, 2024.                            and multi-language unit test generation with llms,” arXiv preprint
+[61] J. Achiam, S. Adler, S. Agarwal, L. Ahmad, I. Akkaya, F. L. Aleman,                 arXiv:2409.03093, 2025.
+     D. Almeida, J. Altenschmidt, S. Altman, S. Anadkat et al., “Gpt-4
+     technical report,” arXiv preprint arXiv:2303.08774, 2023.
+[62] L. Ouyang, J. Wu, X. Jiang, D. Almeida, C. Wainwright, P. Mishkin,
+     C. Zhang, S. Agarwal, K. Slama, A. Ray et al., “Training language
+     models to follow instructions with human feedback,” Advances in neural
+     information processing systems, vol. 35, pp. 27 730–27 744, 2022.
+[63] T. Brown, B. Mann, N. Ryder, M. Subbiah, J. D. Kaplan, P. Dhariwal,
+     A. Neelakantan, P. Shyam, G. Sastry, A. Askell et al., “Language mod-
+     els are few-shot learners,” Advances in neural information processing
+     systems, vol. 33, pp. 1877–1901, 2020.
+[64] A. Liu, B. Feng, B. Xue, B. Wang, B. Wu, C. Lu, C. Zhao, C. Deng,
+     C. Zhang, C. Ruan et al., “Deepseek-v3 technical report,” arXiv preprint
+     arXiv:2412.19437, 2024.
+[65] W. C. Ouédraogo, K. Kaboré, H. Tian, Y. Song, A. Koyuncu, J. Klein,
+     D. Lo, and T. F. Bissyandé, “Large-scale, independent and comprehen-
+     sive study of the power of llms for test case generation,” arXiv preprint
+     arXiv:2407.00225, 2024.
+[66] A. Deljouyi, R. Koohestani, M. Izadi, and A. Zaidman, “Leveraging
+     large language models for enhancing the understandability of generated
+     unit tests,” arXiv preprint arXiv:2408.11710, 2024.
+[67] Z. Wang, Z. Zhou, Y. H. Da Song, S. Chen, L. Ma, and T. Zhang,
+     “Towards understanding the characteristics of code generation errors
+     made by large language models,” Preprint, 2025.
+[68] D. Huang, J. M. Zhang, M. Luck, Q. Bu, Y. Qing, and H. Cui,
+     “Agentcoder: Multi-agent-based code generation with iterative testing
+     and optimisation,” arXiv preprint arXiv:2312.13010, 2023.
+

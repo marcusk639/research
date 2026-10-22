@@ -1,0 +1,76 @@
+__HTTP 200__
+AI Automation Agent for Deep Coverage in Software Testing | QA Wolf Platform Mapping AI Automation AI Run Infra Service Resources Changelog Blog Docs The Wolf Den Pricing Sign in Contact sales Start now         Platform     Mapping AI   Automation AI   Run Infra       Service     Resources     Changelog   Blog   Docs   The Wolf Den       Pricing   Sign in     Contact sales   Automation AI AI that helps QA Engineers, Product Managers, and everyone in between automate even the most complex, highly integrated tests. QA Wolf AI generates deterministic Appium and Playwright code behind the scenes so tests execute reliably and consistently every time.   Try for free     Thank you! Your submission has been received! Oops! Something went wrong while submitting the form. ★★★★★ 4.8 rating 100+ reviews 12x Faster test runs than computer-use agents ZERO Lock-in 100% Deterministic & reproducible test results Introducing Agentic Automated Testing AI that adds the determinism of code-based Playwright and Appium scripts for faster, more consistent, and more reliable E2E tests than tools that rely on computer-use reasoning alone. Agentic Automated testing Agentic Manual testing Agentic Automated Testing uses AI to write E2E test scripts from a prompt, and maintain those scripts when the product changes. Agentic Manual Testing uses AI to click through a manual test plan exactly like a human tester: slowly and inconsistently. What can I help you automate? Write a test that adds a component from a library ✅ Step 1: Navigate to the assets tab // Navigate to the 'Assets' tab
+await clickIntoAssets(page);
+await page.waitForTimeout(1500);
+ ✅ Step 2: Select the buttons library // Select the 'Buttons' library
+await page
+  .locator(`[aria-label="Buttons"]`,)
+  .click();
+await page.waitForTimeout(1000);
+ ✅ Step 3: Insert the 'Add Button' component // Insert the 'Add Button' component instance on to the canvas
+await page.getByRole(`button`, { name: `Add Button` }).click();
+await page.waitForTimeout(1000);
+await page.getByRole(`button`, { name: `Insert instance` }).click();
+ ✅ TEST PASSED ✅ What can I help you test? Write a test that adds a component from a library ✅ Step 1: Navigate to the assets tab Scanning viewport for navigation elements... Identified 'tab-assets' at coordinates (45, 120) Click element ❌ Step 2: Select the buttons library Locate 'Buttons' category A search bar was detected at top of pane. Using search... ERROR: Search results dropdown is obscuring add button, cannot verify selection state ⚠️ Step 3: Insert the 'Add Button' component ERROR: Dependency failed, Step 2 did not complete succesfully. ❌ TEST FAILED ❌ ✅ Writes code from a prompt Playwright for web apps and Appium for mobile apps. ❌ Follows a manual test plan Exactly like a manual tester would: slowly and inconsistently. ✅ Runs the same way each time Automated tests can’t improvise or hallucinate so there’s no variance between runs. ❌ Changes or skips test steps Agentic manual testers will interpret the tests in new ways each time, especially after a change, making them unreliable testers. ✅ Reproducible QA teams and developers can reproduce bugs by following the test steps. ❌ Can’t be reproduced by humans Reproducing bugs is impossible if you don’t know what steps the test ran. ✅ Has the flexibility and precision of code Automated tests can call APIs, seed databases, mock external dependencies, and adjust feature flags. ❌ Even more limited than human testers Agentic manual testers are restricted to what they can see on the screen, and get confused by change. ✅ Cost-effective QA Wolf charges per test on the platform, with no cost for extra runs. ❌ Expensive to run Each run uses expensive computer-use tokens. Agentic Automated testing Agentic Automated Testing uses AI to write E2E test scripts from a prompt, and maintain those scripts when the product changes. What can I help you automate? Write a test that adds a component from a library ✅ Step 1: Navigate to the assets tab // Navigate to the 'Assets' tab
+await clickIntoAssets(page);
+await page.waitForTimeout(1500);
+ ✅ Step 2: Select the buttons library // Select the 'Buttons' library
+await page
+  .locator(`[aria-label="Buttons"]`,)
+  .click();
+await page.waitForTimeout(1000);
+ ✅ Step 3: Insert the 'Add Button' component // Insert the 'Add Button' component instance on to the canvas
+await page.getByRole(`button`, { name: `Add Button` }).click();
+await page.waitForTimeout(1000);
+await page.getByRole(`button`, { name: `Insert instance` }).click();
+ ✅ TEST PASSED ✅ ✅ Writes code from a prompt Playwright for web apps and Appium for mobile apps. ✅ Runs the same way each time Automated tests can’t improvise or hallucinate so there’s no variance between runs. ✅ Reproducible QA teams and developers can reproduce bugs by following the test steps. ✅ Has the flexibility and precision of code Automated tests can call APIs, seed databases, mock external dependencies, and adjust feature flags. ✅ Cost-effective QA Wolf charges per test on the platform, with no cost for extra runs. Agentic Manual testing Agentic Manual Testing uses AI to click through a manual test plan exactly like a human tester: slowly and inconsistently. What can I help you test? Write a test that adds a component from a library ✅ Step 1: Navigate to the assets tab Scanning viewport for navigation elements... Identified 'tab-assets' at coordinates (45, 120) Click element ❌ Step 2: Select the buttons library Locate 'Buttons' category A search bar was detected at top of pane. Using search... ERROR: Search results dropdown is obscuring add button, cannot verify selection state ⚠️ Step 3: Insert the 'Add Button' component ERROR: Dependency failed, Step 2 did not complete succesfully. ❌ TEST FAILED ❌ ❌ Follows a manual test plan Exactly like a manual tester would: slowly and inconsistently. ❌ Changes or skip test steps Agentic manual testers will interpret the tests in new ways each time, especially after a change, making them unreliable testers. ❌ Can’t be reproduced by humans Reproducing bugs is impossible if you don’t know what steps the test ran. ❌ Even more limited than human testers Agentic manual testers are restricted to what they can see on the screen, and get confused by change. ❌ Expensive to run Each run uses expensive computer-use tokens. Now the whole team can own quality document.addEventListener("DOMContentLoaded", () => {
+  const wrapper = document.querySelector(".aux_toggle-wrapper");
+  const eyebrow = document.getElementById("aux_toggle-eyebrow");
+  const header  = document.getElementById("aux_toggle-header");
+  const body1   = document.getElementById("aux_toggle-body1");
+  const body2   = document.getElementById("aux_toggle-body2");
+  const content = document.getElementById("toggle-content-fade");
+
+  if (!wrapper || !content) return;
+
+  const headerOn  = "Code Mode for QA engineers and developers";
+  const headerOff = "Prompt Mode for non-technical testers";
+
+  const body1On =
+    "Complex tests need the flexibility and precision of code. For technical users, Code Mode gives you full control of your test suite.";
+
+  const body1Off =
+    "If coding isn’t your thing, Prompt Mode shows you each step of a test and the assertions being made. To make changes, just chat with the Automation AI and the underlying Playwright or Appium code will be updated for you.";
+
+  wrapper.addEventListener("click", () => {
+    const isOn = wrapper.classList.contains("toggle-on");
+
+    // Toggle wrapper visual state (background, stroke, button position, etc.)
+    wrapper.classList.toggle("toggle-on", !isOn);
+    wrapper.classList.toggle("toggle-off", isOn);
+ What can I help you automate? Write a test to do something cool Prompt-driven Test Creation Create and repair E2E tests by chatting or speaking to the Automation Agent Chat and voice inputs let QA engineers and non-technical roles build E2E test scripts in Playwright or Appium. With tests written in code, teams can test more complex workflows: Web, iOS, & Android apps Multi-user & cross-device workflows Feature flags, A/B variants, dynamic UI, & localization APIs, database seeding, & third-party integrations Salesforce, Oracle, & other enterprise software platforms File uploads, browser extensions, multi-factor auth, & genAI outputs Code & Prompt modes Code Mode for QA engineers and developers Complex tests need the flexibility and precision of code. For technical users, Code Mode gives you full control of your test suite. Trust and verify that the AI assistant is testing what you want, the way you want it to. Take over code writing when the test is too complex or requires custom instructions. Troubleshoot problematic tests quickly, without the guesswork of vibe-coding or restrictive low-code frameworks. NEW! Code toggle document.addEventListener("DOMContentLoaded", () => {
+  const wrapper = document.querySelector(".aux_toggle-wrapper");
+  const eyebrow = document.getElementById("aux_toggle-eyebrow");
+  const header  = document.getElementById("aux_toggle-header");
+  const body1   = document.getElementById("aux_toggle-body1");
+  const body2   = document.getElementById("aux_toggle-body2");
+  const content = document.getElementById("toggle-content-fade");
+
+  if (!wrapper || !content) return;
+
+  const headerOn  = "Code Mode for QA engineers and developers";
+  const headerOff = "Prompt Mode for non-technical testers";
+
+  const body1On =
+    "Complex tests need the flexibility and precision of code. For technical users, Code Mode gives you full control of your test suite.";
+
+  const body1Off =
+    "If coding isn’t your thing, Prompt Mode shows you each step of a test and the assertions being made. To make changes, just chat with the Automation AI and the underlying Playwright or Appium code will be updated for you.";
+
+  wrapper.addEventListener("click", () => {
+    const isOn = wrapper.classList.contains("toggle-on");
+
+    // Toggle wrapper visual state (background, stroke, button position, etc.)
+    wrapper.classList.toggle("toggle-on", !isOn);
+    wrapper.classList.toggle("toggle-off", isOn);
+ 📄 Refresh Order Confirmation Page From Loading State 📄 Schedule Future Delivery From Checkout Page 📄 Scroll Payment Methods In Payment Options Modal 📄 Scroll Upsell Items In Complete Your Order Panel 📄 Select Delivery Option On Checkout Page 📄 Skip Upsell Items From Complete Your Order Panel 📄 Start Uber One Trial From Checkout Page 📄 Switch Between Delivery And Pickup On Checkout Page 📄 Refresh Order Confirmation Page From Loading State 📄 Schedule Future Delivery From Checkout Page 📄 Scroll Payment Methods In Payment Options Modal 📄 Scroll Upsell Items In Complete Your Order Panel 📄 Select Delivery Option On Checkout Page 📄 Skip Upsell Items From Complete Your Order Panel 📄 Start Uber One Trial From Checkout Page 📄 Switch Between Delivery And Pickup On Checkout Page This test broke. It appears the the user must now accept Terms & Conditions. I'll need to add a loop that accepts them if they appear. The new code is working. You can now publish the test. Agentic Test Maintenance AI automatically diagnoses broken tests and refactors the code After you triage a broken test, the Automation AI reproduces the failure manually and diagnoses the cause, quickly rewrites the Playwright or Appium code, and validates the fix. 💡 Did you know? Only 28% of broken tests can be fixed by updating a selector Agentic QA tools that repair selectors but nothing else only repair about 20% of flakes. QA Wolf's Automation AI addresses virtually 100% of flakes including timing issues, runtime errors, and un-rendered components, nearly eliminating flaky tests altogether.       Timing issues, flakes, and waits:   30 DOM changes and brittle selectors:   28 App runtime errors (JS exceptions, API 4xx/5xx):   8 Component rendering problems:   10 Test data, auth problems, or env access:   14 Other:   10 Web iOS Android Electron Chrome integrations APIs Cross-platform testing Build coverage for your entire tech stack Modern applications need deep test coverage that’s only possible with AI that uses Playwright and Appium code: shared state between devices, synchronous and async interactions with other users, and diverse integrations. AI that gets stumped by simple pop-ups will leave you without real test coverage. Parallel Test Creation Build and maintain multiple tests at the same time Our Automation Agent increases a QA engineer’s capacity 10-20x by handling multiple requests simultaneously. Other AI tools are limited to single sequential tasks, which just shifts the bottleneck from the QA engineer to the AI. Tests running 0 Tests retrying 0 Tests passed 0 Automation Agent Benchmarks Test Creation Speed In speed tests, QA Wolf AI v3 helps QA engineers write Playwright code 5x faster than using VSCode. Watch the video Product Mapping AI Automation AI Run Infra Coverage as a Service Pricing Resources Changelog Blog Customer stories Docs The Wolf Den Status Company Careers Book a demo hello@qawolf.com Legal Terms of Service Self-Service Terms Privacy Policy Website Terms of Use Restricted Use Cookie preferences © 2026 QA Wolf By clicking  “Accept” , you agree to the storing of cookies on your device to enhance site navigation, analyze site usage, and assist in our marketing efforts. View our   Privacy Policy  for more information. The GPC signal has been honored. Accept Reject Preferences Manage consent preferences by category: Essentials Necessary for the site to function. Always On. Marketing Used for targeted advertising. Personalization Remembers your preferences and provides enhanced features. Analytics Measures usage and improves your experience. Accept all Reject all Save preferences

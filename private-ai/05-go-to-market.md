@@ -12,7 +12,7 @@
 | Law firms  | Year-round                              | —                                   |
 | Industrial | Timed to turnaround and audit calendars | —                                   |
 
-The CPA research uses a slightly different blackout ("no new tooling February to mid-April"). Hurricane season also limits on-site work June–November. See [12-open-questions.md](12-open-questions.md#contradictions-found).
+The CPA research uses a slightly different blackout ("no new tooling February to mid-April"). Hurricane season also limited on-site work June–November. **Decision (Oct 20, 2026):** only avoid installs during an active named-storm watch; prefer May–July and November–December for CPA installs ([14](14-revised-plan-2026-10-20.md#2-the-calendar-that-drives-everything)). See [12-open-questions.md](12-open-questions.md#contradictions-found).
 
 ### Track 1: CPA firms (the reference vertical)
 

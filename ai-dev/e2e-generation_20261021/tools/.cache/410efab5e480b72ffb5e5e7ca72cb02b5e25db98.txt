@@ -1,0 +1,433 @@
+__HTTP 200__
+                                                LELANTE: LEveraging LLM for Automated ANdroid TEsting
+                                                Shamit Fatin1 , Mehbubul Hasan Al-Quvi1 , Sukarna Barua1 , Anindya Iqbal1 , Sadia Sharmin1 , Md.
+                                                        Mostofa Akbar1 , Haz Sameen Shahgir2 , Kallol Kumar Pal3 , A. Asif Al Rashid3
+                                                                                     1 Bangladesh University of Engineering and Technology, Bangladesh
+                                                                                                          2 University of California, Riverside, USA
+                                                                                                    3 Samsung R&D Institute Bangladesh, Bangladesh
+
+                                                                            {1805055,1805007,sukarnabarua,anindya,sadiasharmin,mostofa}@cse.buet.ac.bd
+                                                                                                         hshah057@ucr.edu
+                                                                                              {kallol.kumar,ahmad.asif}@samsung.com
+
+
+
+
+arXiv:2504.20896v1 [cs.SE] 29 Apr 2025
+                                         Abstract                                                                                        ANdroid TEsting. In Proceedings of The 29th International Conference on
+                                         Given natural language test case description for an Android appli-                              Evaluation and Assessment in Software Engineering, June 17–20, 2025, Istanbul,
+                                                                                                                                         Turkey (EASE 2025). ACM, New York, NY, USA, 6 pages. https://doi.org/
+                                         cation, existing testing approaches require developers to manually
+                                                                                                                                         XXXXXXX.XXXXXXX
+                                         write scripts using tools such as Appium and Espresso to execute
+                                         the corresponding test case. This process is labor-intensive and de-
+                                         mands significant effort to maintain as UI interfaces evolve through-
+                                         out development. In this work, we introduce LELANTE, a novel
+                                         framework that utilizes large language models (LLMs) to automate
+                                         test case execution without requiring pre-written scripts. LELANTE
+                                         interprets natural language test case descriptions, iteratively gener-
+                                         ate action plans, and perform the actions directly on the Android
+                                         screen using its GUI. LELANTE employs a screen refinement process
+                                         to enhance LLM interpretability, constructs a structured prompt
+                                         for LLMs, and implements an action generation mechanism based
+                                         on chain-of-thought reasoning of LLMs. To further reduce com-
+                                         putational cost and enhance scalability, LELANTE utilizes model
+                                         distillation using a foundational LLM. In experiments across 390
+                                         test cases spanning 10 popular Android applications, LELANTE
+                                         achieved a 73% test execution success rate. Our results demon-
+                                         strate that LLMs can effectively bridge the gap between natural
+                                         language test case description and automated execution, making                                  Figure 1: Overview of the LELANTE test case execution pro-
+                                         mobile testing more scalable and adaptable.                                                     cess. Given a natural language test case description, LELANTE
+                                                                                                                                         incrementally refines the screen GUI representation and ex-
+                                         CCS Concepts                                                                                    ecutes the test case step by step until completion.
+                                         • Software and its engineering → Software testing and debug-                                    1    Introduction
+                                         ging; • Computing methodologies → Planning for deterministic                                    The rapid growth of the mobile application ecosystem has made
+                                         actions; Natural language processing.                                                           Android the dominant platform for app development, with a mar-
+                                                                                                                                         ket share consistently exceeding 70% [21]. This diversity allows for
+                                         Keywords                                                                                        innovation but also presents challenges for developers aiming to
+                                         Automated Android Testing, Large Language Models (LLMs), GUI                                    ensure consistent functionality across various devices, operating
+                                         Refinement, Model Distillation, Prompt Engineering                                              system versions, and screen sizes [4, 6, 12, 24]. As mobile appli-
+                                         ACM Reference Format:                                                                           cations evolve, rigorous testing becomes essential to maintaining
+                                         Shamit Fatin1 , Mehbubul Hasan Al-Quvi1 , Sukarna Barua1 , Anindya Iqbal1 ,                     software quality.
+                                         Sadia Sharmin1 , Md. Mostofa Akbar1 , Haz Sameen Shahgir2 , Kallol Kumar                           Application testing involves designing and executing test cases,
+                                         Pal3 , A. Asif Al Rashid3 . 2025. LELANTE: LEveraging LLM for Automated                         which define scenarios to validate an application’s functionality.
+                                                                                                                                         Each test case typically includes a test case description, out-
+                                         Permission to make digital or hard copies of all or part of this work for personal or
+                                         classroom use is granted without fee provided that copies are not made or distributed           lining the overall objective of the test. For example, a test case
+                                         for profit or commercial advantage and that copies bear this notice and the full citation       may verify whether a user can successfully log into an applica-
+                                         on the first page. Copyrights for components of this work owned by others than the              tion, and its description would be "Log in the application by
+                                         author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or
+                                         republish, to post on servers or to redistribute to lists, requires prior specific permission   entering user name and password". In some cases, a test case
+                                         and/or a fee. Request permissions from permissions@acm.org.                                     may also specify a sequence of test steps or actions, which are
+                                         EASE 2025, 978-1-4503-XXXX-X/2025/06                                                            atomic, human-performable interactions (e.g., tapping a button,
+                                         © 2025 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+                                         ACM ISBN 978-x-xxxx-xxxx-x/YYYY/MM                                                              entering text) that must be executed in order to complete the test
+                                         https://doi.org/XXXXXXX.XXXXXXX                                                                 case. For instance, the test steps for the login test case might include
+EASE 2025, 978-1-4503-XXXX-X/2025/06                                                                                                    Shamit, et al.
+
+
+launching the application, tapping the "Login" button,                    need for writing detailed and time-consuming test case steps, as it
+entering a valid email and password, pressing "Sign In"                   executes the test case directly from test case descriptions.
+and verifying that the home screen appears. Both test case                   Through experiments across 390 test cases spanning 10 popular
+descriptions and test steps are written in human-readable language        Android applications, LELANTE achieved a 73% test execution
+and are not structured for direct machine interpretation.                 success rate. Our findings demonstrate that LLM-based execution
+   Quality Assurance (QA) teams are responsible for creating              significantly improves the adaptability and scalability of mobile
+test cases to ensure comprehensive coverage of an application’s           testing workflows, reducing the reliance on brittle, manually main-
+features and expected behavior. Human testers then execute these          tained scripts. This paper presents the following key contributions:
+test cases by either following the specified test steps or, if no steps        • A fully automated test case execution framework that elimi-
+are provided, relying on their own understanding of the test ob-                 nates the need for manually written scripts, allowing natural
+jective. However, manually defining test steps is a labor-intensive              language test case descriptions to be executed directly and
+process that requires continuous updates as applications evolve.                 dynamically on the Android application.
+This challenge is particularly pronounced in large development                 • A structured prompt to guide the LLM and a GUI refine-
+teams, where testing team may be unfamiliar with the applica-                    ment process to extract relevant interactive elements from
+tion’s functionality. In this work, we assume that test steps are not            screen XML representations, reducing noise and improv-
+explicitly provided by the QA team. Therefore, the system must                   ing the LLM’s ability to accurately interpret the application
+autonomously determine the appropriate sequence of actions to                    interface and reason actions.
+execute each test case.                                                        • Efficient distillation of open-source large language models
+   Automated testing frameworks such as Appium [26] and Espresso                 for LELANTE execution, reducing computational overhead
+[3] allow testers to write scripts for test cases that simulate test             while maintaining accuracy.
+steps on an application. Although these tools ensure consistency               • Empirical validation demonstrating a 73% test execution
+and repeatability, they require significant manual effort and techni-            success rate across 390 test cases, showcasing the effec-
+cal knowledge to create, maintain, and rewrite test scripts, especially          tiveness of LLM-driven automation.
+as user interfaces evolve throughout development [2, 8, 13, 17, 23].
+Record-and-replay mechanisms [22], which capture user actions for         2    Problem Statement
+later execution, simplify the scripting process to some extent but
+                                                                          Let 𝑇 denote a natural language test case description, and 𝑆 rep-
+struggle with dynamic UI modifications [9]. These limitations ne-
+                                                                          resent the state of the Android application system at any given
+cessitate an automation tool that can directly interpret pre-existing
+                                                                          time. The state 𝑆 includes all observable and internal aspects of the
+human-readable test cases description in order to execute the test
+                                                                          system, such as the current screen layout, UI components, system
+case without requiring manual intervention.
+                                                                          settings, network conditions, and application runtime states. From
+   Recent advances in artificial intelligence, particularly in large
+                                                                          𝑆, we obtain a simplified and structured representation 𝐺, which
+language models (LLMs) such as GPT-4 [1] and LLaMA [27], have
+                                                                          captures only essential components of the state including UI ele-
+enabled new possibilities for automating human-readable tasks[10,
+                                                                          ments and their properties, allowing for reasoning about available
+14, 16, 18, 31]. For example, AutoDroid [29] employs LLMs to auto-
+                                                                          interactions.
+mate Android tasks, demonstrating feasibility in interpreting and
+                                                                             At the start of testing, the Android device is in an initial state 𝑆 0 .
+executing simple user commands. However, AutoDroid is not de-
+                                                                          The execution of an action or a test step 𝑎𝑡 causes a transition in the
+signed for structured test case execution, as it lacks mechanisms
+                                                                          system, leading to a new state 𝑆𝑡 , modeled by the state transition
+for dynamically adapting to UI changes and recovering from exe-
+                                                                          function Φ:
+cution errors and plan for knowledge distillation. Furthermore it
+relies on foundational LLMs without incorporating model distilla-                                    𝑆𝑡 = Φ(𝑆𝑡 −1, 𝑎𝑡 ).
+tion techniques, making its execution computationally expensive           The function Φ captures how Android updates its state in response
+and less practical for large-scale testing. These limitations make it     to user interactions. For instance, if the action 𝑎𝑡 is "tap on a button,"
+unsuitable for comprehensive and scalable test automation.                Φ updates 𝑆𝑡 −1 to reflect the resulting UI change, such as navigating
+   In this work, we introduce LELANTE, a novel framework that             to a new screen or displaying a pop-up dialog. Similarly, if 𝑎𝑡 is
+automates test case execution using LLMs, given only a natural            "enter text in a field," Φ modifies 𝑆𝑡 −1 to include the new text input.
+language test case description. LELANTE eliminates the need for               The test case description 𝑇 implicitly defines an expected final
+manually written test scripts by automatically generating a test          state 𝑆𝑒 , which specifies the conditions that must be satisfied for the
+case execution plan, consisting of required action sequence for exe-      test to be considered successful. For example, if 𝑇 is "Delete the
+cuting the test case. LELANTE guides an LLM to generate actions           contact named X", then 𝑆 0 represents the initial state where the
+iteratively using a structured prompt based on a refined screen           contact exists in storage. The sequence of actions {𝑎 1, 𝑎 2, . . . , 𝑎𝑛 }
+representation, past action history, and test case description. The       may involve opening the contacts app, searching for the contact, se-
+generated actions are executed on the application until LELANTE           lecting the delete option, and confirming the deletion. The expected
+determines that the test case execution is complete. Figure 1 illus-      final state 𝑆𝑒 should then satisfy the condition that the contact is
+trates the core execution process of LELANTE. By automating this          no longer retrievable in the storage system.
+entire process, LELANTE significantly reduces the human effort                The goal of LELANTE is to generate a valid sequence of actions
+required for software testing, allowing teams to conduct more ex-         {𝑎 1, 𝑎 2, . . . , 𝑎𝑛 } such that the android application transitions from
+tensive testing with minimal overhead. LELANTE eliminates the             𝑆 0 to 𝑆𝑒 in compliance with the test case. At each step 𝑡, LELANTE
+LELANTE: LEveraging LLM for Automated ANdroid TEsting                                                          EASE 2025, 978-1-4503-XXXX-X/2025/06
+
+
+acts as an agent that determines the next action:                          3.2    LLM-Driven Action Generation
+                                                                           Given natural language test case description, refined screen repre-
+                                                           
+                   𝑎𝑡 = 𝑓 𝑇 , {𝑎 1, 𝑎 2, . . . , 𝑎𝑡 −1 }, 𝐺 ,              sentation, and a record of previous actions, LELANTE constructs a
+                                                                           structured prompt to guide the LLM in reasoning about the next
+                                                                           action. The prompt is designed to enforce a structured chain-of-
+ensuring that after 𝑛 steps, the system reaches 𝑆𝑛 = 𝑆𝑒 . LELANTE          thought [28] reasoning process, ensuring that the model first thinks
+employs iterative decision-making to automate Android testing to           about how to reach the final state before generating appropriate
+continuously adapt its actions based on the observed UI state.             action. The overall structure of the prompt is given in Appendix B.
+   A test case is considered successfully completed if, after execut-         A key challenge in this process was resolving ambiguity when
+ing a valid sequence of actions {𝑎 1, 𝑎 2, ..., 𝑎𝑛 }, the Android appli-   the LLM selected an action. To address this, LELANTE assigns
+cation’s final state 𝑆𝑛 matches the expected final state 𝑆𝑒 implied        unique identifiers to each actionable UI element during the screen
+by the test case description 𝑇 . If the final state does not satisfy the   refinement stage, ensuring that the LLM can reference them pre-
+conditions implied by the description, the test case is considered         cisely. Instead of generating free-text descriptions of UI elements,
+incomplete or failed.                                                      the LLM directly outputs the corresponding identifier, eliminating
+                                                                           potential misinterpretations and reducing the need for additional
+3     Methodology                                                          disambiguation steps.
+                                                                              An important component of our structured reasoning mecha-
+LELANTE begins with refining the application’s graphical repre-
+                                                                           nism is error recovery. During the execution, LELANTE analyzes
+sentation, eliminating unnecessary metadata while preserving only
+                                                                           the execution history and current screen to autonomously detect
+relevant interactive elements to create a structured and meaningful
+                                                                           whether it has executed any incorrect or unintended action through
+screen description (§ 3.1). This refined representation is then used
+                                                                           iterative reasoning steps. Upon detection of an erroneous step,
+to generate a structured prompt (§ 3.2), enabling the LLM to deter-
+                                                                           LELANTE chooses the explicitly provided ’Back’ button in the re-
+mine the next action based on the provided test case description
+                                                                           fined screen representation to revert to an earlier screen state, from
+and execution history. Once an action is selected, it is mapped to
+                                                                           which it re-evaluates and selects an alternative action in subsequent
+the corresponding UI element and executed on the device, with
+                                                                           steps to rectify its action plan. The reasoning process repeats the
+built-in mechanisms for ambiguity resolution and iterative GUI
+                                                                           backtracking until a viable action path is found or until the test
+interaction (§ 3.3). To ensure cost-effective execution without re-
+                                                                           case is successfully completed.
+liance on third-party vendors, LELANTE employs model distillation
+                                                                              To programmatically determine when a test case execution should
+using an open-source large language model, significantly reducing
+                                                                           end, LELANTE explicitly instructs the LLM, within the structured
+computational overhead while maintaining accuracy (§ 3.4).
+                                                                           prompt described in Appendix B, to reason about whether the ex-
+                                                                           pected final state described in problem statement has been reached.
+3.1    Screen Representation Refinement
+                                                                           Specifically, the LLM sets a boolean indicator when it detects com-
+Android applications store screen layouts as XML structures, which,        pletion, accompanied by a unique action identifier -1. LELANTE
+while comprehensive, are often verbose and inefficient for direct          detects this special identifier, signaling termination of the ongoing
+understanding and processing by LLMs. LELANTE applies a pre-               test execution. Finally, a human tester manually validates if the
+processing step to refine the screen representation by extracting          actual application state matches the intended outcome from the
+only the essential interactive and informative components from             test case description, confirming successful execution.
+an XML screen description. The refinement process begins with
+XML parsing, removing elements that lack interaction potential,            3.3    Action Execution Using GUI Interaction
+such as non-essential and non-interactive background images, la-           After generating an action by LLM, LELANTE executes it on the
+bels, and decorative UI components. Interactive elements, including        application GUI using the identified UI element and applying the
+buttons, text fields, and checkable inputs, are retained. Each ac-         interaction (e.g, input a text or click a button). We use Appium to
+tionable element is assigned with an unique identifiers to enable          execute LLM provided action into the Android GUI. Once the action
+referencing during execution. Some retained non-interactive ele-           is executed, the application state changes and the XML representa-
+ments include textual descriptions or icons. Since LELANTE relies          tion of the new screen is fetched by Appium. This screen along with
+on a purely text-based LLM for action inference, an image-to-text          previous actions and test steps are iteratively processed through
+icon classification model is utilized to convert icon images into          the LELANTE pipeline until it decides that no further action is
+textual descriptions. Based on a Vision Transformer (ViT) model            required.
+[5], the icon-classifier is integrated in LELANTE to recognize icons
+and include their semantic labels in the representation.                   3.4    Distillation for Cost-Effective Execution
+   In addition to existing screen elements, LELANTE explicitly adds        While foundational LLMs (e.g., GPT-4o and Claude) demonstrate
+navigation buttons for scrolling and a ’Back’ action, to the refined       strong reasoning capabilities, their computational demands make
+screen representation. Inclusion of the ’Back’ button provides a           them impractical for local or cheap test execution. To address this,
+built-in recovery action, enabling LELANTE to backtrack (guided            LELANTE employs knowledge distillation [7], where a smaller
+by reasoning from LLM) and rectify erroneous action sequences              model is fine-tuned using data generated by a larger model. This
+autonomously. Figure 2 provides an example of this refinement              reduces computational overhead while preserving structured rea-
+process.                                                                   soning capabilities.
+EASE 2025, 978-1-4503-XXXX-X/2025/06                                                                                                            Shamit, et al.
+
+
+
+
+Figure 2: Screen representation refinement for LLM understanding. This process extracts essential and actionable elements
+(e.g., buttons, text fields) from the original screen representation (XML) and convert it to an optimized format suitable for LLM
+prompts.
+
+
+   The distillation process began with human testers executing                                                      Test                          Execution
+                                                                                                                               Error Recovery
+                                                                        Technique            Model               Execution                          Time
+test cases using a foundational model (GPT-4o), during which we                                                                     Rate
+                                                                                                                Success Rate                       per Step
+recorded its responses, including predicted actions and reasoning       AutoDroid           GPT-4o                 71.3%            12%             20.5s
+steps. We collected test cases for 30 Android applications that         LELANTE             GPT-4o                  73%             78%             11.8s
+                                                                        LELANTE       LLaMA-3.1 8B (Base)           60%             10%             11.0s
+were not included in the final evaluation set. To maintain high-        LELANTE     LLaMA-3.1 8B (Fine-tuned)       65%             55%             11.0s
+quality training data, we filtered out erroneous actions, redundant    Table 1: Test Execution Performance Metrics for Various
+backtracking, and inefficient execution paths, resulting in a fine-    Techniques and Models
+tuning dataset consisting of 4,000 test case steps.
+   For model adaptation, we employed Low-Rank Adaptation
+(LoRA) [11], a parameter-efficient fine-tuning approach, allowing
+us to optimize the model on local machines without excessive com-
+putational overhead. Because we employ a step by step execution
+model, we needed to train the model on the test steps rather than in
+full execution history. Our fine-tuned model retained the structured
+reasoning of the foundational model while significantly reducing
+inference costs, making LELANTE more practical for real-world
+deployment.
+
+4    Evaluation                                                        Figure 3: The left histogram shows test case length distri-
+We evaluate LELANTE based on its accuracy and efficiency in ex-        bution, with most cases in the 3–10 step range. The right
+ecuting natural language test cases, answering the following two       histogram shows that shorter test cases succeed more often,
+research questions:                                                    while longer ones have lower success due to increased inter-
+   RQ1: How accurately and efficiently can LELANTE execute             actions and error risks
+natural language test cases across various applications?
+   RQ2: How effectively can LELANTE recover from erro-                 demonstrates LELANTE’s reliability and efficiency in executing
+neous steps?                                                           natural language test cases description without predefined scripts.
+   Our evaluation is performed using a dataset of 390 human-           For RQ2, the 78% error recovery rate highlights the framework’s
+generated test cases for 10 Android applications. The minimum num-     capability to dynamically handle execution errors. Due to limited
+ber of test steps required to complete each test case varied. Tests    prior work in structured test execution automation, we compare
+were conducted on physical Android devices (Samsung A14, A15,          LELANTE against the closely related AutoDroid. The comparison
+and A03 models) running Android 11, replicating realistic testing      emphasizes LELANTE’s strengths in error correction (66% higher),
+environments.                                                          execution success rate (1.7% higher), and execution efficiency (8.7s
+                                                                       lower time required per step) compared to AutoDroid. Further-
+    Evaluation metrics. We use the following three metrics:            more, its use of distilled models enables cost-effective and scalable
+     • Test Execution Success Rate: Percentage of test cases com-      deployment.
+       pletely executed.
+     • Error Recovery Rate: Percentage of erroneous steps after           Impact of Test Case Length on Execution Success. Minimum num-
+       which LELANTE autonomously detects mistakes, navigates          ber of test steps needed to complete a test case can affects execution
+       backward, and chooses the correct alternative step.             success rate. Figure 3 shows that most test cases have 3–10 steps
+     • Execution Time per Step: Average time required to per-          (left) and that shorter test cases (fewer than 6 steps) succeed more
+       form each test step.                                            often (right). Longer test cases see lower success due to increased
+                                                                       interactions, error risks, and incorrect action selection. This high-
+   Performance of LELANTE in test case execution. The evaluation       lights the need for refining test descriptions and improving error
+results are summarized in Table 1. For RQ1, the 73% success rate       recovery.
+LELANTE: LEveraging LLM for Automated ANdroid TEsting                                                                  EASE 2025, 978-1-4503-XXXX-X/2025/06
+
+
+        Condition            Execution Success Rate                      verify if an executed test case successfully achieves its expected re-
+        Original Test Cases            65%                               sults. Consequently, human validation remains essential to confirm
+        Modified Test Cases            73%                               whether the expected final application state is correctly attained.
+Table 2: Impact of Test Case Modifications (Ambiguity Reso-              Additionally, the current backtracking mechanism remains rela-
+lution of Test Case Descriptions) on Execution Success Rate              tively slow during error recovery, necessitating improvements on
+                                                                         reasoning mechanism and disambiguation strategy.
+   Impact of Ambiguity Resolution in Test Cases. Ambiguous test de-      7     Conclusion and Future Work
+scriptions reduced execution reliability. For example, "Change noti-
+                                                                         In this work, we propose LELANTE , an LLM-driven framework
+fication settings" lacked details on which settings to modify, leading
+                                                                         for automating the execution of test cases for Android application.
+LELANTE to misinterpret steps. Refining descriptions (e.g., "Disable
+                                                                         LELANTE utilizes a refined screen representation and a structured
+email notifications from the Settings menu") improved success rates
+                                                                         prompt to guide an LLM in generating execution plans for test
+from 65% to 73% (Table 2). Guidelines for resolving ambiguity are
+                                                                         cases. LELANTE’s reasoning-driven action selection and automated
+in Appendix A.
+                                                                         backtracking for error correction results in an enhanced execution
+5    Related Works                                                       efficiency and adaptability to dynamic UI changes. Our work paves
+Automated mobile application testing has traditionally relied on         the way for further advancements in AI-driven test automation, re-
+script-based frameworks such as Appium and Espresso [3, 26], which       ducing developer effort, improving software quality and eliminating
+allow developers to write scripts that simulate user interactions.       the need for manual script writing for test case automation. Future
+While these tools provide consistency in test execution, they re-        efforts will focus on automating test outcome (i.e., expected results)
+quire extensive manual effort to maintain scripts as applications        validation to reduce human dependency, optimizing backtracking
+evolve, making them inefficient for large-scale automation. To miti-     performance, and investigating prompt-based or incremental learn-
+gate script maintenance overhead, record-and-replay mechanisms,          ing techniques for leveraging historical execution data without
+such as RERAN [15], capture user interactions for deterministic ex-      extensive model fine-tuning.
+ecution. However, these approaches remain fragile when handling          8     Acknowledgments
+dynamic UI changes requiring manual adaptation of the scripts
+                                                                         This work was supported by Samsung R&D Institute Bangladesh
+and limiting their effectiveness in real-world scenarios. In con-
+                                                                         (SRBD) and Bangladesh University of Engineering and Technology
+trast, LELANTE’s LLM driven execution directly interprets human-
+                                                                         (BUET).
+language test cases without requiring any pre-written scripts.
+   To improve scalability, search-based techniques such as Stoat [25]    References
+and Sapienz [20] employ probabilistic and evolutionary algorithms         [1] Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya, Floren-
+                                                                              cia Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman, Shyamal
+for automated exploratory testing. Although effective in broaden-             Anadkat, et al. 2023. Gpt-4 technical report. arXiv preprint arXiv:2303.08774
+ing test coverage, these methods often require substantial com-               (2023).
+putational resources and manual validation of results. Recently,          [2] Riccardo Coppola, Luca Ardito, Maurizio Morisio, and Marco Torchiano. 2020.
+                                                                              Mobile testing: new challenges and perceived difficulties from developers of the
+AI-driven methods such as AutoDroid [29] leverage LLMs to au-                 Italian industry. IT Professional 22, 5 (2020), 32–39.
+tomate single-step UI interactions. However, AutoDroid primarily          [3] Android Developers. 2025. Espresso Testing Framework - Android Developers.
+focuses on task execution without explicitly handling incorrect               https://developer.android.com/training/testing/espresso Accessed: 2025-03-03.
+                                                                          [4] Gianluca Dini, Fabio Martinelli, Ilaria Matteucci, Marinella Petrocchi, Andrea
+execution paths or error recovery. In contrast, LELANTE adopts                Saracino, and Daniele Sgandurra. 2018. Risk analysis of Android applications: A
+an iterative, reasoning-driven approach specifically designed for             user-centric solution. Future Generation Computer Systems 80 (2018), 505–518.
+                                                                          [5] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xi-
+testers, emphasizing robustness through dynamic error detection               aohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg
+and recovery.                                                                 Heigold, Sylvain Gelly, Jakob Uszkoreit, and Neil Houlsby. 2021. An Image is
+   Multimodal frameworks integrating vision-language models [19,              Worth 16x16 Words: Transformers for Image Recognition at Scale. In Interna-
+                                                                              tional Conference on Learning Representations. https://openreview.net/forum?id=
+30] have also been explored for UI understanding and verification.            YicbFdNTTy
+However, these models typically involve high computational costs          [6] Hossein Falaki, Ratul Mahajan, Srikanth Kandula, Dimitrios Lymberopoulos,
+due to heavy reliance on visual processing, limiting practical de-            Ramesh Govindan, and Deborah Estrin. 2010. Diversity in smartphone usage. In
+                                                                              Proceedings of the 8th International Conference on Mobile Systems, Applications, and
+ployment at scale. LELANTE, on the other hand, relies solely on               Services (San Francisco, California, USA) (MobiSys ’10). Association for Computing
+textual representation derived from a GUI refinement process (§ 3.1),         Machinery, New York, NY, USA, 179–194. doi:10.1145/1814433.1814453
+                                                                          [7] Jianping Gou, Baosheng Yu, Stephen J Maybank, and Dacheng Tao. 2021. Knowl-
+which enhances the effectiveness of prompt engineering, improves              edge distillation: A survey. International Journal of Computer Vision 129, 6 (2021),
+model performance, and reduces deployment costs.                              1789–1819.
+                                                                          [8] Giovanni Grano, Adelina Ciurumelea, Sebastiano Panichella, Fabio Palomba, and
+6    Discussion                                                               Harald C Gall. 2018. Exploring the integration of user feedback in automated
+                                                                              testing of android applications. In 2018 IEEE 25Th international conference on
+LELANTE demonstrates a significant step in automating Android                 software analysis, evolution and reengineering (SANER). IEEE, 72–83.
+testing, achieving a 73% success rate and 78% error recovery. How-        [9] Jiaqi Guo, Shuyue Li, Jian-Guang Lou, Zijiang Yang, and Ting Liu. 2019. Sara: self-
+                                                                              replay augmented record and replay for android in industrial cases. In Proceedings
+ever, performance declines with longer test cases, highlighting               of the 28th acm sigsoft international symposium on software testing and analysis.
+challenges in handling ambiguity and error propagation. While                 90–100.
+GUI refinement improves execution, reliance on manual test case          [10] Xinyi Hou, Yanjie Zhao, Yue Liu, Zhou Yang, Kailong Wang, Li Li, Xiapu Luo,
+                                                                              David Lo, John Grundy, and Haoyu Wang. 2024. Large language models for
+modifications suggests limitations in natural language understand-            software engineering: A systematic literature review. ACM Transactions on
+ing. Another limitation of LELANTE is its inability to autonomously           Software Engineering and Methodology 33, 8 (2024), 1–79.
+EASE 2025, 978-1-4503-XXXX-X/2025/06                                                                                                                        Shamit, et al.
+
+
+[11] Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean          A     Guidelines for Formatting Test Cases
+     Wang, Lu Wang, Weizhu Chen, et al. 2022. Lora: Low-rank adaptation of large
+     language models. ICLR 1, 2 (2022), 3.                                                  Creating well-structured test case descriptions is crucial for ensur-
+[12] Manishaben Jaiswal. 2018. Android the mobile operating system and architec-            ing the optimal performance of LELANTE’s LLM-based processing
+     ture. Manishaben Jaiswal," ANDROID THE MOBILE OPERATING SYSTEM AND
+     ARCHITECTURE", International Journal of Creative Research Thoughts (IJCRT),
+                                                                                            pipeline. Poorly written test cases can introduce ambiguity, mak-
+     ISSN (2018), 2320–2882.                                                                ing it difficult for the model to interpret and execute the correct
+[13] Pingfan Kong, Li Li, Jun Gao, Kui Liu, Tegawendé F Bissyandé, and Jacques Klein.       actions. For example, instead of saying "Add category inside the Edit
+     2018. Automated testing of android apps: A systematic literature review. IEEE
+     Transactions on Reliability 68, 1 (2018), 45–66.                                       Category window", a clearer version would be "Add a new category
+[14] Metin Konuk, Cem Baglum, and Ugur Yayan. 2024. Evaluation of Large Language            named Elysium from inside the Edit Category window".
+     Models for Unit Test Generation. In 2024 Innovations in Intelligent Systems and           Additionally, test cases should be structured to provide only es-
+     Applications Conference (ASYU). IEEE, 1–6.
+[15] Wing Lam, Zhengkai Wu, Dengfeng Li, Wenyu Wang, Haibing Zheng, Hui Luo,                sential details while maintaining precision. If an action can be
+     Peng Yan, Yuetang Deng, and Tao Xie. 2017. Record and replay for android: Are          performed in multiple ways, only one method should be specified,
+     we there yet in industrial cases?. In Proceedings of the 2017 11th joint meeting on
+     foundations of software engineering. 854–859.
+                                                                                            such as "Set call vibration as Basic call in Call alerts and ringtones"
+[16] Youwei Li, Yangyang Li, and Yangzhao Yang. 2024. Test-Agent: A Multimodal              instead of just "Set call vibration as Basic call". Unnecessary
+     App Automation Testing Framework Based on the Large Language Model. In                 details should be avoided when there is only one way to complete
+     2024 IEEE 4th International Conference on Digital Twins and Parallel Intelligence
+     (DTPI). IEEE, 609–614.                                                                 a task. When necessary, explicit directions should be provided to
+[17] Jun-Wei Lin, Navid Salehnamadi, and Sam Malek. 2020. Test automation in open-          help locate options within the UI, such as clarifying that "Gallery
+     source android apps: A large-scale empirical study. In Proceedings of the 35th         settings are located in the drawer". Finally, test case descriptions
+     IEEE/ACM International Conference on Automated Software Engineering. 1078–
+     1089.                                                                                  should always include the final confirmation step to prevent pre-
+[18] Jiawei Liu, Chunqiu Steven Xia, Yuyao Wang, and Lingming Zhang. 2024. Is your          mature completion—an instruction like "Update Samsung account
+     code generated by chatgpt really correct? rigorous evaluation of large language
+     models for code generation. Advances in Neural Information Processing Systems
+                                                                                            profile picture by taking a picture" should be revised to "Update
+     36 (2024).                                                                             Samsung account profile picture by taking a picture. Click Done to
+[19] Zhe Liu, Cheng Li, Chunyang Chen, Junjie Wang, Boyu Wu, Yawen Wang, Jun Hu,            save".
+     and Qing Wang. 2024. Vision-driven automated mobile gui testing via multimodal
+     large language model. arXiv preprint arXiv:2407.03037 (2024).                          B    Prompt structure
+[20] Ke Mao, Mark Harman, and Yue Jia. 2016. Sapienz: Multi-objective automated
+     testing for android applications. In Proceedings of the 25th international symposium   To ensure accurate test execution, LELANTE employs a structured
+     on software testing and analysis. 94–105.                                              prompt shown below that guides the LLM in understanding the
+[21] Bahman Rashidi and Carol J Fung. 2015. A Survey of Android Security Threats
+     and Defenses. J. Wirel. Mob. Networks Ubiquitous Comput. Dependable Appl. 6, 3         test case, evaluating prior actions, and determining the next step.
+     (2015), 3–35.
+[22] Onur Sahin, Assel Aliyeva, Hariharan Mathavan, Ayse Coskun, and Manuel Egele.          You are given the textual description of a screen , past actions ,
+     2019. Randr: Record and replay for android applications via targeted runtime                   and an overall goal . Some actions have already been taken in
+     instrumentation. In 2019 34th IEEE/ACM International Conference on Automated                   the past and you need to determine the immediate next action
+     Software Engineering (ASE). IEEE, 128–138.                                                     needed to achieve the goal . Do the past actions indicate
+[23] Kabir S Said, Liming Nie, Adekunle A Ajibode, and Xueyi Zhou. 2020. GUI testing                that the goal has already been achieved ? Output a JSON with
+     for mobile applications: objectives, approaches and challenges. In Proceedings of              keys :
+     the 12th Asia-Pacific Symposium on Internetware. 51–60.                                " goal_action_plan ": " string , a goal is made up of a series of
+[24] Anirban Sarkar, Ayush Goyal, David Hicks, Debadrita Sarkar, and Saikat Hazra.                  actions that need to be taken to achieve it . Write a
+     2019. Android application development: a brief overview of android platforms and               detailed description of the actions required . Some actions
+     evolution of security systems. In 2019 Third International conference on I-SMAC                may already have been completed . The next action may not be
+     (IoT in Social, Mobile, Analytics and Cloud)(I-SMAC). IEEE, 73–79.                             directly on the screen , but an action on the screen could
+[25] Ting Su, Guozhu Meng, Yuting Chen, Ke Wu, Weiming Yang, Yao Yao, Geguang                       lead to it . Think strategically , step by step , considering
+     Pu, Yang Liu, and Zhendong Su. 2017. Guided, stochastic model-based GUI testing                the goal and past actions ." ,
+     of Android apps. In Proceedings of the 2017 11th joint meeting on foundations of       " past_actions_summary ": " string , a short description of what
+     software engineering. 245–256.                                                                 actions were taken in the past ",
+[26] Appium Team. 2025. Appium Documentation. https://appium.io/docs/en/latest/             " no_further_action_needed ": " string , whether the past actions
+     Accessed: 2025-03-03.                                                                          fully achieve the goal or not . Start with ' Past Actions
+[27] Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne                     indicate ... ' or ' Past Actions do not indicate ... '. Don ' t
+     Lachaux, Timothée Lacroix, Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal                  forget to save if instructed ." ,
+     Azhar, et al. 2023. Llama: Open and efficient foundation language models. arXiv                " no_further_action_needed_bool ": " boolean , true or false ",
+     preprint arXiv:2302.13971 (2023).                                                      " immediate_next_action ": " string , a detailed explanation of the
+[28] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Fei Xia, Ed Chi,                       next action to perform , based on the goal and past actions .
+     Quoc V Le, Denny Zhou, et al. 2022. Chain-of-thought prompting elicits reasoning               Think step by step ." ,
+     in large language models. Advances in neural information processing systems 35         " current_screen_actions ": [ [ action : str , ID : int ] ],
+     (2022), 24824–24837.                                                                   " selected_current_screen_action ": [ reasoning : str , action : str ,
+[29] Hao Wen, Yuanchun Li, Guohong Liu, Shanhui Zhao, Tao Yu, Toby Jia-Jun Li, Shiqi                ID : int ],
+     Jiang, Yunhao Liu, Yaqin Zhang, and Yunxin Liu. 2024. Autodroid: Llm-powered           " repeating_past_action ": " string , describing if a past action is
+     task automation in android. In Proceedings of the 30th Annual International Con-               being repeated , excluding scrolling or going back ." ,
+     ference on Mobile Computing and Networking. 543–557.                                   " repeating_past_action_bool ": " boolean , true or false . False for
+[30] Qinzhuo Wu, Weikai Xu, Wei Liu, Tao Tan, Liujian Liujianfeng, Ang Li, Jian                     scrolling or going back ." ,
+     Luan, Bin Wang, and Shuo Shang. 2024. MobileVLM: A Vision-Language Model               " id ": " number / integer , the ID of the element to interact with .
+     for Better Intra- and Inter-UI Understanding. In Findings of the Association for               Use -1 if no action is needed ." ,
+     Computational Linguistics: EMNLP 2024, Yaser Al-Onaizan, Mohit Bansal, and             " text_input_value ": " string , only EditText and
+     Yun-Nung Chen (Eds.). Association for Computational Linguistics, Miami, Florida,               AutoCompleteTextView can accept textinputvalue . For other
+     USA, 10231–10251. doi:10.18653/v1/2024.findings-emnlp.599                                      elements , use '< NOVALUE > '"
+[31] Daniel Zimmermann and Anne Koziolek. 2023. GUI-Based Software Testing:                 Current Screen: <Refined Current Screen Description>
+     An Automated Approach Using GPT-4 and Selenium WebDriver. In 2023 38th                 Overall Goal: <Test Case Description> Past Actions: <Past Actions Selected by
+     IEEE/ACM International Conference on Automated Software Engineering Workshops          LELANTE>
+     (ASEW). IEEE, 171–174.
+

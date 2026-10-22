@@ -1,0 +1,863 @@
+__HTTP 200__
+
+
+
+
+  
+
+ 
+ 
+
+
+
+
+   
+     
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+
+   
+
+   
+
+     
+     
+     
+     
+   
+
+  
+
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+   Cannot access Primary Button from Payment Sheet on Android in Detox Tests · Issue #1504 · stripe/stripe-react-native · GitHub 
+
+
+
+   
+   
+   
+   
+
+    
+   
+
+
+   
+
+
+     
+
+
+   
+  
+
+   
+   
+
+     
+
+ 
+
+
+
+
+
+   
+
+  
+
+
+
+
+     
+
+  
+
+     
+
+    
+
+       
+
+       
+
+     
+     
+     
+
+       
+   
+  
+
+
+
+
+       
+
+
+
+         
+
+
+   
+   
+   
+   
+
+   
+
+       
+   
+
+   
+  
+
+
+
+       
+
+
+     
+   
+
+
+   
+
+
+   
+
+   
+   
+
+   
+   
+   
+
+ 
+ 
+
+
+   
+
+   
+
+   
+     
+       
+      
+
+     
+       Skip to content 
+
+       
+     
+       
+       
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+
+
+
+      
+
+           
+ 
+ 
+
+ 
+  
+   
+   
+ 
+
+
+          
+
+                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge APPLICATION SECURITY GitHub Advanced Security Find and fix vulnerabilities Code security Secure your code as you build Secret protection Stop leaks before they start EXPLORE Why GitHub Documentation Blog Changelog Marketplace View all features Solutions BY COMPANY SIZE Enterprises Small and medium teams Startups Nonprofits BY USE CASE App Modernization DevSecOps DevOps CI/CD View all use cases BY INDUSTRY Healthcare Financial services Manufacturing Government View all industries View all solutions Resources EXPLORE BY TOPIC AI Software Development DevOps Security View all topics EXPLORE BY TYPE Customer stories Events & webinars Ebooks & reports Business insights GitHub Skills SUPPORT & SERVICES Documentation Customer support Community forum Trust center Partners View all resources Open Source COMMUNITY GitHub Sponsors Fund open source developers PROGRAMS Security Lab Maintainer Community GitHub Stars Archive Program REPOSITORIES Topics Trending Collections Enterprise ENTERPRISE SOLUTIONS Enterprise platform AI-powered developer platform AVAILABLE ADD-ONS GitHub Advanced Security Enterprise-grade security features Copilot for Business Enterprise-grade AI features Premium Support Enterprise-grade 24/7 support Pricing Search / Sign in Sign up Appearance settings 
+ 
+
+
+
+       
+  
+         
+         You signed in with another tab or window.  Reload  to refresh your session. 
+         You signed out in another tab or window.  Reload  to refresh your session. 
+         You switched accounts on another tab or window.  Reload  to refresh your session. 
+
+        
+ Dismiss alert 
+
+
+  
+ 
+     
+
+   
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+   
+    
+ 
+   
+     
+       
+     
+     
+      
+       {{ message }} 
+
+     
+   
+ 
+   
+ 
+
+
+    
+
+
+
+
+
+
+   
+         
+     
+      
+      
+    
+
+
+    
+
+
+
+
+
+
+
+
+  
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+  
+   
+   stripe stripe-react-native Repository navigation Code Issues 135  ( 135 ) Pull requests 67  ( 67 ) Discussions Actions Projects Security and quality Insights More  items 
+ 
+
+
+  
+
+
+
+ 
+     
+    
+
+
+
+    
+      
+    
+
+
+
+
+
+
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+  
+
+
+ 
+  
+   
+   Cannot access Primary Button from Payment Sheet on Android in Detox Tests   #1504 New issue Copy link New issue Copy link Open Open Cannot access Primary Button from Payment Sheet on Android in Detox Tests #1504 Copy link Description cunderw opened  on Sep 14, 2023 Issue body actions Describe the bug 
+A clear and concise description of what the bug is. 
+ To Reproduce 
+Steps to reproduce the behavior: 
+ 
+ Present the PaymentSheet 
+ Attempt to tap the Primary (Pay $XX.XX) button on Android in a Detox Test 
+ Cannot access the button from a Detox Test 
+ 
+ Expected behavior 
+Detox can interact with the primary pay button 
+ Smartphone (please complete the following information): 
+ 
+ Device: [Any Android Emulator] 
+ 
+ Additional context 
+RN Version: 0.72.0 
+ Code to present the payment sheet: 
+`const {paymentSheet} = 
+await fetchPaymentSheetParams(); 
+     const {error} = await initPaymentSheet({
+      appearance: PaymentSheetStyle,
+      merchantDisplayName: 'Test',
+      customerId: paymentSheet.customer,
+      customerEphemeralKeySecret: paymentSheet.ephemeralKey,
+      paymentIntentClientSecret: paymentSheet.paymentIntent,
+      defaultBillingDetails: {
+        email: user?.details?.email,
+        name: user?.details?.firstName + ' ' + user?.details?.lastName,
+      },
+    });`
+ 
+ This works in iOS 
+     await waitFor(element(by.text(`Pay $${orderTotal}`)))
+      .toBeVisible()
+      .withTimeout(3000);
+
+    await element(by.text(`Pay $${orderTotal}`)).tap();
+ 
+ Nothing tried has worked for Android, byId, byText, byType, etc... Reactions are currently unavailable Activity raldred   commented   on   Sep 16, 2024   raldred on Sep 16, 2024 Last edited by  raldred More actions Presumably this is related to the accessibility properties of the elements created by the  native SDK  rather than this react-native interface? towfurious   commented   on   Aug 4, 2025   towfurious on Aug 4, 2025 Last edited by  towfurious More actions Hello everyone, i have same issue. 
+When testing Stripe card input using stripe-react-native, Detox cannot interact with the card number, expiration, or CVC fields on Android. No combination of by.text(), by.type(), or withAncestor() works — neither locating the field nor typing text into it is successful. 
+ ENV: 
+ "RN" : "0.73" 
+"stripe-react-native" : "0.40.0" 
+ This makes it impossible to E2E test any payment flow that requires card entry via Stripe UI on Android using Detox. 
+ What we tried: 
+ await element(by.text('Card number')).tap();    // fails 
+await element(by.type('android.widget.EditText')).atIndex(0).tap();    // fails 
+await element(by.text('Card number').withAncestor(by.type('android.widget.EditText'))).tap();    // fails 
+also await device.tap({ x: 540, y: 1598 });    //fails 
+ of course this includes all variations of traversing the list of TextView, EditText and so on. 
+ 
+ For example, let's take the card input field. We see that we have a TextView that only contains text wrapped in an EditText that has no identifiers or text. 
+ simple visualization: 
+             ├── android.widget.EditText  // Card Number input
+            │   text=""
+            │   resource-id=""
+            │   content-desc=""
+            │
+            │   ├── android.view.View
+            │       text=""
+            │       resource-id=""
+            │       content-desc=""
+            │
+            │   └── android.widget.TextView  
+            │       text="Card number"
+            │       resource-id=""
+            │       content-desc=""
+ 
+ stripped hierarchy dump: 
+ <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<hierarchy rotation="0">
+	<node index="0" text="" resource-id="" class="android.widget.FrameLayout" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,0][1080,2400]">
+		<node index="0" text="" resource-id="" class="android.widget.LinearLayout" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,0][1080,2400]">
+			<node index="0" text="" resource-id="" class="android.widget.FrameLayout" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,0][1080,2400]">
+				<node index="0" text="" resource-id="stripped:id/action_bar_root" class="android.widget.LinearLayout" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,0][1080,2400]">
+					<node index="0" text="" resource-id="android:id/content" class="android.widget.FrameLayout" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,0][1080,2400]">
+						<node index="0" text="" resource-id="" class="androidx.compose.ui.platform.ComposeView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,0][1080,2400]">
+							<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,0][1080,2400]">
+								<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="Close sheet" checkable="false" checked="false" clickable="true" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,64][1080,1201]" />
+								<node index="1" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,1201][1080,2400]">
+									<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,1201][1080,2400]">
+										<node index="0" text="" resource-id="" class="android.widget.ScrollView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,1351][1080,2400]">
+											<node index="0" text="Add card" resource-id="" class="android.widget.TextView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[54,1351][268,1423]" />
+											<node index="1" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,1455][1080,1954]">
+												<node index="0" text="Card information" resource-id="" class="android.widget.TextView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[54,1455][305,1502]" />
+												<node index="1" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[54,1523][1026,1826]">
+													<node index="0" text="" resource-id="" class="android.widget.EditText" package="stripped" content-desc="" checkable="false" checked="false" clickable="true" enabled="true" focusable="true" focused="false" scrollable="false" long-clickable="true" password="false" selected="false" bounds="[54,1523][1026,1673]">
+														<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[54,1523][1026,1673]" />
+														<node index="1" text="Card number" resource-id="" class="android.widget.TextView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[97,1573][307,1624]" /></node>
+													<node index="1" text="" resource-id="" class="android.widget.EditText" package="stripped" content-desc="" checkable="false" checked="false" clickable="true" enabled="true" focusable="true" focused="false" scrollable="false" long-clickable="true" password="false" selected="false" bounds="[54,1676][538,1826]">
+														<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[54,1676][538,1826]" />
+														<node index="1" text="MM / YY" resource-id="" class="android.widget.TextView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[97,1726][237,1777]" /></node>
+													<node index="2" text="" resource-id="" class="android.widget.EditText" package="stripped" content-desc="" checkable="false" checked="false" clickable="true" enabled="true" focusable="true" focused="false" scrollable="false" long-clickable="true" password="false" selected="false" bounds="[541,1676][1026,1826]">
+														<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[541,1676][1026,1826]" />
+														<node index="1" text="CVC" resource-id="" class="android.widget.TextView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[584,1726][656,1777]" /></node>
+												</node>
+												<node index="2" text="By providing your card information, you allow 'stripped' to charge your card for future payments in accordance with their terms." resource-id="" class="android.widget.TextView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[54,1852][1026,1933]" /></node>
+											<node index="2" text="" resource-id="" class="android.view.ViewGroup" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,2008][1080,2164]">
+												<node index="0" text="" resource-id="" class="android.widget.FrameLayout" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,2008][1080,2164]">
+													<node index="0" text="" resource-id="stripped:id/primary_button" class="android.widget.FrameLayout" package="stripped" content-desc="" checkable="false" checked="false" clickable="true" enabled="false" focusable="true" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[54,2035][1026,2164]">
+														<node index="0" text="" resource-id="stripped:id/label" class="androidx.compose.ui.platform.ComposeView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[65,2058][1015,2140]">
+															<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[65,2058][1015,2140]">
+																<node index="0" text="Add my payment method" resource-id="" class="android.widget.TextView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[76,2069][1004,2127]" /></node>
+														</node>
+														<node index="1" text="" resource-id="stripped:id/lock_icon" class="android.widget.ImageView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[967,2083][994,2115]" /></node>
+												</node>
+											</node>
+										</node>
+										<node index="1" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,1201][1080,1351]">
+											<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,1201][1080,1351]">
+												<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="true" enabled="true" focusable="true" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[12,1213][140,1341]">
+													<node index="0" text="" resource-id="" class="android.view.View" package="stripped" content-desc="Close" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[60,1261][92,1293]" />
+													<node index="1" text="" resource-id="" class="android.widget.Button" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[60,1261][92,1293]" /></node>
+												<node index="1" text="TEST MODE" resource-id="" class="android.widget.TextView" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[209,1253][391,1300]" /></node>
+										</node>
+									</node>
+								</node>
+							</node>
+						</node>
+					</node>
+				</node>
+			</node>
+		</node>
+		<node index="1" text="" resource-id="android:id/statusBarBackground" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,0][1080,64]" />
+		<node index="2" text="" resource-id="android:id/navigationBarBackground" class="android.view.View" package="stripped" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,2271][1080,2400]" /></node>
+</hierarchy>
+ 
+ P.S. I understand that the problems are more likely with Detox which works, relying on the UI hierarchy of the Android View system, in particular UIAutomator2. I will also create a ticket for Detox. tjclawson-stripe   commented   on   Aug 11, 2025   tjclawson-stripe on Aug 11, 2025 Collaborator More actions @towfurious  does using  by.label()  resolve this? It looks a  bug  regarding this was fixed in react-native 0.60.5 👎 React with 👎 1 Reacted by  Carson Underwood towfurious   commented   on   Aug 11, 2025   towfurious on Aug 11, 2025 Last edited by  towfurious More actions @tjclawson-stripe  i and author are using RN version is above 0.60.5, so probably this bug is not a case,  by.label()  method works great with other elements, except stripe UI part. 
+It might also be accessibility fields passed the wrong way, from native applications out to RN like here  #1920 . 
+Maybe when you get to this bug, you can see what you can do here. 👍 React with 👍 1 Reacted by  Carson Underwood grgmo   commented   on   Sep 12, 2025   grgmo on Sep 12, 2025 More actions we also recently updated  react-native  from  0.74  ->  0.81  and with  stripe  from  0.39  to  0.51 
+ we're seeing this issue for android only, we have Maestro tests which was working fine on  0.39  and rn 0.74 
+ only workaround for us atm is to use  primary_button  id for Android, iOS works with  Pay £4.95 
+ ❤️ React with ❤️ 1 Reacted by  Viktor Shavarin Sign up for free   to join this conversation on GitHub.   Already have an account?   Sign in to comment Metadata Metadata Assignees No one assigned Labels No labels No labels Type No type Projects No projects Milestone No milestone Relationships None yet Development No branches or pull requests Issue actions Open in GitHub Copilot app 
+ 
+ 
+
+
+
+
+   
+
+ 
+
+     
+   
+
+   
+
+           
+   Footer 
+
+  
+
+
+   
+     
+       
+         
+ 
+       
+        © 2026 GitHub, Inc.
+       
+     
+
+     
+       Footer navigation 
+
+       
+
+
+           
+             Terms 
+           
+
+           
+             Privacy 
+           
+
+
+             
+               Security 
+             
+
+             
+               Status 
+             
+
+           
+             Community 
+           
+
+           
+             Docs 
+           
+
+           
+             Contact 
+           
+
+          
+ 
+   
+     
+      Manage cookies
+     
+   
+ 
+
+   
+     
+       
+        Do not share my personal information
+       
+     
+   
+
+       
+     
+   
+ 
+
+
+
+     
+
+
+
+
+   
+     
+     
+       
+     
+    You can’t perform that action at this time.
+   
+
+     
+   
+     
+     
+       
+         
+       
+       
+     
+   
+ 
+
+     
+   
+   
+ 
+
+     
+   
+     
+       
+       
+     
+   
+ 
+ 
+   
+     
+       
+       
+     
+   
+ 
+
+
+
+
+     
+     
+     
+   
+ 
+

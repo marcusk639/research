@@ -1,0 +1,867 @@
+__HTTP 200__
+                                                   On the Evaluation of Large Language Models in Unit Test
+                                                                         Generation
+                                                        Lin Yang∗†                                   Chen Yang∗                             Shutao Gao                         Weijing Wang
+                                              College of Intelligence and                   College of Intelligence and                  School of Future                College of Intelligence and
+                                                 Computing, Tianjin                            Computing, Tianjin                       Technology, Tianjin                 Computing, Tianjin
+                                                      University                                    University                              University                           University
+                                                        China                                         China                                   China                                China
+                                                 linyang@tju.edu.cn                          yangchenyc@tju.edu.cn                     gaoshutao@tju.edu.cn               wangweijing@tju.edu.cn
+
+
+
+
+arXiv:2406.18181v2 [cs.SE] 25 Sep 2024
+                                                          Bo Wang                                     Qihao Zhu                               Xiao Chu                           Jianyi Zhou
+                                              School of Computer and                         Key Laboratory of HCST,                  Huawei Cloud Computing              Huawei Cloud Computing
+                                              Information Technology,                          MoE DCST, Peking                               Co. Ltd.                            Co. Ltd.
+                                             Beijing Jiaotong University                           University                                  China                               China
+                                                        China                                        China                             chuxiao1@huawei.com                zhoujianyi2@huawei.com
+                                              wangbo_cs@bjtu.edu.cn                            zhuqh@pku.edu.cn
+
+                                                                           Guangtai Liang                              Qianxiang Wang                         Junjie Chen‡
+                                                                     Huawei Cloud Computing  Huawei Cloud Computing   College of Intelligence and
+                                                                             Co. Ltd.                Co. Ltd.            Computing, Tianjin
+                                                                              China                   China                   University
+                                                                    liangguangtai@huawei.com wangqianxiang@huawei.com           China
+                                                                                                                       junjiechen@tju.edu.cn
+                                         ABSTRACT                                                                                     inﬂuence of various prompt factors, show the performance of open-
+                                         Unit testing is an essential activity in software development for ver-                       source LLMs compared to the commercial GPT-4 and the tradi-
+                                         ifying the correctness of software components. However, manually                             tional Evosuite, and identify limitations in LLM-based unit test
+                                         writing unit tests is challenging and time-consuming. The emer-                              generation. We then derive a series of implications from our study
+                                         gence of Large Language Models (LLMs) oﬀers a new direction                                  to guide future research and practical use of LLM-based unit test
+                                         for automating unit test generation. Existing research primarily fo-                         generation.
+                                         cuses on closed-source LLMs (e.g., ChatGPT and CodeX) with ﬁxed
+                                         prompting strategies, leaving the capabilities of advanced open-                             CCS CONCEPTS
+                                         source LLMs with various prompting settings unexplored. Partic-                              • Software and its engineering → Software testing and de-
+                                         ularly, open-source LLMs oﬀer advantages in data privacy protec-                             bugging.
+                                         tion and have demonstrated superior performance in some tasks.
+                                         Moreover, eﬀective prompting is crucial for maximizing LLMs’ ca-                             KEYWORDS
+                                         pabilities. In this paper, we conduct the ﬁrst empirical study to ﬁll                        Large Language Model, Unit Test Generation, Empirical Study
+                                         this gap, based on 17 Java projects, ﬁve widely-used open-source
+                                                                                                                                      ACM Reference Format:
+                                         LLMs with diﬀerent structures and parameter sizes, and compre-
+                                                                                                                                      Lin Yang, Chen Yang, Shutao Gao, Weijing Wang, Bo Wang, Qihao Zhu,
+                                         hensive evaluation metrics. Our ﬁndings highlight the signiﬁcant                             Xiao Chu, Jianyi Zhou, Guangtai Liang, Qianxiang Wang, and Junjie Chen.
+                                                                                                                                      2024. On the Evaluation of Large Language Models in Unit Test Generation.
+                                         ∗ Both authors contributed equally to this research.                                         In 39th IEEE/ACM International Conference on Automated Software Engi-
+                                         † This paper was completed during an internship at Huawei Cloud Computing Co.
+                                                                                                                                      neering (ASE ’24), October 27-November 1, 2024, Sacramento, CA, USA. ACM,
+                                         Ltd.                                                                                         New York, NY, USA, 13 pages. https://doi.org/10.1145/3691620.3695529
+                                         ‡ Corresponding Author
+
+
+                                                                                                                                      1 INTRODUCTION
+                                         Permission to make digital or hard copies of all or part of this work for personal or
+                                         classroom use is granted without fee provided that copies are not made or distributed        Unit testing focuses on verifying the functionality of each indi-
+                                         for proﬁt or commercial advantage and that copies bear this notice and the full cita-        vidual program component (such as each method) in order to en-
+                                         tion on the ﬁrst page. Copyrights for components of this work owned by others than           sure it works as intended. Hence, writing high-quality unit tests
+                                         the author(s) must be honored. Abstracting with credit is permitted. To copy other-
+                                         wise, or republish, to post on servers or to redistribute to lists, requires prior speciﬁc   is crucial, which facilitates developers to catch defects early and
+                                         permission and/or a fee. Request permissions from permissions@acm.org.                       diagnose them eﬃciently. However, manually writing these tests
+                                         ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA                                    is time-consuming and tedious, which could signiﬁcantly escalate
+                                         © 2024 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+                                         ACM ISBN 979-8-4007-1248-7/24/10                                                             the cost of software development [36]. To reduce this eﬀort, sev-
+                                         https://doi.org/10.1145/3691620.3695529                                                      eral approaches have been proposed to automatically generate unit
+ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA                                                                           Yang et al.
+
+
+tests. Traditional approaches adopted symbolic execution [62, 87],       future research and practice use in this ﬁeld, which are mainly sum-
+evolutionary algorithms [20], or model checking [18, 21] to auto-        marized as follows:
+matically generate unit tests. While they can generate tests with
+promising coverage, they still fall short of the high utility achieved    (1) The prompt design (the description style and selected code
+by human-written tests. For example, the tests can be diﬃcult to              features) is crucial to the eﬀectiveness of LLMs in unit test
+maintain and understand due to the code smell issue, such as lack             generation. It is recommended to align the description style
+of meaningful identiﬁers [59]. To alleviate this problem, several             with the training data and choose code features considering
+deep-learning-based (DL-based) approaches have been proposed                  the LLMs’ code comprehension ability and the space left for
+[8, 74]. They collected a large corpus of unit tests with their cor-          generating unit tests. Notably, including other methods de-
+responding focal method to build DL models, thereby enhancing                 ﬁned in the target class (except the focal method) negatively
+their test generation eﬀectiveness. However, due to limitations in            impacts the overall eﬀectiveness of LLM-based unit test gen-
+the scale of models and training data, they often struggle to fully           eration due to their extensive length.
+understand the code’s intent and generate high-quality tests.             (2) The conclusions drawn from open-source LLMs in other tasks
+   Although existing approaches have made signiﬁcant progress,                do not necessarily generalize to unit test generation, includ-
+automatically generating unit tests still faces the following chal-           ing dominance relationships among studied LLMs. However,
+lenges: (1) Generating syntactically correct tests. Unit test genera-         all studied LLMs, including the state-of-the-art GPT-4, under-
+tion can be treated as a sub-problem of code generation, and thus             perform traditional Evosuite in terms of test coverage. This is
+also suﬀers from the general problem of ensuring that the gener-              primarily due to the large percentage of syntactically invalid
+ated code conforms to language’s grammar rules. (2) Generating                unit tests generated by LLMs, a result of LLMs’ hallucination.
+eﬀective tests. High-quality unit tests should thoroughly explore             Therefore, eﬀective solutions are needed, e.g., designing post-
+the behaviour of the target program component, which requires                 processing rules to ﬁx common syntactic issues.
+the approach to understand code intent and structures and thus            (3) Despite their eﬀectiveness in other tasks, directly adapting
+generate tests with high test coverage and defect detection ability.          the Chain-of-Thoughts (CoT) and Retrieval Augmented Gen-
+(3) Generating maintainable tests. In software evolution, we prefer           eration (RAG) methods for unit test generation does not im-
+unit tests that are easy to read and change, which requires the ap-           prove eﬀectiveness and may even reduce it in some cases.
+proach to generate tests following the code practice and smell well.          CoT is primarily limited by the LLMs’ code comprehension
+   Recently, Large Language Models (LLMs), with supreme abili-                ability, while RAG is constrained by the signiﬁcant gap be-
+ties in code understanding and natural language processing, have              tween the retrieved unit tests and those that LLMs excel at
+shown potential in code generation tasks. Researchers also pro-               generating. Special design for the use of ICL methods in unit
+posed to leverage the most popular LLMs, i.e., GPT-3.5 or GPT-4,              test generation is required.
+to automatically generate unit tests [68, 88, 92]. However, these         (4) The defect detection ability of LLM-generated unit tests is
+LLMs are commercial and closed-source, which presents practical               limited, primarily due to their low validity. Although valid
+challenges due to concerns over data security and the costs associ-           unit tests are generated by LLMs for many defects, a signif-
+ated with API usage. Additionally, these existing studies predomi-            icant number of defects remain undetected, mainly because
+nantly relied on ﬁxed prompting strategies based on prior experi-             the tests fail to produce the speciﬁc inputs necessary to trig-
+ence, neglecting the potential inﬂuence of various prompting fac-             ger these defects. Therefore, designing eﬀective mutation strate-
+tors, such as prompt design choices and in-context learning (ICL)             gies for the inputs within generated unit tests could further
+methods. As shown in existing studies, prompting is crucial in max-           improve defect detection eﬀectiveness.
+imizing the capabilities of LLMs [42, 49, 81, 93], and thus this lack      In summary, this paper makes the following contributions:
+of in-depth analysis on these factors could signiﬁcantly limit the
+development of actionable guidelines for optimizing unit test gen-          • We performed the ﬁrst empirical study to evaluate open-source
+eration with LLMs [64, 67]. Moreover, with the rapid emergence                LLMs in unit test generation. We studied ﬁve powerful code
+of open-source code LLMs and various prompting methods, their                 LLMs, ranging from 7B to 34B parameters, on 17 Java projects
+eﬀectiveness for unit test generation remains largely unexplored.             from the well-known Defects4J benchmark. Our experiments
+Therefore, it is urgent to investigate the eﬀectiveness of advanced           required around 3,000 NVIDIA A100 GPU-hours, underscor-
+open-source LLMs in unit test generation with various prompting               ing the scale and intensity of our study in advancing LLM-
+methods.                                                                      based unit test generation.
+   In this work, we conducted the ﬁrst extensive study to achieve           • We evaluated LLM-based unit test generation from four as-
+the above-mentioned goal based on 17 Java projects from the De-               pects deﬁned by our research questions, including the inﬂu-
+fects4J 2.0 benchmark [32]. Particularly, we evaluated ﬁve open-              ence of prompt design, the inﬂuence of ICL methods, the
+source code LLMs, which are built on top of the widely-used CodeL-            comparison among open-source LLMs, the commercial GPT-
+lama [63] and DeepSeek-Coder [15] structures with diverse model               4, and traditional Evosuite, and the evaluation in terms of di-
+scales ranging from 7B to 34B. Based on the extensive experiments             verse metrics (including syntactic validity, test coverage, and
+under the guidance of our elaborately-designed four research ques-            defect detection).
+tions (RQs), we obtain a series ﬁndings about LLM-based unit test           • We summarized nine major ﬁndings from our extensive study
+generation and deliver the corresponding actionable guidelines for            and delivers a series of implications for guiding future re-
+                                                                              search and practice use of LLM-based unit test generation.
+On the Evaluation of Large Language Models in Unit Test Generation                             ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA
+
+
+2     STUDY DESIGN                                                           each structure. They are CodeLlama-7B-Instruct, CodeLlama-13B-
+In general, when using LLMs to address some code-related task,               Instruct, Phind-CodeLlama-34B-v2, DeepSeekCoder-6.7B-Instruct,
+it involves three main aspects: an LLM, a prompt as the input of             and DeepSeekCoder-33B-Instruct. Besides, we used the state-of-
+the LLM, and an in-context (ICL) method employed to improve                  the-art commercial LLM (i.e., GPT-4 [6]), as a reference due to its
+LLMs in addressing the task, and thus it is important to investigate         well-known eﬀectiveness.
+these aspects in LLM-based unit test generation. Furthermore, as                CodeLlama refers to a series of code-speciﬁc LLMs evolved
+the goal of unit testing is to detect defects at an early stage, the         from Llama 2 [73], available in three sizes (i.e., 7B, 13B, and 34B)
+defect detection ability of the generated unit tests by LLMs is also         and three variants (i.e., base model, Python ﬁne-tuned and instruction-
+crucial. In this work, to conduct a comprehensive study, the work-           tuned models). Phind models are the ﬁne-tuned versions of CodeLlama-
+ﬂow of our study consists of four parts that target each aspect of           34B, leveraging an internal Phind corpus and instruction-tuning,
+LLM-based unit test generation as discussed above.                           and they have outperformed other models in CodeLlama series. In
+                                                                             our study, we selected three instruction-tuned LLMs: CodeLlama-
+2.1     Research Questions                                                   7B-Instruct, CodeLlama-13B-Instruct, and Phind-CodeLlama-34B-
+                                                                             v2, as instruction-tuned models tend to exhibit superior perfor-
+We investigated the unit test generation eﬀectiveness of LLMs by
+                                                                             mance as shown in the existing work [91]. For ease of presentation,
+answering the following research questions (RQs):
+                                                                             we call them CL-7B, CL-13B, and PD-34B, respectively.
+ • RQ1: How does prompt design aﬀect the eﬀectiveness of LLMs                   DeepSeekCoder comprises a series of code LLMs trained on a
+     in unit test generation?                                                repository-level code corpus, including both pre-trained and instruction-
+ • RQ2: How do open-source LLMs perform in unit test genera-                 tuned models. These models come in various sizes, including 1.3B,
+     tion compared to GPT-4 and Evosuite?                                    5.7B, 6.7B, and 33B. To ensure fair comparisons with our selected
+ • RQ3: How do in-context learning methods aﬀect the eﬀective-               CodeLlama models, we selected DeepSeekCoder-6.7B-Instruct and
+     ness of LLM-based unit test generation?                                 DeepSeekCoder-33B-Instruct since they have comparable parame-
+ • RQ4: How eﬀective are the unit tests generated by LLMs in                 ter sizes with CL-7B and PD-34B. We call them DC-7B and DC-
+     terms of defect detection?                                              33B, respectively.
+    In RQ1, we investigated the eﬀectiveness of each studied open-              ChatGPT includes inﬂuential commercial closed-source LLMs
+source LLM in unit test generation by designing diﬀerent prompts.            developed by OpenAI, such as GPT-3.5 and GPT-4. These models
+This helps investigate the inﬂuence of diﬀerent prompt designs               are pre-trained on trillions of tokens and further enhanced through
+on this task and also helps determine how to design a prompt to              instruction-tuning and reinforcement learning with human feed-
+make LLMs achieve the best eﬀectiveness. In RQ2, we compared                 back [94]. They have shown exceptional performance in various
+the studied open-source LLMs in unit test generation based on the            tasks [88, 92]. Among the ChatGPT series, GPT-4 is the most ad-
+best prompt design we explored in RQ1, and employed the state-of-            vanced and outperforms its predecessors. Therefore, we selected
+the-art commercial LLM (i.e., GPT-4) and the widely-studied tradi-           GPT-4 as the representative closed-source LLM for reference.
+tional approach (i.e., Evosuite) as reference. This helps understand
+the current situation of these open-source LLMs in unit test gen-
+eration. In RQ3, we incorporated two widely-used ICL methods to              2.3 Prompt Design
+improve the usage of these studied LLMs respectively, and then re-           Prompts are crucial for an LLM as they contain the context, in-
+visited the eﬀectiveness of these LLMs in unit test generation. This         struct the task, and largely inﬂuence the model’s performance [9,
+is helpful to explore whether the state-of-the-art ICL methods in            23, 39, 64]. In general, when handling code-related tasks, the prompt
+general tasks can help improve the eﬀectiveness of LLMs in the               should include proper code features, and the task and these code
+speciﬁc task of unit test generation.                                        features should be described in a proper style, which can facilitate
+    The former three RQs correspond to the above-mentioned three             the LLM understanding and thus address this task. That is, when
+aspects aﬀecting the eﬀectiveness of LLMs in addressing some tasks,          designing a prompt, we should take two factors into consideration:
+which adopted the widely-used evaluation metrics in existing stud-           (1) which style is used to describe the task and these code features,
+ies on LLM-based unit test generation (i.e., syntactic validity and          and (2) which code features should be included.
+test coverage). RQ4 further complements them by considering an-                 Description Style. There are two widely-used description styles
+other key ability (i.e., the defect detection ability) of unit tests. That   in addressing code-related tasks with LLMs in the literature [14,
+is, in RQ4, we investigated the eﬀectiveness of these studied LLMs           65, 88, 92]: natural language description [88, 92] and code language
+in terms of fault detection with the corresponding automatically             description [14, 65, 68]. The former describes the task and code fea-
+generated unit tests.                                                        tures in natural language, while the latter makes the prompt a code
+                                                                             fragment by introducing the task and code features in correspond-
+2.2     Studied LLMs                                                         ing comments. In our study, we investigated the inﬂuence of the
+First, we selected a set of representative code LLMs for investiga-          two styles on the eﬀectiveness of each studied open-source LLM
+tion in our study. Our selection process started with the leader-            in unit test generation.
+board of code LLMs hosted on Hugging Face [4]. We ﬁrst sorted                   Code Features. To adequately investigate the inﬂuence of dif-
+code LLMs based on their scores and found that the most power-               ferent code features, we surveyed the existing studies on LLM-
+ful LLMs shared two structures: CodeLlama and DeepSeekCoder.                 based unit test generation [8, 14, 68, 88, 92], and collected all their
+Then, we determined a set of code LLMs with diﬀerent scales for              used code features. In total, we collected six code features and
+ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA                                                                           Yang et al.
+
+
+categorized them into three types: (1) Focal Method is the target       each patched method as a focal method to be tested, instead of
+method to be tested. The code features extracted from it include        all methods in this benchmark. Particularly, following the testing
+the method body (FM𝑏 ) and its parameters (FM𝑝 ). (2) Focal Class is    practice and the existing work [8, 74], we just considered public
+the class containing the focal method. The code features extracted      methods as focal methods. For a bug involving multiple buggy
+from it include its constructor (FC𝑐 ), the ﬁelds deﬁned within the     methods, we used all the public methods as focal methods. In total,
+class (FC 𝑓 ), and other methods deﬁned within the class (FC𝑚 ). (3)    we collected 778 focal methods, which involve 413 defects from all
+Related Classes are the classes including the constructors of the       17 projects in the benchmark. Due to the space limit, we put the
+parameters in the focal method (except the focal class). The code       numbers of focal methods and involved defects for each project at
+feature extracted from it is these constructors (RC𝑐 ). Among them,     our homepage [5].
+FM𝑏 is the basic content in the prompt for LLM-based unit test gen-
+eration. Thus we performed an ablation experiment to investigate        2.6 Implementation
+the contribution of each of the remaining ﬁve code features.            Due to the variable inconsistent output format of LLMs, we ﬁrst
+                                                                        used the widely-used AST parser (i.e., tree-sitter[3]) to extract the
+2.4     In-Context Learning Method                                      generated unit tests from the outputs, rather than relying on sim-
+Chain-of-Thoughts (CoT) [92] and Retrieval Augmented Generation         ple text matching. Then, we integrated all test methods into a test
+(RAG) [41] are two widely-used ICL methods in various code-related      class for subsequent evaluation. Finally, we imported the classes
+tasks. In this study, we adapted them to unit test generation task,     within the project and some common dependencies required by
+and investigated the impact of these methods on the eﬀectiveness        JDK (e.g., the java.utils package) and JUnit (e.g., the org.junit.Assert
+of unit test generation.                                                package) into the test class, in order to avoid simple compilation
+   CoT was originally proposed to improve the reasoning ability         issues caused by missing dependencies.
+of LLMs in addressing mathematical and common-sense reasoning              We developed our experimental scripts based on PyTorch 2.0.0 [1]
+tasks [81]. Subsequently, it has been applied to some code-related      and transformers 4.34.1 [2], and used VLLM [37] libraries to speed
+tasks and the eﬀectiveness has been also demonstrated through           up our experiments. All the experiments were conducted on four
+extensive experiments [42, 92]. Particularly, the existing work has     servers with the same conﬁguration, i.e., Ubuntu 18.04 LTS, Intel
+demonstrated the eﬀectiveness of applying CoT to ChatGPT for            Xeon Gold 6240C CPU, 512GB RAM, and eight NVIDIA A100 GPUs.
+unit test generation [92], which instructs ChatGPT to (1) under-        All of our code and data are available at our project homepage [5].
+stand the focal method and then (2) generate unit tests according
+to its understanding. However, it is unclear whether CoT is still       2.7 Metrics
+eﬀective in improving open-source LLMs in unit test generation.         Following the existing studies [88, 92], we leveraged the three widely-
+To ﬁll the gap, this work performs the ﬁrst study that extensively      used metrics to evaluate the generated unit tests by each technique
+investigates the eﬀectiveness of COT on various widely used open-       in RQ1, RQ2, and RQ3: Compilation Success Rate (CSR), Line
+source LLMs.                                                            Coverage (𝐶𝑜𝑣 𝐿 ), and Branch Coverage (𝐶𝑜𝑣 𝐵 ). As introduced
+   RAG enhances LLMs by incorporating relevant information re-          in Section 2.6, for each focal method, we integrated all the gener-
+trieved from external databases to improve prompt contents, which       ated unit tests into a test class, and then compiled the test class.
+has been widely used in code generation [61, 77, 79]. In general,       Therefore, we calculated CSR by the ratio of the number of test
+RAG ﬁrst retrieves similar inputs, and then treats these inputs along   classes compiled successfully over the total number of test classes
+with their corresponding ground-truth outputs as examples to en-        corresponding to all focal methods. Then, we executed each test
+hance LLMs. In our study, we investigated its eﬀectiveness in im-       class that was successfully compiled, and collected its achieved
+proving LLM-based unit test generation through adaptation. Specif-      line coverage and branch coverage via the code coverage collection
+ically, it ﬁrst retrieves the most similar method to the focal method   tool (i.e., Jacoco [24]). For each test class with compilation errors,
+within the project. Following the existing work [34, 77], we used       we recursively remove test methods occurred in compilation error
+CodeBERT to encode the semantics of methods as vectors and then         messages from the test class and re-execute the test class until it
+measured the cosine similarity between vectors. Then, the retrieved     can be compiled successfully or there is no test method left in the
+method, along with its corresponding unit tests, was integrated         test class. In this way, we try our best to collect as much coverage
+into the prompt to instruct LLMs to generate unit tests.                achieved as possible. Higher CSR, 𝐶𝑜𝑣 𝐿 , and 𝐶𝑜𝑣 𝐵 indicate better
+                                                                        eﬀectiveness in unit test generation.
+2.5     Benchmark                                                          Furthermore, we incorporated an additional metric in RQ4, i.e.,
+                                                                        the Number of Detected Defects (NDD), to evaluate the defect
+We used the Defects4J 2.0 benchmark [32] to evaluate the eﬀective-      detection ability of the generated unit tests. Speciﬁcally, if a test
+ness of LLMs in unit test generation. It consists of 835 real-world     class passes on a ﬁxed version but fails on the corresponding buggy
+defects collected from 17 open-source Java projects and has been        version, it indicates that the test class detected a defect.
+widely used in software testing [33], fault localization [27, 28] and
+program repair [29, 30, 51, 83]. In this benchmark, each defect cor-    3 RESULTS
+responds to a buggy version and a ﬁxed version. The ﬁxed ver-
+sion indicates that the patches have been applied to certain meth-      3.1 Inﬂuence of Prompt Design
+ods and then the defect can be ﬁxed. To balance the evaluation          Inﬂuence of Description Style. We ﬁrst investigated the inﬂu-
+costs and defect detection capability investigation, we regarded        ence of description styles, i.e., natural language description (NL)
+On the Evaluation of Large Language Models in Unit Test Generation                                    ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA
+
+
+                       Table 1: Eﬀectiveness of Open-source LLMs Using Diﬀerent Description Styles in Prompt.
+
+                        CL-7B                         CL-13B                     PD-34B                      DC-7B                      DC-33B
+    Style
+               𝑪𝑺𝑹      𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩           𝑪𝑺𝑹      𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩       𝑪𝑺𝑹      𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩        𝑪𝑺𝑹     𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩         𝑪𝑺𝑹     𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩
+      NL      40.31      18.76     16.67     53.86     18.55     17.11   51.93    28.59     23.51   47.36    23.79    18.66     49.07    26.98     23.91
+      CL      34.37      16.21     14.34     38.95     14.16     12.18   56.06    30.31     24.14   50.27    23.94    17.20     50.54    32.36     26.76
+
+
+and code language description (CL). Speciﬁcally, we investigated                   Table 2: Eﬀectiveness of Unit Tests Generated By Open-
+the eﬀectiveness of each studied open-source LLM by incorporat-                    Source LLMs with Diﬀerent Prompt Variants in Terms of
+ing all studied code features into the prompt in each studied de-                  Compilation Success Rate (CSR).
+scription style, respectively. Table 1 shows the results in terms of
+CSR, 𝐶𝑜𝑣 𝐿 , and 𝐶𝑜𝑣 𝐵 . To evaluate the diﬀerence between NL and                    Variants       CL-7B    CL-13B      PD-34B         DC-7B     DC-33B
+CL in statistics, we performed the Wilcoxon rank sum test [84]
+                                                                                          All        40.31      53.86         55.49      49.22        45.65
+with a signiﬁcance level of 0.05 between them and calculated the
+Rank-biserial correlation [58] scores to show the eﬀect size. If a p-               𝒘/𝒐 𝑭 𝑪𝒄         +0.99       -1.87         -0.42      -1.00        -2.43
+value is smaller than 0.05, it indicates that there is a statistically sig-         𝒘/𝒐 𝑭 𝑪𝒇         +0.28       -3.43        +0.29       -0.86        -0.29
+niﬁcant diﬀerence between NL and CL for the used LLM in terms                       𝒘/𝒐 𝑭 𝑪𝒎         -2.14     -14.92         -6.42     -11.42        -4.28
+of the metric. An eﬀect-size value above 0.3 generally indicates a                  𝒘/𝒐 𝑭 𝑴𝒑         +3.99       -1.01        +1.57      +1.84         -0.71
+meaningful diﬀerence between compared groups [13]. In this table,                   𝒘/𝒐 𝑹𝑪𝒄          +3.99       -1.01        +1.57      +1.84         -0.71
+we used bold to highlight the better one with statistical and mean-
+ingful signiﬁcance according to the p-value (<0.05) and the eﬀect
+size (>0.3) between NL and CL.
+                                                                                    Finding 1: CL-7B and CL-13 perform signiﬁcantly better when
+   From Table 1, CL-7B and CL-13B perform better when using the
+                                                                                    using the style of NL to instruct them, while PD-34B, DC-7B,
+NL style than using the CL style in terms of all three used metrics.
+                                                                                    and DC-33B perform stably regardless of the used styles. The
+In particular, the superiority of NL over CL is statistically signiﬁ-
+                                                                                    underlying reason lies in whether the description styles used
+cant in all six cases for CL-7B and CL-13B. For example, the unit
+                                                                                    for instructing LLMs are well aligned with those used in the
+tests generated by CL-7B in the NL style achieve 2.55% and 2.33%
+                                                                                    training data for LLMs.
+higher line coverage and branch coverage than those in the CL
+style. For DC-7B, DC-33B, and PD-34B, there is no statistically sig-
+niﬁcant diﬀerence between the two styles in most (seven out of                     Inﬂuence of Code Features. We performed an ablation experi-
+nine) cases, even though the CL style performs slightly better than                ment to investigate the inﬂuence of code features (i.e., 𝐹 𝑀𝑝 , 𝐹𝐶𝑐 ,
+the NL style in general. The results indicate that DC-7B, DC-33B,                  𝐹𝐶 𝑓 , 𝐹𝐶𝑚 , and 𝑅𝐶𝑐 presented in Section 2.3). Speciﬁcally, we cre-
+and PD-34B are more robust with respect to the description style                   ated ﬁve variants for prompt design, each of which removes a code
+used in prompt than CL-7B and CL-13B.                                              feature from the prompt incorporating all studied code features, re-
+   We then investigated the reason behind the above phenomenon                     spectively. Then, we investigated the eﬀectiveness of each studied
+and found that the root cause lies in which description styles are                 open-source LLM with each of the prompt variants in its descrip-
+employed in the training data for LLMs. Speciﬁcally, CL-7B and                     tion style determined before. Table 2 shows the results in terms
+CL-13B were build based on Llama2 by using a code corpus with                      of CSR and Table 3 shows the results in terms of 𝐶𝑜𝑣 𝐿 and 𝐶𝑜𝑣 𝐵 .
+500B tokens. Although they have learned how to understand code                     In both tables, Rows “All” present the results of each studied LLM
+language, the base Llama2 model still have dominant impact on                      with the prompt incorporating all studied code features, and the
+their ability of understanding prompts. In contrast, although PD-                  remaining rows present the increased/decreased eﬀectiveness over
+34B shares the Llama2 architecture, it conducted three rounds of                   the corresponding eﬀectiveness shown in Rows “All” for each stud-
+additional training with CL data (i.e., from Llama2 to CodeLlama-                  ied LLM. We also used bold to highlight the increment/decrement
+34B, then Phind-v1 and v2), and thus it performs stably regard-                    with statistical signiﬁcance (p-values smaller than 0.05 and eﬀect
+less of the used styles. Similarly, DC-7B and DC-33B were initially                size greater than 0.3).
+trained on a hybrid corpus comprising 80% data in the CL style                        From Table 2, all the cases with statistical signiﬁcance are at
+and 20% data in the NL style, allowing them to work well with                      Row “w/o 𝐹𝐶𝑚 ” and all of them are decrement (ranging from 2.14%
+both styles.                                                                       to 14.92%) in terms of CSR. The results indicate the signiﬁcant con-
+   Overall, when utilizing an LLM to address the task of unit test                 tribution of 𝐹𝐶𝑚 (other methods deﬁned within the focal class) to
+generation, it is preferable to design the prompt in the description               generate syntactic valid unit tests with LLMs. The reason may be
+style that the LLM was trained on, which is usually overlooked in                  that building a unit test scenario often requires several steps and
+practice. For suﬃcient comparisons, we adopted the style making                    some necessary information exists in 𝐹𝐶𝑚 . Hence, removing 𝐹𝐶𝑚
+the LLM perform better for each LLM in the following experiments.                  may result in signiﬁcant hallucination issues for LLMs, harming
+Speciﬁcally, we designed the prompt in the NL style for CL-7B and                  the validity of generated unit tests. The remaining code features
+CL-13B and in the CL style for DC-7B, DC-33B, and PD-34B.                          have no statistically signiﬁcant inﬂuence on LLM-based unit test
+                                                                                   generation in terms of CSR, which is also as expected. Speciﬁcally,
+ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA                                                                                 Yang et al.
+
+
+              Table 3: Eﬀectiveness of Unit Tests Generated By Diﬀerent Prompt Variants in Terms of Test Coverage.
+
+                                           CL-7B              CL-13B          PD-34B            DC-7B            DC-33B
+                          Variants
+                                        𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩         𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩     𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩       𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩      𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩
+                             All         18.76     16.67    18.55   17.11   33.41     27.12    29.02   23.77   32.72   29.26
+                         𝒘/𝒐 𝑭 𝑪𝒄       +8.09     +7.66     -2.44   -0.12   +0.62     +1.62    -2.72   -2.01   -3.16   -2.31
+                         𝒘/𝒐 𝑭 𝑪𝒇       +7.46     +6.52     +1.83   +0.92   +5.17     +4.61    -0.37   -0.75   +1.11   -0.70
+                         𝒘/𝒐 𝑭 𝑪𝒎       +9.26     +8.67     +3.07   +3.62   +4.04     +5.23    -0.65   +2.27   +1.79   +0.05
+                         𝒘/𝒐 𝑭 𝑴𝒑       +8.93     +8.09     -0.32   +0.37   +2.46     +2.57    -1.31   -1.18   -1.63   -1.91
+                         𝒘/𝒐 𝑹𝑪𝒄        +8.96     +8.11     -0.32   +0.37   +2.45     +2.56    -1.31   -1.18   -1.90   -2.10
+
+
+(1) regarding 𝐹𝐶 𝑓 , ﬁelds are seldom directly accessed from unit              code features, the negative inﬂuence of missing some information
+tests; (2) regarding 𝐹𝐶𝑐 and 𝑅𝐶𝑐 , LLMs typically use no-parameter             due to removing code features is smaller than the brought beneﬁt
+constructors for instantiation or employ mocked instances instead              (i.e., leaving larger space for LLMs’ response), eventually bringing
+(e.g., about 58.49% of generated test classes involve such instantia-          the improvement of test coverage. Additionally, the possible reason
+tion methods on average); (3) the parameters of the focal method               why removing 𝐹𝐶𝑚 has positive inﬂuence on both CodeLlama and
+also occur in the method body (i.e., the basic content 𝐹 𝑀𝑏 that is            DeepSeek-Coder models is that 𝐹𝐶𝑚 is signiﬁcantly longer than
+always retained in the prompt).                                                the other code features, and thus the beneﬁt in leaving space for
+   From Table 3, we found a surprising phenomenon, i.e., almost all            LLMs’ response due to its removal is more signiﬁcant to test cov-
+cases at Row “w/o 𝐹𝐶𝑚 ” are increment, even with statistical signif-           erage improvement by generating more unit tests. Overall, there
+icance. This indicates that removing 𝐹𝐶𝑚 in prompt design is help-             seems to be a trade-oﬀ between including more code features and
+ful to improve code coverage even though it is harmful to the syn-             leaving space for generating more unit tests in prompt design.
+tactic validity of generated unit tests. We carefully analyzed the un-             Particularly, when incorporating all studied code features, the
+derlying reason and found that the number of generated unit tests              relatively small CodeLlama models (i.e., CL-7B and CL-13B) per-
+may be the key factor. Speciﬁcally, these open-source LLMs have                form worse than the relatively small DeepSeek-Coder model (i.e.,
+ﬁxed-size space to include prompt contents and LLMs’ response. If              DC-7B) in terms of code coverage, and the relatively large CodeL-
+the prompt is longer, it indicates that the contents of the response           lama model (i.e., PD-34B) performs closely to the relatively large
+from the LLM are fewer, potentially leading to a smaller number                DeepSeek-Coder model (i.e., DC-33B). However, in our ablation ex-
+of generated unit tests. After removing 𝐹𝐶𝑚 in prompt design, the              periment, the best eﬀectiveness of CL-7B and CL-13B in terms of
+window space left for the LLM’s response becomes larger, and in-               code coverage (i.e., that achieved by the prompt variant removing
+deed, the average number of generated unit tests across all the                𝐹𝐶𝑚 ) is even better than that of DC-7B. Similarly, the achieved
+studied open-source LLMs are signiﬁcantly increased from 3,654 to              code coverage with PD-34B using the prompt variant removing
+5,434, which is indeed helpful to improve code coverage. Overall,              𝐹𝐶𝑚 outperforms the best eﬀectiveness of DC-33B. This indicates
+this beneﬁt even outperforms the negative inﬂuence on the syntac-              the importance of selecting code features for a given LLM due to
+tic validity of generated unit tests.                                          the diverse characteristics of LLMs. For suﬃcient comparisons, we
+                                                                               adopted the prompt variant making the LLM perform the best for
+  Finding 2: 𝐹𝐶𝑚 contributes the most to the syntactic validity                each LLM in the following experiments. Speciﬁcally, we incorpo-
+  of generated unit tests among all studied code features, but its             rated all studied code features in the prompt for DC-7B and DC-
+  extensive length limits the number of generated unit tests with              33B but removed 𝐹𝐶𝑚 for the remaining three LLMs. Note that
+  LLMs. The outperforming inﬂuence of the latter over the for-                 the prompt variant performing the best in our ablation experiment
+  mer ﬁnally makes 𝐹𝐶𝑚 limit test coverage.                                    may be not the global optimum, since we did not evaluate all com-
+                                                                               binations of these code features due to signiﬁcant costs. We will
+    Except 𝐹𝐶𝑚 , removing each of the remaining four code features             discuss this threat in detail in Section 4.
+is signiﬁcantly helpful to improve code coverage for the three LLMs
+based on CodeLlama in general, but has no statistical signiﬁcant
+                                                                                    Finding 3: Code features (except 𝐹𝐶𝑚 ) have diﬀerent inﬂuence
+inﬂuence on the two LLMs based on DeepSeek-Coder in terms
+                                                                                    on LLMs due to diﬀerent abilities of their foundation models
+of code coverage. The underlying reason may lie in the ability of
+                                                                                    in comprehending code features. Using proper code features
+the foundation models in comprehending code features. Speciﬁ-
+                                                                                    may largely enhance unit test generation eﬀectiveness of LLMs
+cally, the CodeLlama models are trained from Llama2, which are
+                                                                                    (especially CodeLlama models).
+pre-trained on natural language data, while the DeepSeek-Coder
+models are built from scratch based on a corpus primarily com-
+posed of code language. Therefore, DC-7B and DC-33B are able
+to comprehend provided code features more suﬃciently, facilitat-               3.2 Eﬀectiveness Comparison
+ing generating eﬀective unit tests. Regarding CL-7B, CL-13B, and               Table 4 shows the eﬀectiveness of each studied open-source LLM
+PD-34B, because of the relatively weak ability in comprehending                with the corresponding best prompt design mentioned above in
+On the Evaluation of Large Language Models in Unit Test Generation                        ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA
+
+
+Table 4: Eﬀectiveness Comparison of Studied LLMs and Evo-               for LLM-based unit test generation [65, 72, 92], but deﬁnitely, LLM-
+suite in Unit Test Generation.                                          based unit test generation should not harm test coverage too much
+                                                                        compared to Evosuite. One possible reason is that a substantial por-
+              Model       𝑪𝑺𝑹 (%)      𝑪𝒐𝒗𝐿 (%)      𝑪𝒐𝒗𝐵 (%)           tion of the unit tests generated by LLMs (ranging from 34.44% to
+                                                                        61.78%) are syntactically invalid.
+             CL-7B          38.17         28.02         25.34              To potentially improve the eﬀectiveness of LLM-based unit test
+             CL-13B         38.94         21.62         20.73           generation, we further analyzed the underlying root cause of their
+             PD-34B         49.07         37.45         32.35
+                                                                        low CSR. Speciﬁcally, there are three main types of invalid unit
+             DC-7B          49.22         29.02         23.77           tests generated by these LLMs: unresolved symbol errors, parame-
+             DC-33B         45.65         32.72         29.26           ter mismatch errors, and abstract instantiation errors. All of them
+              GPT-4         52.96         40.43         31.78           are caused by the hallucination issue [7, 48, 82] of LLMs. Unre-
+                                                                        solved symbol errors are the most common, which account for
+             Evosuite       85.71         78.91         76.59
+                                                                        30.68% of all invalid unit tests and are caused due to using semantically-
+                                                                        coherent but undeﬁned identiﬁers in unit tests. Parameter mismatch
+terms of CSR, 𝐶𝑜𝑣 𝐿 , and 𝐶𝑜𝑣 𝐵 . To better understand the eﬀective-    errors are the second most common, accounting for 17.25%, which
+ness of open-source LLMs in unit test generation, we also reported      involves incorrect parameter types or counts in invoked APIs. This
+the eﬀectiveness of traditional technique Evosuite with its default     is because there are many APIs sharing the same name but diﬀer-
+setting, as well as the closed-source GPT-4 model by incorporating      ent parameter lists due to the overloading feature, aggregating the
+all studied code features in the natural language description style     diﬃculty in generating correct API invocations for LLMs. Abstract
+(the most widely-used setting in the literature [72, 88, 92]).          instantiation errors are the third most common, accounting for
+   From Table 4, the two most large-scale open-source LLMs (i.e.,       10.38%, which involves incorrect instantiation of abstract classes.
+PD-34B and DC-33B) achieve higher code coverage than the re-            Speciﬁcally, when a method parameter is deﬁned in an abstract
+maining small-scale LLMs, and the commercial GPT-4 generally            class, an instance of the corresponding subclass should be declared
+performs better than these studied open-source LLMs. For exam-          since abstract classes cannot be instantiated. However, LLMs often
+ple, DC-33B achieves 12.75% higher line coverage and 23.10% higher      declare an instance for the parameter according to its deﬁned type.
+branch coverage than DC-7B. This is as expected since larger-scale
+LLMs tend to have a stronger ability to understand instructions,
+and the same ﬁnding has been observed on the task of LLM-based           Finding 5: LLM’s hallucination leads to three main types of
+code generation [11]. There is an unusual case, i.e., CL-13B per-        compilation errors for unit tests, i.e., unresolved symbol errors,
+forms worse than CL-7B in our study. This is because CL-7B suﬀers        parameter mismatch errors, and abstract instantiation errors.
+from a repetition issue [25], which causes that the number of gen-       This makes LLM-based unit test generation underperform Evo-
+erated unit tests is substantially larger than that generated by CL-     suite in terms of test coverage, although the latter suﬀers from
+13B. Although this repetition issue could beneﬁt the task of unit        the poor readability issue.
+test generation to some degree, it is actually widely-recognized as a
+typical aspect reﬂecting LLM’s poor capability [35]. There are also
+diﬀerent ﬁndings derived from diﬀerent tasks with LLMs. From Ta-
+ble 4, PD-34B outperforms DC-33B in terms of both line coverage
+and branch coverage, but the conclusion is opposite on the task of
+                                                                        3.3 Eﬀectiveness of In-Context Learning
+code generation based on the widely-known leaderboard [4]. This         We investigated the inﬂuence of in-context learning on LLM-based
+indicates the necessity of re-evaluating LLMs when a new task is        unit test generation by evaluating each studied open-source LLM
+speciﬁed, since the most suitable LLM may be diﬀerent for diﬀer-        with the CoT and RAG methods (introduced in Section 2.4), re-
+ent tasks due to diﬀerent characteristics involved in them.             spectively. Table 5 presents their eﬀectiveness in terms of 𝐶𝑜𝑣 𝐿
+                                                                        and 𝐶𝑜𝑣 𝐵 . We also used bold to highlight the increment/decrement
+  Finding 4: While these open-source LLMs have been evaluated           with statistical signiﬁcance (p-values smaller than 0.05 and eﬀect
+  on other tasks, not all ﬁndings can be generalized to unit test       size greater than 0.3).
+  generation, especially in identifying the most eﬀective open-            From this table, incorporating CoT weakens the eﬀectiveness of
+  source LLM for it. The state-of-the-art commercial GPT-4 is still     all three CodeLlama models (i.e., CL-7B, CL-13B, and PD-34B) in
+  more eﬀective in unit test generation.                                terms of 𝐶𝑜𝑣 𝐿 and 𝐶𝑜𝑣 𝐵 , but enhances the eﬀectiveness of both
+                                                                        DeepSeek-Coder models (i.e., DC-7B and DC-33B). For example,
+   By comparing the traditional Evosuite with LLM-based unit test       incorporating CoT results in 3.04% decrement for CL-7B in terms
+generation in Table 4, the former signiﬁcantly outperforms all the      of 𝐶𝑜𝑣 𝐿 , but brings 2.72% increment for DC-7B. This diﬀerence
+LLM-based techniques (including the commercial GPT-4) in terms          may be attributed to the ability of LLMs in code comprehension.
+of all three used metrics. For example, the line coverage achieved      Speciﬁcally, CoT introduces an extra task of describing the focal
+by Evosuite is 78.91%, while that by GPT-4 is just 40.43%. Of course,   method for guiding subsequent unit test generation, which stresses
+the unit tests generated by Evosuite have always been criticized for    the code comprehension ability of LLMs more explicitly. Therefore,
+poor readability, rather than for low test coverage [8, 92]. The poor   the LLMs with a strong code comprehension ability could provide
+readability of traditional techniques is also the initial motivation    informative descriptions, thereby improving the eﬀectiveness of
+ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA                                                                             Yang et al.
+
+
+     Table 5: Eﬀectiveness of Open-source LLMs with Diﬀerent In-Context Learning Methods in Terms of Test Coverage.
+
+                                               CL-7B       CL-13B     PD-34B       DC-7B      DC-33B
+                                   Model
+                                             𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩 𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩 𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩 𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩 𝑪𝒐𝒗 𝑳 𝑪𝒐𝒗 𝑩
+                                  Base       28.02 25.34 21.62 20.73 37.45 32.35 29.02 23.77 32.72 29.26
+                                  + CoT      -3.04 -2.79 -6.45 -4.57 -0.02 -2.06 +2.72 +4.03 +0.69 +0.48
+                                  + RAG      -5.57 -5.85 -6.03 -5.10 -9.28 -8.78 -5.80 -4.44 -3.34 -5.72
+
+
+subsequent unit test generation. However, the LLMs with a rela-             Table 6: Defect Detection Eﬀectiveness of Studied LLMs.
+tively weak code comprehension ability may not describe the fo-
+cal method correctly, eventually leading to the eﬀectiveness decre-         Models CL-7B CL-13B PD-34B DC-7B DC-33B GPT-4
+ment. Through our manual analysis, the studied DeepSeek-Coder
+                                                                             NTD        41       28        63        60        62       65
+models indeed provide more accurate and informative descriptions
+                                                                             NDD        12       15        30        24        33       39
+than the studied CodeLlama models, thereby achieving better eﬀec-
+tiveness in terms of test coverage. This indicates the superiority of
+the former in the code comprehension ability, which is also aligned
+with Finding 3. Hence, it is important to determine whether incor-        3.4 Defect Detection Ability
+porating CoT to guide the used LLM is really helpful through a            We further investigated the eﬀectiveness of each LLM-based unit
+preliminary study in advance.                                             test generation technique in terms of defect detection by execut-
+                                                                          ing its generated unit tests on the corresponding faulty versions.
+                                                                          As shown before, a number of generated unit tests by each LLM
+  Finding 6: CoT is helpful to improve the eﬀectiveness of both           cannot be compiled successfully, causing that there are no valid
+  DeepSeek-Coder models in unit test generation while it does             unit tests for many defects. These defects cannot be detected at
+  not beneﬁt the three CodeLlama models due to the stronger               all. Therefore, for each LLM, we ﬁltered out such defects in this
+  ability of the former in code comprehension.                            experiment and reported the number of remaining defects that are
+                                                                          detectable in Row “NTD” (short for the number of testable defects
+                                                                          that have at least test classes compiled successfully on the corre-
+   From Table 5, incorporating RAG makes all studied open-source          sponding version) in Table 6. From this row, 87.13% of defects can-
+LLMs perform worse in terms of both line coverage and branch cov-         not be detected due to the compilation issue on average across all
+erage. For example, the decrement of 𝐶𝑜𝑣 𝐿 and 𝐶𝑜𝑣 𝐵 for CL-7B is         studied LLMs, suggesting that improving the validity of generated
+5.57% and 5.85%, respectively. We extensively analyzed the reason         unit tests by LLMs is critical to improve the defect detection ability
+behind the negative conclusion, and found that there is a signiﬁ-         of them.
+cant gap between the unit tests retrieved by the RAG method and               We then reported the number of detected defects by each LLM in
+those that LLMs excel at generating, which causes the informa-            the row “NDD” in Table 6. We further conﬁrmed the larger-scale
+tion that LLMs learn from the retrieved examples is limited (even         LLMs (including GPT-4, PD-34B, and DC-33B) detected more de-
+disruptive). For example, the average length of the retrieved unit        fects than the remaining smaller-scale LLMs. Among the detected
+tests is 12.10 lines of code (LOC) while that of the generated unit       defects, there are two types of defect-triggering reasons: run-time
+tests by LLMs is 5.60 LOC. Also, the average number of retrieved          exceptions and assertion errors. For example, DC-7B, PD-34B, DC-
+unit tests per focal method (i.e., 2.41) is much smaller than that of     33B, and GPT-4 detected 6, 16, 17, and 19 defects triggered by as-
+the generated unit tests by LLMs (i.e., 6.94). That is, the current re-   sertion errors, respectively, and 18, 14, 16, and 20 defects triggered
+trieval method, which is restricted within the project following the      by run-time exceptions. On the other hand, all defects detected by
+practice of code generation [34, 77], is not suﬃcient. This indicates     CL-7B and CL-13B were triggered by run-time exceptions, show-
+that setting a high-quality database speciﬁc to the task of unit test     ing their relatively weaker ability in generating proper assertions.
+generation could be helpful to improve the eﬀectiveness of RAG in         Despite these ﬁndings, the percentage of detected defects is still
+enhancing LLM-based unit test generation.                                 small, ranging from 29.27% to 60.00%. This indicates the weak de-
+                                                                          fect detection ability of LLM-based unit test generation.
+
+  Finding 7: The RAG method adapted from code generation                   Finding 8: The defect detection ability of LLM-based unit test
+  is ineﬀective to enhance LLMs in unit test generation. This is           generation is weak, mainly caused by the low validity of gener-
+  mainly caused by the large gap between unit tests retrieved              ated unit tests. On average, for 87.13% defects, LLMs do not gen-
+  and those that LLMs excel at generating, indicating the neces-           erate any valid unit tests. Among the remaining defects, only
+  sity of setting a high-quality retrieval database speciﬁc to unit        47.28% defects are exactly detected.
+  test generation.
+                                                                             We then analyzed why just a few defects are detected among all
+                                                                          detectable ones in order to further understand the challenges for
+On the Evaluation of Large Language Models in Unit Test Generation                          ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA
+
+
+LLM-based unit test generation in defect detection. Speciﬁcally, fol-     helpful to reduce this kind of threats to some degree. Actually, the
+lowing the PIE theory in software engineering [75], we designed           current experiments on the used benchmark and LLMs have spent
+three reasons why these defects were not detected by generated            3,000 A100 GPU hours, and our experimental design balances con-
+tests. Then, four authors with over four years of Java programming        clusion generalizability and evaluation costs well.
+experience manually analyzed and independently labeled each de-              The threats to construct validity mainly lie in our studied code
+fect. The Cohen’s Kappa score is 0.95, indicating the labeling qual-      features, ICL methods, randomness, and potential data leakage. Re-
+ity to some degree. Then, all the inconsistencies in labeling were        garding the former, we collected all the code features that have
+discussed together to reach a consensus. Table 7 presents the num-        been used in the existing studies on LLM-based testing [8, 74, 88,
+ber of undetected defects caused by each reason for each LLM.             92], demonstrating the comprehensiveness of our investigation. How-
+   (1) Insuﬃcient test coverage refers to that all the generated          ever, due to the evaluation costs, it is unaﬀordable to investigate
+unit tests by an LLM do not reach the faulty code. From Table 7,          the eﬀectiveness of all combinations of these code features. Instead,
+there are 3.61%, 1.81%, 6.63%, 6.02%, 5.42% of undetected defects         we performed an ablation experiment by respectively removing
+caused by this reason for CL-7B, CL-13B, PD-34B, DC-7B, and DC-           one code feature from the whole set to investigate the contribu-
+33B, respectively. (2) Missing speciﬁc inputs refers to that there        tion. Therefore, we may not ﬁnd the globally optimal setting for
+are some unit tests executing the faulty code but the inputs spec-        each studied LLM for the experiments in Sections 3.2, 3.3, and 3.4,
+iﬁed in the unit tests cannot trigger the defect. That is, the trig-      but selected the locally optimal setting from our ablation experi-
+gering of the defect requires some speciﬁc inputs (such as setting        ment.
+the real part of a complex number to NaN for triggering the de-              Regarding the ICL methods, we investigated two most widely-
+fect in Math-53). From Table 7, there are 13.25%, 6.02%, 12.65%,          studied methods, i.e., CoT and RAG, in the literature [41, 81]. Ac-
+15.66%, 12.05% , 14.46% of undetected defects caused by this reason       cording to the characteristics of unit test generation, we adapted
+for CL-7B, CL-13B, PD-34B, DC-7B, DC-33B, and GPT-4, respec-              them to ﬁt our task as introduced in Section 2.4. The current adap-
+tively. (3) Improper assertions refer to that the defect-triggering       tations are reasonable but may be not the best strategies in unit
+inputs have been speciﬁed in some unit tests, but no proper asser-        test generation. In the future, we will explore more usages of CoT,
+tions are produced to capture this defect. For example, the defect in     RAG, and some other ICL methods (e.g., self-repairing [88], self-
+Compress-34 lies in missing to ﬂush the input stream after closing        consistency [78], prompt tuning [39]) in LLM-based unit test gener-
+a ﬁle. However, the unit tests generated by PD-34B do not con-            ation for more suﬃcient investigation. To reduce the threat of ran-
+tain the assertions checking whether the corresponding attribute          domness from LLMs, we set the temperature to zero, which is the
+is null, but just check whether the ﬁle is closed. From Table 7,          most widely-used setting to increase LLMs’ determinacy [19, 57].
+there are 0.60%, 0.60%, 1.20% of undetected defects caused by this        Same as the existing studies on LLMs using the Defects4J bench-
+reason for CL-7B, PD-34B, and GPT-4, respectively.                        mark [56, 85, 88], there is also a potential data leakage threat in
+                                                                          our study. Following the existing practice [65, 85], we compared
+    Finding 9: Regarding the undetected defects with valid unit           LLM-generated unit tests with the original unit tests equipped by
+    tests generated by LLMs, the main reason lies in missing to           this benchmark. We found that there is no exact match between
+    produce the speciﬁc inputs required to trigger defects, resulting     them, and even the number of LLM-generated unit tests (3.70 on
+    in 74.99% of undetected defects on average.                           average) is largely diﬀerent with that of original unit tests (2.41).
+                                                                          This helps reduce the inﬂuence of this threat to some degree. In
+                                                                          the future, we will extend our study to more recent benchmarks,
+4     THREATS TO VALIDITY                                                 such as GitBug-Java [69].
+The threats to internal validity mainly lie in our experimental scripts
+and the usages of LLMs. To reduce the former threat, two authors
+have carefully checked our implementations through code review            5 IMPLICATIONS
+and testing. We also released our implementations at our project          Based on our ﬁndings from the study, we summarize a series of im-
+homepage for replication. To reduce the latter threat, we used pub-       plications, which could suggest better practice of leveraging LLMs
+licly accessible model weights from Hugging Face adhered strictly         in unit test generation.
+to the well-documented usage guidelines for open-source models,               1 Tuning prompt design (including both description styles
+and leveraged the API services provided by OpenAI for GPT-4.              and code features) for a given LLM is important. As shown
+    The threats to external validity mainly lie in our used bench-        in Section 3.1, both description styles and code features signiﬁ-
+mark and LLMs. In our study, we adopted the Defects4J benchmark           cantly aﬀect the eﬀectiveness of LLM-based unit test generation.
+for evaluation, which has been widely used in the existing studies        Improper prompts can even decrease eﬀectiveness in terms of both
+on software testing and debugging [27, 28, 47, 86]. Speciﬁcally, we       CSR and test coverage. This suggests that, for a given LLM, it is nec-
+collected 778 focal methods involving 413 defects from 17 projects,       essary to perform preliminary experiments to determine an opti-
+exhibiting the diversity of our evaluation data to some degree. Also,     mal prompt for unit test generation.
+we studied ﬁve open-source LLMs and the state-of-the-art com-                 2 Removing useless information from code features helps
+mercial LLM (i.e., GPT-4). As presented in Section 2.2, we selected       balance prompt content and space for generating unit tests.
+these LLMs by considering diverse architectures and model sizes,          According to Section 3.1, there is a trade-oﬀ between incorporating
+as well as their eﬀectiveness on code-related tasks highlighted in        more information and leaving suﬃcient space for generating unit
+the leaderboard hosted on Hugging Face. The above diversity is            tests, particularly for 𝐹𝐶𝑚 . Directly removing 𝐹𝐶𝑚 is somewhat
+ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA                                                                                 Yang et al.
+
+
+                   Table 7: Number of Defects that Valid Unit Tests Failed to Detect Categorized by Three Reasons.
+
+                             Model                          CL-7B   CL-13B    PD-34B      DC-7B      DC-33B      GPT-4
+                             Insuﬃcient Test Coverage        6        3           11         10         9            0
+                             Missing Speciﬁc Inputs          22       10          21         26         20          24
+                             Improper Assertions             1        0           1           0         0            2
+
+
+coarse-grained and may result in the loss of necessary informa-              due to the absence of speciﬁc defect-triggering inputs. This is un-
+tion for constructing valid unit tests. Therefore, conducting static         derstandable as LLMs tend to produce more common inputs, given
+analysis to remove the methods in 𝐹𝐶𝑚 that do not have depen-                their inherent characteristics. Therefore, it could be promising to
+dencies to the focal method is a promising method to achieve this            design mutation strategies to transform a generated unit test into a
+balance.                                                                     mutated one that includes the defect-triggering input. Such muta-
+    3 Empirically selecting a proper LLM is necessary, in-                   tion strategies could involve (1) mutating an input to its boundary
+stead of relying on the best LLM according to experience in                  value, and (2) mutating an input to a value found in historically
+other tasks. As shown in Section 3.2, larger-scale LLMs gener-               defect-triggering tests, which can be obtained from bug reposito-
+ally perform better than smaller-scale ones, a conclusion consis-            ries.
+tent across unit test generation and other code-related tasks. How-              7 Supervised ﬁne-tuning (SFT) of open-source LLMs by
+ever, for LLMs with similar scales, the best one may vary depend-            incorporating unit test generation data may fundamentally
+ing on the speciﬁc task. This variability arises because open-source         improve eﬀectiveness. The overall eﬀectiveness of directly ap-
+LLMs are based on diﬀerent foundation models and ﬁne-tuned on                plying existing open-source LLMs to the task of unit test gener-
+diﬀerent datasets, thus exhibiting diﬀerent capabilities across var-         ation is unsatisfactory based on our results. This deﬁciency may
+ious tasks. Therefore, to generate high-quality tests, it is crucial to      stem from these LLMs’ limited knowledge acquisition regarding
+evaluate several LLMs rather than simply using the one deemed                this task during the pre-training process. Therefore, conducting
+best in other tasks.                                                         SFT speciﬁc to the task of unit test generation could be beneﬁcial,
+    4 Reﬁning the use of ICL methods speciﬁc to unit test                    representing a promising direction alongside the construction of a
+generation is essential. As shown in Section 3.3, the eﬀective-              high-quality corpus tailored to this task.
+ness of CoT varies due to diﬀerent LLMs’ code comprehension
+abilities, which signiﬁcantly aﬀects their understanding of focal
+methods and, consequently, the eﬀectiveness of unit test genera-             6 RELATED WORK
+tion. Speciﬁcally, applying CoT to LLMs with weak code compre-
+hension abilities can even decrease test coverage. Therefore, it is          Unit Test Generation. In the literature, a signiﬁcant body of re-
+advisable to conduct preliminary studies to determine if employ-             search has been dedicated to the development of automated unit
+ing CoT beneﬁts the given LLM. Additionally, the existing RAG                test generation techniques [8, 10, 14, 43, 66, 68, 74, 88, 89, 92]. They
+method used in code generation is ineﬀective for unit test gener-            can be divided into two main categories: traditional techniques and
+ation, primarily due to the signiﬁcant gap between retrieved unit            DL-based techniques.
+tests and those generated by LLMs. This highlights the necessity of             Traditional techniques adopted a variety of methods to solve
+constructing a high-quality retrieval database speciﬁc to unit test          this problem, including symbolic execution [62, 87], search-based
+generation.                                                                  optimization [20], model checking [18, 21]. For instance, one of the
+    5 Designing post-processing strategies to ﬁx invalid unit                most inﬂuential unit test generation techniques, i.e., Evosuite [20],
+tests can help mitigate the inﬂuence of LLMs’ hallucination.                 treats this problem as a search problem and leverages the evolu-
+Our study reveals that a signiﬁcant percentage of unit tests gen-            tionary search algorithm to ﬁnd the tests achieving high code cov-
+erated by LLMs cannot be compiled successfully, thereby limiting             erage. Although they can generate unit tests with reasonable cov-
+their eﬀectiveness in terms of both test coverage and defect de-             erage, they often lack readability and maintainability compared to
+tection. We analyzed the major error types for these invalid unit            manually written ones. As a result, it is challenging for developers
+tests caused by LLMs’ hallucination, and found that it is possi-             to use these automatically generated tests in practice directly.
+ble to design post-processing rules to ﬁx these errors. For exam-               DL-based techniques exploited the power of pre-trained language
+ple, extracting the class inheritance relationship can help address          models to unit test generation. They often treat this problem as a
+abstract instantiation errors. Additionally, we can follow existing          neural machine translation problem, which inputs the target meth-
+methods [88, 92] to instruct LLMs to ﬁx these errors by feeding              ods and outputs the unit tests. For instance, Tufano et al. [74] pro-
+error messages back to them.                                                 posed AthenaTest, which leverages the pre-trained BART Trans-
+    6 Designing mutation strategies for the inputs speciﬁed                  former [40] to generate unit tests about the given methods. How-
+in LLM-generated unit tests is helpful in improving defect                   ever, the early techniques used smaller general-purpose pre-trained
+detection ability. As demonstrated in Section 3.4, many detectable           language models, thereby limiting their eﬀectiveness.
+defects remain undiscovered by valid unit tests generated by LLMs               Recently, with the huge impact of ChatGPT, researchers explored
+                                                                             the eﬀectiveness of LLMs in generating unit tests. Speciﬁcally, Yuan
+                                                                             et al. [92] proposed ChatTester that iteratively generates unit tests
+On the Evaluation of Large Language Models in Unit Test Generation                                     ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA
+
+
+based on conversations with ChatGPT. Lemieux et al. [38] pro-             method for test assertion generation, and Sun et al. [71] further de-
+posed CODAMOSA that combines evolutionary search with CodeX [11] veloped EDITAS to improve IR-based test assertion generation by
+by exploiting code understanding ability of CodeX to overcome the         considering the diﬀerences between the retrieved and target “focal-
+low rate of generating coverage-improving tests with traditional          test” method pairs. In our study, we use LLMs to generate complete
+methods. Li et al. [44] proposed using the subtle diﬀerences be-          unit tests, including both test preﬁxes and test oracles. When mea-
+tween ﬁxed and buggy code versions to guide ChatGPT to gen-               suring the eﬀectiveness of generated unit tests (e.g., validity and
+erate failure-inducing tests. Schafer et al. [65] proposed TestPilot,     defect-detection eﬀectiveness), we also considered both test pre-
+which incorporates API documentation and GPT-3.5 for unit test            ﬁxes and oracles.
+generation. These LLM-based techniques show signiﬁcant superi-
+ority over earlier DL-based ones. However, they are all based on          7 CONCLUSION
+closed-source LLMs, resulting in a lack of transparency and repro-
+                                                                          This work conducted an comprehensive evaluation of ﬁve open-
+ducibility. Recently, Yang et al. [89] proposed TELPA, which aims
+                                                                          source LLMs for unit test generation. We investigated several as-
+to improve the eﬀectiveness of LLMs in unit test generation by in-
+                                                                          pects: the inﬂuence of diﬀerent prompt designs, the comparison ef-
+tegrating them with bidirectional method invocation analysis and
+                                                                          fectiveness among open-source LLMs, the commercial closed-source
+counterexample sampling. However, their evaluation was limited
+                                                                          LLM (i.e., GPT-4) and the traditional method (i.e., Evosuite), the in-
+to PD-34B, and it remains unclear how recent open-source LLMs
+                                                                          ﬂuence of in-context learning on LLM-based unit tests generation,
+perform in unit test generation.
+                                                                          and the defect detection ability of LLM-generated unit tests. Our
+Empirical Study on evaluating LLMs in Code-Related Tasks.
+                                                                          ﬁndings ﬁrst point out that prompt design is crucial to the eﬀec-
+With the rapid development in LLMs, there are multiple studies in-
+                                                                          tiveness of LLMs in unit test generation, and suggest that it is bet-
+vestigating the eﬀectiveness of LLMs in code-related tasks [12, 17,
+                                                                          ter to align the description style with the training data and choose
+22, 26, 45, 46, 50, 52–55, 60, 70, 76, 85]. In particular, there are some
+                                                                          code features considering the LLMs’ code comprehension ability
+empirical studies on LLM-based unit test generation [14, 65, 68, 88,
+                                                                          and the prompt length. Second, our results indicate that the con-
+92]. For example, Yuan et al. [92] investigated the eﬀectiveness of
+                                                                          clusions drawn from other tasks do not necessarily generalize to
+ChatGPT in terms of the correctness, suﬃciency, readability and
+                                                                          unit test generation, especially in identifying the best open-source
+usability of generated unit tests in unit test generation. Siddiq et
+                                                                          LLM speciﬁc to the task. However, all studied LLMs (including the
+al. [68] investigated the eﬀectiveness of GPT-3.5 and Codex in unit
+                                                                          best GPT-4) still underperform Evosuite, primarily due to the sig-
+test generation. Schafer et al. [65] investigated the eﬀectiveness of
+                                                                          niﬁcant percentage of invalid tests caused by hallucination. Our
+GPT-3.5 in generating unit tests for Javascript language..
+                                                                          further analysis suggests that eﬀective post-processing could help
+    However, these existing studies mostly relied on ﬁxed prompt-
+                                                                          mitigate this problem. Third, we found that directly adapting ICL
+ing strategies based on closed-source LLMs, neglecting the power
+                                                                          techniques from other tasks does not improve the eﬀectiveness of
+of advanced open-source LLMs and the inﬂuence of various prompt-
+                                                                          unit tests generation, requiring special design for the use of ICL
+ing factors (such as prompt design and ICL methods). In our study,
+                                                                          methods according to the characteristics of the task. Finally, we
+we focus on open-source LLMs with extensive consideration of
+                                                                          found that the defect detection ability of LLM-generated unit tests
+these factors, and performed the ﬁrst study to demonstrate their
+                                                                          is limited, primarily due to their low syntactic validity and the lack
+eﬀectiveness. Our ﬁndings provide a series of actionable sugges-
+                                                                          of speciﬁc input for triggering the defects. Our analysis indicates
+tions to LLM-based unit test generation.
+                                                                          that designing eﬀective mutation strategies for the inputs could
+    Furthermore, there are some empirical studies on evaluating
+                                                                          further improve the defect detection eﬀectiveness.
+LLMs in addressing other code-related tasks. For example, Du et
+al. [17] conducted experiments to investigate the eﬀectiveness of
+LLMs in class-level code generation. Nam et al. [54] compared the         ACKNOWLEDGMENTS
+code understanding ability of LLMs when using them to help de-            We gratefully acknowledge the ﬁnancial support provided by the
+velopers understand the project. Sun et al. [70] conducted exper-         National Natural Science Foundation of China (Grant Nos. 62322208,
+iments to investigate the eﬀectiveness of ChatGPT in code sum-            62202040, 62232001, 12411530122) and CCF-Huawei Populus Grove
+marization. Facundo et al. [53] summarized three types of oracles         Fund which made this research possible. We would like to express
+and threats that arise from automatically generating oracles using        our sincere appreciation to the anonymous reviewers for their con-
+LLMs. Researchers [31, 85] conducted experiments on LLMs to in-           structive suggestions, which have greatly improved the quality of
+vestigate their eﬀectiveness in automated program repair. Niu et          this paper.
+al. [55] conducted a comprehensive investigation on the eﬀective-
+ness of pre-trained models in six code-related tasks. Diﬀerent from
+                                                                          REFERENCES
+them, our work targets the task of unit test generation.
+                                                                           [1] Accessed: 2023. PyTorch. https://pytorch.org/.
+Test Oracle Generation Due to the importance of test oracles,              [2] Accessed: 2023. Transformers. https://github.com/huggingface/transformers/.
+numerous research eﬀorts have been dedicated to automatically              [3] Accessed: 2023. Tree-sitter. https://tree-sitter.github.io/tree-sitter/.
+                                                                           [4] Accessed:     2024.                  Big      Code       Models       Leaderboard.
+generating test oracles for test cases [16, 71, 80, 90]. For example,          https://huggingface.co/spaces/bigcode/bigcode-models-leaderboard.
+Watson et al. [80] proposed ATLAS, which adopted a bidirectional           [5] Accessed: 2024. HomePage. https://github.com/LeonYang95/LLM4UT.
+RNN for test assertion generation. Dinella et al. [16] introduced          [6] Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya, Flo-
+                                                                               rencia Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman, Shya-
+TOGA to infer exceptional and assertion test oracles based on the              mal Anadkat, et al. 2023. Gpt-4 technical report. arXiv preprint arXiv:2303.08774
+context of the focal method. Yu et al. [90] ﬁrst proposed an IR-based          (2023).
+ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA                                                                                                             Yang et al.
+
+
+ [7] Lakshya A. Agrawal, Aditya Kanade, Navin Goyal, Shuvendu K. Lahiri, and Sri-          [32] René Just, Darioush Jalali, and Michael D. Ernst. 2014. Defects4J: a database of
+     ram K. Rajamani. 2023. Monitor-Guided Decoding of Code LMs with Static Anal-               existing faults to enable controlled testing studies for Java programs. In ISSTA.
+     ysis of Repository Context. In NeurIPS.                                                    ACM, 437–440.
+ [8] Saranya Alagarsamy, Chakkrit Tantithamthavorn, and Aldeida Aleti. 2023.               [33] Sungmin Kang, Juyeon Yoon, and Shin Yoo. 2023. Large language models are few-
+     A3Test: Assertion-Augmented Automated Test Case Generation.                 CoRR           shot testers: Exploring llm-based general bug reproduction. In 2023 IEEE/ACM
+     abs/2302.10352 (2023).                                                                     45th International Conference on Software Engineering (ICSE). IEEE, 2312–2323.
+ [9] Xavier Amatriain. 2024. Prompt Design and Engineering: Introduction and Ad-           [34] Vladimir Karpukhin, Barlas Oguz, Sewon Min, Patrick S. H. Lewis, Ledell Wu,
+     vanced Methods. CoRR abs/2401.14423 (2024).                                                Sergey Edunov, Danqi Chen, and Wen-tau Yih. 2020. Dense Passage Retrieval
+[10] Shreya Bhatia, Tarushi Gandhi, Dhruv Kumar, and Pankaj Jalote. 2023. Unit                  for Open-Domain Question Answering. In EMNLP (1). Association for Compu-
+     Test Generation using Generative AI : A Comparative Performance Analysis of                tational Linguistics, 6769–6781.
+     Autogeneration Tools. CoRR abs/2312.10622 (2023).                                     [35] Nitish Shirish Keskar, Bryan McCann, Lav R. Varshney, Caiming Xiong, and
+[11] Mark Chen, Jerry Tworek, Heewoo Jun, , et al. 2021. Evaluating Large Language              Richard Socher. 2019. CTRL: A Conditional Transformer Language Model for
+     Models Trained on Code. CoRR abs/2107.03374 (2021).                                        Controllable Generation. CoRR abs/1909.05858 (2019).
+[12] Xiangping Chen, Xing Hu, Yuan Huang, He Jiang, Weixing Ji, Yanjie Jiang,              [36] Divya Kumar and Krishn Kumar Mishra. 2016. The impacts of test automation
+     Yanyan Jiang, Bo Liu, Hui Liu, Xiaochen Li, Xiaoli Lian, Guozhu Meng, Xin Peng,            on software’s cost, quality and time to market. Procedia Computer Science 79
+     Hailong Sun, Lin Shi, Bo Wang, Chong Wang, Jiayi Wang, Tiantian Wang, Jifeng               (2016), 8–15.
+     Xuan, Xin Xia, Yibiao Yang, Yixin Yang, Li Zhang, Yuming Zhou, and Lu Zhang.          [37] Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying Sheng, Lianmin Zheng,
+     [n. d.]. Deep Learning-based Software Engineering: Progress, Challenges, and               Cody Hao Yu, Joseph Gonzalez, Hao Zhang, and Ion Stoica. 2023. Eﬃcient mem-
+     Opportunities. SCIENCE CHINA Information Sciences ([n. d.]), –.                            ory management for large language model serving with pagedattention. In Pro-
+[13] Jacob Cohen. 2013. Statistical power analysis for the behavioral sciences. Rout-           ceedings of the 29th Symposium on Operating Systems Principles. 611–626.
+     ledge.                                                                                [38] Caroline Lemieux, Jeevana Priya Inala, Shuvendu K Lahiri, and Siddhartha Sen.
+[14] Arghavan Moradi Dakhel, Amin Nikanjam, Vahid Majdinasab, Foutse Khomh,                     2023. CODAMOSA: Escaping coverage plateaus in test generation with pre-
+     and Michel C. Desmarais. 2024. Eﬀective test generation using pre-trained Large            trained large language models. In International conference on software engineer-
+     Language Models and mutation testing. Inf. Softw. Technol. 171 (2024), 107468.             ing (ICSE).
+[15] DeepSeek. 2023.             DeepSeek Coder: Let the Code Write Itself.                [39] Brian Lester, Rami Al-Rfou, and Noah Constant. 2021. The Power of Scale for
+     https://github.com/deepseek-ai/DeepSeek-Coder.                                             Parameter-Eﬃcient Prompt Tuning. In EMNLP (1). Association for Computa-
+[16] Elizabeth Dinella, Gabriel Ryan, Todd Mytkowicz, and Shuvendu K Lahiri. 2022.              tional Linguistics, 3045–3059.
+     Toga: A neural method for test oracle generation. In Proceedings of the 44th In-      [40] Mike Lewis, Yinhan Liu, Naman Goyal, Marjan Ghazvininejad, Abdelrahman
+     ternational Conference on Software Engineering. 2130–2141.                                 Mohamed, Omer Levy, Ves Stoyanov, and Luke Zettlemoyer. 2019. Bart: Denois-
+[17] Xueying Du, Mingwei Liu, Kaixin Wang, , et al. 2024. Evaluating Large Language             ing sequence-to-sequence pre-training for natural language generation, transla-
+     Models in Class-Level Code Generation. In ICSE. ACM, 81:1–81:13.                           tion, and comprehension. arXiv preprint arXiv:1910.13461 (2019).
+[18] Eduard Paul Enoiu, Adnan Causevic, Thomas J. Ostrand, Elaine J. Weyuker,              [41] Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir
+     Daniel Sundmark, and Paul Pettersson. 2016. Automated test generation using                Karpukhin, Naman Goyal, Heinrich Küttler, Mike Lewis, Wen-tau Yih, Tim Rock-
+     model checking: an industrial evaluation. Int. J. Softw. Tools Technol. Transf. 18,        täschel, et al. 2020. Retrieval-augmented generation for knowledge-intensive nlp
+     3 (2016), 335–353.                                                                         tasks. Advances in Neural Information Processing Systems 33 (2020), 9459–9474.
+[19] Angela Fan, Beliz Gokkaya, Mark Harman, Mitya Lyubarskiy, Shubho Sengupta,            [42] Jia Li, Yongmin Li, Ge Li, and Zhi Jin. 2023. Structured Chain-of-Thought Prompt-
+     Shin Yoo, and Jie M. Zhang. 2023. Large Language Models for Software Engi-                 ing for Code Generation. CoRR (2023).
+     neering: Survey and Open Problems. In ICSE-FoSE. IEEE, 31–53.                         [43] Kefan Li and Yuan Yuan. 2024. Large Language Models as Test Case Generators:
+[20] Gordon Fraser and Andrea Arcuri. 2011. EvoSuite: automatic test suite genera-              Performance Evaluation and Enhancement. CoRR abs/2404.13340 (2024).
+     tion for object-oriented software. In SIGSOFT FSE. ACM, 416–419.                      [44] Tsz-On Li, Wenxi Zong, Yibo Wang, Haoye Tian, Ying Wang, Shing-Chi Cheung,
+[21] Angelo Gargantini and Constance L. Heitmeyer. 1999. Using Model Checking to                and Jeﬀ Kramer. 2023. Nuances are the key: Unlocking chatgpt to ﬁnd failure-
+     Generate Tests from Requirements Speciﬁcations. In ESEC / SIGSOFT FSE (Lec-                inducing tests with diﬀerential prompting. In 2023 38th IEEE/ACM International
+     ture Notes in Computer Science, Vol. 1687). Springer, 146–162.                             Conference on Automated Software Engineering (ASE). IEEE, 14–26.
+[22] Qi Guo, Junming Cao, Xiaofei Xie, Shangqing Liu, Xiaohong Li, Bihuan Chen,            [45] Yichen Li, Yintong Huo, Zhihan Jiang, Renyi Zhong, Pinjia He, Yuxin Su, and
+     and Xin Peng. 2024. Exploring the potential of chatgpt in automated code re-               Michael R Lyu. 2023. Exploring the eﬀectiveness of llms in automated logging
+     ﬁnement: An empirical study. In Proceedings of the 46th IEEE/ACM International             generation: An empirical study. arXiv preprint arXiv:2307.05950 (2023).
+     Conference on Software Engineering. 1–13.                                             [46] Zongjie Li, Chaozheng Wang, Pingchuan Ma, Chaowei Liu, Shuai Wang,
+[23] Stefan Hackmann, Haniyeh Mahmoudian, Mark Steadman, and Michael                            Daoyuan Wu, Cuiyun Gao, and Yang Liu. 2024. On extracting specialized code
+     Schmidt. 2024. Word Importance Explains How Prompts Aﬀect Language Model                   abilities from large language models: A feasibility study. In Proceedings of the
+     Outputs. CoRR abs/2403.03028 (2024).                                                       IEEE/ACM 46th International Conference on Software Engineering. 1–13.
+[24] Marc Hoﬀmann and Michael Ernst. 2021. JaCoCo: Java Code Coverage Library.             [47] Jingjing Liang, Ruyi Ji, Jiajun Jiang, Shurui Zhou, Yiling Lou, Yingfei Xiong, and
+     https://www.jacoco.org. Accessed: 2024-05-19.                                              Gang Huang. 2021. Interactive patch ﬁltering as debugging aid. In 2021 IEEE
+[25] Ari Holtzman, Jan Buys, Li Du, Maxwell Forbes, and Yejin Choi. 2020. The Cu-               International Conference on Software Maintenance and Evolution (ICSME). IEEE,
+     rious Case of Neural Text Degeneration. In ICLR. OpenReview.net.                           239–250.
+[26] Xinyi Hou, Yanjie Zhao, Yue Liu, Zhou Yang, Kailong Wang, Li Li, Xiapu Luo,           [48] Fang Liu, Yang Liu, Lin Shi, Houkun Huang, Ruifeng Wang, Zhen Yang, and Li
+     David Lo, John C. Grundy, and Haoyu Wang. 2023. Large Language Models for                  Zhang. 2024. Exploring and Evaluating Hallucinations in LLM-Powered Code
+     Software Engineering: A Systematic Literature Review. CoRR abs/2308.10620                  Generation. arXiv preprint arXiv:2404.00971 (2024).
+     (2023).                                                                               [49] Hanmeng Liu, Zhiyang Teng, Leyang Cui, Chaoli Zhang, Qiji Zhou, and Yue
+[27] Jiajun Jiang, Ran Wang, Yingfei Xiong, Xiangping Chen, and Lu Zhang. 2019.                 Zhang. 2023. Logicot: Logical chain-of-thought instruction-tuning data collec-
+     Combining spectrum-based fault localization and statistical debugging: An em-              tion with gpt-4. arXiv preprint arXiv:2305.12147 (2023).
+     pirical study. In 2019 34th IEEE/ACM International Conference on Automated Soft-      [50] Jiawei Liu, Chunqiu Steven Xia, Yuyao Wang, and Lingming Zhang. 2023. Is
+     ware Engineering (ASE). IEEE, 502–514.                                                     Your Code Generated by ChatGPT Really Correct? Rigorous Evaluation of Large
+[28] Jiajun Jiang, Yumeng Wang, Junjie Chen, Delin Lv, and Mengjiao Liu. 2023.                  Language Models for Code Generation. arXiv preprint arXiv:2305.01210 (2023).
+     Variable-Based Fault Localization via Enhanced Decision Tree. ACM Transac-            [51] Kui Liu, Anil Koyuncu, Dongsun Kim, and Tegawendé F Bissyandé. 2019. Tbar:
+     tions on Software Engineering and Methodology 33, 2 (2023), 1–32.                          Revisiting template-based automated program repair. In Proceedings of the 28th
+[29] Jiajun Jiang, Yingfei Xiong, and Xin Xia. 2019. A manual inspection of defects4j           ACM SIGSOFT international symposium on software testing and analysis. 31–42.
+     bugs and its implications for automatic program repair. Science china information     [52] Antonio Mastropaolo, Luca Pascarella, Emanuela Guglielmi, Matteo Ciniselli, Si-
+     sciences 62 (2019), 1–16.                                                                  mone Scalabrino, Rocco Oliveto, and Gabriele Bavota. 2023. On the robustness
+[30] Jiajun Jiang, Yingfei Xiong, Hongyu Zhang, Qing Gao, and Xiangqun Chen.                    of code generation techniques: An empirical study on github copilot. In 2023
+     2018.      Shaping program repair space with existing patches and simi-                    IEEE/ACM 45th International Conference on Software Engineering (ICSE). IEEE,
+     lar code. In Proceedings of the 27th ACM SIGSOFT International Sympo-                      2149–2160.
+     sium on Software Testing and Analysis (Amsterdam, Netherlands) (ISSTA                 [53] Facundo Molina and Alessandra Gorla. 2024. Test Oracle Automation in the era
+     2018). Association for Computing Machinery, New York, NY, USA, 298–309.                    of LLMs. arXiv preprint arXiv:2405.12766 (2024).
+     https://doi.org/10.1145/3213846.3213871                                               [54] Daye Nam, Andrew Macvean, Vincent Hellendoorn, Bogdan Vasilescu, and Brad
+[31] Shengbei Jiang, Jiabao Zhang, Wei Chen, Bo Wang, Jianyi Zhou, and Jie Zhang.               Myers. 2024. Using an llm to help with code understanding. In Proceedings of
+     2024. Evaluating Fault Localization and Program Repair Capabilities of Exist-              the IEEE/ACM 46th International Conference on Software Engineering. 1–13.
+     ing Closed-Source General-Purpose LLMs. In Proceedings of the 1st International       [55] Changan Niu, Chuanyi Li, Vincent Ng, Dongxiao Chen, Jidong Ge, and Bin Luo.
+     Workshop on Large Language Models for Code. 75–78.                                         2023. An Empirical Comparison of Pre-Trained Models of Source Code. In ICSE.
+On the Evaluation of Large Language Models in Unit Test Generation                                               ASE ’24, October 27-November 1, 2024, Sacramento, CA, USA
+
+
+     IEEE, 2136–2148.                                                                     [73] Hugo Touvron, Louis Martin, Kevin Stone, et al. 2023. Llama 2: Open Foundation
+[56] Wendkûuni C. Ouédraogo, Laura Plein, Abdoul Kader Kaboré, Andrew Habib,                   and Fine-Tuned Chat Models. CoRR abs/2307.09288 (2023).
+     Jacques Klein, David Lo, and Tegawendé F. Bissyandé. 2023. Enriching Auto-           [74] Michele Tufano, Dawn Drain, Alexey Svyatkovskiy, Shao Kun Deng, and Neel
+     matic Test Case Generation by Extracting Relevant Test Inputs from Bug Reports.           Sundaresan. 2020. Unit Test Case Generation with Transformers. CoRR
+     CoRR abs/2312.14898 (2023).                                                               abs/2009.05617 (2020).
+[57] Shuyin Ouyang, Jie M. Zhang, Mark Harman, and Meng Wang. 2023. LLM is                [75] Jeﬀrey M. Voas. 1992. PIE: A Dynamic Failure-Based Technique. IEEE Trans.
+     Like a Box of Chocolates: the Non-determinism of ChatGPT in Code Generation.              Software Eng. 18, 8 (1992), 717–727.
+     CoRR abs/2308.02828 (2023).                                                          [76] Junjie Wang, Yuchao Huang, Chunyang Chen, Zhe Liu, Song Wang, and Qing
+[58] Julie Pallant. 2020. SPSS survival manual: A step by step guide to data analysis          Wang. 2024. Software Testing With Large Language Models: Survey, Landscape,
+     using IBM SPSS. Routledge.                                                                and Vision. IEEE Trans. Software Eng. 50, 4 (2024), 911–936.
+[59] Fabio Palomba, Dario Di Nucci, Annibale Panichella, Rocco Oliveto, and Andrea        [77] Weishi Wang, Yue Wang, Shaﬁq Joty, and Steven CH Hoi. 2023. Rap-gen:
+     De Lucia. 2016. On the diﬀusion of test smells in automatically generated test            Retrieval-augmented patch generation with codet5 for automatic program re-
+     code: An empirical study. In 2016 IEEE/ACM 9th International Workshop on                  pair. In Proceedings of the 31st ACM Joint European Software Engineering Confer-
+     Search-Based Software Testing (SBST). IEEE, 5ś14 (2016).                                  ence and Symposium on the Foundations of Software Engineering. 146–158.
+[60] Rangeet Pan, Ali Reza Ibrahimzada, Rahul Krishna, Divya Sankar, Lam-                 [78] Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc V. Le, Ed H. Chi, Sharan
+     bert Pouguem Wassi, Michele Merler, Boris Sobolev, Raju Pavuluri, Saurabh                 Narang, Aakanksha Chowdhery, and Denny Zhou. 2023. Self-Consistency Im-
+     Sinha, and Reyhaneh Jabbarvand. 2024. Lost in translation: A study of bugs                proves Chain of Thought Reasoning in Language Models. In ICLR. OpenRe-
+     introduced by large language models while translating code. In Proceedings of             view.net.
+     the IEEE/ACM 46th International Conference on Software Engineering. 1–13.            [79] Yue Wang, Hung Le, Akhilesh Deepak Gotmare, Nghi DQ Bui, Junnan Li, and
+[61] Md. Rizwan Parvez, Wasi Uddin Ahmad, Saikat Chakraborty, Baishakhi Ray,                   Steven CH Hoi. 2023. Codet5+: Open code large language models for code un-
+     and Kai-Wei Chang. 2021. Retrieval Augmented Code Generation and Summa-                   derstanding and generation. arXiv preprint arXiv:2305.07922 (2023).
+     rization. In EMNLP (Findings). Association for Computational Linguistics, 2719–      [80] Cody Watson, Michele Tufano, Kevin Moran, Gabriele Bavota, and Denys Poshy-
+     2734.                                                                                     vanyk. 2020. On learning meaningful assert statements for unit test cases. In
+[62] Corina S. Pasareanu, Peter C. Mehlitz, David H. Bushnell, Karen Gundy-Burlet,             ICSE. ACM, 1398–1409.
+     Michael R. Lowry, Suzette Person, and Mark Pape. 2008. Combining unit-level          [81] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei
+     symbolic execution and system-level concrete execution for testing NASA soft-             Xia, Ed H. Chi, Quoc V. Le, and Denny Zhou. 2022. Chain-of-Thought Prompting
+     ware. In ISSTA. ACM, 15–26.                                                               Elicits Reasoning in Large Language Models. In NeurIPS.
+[63] Baptiste Rozière, Jonas Gehring, Fabian Gloeckle, Sten Sootla, Itai Gat, Xi-         [82] Yuxiang Wei, Chunqiu Steven Xia, and Lingming Zhang. 2023. Copiloting the
+     aoqing Ellen Tan, Yossi Adi, Jingyu Liu, Tal Remez, Jérémy Rapin, Artyom                  Copilots: Fusing Large Language Models with Completion Engines for Auto-
+     Kozhevnikov, Ivan Evtimov, Joanna Bitton, Manish Bhatt, Cristian Canton-                  mated Program Repair. In ESEC/SIGSOFT FSE. ACM, 172–184.
+     Ferrer, Aaron Grattaﬁori, Wenhan Xiong, Alexandre Défossez, Jade Copet, Faisal       [83] Ming Wen, Junjie Chen, Rongxin Wu, Dan Hao, and Shing-Chi Cheung. 2018.
+     Azhar, Hugo Touvron, Louis Martin, Nicolas Usunier, Thomas Scialom, and                   Context-aware patch generation for better automated program repair. In Pro-
+     Gabriel Synnaeve. 2023. Code Llama: Open Foundation Models for Code. CoRR                 ceedings of the 40th international conference on software engineering. 1–11.
+     abs/2308.12950 (2023).                                                               [84] Frank Wilcoxon. 1992. Individual comparisons by ranking methods. In Break-
+[64] Pranab Sahoo, Ayush Kumar Singh, Sriparna Saha, Vinija Jain, Samrat Mondal,               throughs in statistics: Methodology and distribution. Springer, 196–202.
+     and Aman Chadha. 2024. A Systematic Survey of Prompt Engineering in Large            [85] Chunqiu Steven Xia, Yuxiang Wei, and Lingming Zhang. 2022. Practical Program
+     Language Models: Techniques and Applications. arXiv preprint arXiv:2402.07927             Repair in the Era of Large Pre-trained Language Models. CoRR abs/2210.14179
+     (2024).                                                                                   (2022).
+[65] Max Schäfer, Sarah Nadi, Aryaz Eghbali, and Frank Tip. 2024. An Empirical            [86] Chunqiu Steven Xia, Yuxiang Wei, and Lingming Zhang. 2023. Automated pro-
+     Evaluation of Using Large Language Models for Automated Unit Test Genera-                 gram repair in the era of large pre-trained language models. In Proceedings of the
+     tion. IEEE Trans. Software Eng. 50, 1 (2024), 85–105.                                     45th International Conference on Software Engineering (ICSE 2023). Association for
+[66] Domenico Serra, Giovanni Grano, Fabio Palomba, Filomena Ferrucci, Harald C                Computing Machinery.
+     Gall, and Alberto Bacchelli. 2019. On the eﬀectiveness of manual and automatic       [87] Tao Xie, Darko Marinov, Wolfram Schulte, and David Notkin. 2005. Symstra: A
+     unit test generation: ten years later. In 2019 IEEE/ACM 16th International Confer-        Framework for Generating Object-Oriented Unit Tests Using Symbolic Execu-
+     ence on Mining Software Repositories (MSR). IEEE, 121–125.                                tion. In TACAS (Lecture Notes in Computer Science, Vol. 3440). Springer, 365–381.
+[67] Mohammed Latif Siddiq, Simantika Dristi, Joy Saha, and Joanna Santos. 2024.          [88] Zhuokui Xie, Yinghao Chen, Chen Zhi, Shuiguang Deng, and Jianwei Yin. 2023.
+     Quality Assessment of Prompts Used in Code Generation. arXiv preprint                     ChatUniTest: a ChatGPT-based automated unit test generation tool. CoRR
+     arXiv:2404.10155 (2024).                                                                  abs/2305.04764 (2023).
+[68] Mohammed Latif Siddiq, Joanna C. S. Santos, Ridwanul Hasan Tanvir, Noshin Ul-        [89] Chen Yang, Junjie Chen, Bin Lin, Jianyi Zhou, and Ziqi Wang. 2024. Enhancing
+     fat, Fahmid Al Rifat, and Vinicius Carvalho Lopes. 2023. Exploring the Eﬀective-          LLM-based Test Generation for Hard-to-Cover Branches via Program Analysis.
+     ness of Large Language Models in Generating Unit Tests. CoRR abs/2305.00418               CoRR abs/2404.04966 (2024).
+     (2023).                                                                              [90] Hao Yu, Yiling Lou, Ke Sun, Dezhi Ran, Tao Xie, Dan Hao, Ying Li, Ge Li, and
+[69] André Silva, Nuno Saavedra, and Martin Monperrus. 2024. GitBug-Java: A Re-                Qianxiang Wang. 2022. Automated Assertion Generation via Information Re-
+     producible Benchmark of Recent Java Bugs. CoRR abs/2402.02961 (2024).                     trieval and Its Integration with Deep learning. In ICSE. ACM, 163–174.
+[70] Weisong Sun, Chunrong Fang, Yudu You, Yun Miao, Yi Liu, Yuekang Li, Gelei            [91] Zhiqiang Yuan, Junwei Liu, Qiancheng Zi, Mingwei Liu, Xin Peng, and Yiling
+     Deng, Shenghan Huang, Yuchen Chen, Quanjun Zhang, Hanwei Qian, Yang Liu,                  Lou. 2023. Evaluating instruction-tuned large language models on code compre-
+     and Zhenyu Chen. 2023. Automatic Code Summarization via ChatGPT: How                      hension and generation. arXiv preprint arXiv:2308.01240 (2023).
+     Far Are We? CoRR abs/2305.12865 (2023).                                              [92] Zhiqiang Yuan, Yiling Lou, Mingwei Liu, Shiji Ding, Kaixin Wang, Yixuan Chen,
+[71] Weifeng Sun, Hongyan Li, Meng Yan, Yan Lei, and Hongyu Zhang. 2023. Revis-                and Xin Peng. 2023. No More Manual Tests? Evaluating and Improving ChatGPT
+     iting and Improving Retrieval-Augmented Deep Assertion Generation. In ASE.                for Unit Test Generation. CoRR abs/2305.04207 (2023).
+     IEEE, 1123–1135.                                                                     [93] Zhuosheng Zhang, Aston Zhang, Mu Li, and Alex Smola. 2022. Automatic chain
+[72] Yutian Tang, Zhijie Liu, Zhichao Zhou, and Xiapu Luo. 2023. ChatGPT vs SBST:              of thought prompting in large language models. arXiv preprint arXiv:2210.03493
+     A Comparative Assessment of Unit Test Suite Generation. CoRR abs/2307.00588               (2022).
+     (2023).                                                                              [94] Daniel M. Ziegler, Nisan Stiennon, Jeﬀrey Wu, Tom B. Brown, Alec Radford,
+                                                                                               Dario Amodei, Paul F. Christiano, and Geoﬀrey Irving. 2019. Fine-Tuning Lan-
+                                                                                               guage Models from Human Preferences. CoRR abs/1909.08593 (2019).
+

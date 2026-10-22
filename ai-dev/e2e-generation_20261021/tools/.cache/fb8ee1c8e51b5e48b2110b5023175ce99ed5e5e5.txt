@@ -1,0 +1,37 @@
+__HTTP 200__
+Sandbox Mode | SendGrid Docs | Twilio Skip to content Skip to navigation Skip to topbar Twilio SendGrid Docs For Developers Parsing Email Inbound Parse Inbound Email Parse Webhook Setting Up The Inbound Parse Webhook Securing your Parse Webhooks Partners Migration Migrating from a partner account Platform Partners Amazon Marketplace Building an iOS App on Windows Azure Google Jelastic Sending Email with Microsoft Azure Microsoft Azure Sending Email SendGrid v3 API Getting started with the SendGrid API Automate Adding Subusers with the SendGrid API Cross Origin Resource Sharing (CORS) cURL Examples for Common Use Cases Getting Started with Transactional Email How to Create a Subuser with the API Personalizations Email API Quickstart for Go Email API Quickstart for Node.js Email API Quickstart for PHP Email API Quickstart: How to Send Email with Python Email API Quickstart for Ruby Sandbox Mode Scheduling Email Send Mime Messages With SendGrid Canceling a scheduled send Stopping an in-progress send Using Handlebars v3 API C# Code Example v3 API Go Code Example v3 API Java Code Example v3 API Kotlin Code Example v3 Mail Send FAQ v3 API PHP Code Example v3 API Python Code Example v3 API Ruby Code Example SendGrid Plugins Apple Mail Using SendGrid with BriteVerify Drupal SugarCRM Integration Sending Email Authentication Enforced TLS Getting Started with the Email Activity Feed API Segmentation Query Language Reference Sender Identity Single Sends 2020 Update Upgrade your authentication method to API keys Web API vs. SMTP for Sending Email Send SMTP Building an X-SMTPAPI Header How to Send an SMTP Email Integrating with the SMTP API SMTP Errors and Troubleshooting Frameworks CakePHP CodeIgniter Django Send Email in Laravel Ruby on Rails Symfony Zend X-SMTPAPI Header Working with Categories Sending a Legacy Transactional Template Email over SMTP Scheduling Parameters Section Tags SMTP Filters SMTP Go Code Example SMTP Node.js Code Example SMTP Perl Code Example SMTP PHP Code Example SMTP Python Code Example SMTP Ruby Code Example Substitution Tags Suppression Groups Unique Arguments Mail Servers Exchange 2010 Exim 4 Microsoft IIS 7.5 Postfix Qmail Sendmail ssmtp SendGrid Partners Building Serverless Apps with Form.io + SendGrid How to integrate with MailPoet Sending New Emails via SendGrid For New Gravity Forms Submissions Send Emails Through SendGrid For New Caught Webhook Data Sending SendGrid Emails For New PostgreSQL Custom Query Row Matches Sending SendGrid Emails From New Google Sheets Rows Sending Emails From SendGrid to Tagged Infusionsoft Contacts Sending SendGrid Email When New Firebase Child Records Are Added Open Source Apps Joomla API Libraries MODX phpBB SendGrid v2 API How To Migrate From v2 to v3 Mail Send v2 API C# Code Example v2 API Go Code Example v2 API Java Code Example v2 API Node.js Code Example v2 API Perl Code Example v2 API PHP Code Example v2 API Python Code Example v2 API Ruby Code Example Mail Clients Outlook 2013 Outlook 2007 Thunderbird Tracking Events Getting Started Getting started with the Event Webhook Getting Started with the Event Webhook Security Features Reference & Troubleshooting Event Webhook Reference Twilio SendGrid Event Webhook API Reference Twilio SendGrid Event Webhook Overview SendGrid Partners SendGrid and Google AMP for Email SendGrid Source Code Examples Event Webhook C# Code Example Event Webhook Go Code Example Event Webhook Node.js Code Example Event Webhook PHP Code Example Event Webhook Python Code Example Migration Guides v2 to v3 API Search Search Log in Sign up Page tools Copy as markdown Useful for sharing or LLM Copy and view Copy as markdown View as markdown Open in assistant Open in ChatGPT Open in Claude Open in Cursor Open in Perplexity Build with AI Connect your AI agent Install Twilio Skills Accelerate development with AI On this page Using Sandbox Mode Valid Request Body Invalid Request Body Example Sandbox Mode JSON Looking for more inspiration? Visit the  Developer Hub On this page Using Sandbox Mode Valid Request Body Invalid Request Body Example Sandbox Mode JSON Copy as markdown Copy and view Copy as markdown View as markdown Open in assistant Open in ChatGPT Open in Claude Open in Cursor Open in Perplexity Build with AI Connect your AI agent Install Twilio Skills Sandbox Mode Sandbox mode is an optional parameter within  mail_settings  that validates a Mail Send request without delivering the email. Enabling sandbox mode lets you confirm that your request body is formatted correctly without sending the email to any of your recipients. 
+ (information) Info Sandbox mode is only used to validate your request. The email will never be delivered while this feature is enabled! Any requests made in sandbox mode will not generate events in either Event Webhook or Email Activity. No Credits will be consumed. 
+ When making a request with sandbox mode enabled, we will validate the form, type, and shape of your request. In other words, sandbox mode will validate each parameter you include and the structure of your JSON payload. If you include a  template_id  in your sandbox mode request, it will be assumed that you have included a subject line and body within the template. We will not validate this content. 
+ 
+ Using Sandbox Mode (error) Danger When using sandbox mode, you must include the "enable" parameter, and it must be given a Boolean value of either true or false.  Do not enclose the Boolean value in quotes  or you will receive the error: The sandbox mode enable param should be a boolean value. 
+ Valid Request Body When your request validates, you will receive a  200 OK  response (as opposed to the  202 ACCEPTED  response that is returned for successful non-sandbox requests). 
+ Invalid Request Body If you submit a request with sandbox mode enabled, but your request body is invalid, you will receive one or more error messages with error codes, detailed explanations for the error or errors, and links to any relevant documentation. 
+ Example Sandbox Mode JSON The following is an invalid request body intended to demonstrate the validation behavior of sandbox mode for a bad request. 
+ Request Copy code block 1 { 
+ 2      "personalizations" : [{ 
+ 3          "to" : [{ 
+ 4              "email" :   "john@example.com" 
+ 5          }], 
+ 6          "subject" :   "Hello, World!" 
+ 7      }], 
+ 8      "from" : { 
+ 9          "email" :   "John Doe" 
+ 10      }, 
+ 11      "content" : { 
+ 12          "type" :   "text" , 
+ 13          "value" :   "Hello, World!" 
+ 14      }, 
+ 15      "mail_settings" : { 
+ 16          "sandbox_mode" : { 
+ 17              "enable" :   true 
+ 18          } 
+ 19      } 
+ 20 } Response Copy code block 1 { 
+ 2    "errors" : [ 
+ 3      { 
+ 4        "field" :   "from" , 
+ 5        "message" :   "The from object must at least have an 'email' 
+ 6 parameter with a valid email address and may also contain a 'name' parameter. e.g. {" email ": " example@example.com "} or {" email ": " example@example.com ", " name ": " Example Recipient "}" 
+ 7      } 
+ 8    ] 
+ 9 } Need some help? We all do sometimes; code is hard. Get help now from our  support team , or lean on the wisdom of the crowd by browsing the  SendGrid tag  on Stack Overflow. Terms of service Privacy Policy Copyright © 2026 Twilio Inc.

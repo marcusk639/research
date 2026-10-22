@@ -1,6 +1,6 @@
 # CONTEXT — Briefing for Claude Sessions
 
-> As of 2026-10-19. Read this first; it is short on purpose. Labels: see [REPORT.md](REPORT.md#labels-used).
+> As of 2026-10-20 (files 01–13 as of 2026-10-19). Read this first; it is short on purpose. Labels: see [REPORT.md](REPORT.md#labels-used).
 
 **Summary.** Private AI (working name) is Marcus Klein's managed private-AI business in Lake Charles, Louisiana. It installs client-owned AI appliances for CPA firms, then law firms, then industrial plants and contractors. Treat [prompts/init.md](prompts/init.md) as the single source of truth, use the financial-model figures, and never put client data in these files.
 
@@ -10,6 +10,7 @@
   - Open-weight model on one 96GB GPU.
   - Answers from the client's documents with citations.
   - Microsoft 365 permission-aware.
+  - Client data never goes to an outside AI provider. At TWK, firm-only knowledge runs on Glass (Anthropic) under the hybrid decision.
 - Sold as assessment ($2,500), then setup ($15,000–40,000), then subscription ($2,500/month Starter; $4,500–6,500/month Professional), plus add-ons.
 - Industrial track: fixed-fee projects (contractor compliance, bad-actor studies, knowledge capture, PSM documentation) that convert to retainers.
 - Market: SWLA first, then Lafayette and Baton Rouge in Year 2.
@@ -32,7 +33,7 @@
 4. **Clients buy the hardware.** The company never carries inventory.
 5. **The model is a configuration setting.** U.S.-origin model for federal, DoD-linked, LNG and critical-infrastructure clients.
 6. **Every deliverable is "draft for qualified review."** Never promise regulatory outcomes.
-7. **No hire before both triggers are met.**
+7. **No hire before the hiring triggers are met.** MRR of about $20–25K is mandatory, plus one other signal (see file 14).
 8. **Keep labels.** Keep [Estimate] and [To verify]; keep figures exactly as given; mark decisions vs recommendations; write TODO for missing facts.
 9. **Don't browse the web unless asked.** Log outside-confirmation items in [12-open-questions.md](12-open-questions.md).
 
@@ -54,11 +55,24 @@ Capital need ~$375K (base); raise $400K. The early-brief figures (~$160K/$455K/$
 - The legal entity and name are undecided (REGROUP, LLC or a new LLC).
 - The §7216 attorney opinion is not yet obtained.
 
+## Resolved Oct 20, 2026
+
+1. **Decision:** TWK runs hybrid. Firm-only knowledge goes on Glass (cloud) and client data on the appliance.
+2. **Hiring revised:** the first W-2 hire is expected in months 15–24, with MRR of about $20–25K mandatory plus one other signal, and a contract engineer before then. The second hire is expected in months 28–32.
+3. **Industrial revised:** Year-1 base is $35–60K, not $150–250K. The first plant PO is expected in months 7–12.
+4. **Decision: calendar.** Installs avoid only active named-storm watches (prefer May–July and November–December for CPA installs). Setup is billed 50% at signing and 50% at acceptance.
+5. **Decision: gates and kill rule.** Gates at months 6, 9 and 12 count signed professional-firm contracts (1, 2 and 3 beyond TWK) and all-track MRR ($5K, $9K and $14K). The month-12 kill rule counts signed CPA/law contracts, not industrial retainers.
+6. **Regenerated 3-year model** ([model/private-ai-3yr-model-2026-10-20.xlsx](model/private-ai-3yr-model-2026-10-20.xlsx)).
+   - Base: revenue ~$190K / $507K / $898K; operating result −$66K / +$78K / +$217K; breakeven at month 18; capital need ~$220K.
+   - Every scenario needs ~$75–85K of founder capital or bridge before the raise closes in month 5.
+
+Details: [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md). Where it conflicts with files 01–13, file 14 wins.
+
 ## Unresolved, most important first
 
-1. TWK architecture: on-prem appliance vs Claude-based "Glass" vs hybrid.
-2. Hiring triggers (8–10 clients) vs a plan with 4–5 clients at month 12.
-3. Industrial 12-month target ($150K–$250K) vs Year-1 total revenue (~$155K).
+1. Size founder capital or an early partial close for the ~$75–85K needed before month 5.
+2. Karbon data classification under the hybrid split.
+3. Price-test contractor compliance retainers.
 
 Full list: [12-open-questions.md](12-open-questions.md).
 
@@ -80,4 +94,5 @@ Full list: [12-open-questions.md](12-open-questions.md).
 | TWK, RAG platform, SDVOSB, entity    | [11-related-workstreams.md](11-related-workstreams.md)         |
 | Decisions, to-verify, contradictions | [12-open-questions.md](12-open-questions.md)                   |
 | Provenance                           | [13-sources.md](13-sources.md)                                 |
+| Revised plan (Oct 20)                | [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md) |
 | Terms                                | [glossary.md](glossary.md)                                     |

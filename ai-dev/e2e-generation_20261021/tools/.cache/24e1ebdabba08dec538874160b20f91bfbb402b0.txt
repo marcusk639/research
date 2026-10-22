@@ -1,0 +1,87 @@
+__HTTP 200__
+Meticulous AI - Automated Frontend Testing Without Writing Tests How it Works Case Studies Blog About Us Careers Sign In Book a Demo Sign In Book a Demo exhaustive verification.   zero developer effort . Automated. Exhaustive. Deterministic. Ship code at the speed your agents write it. Built for the world's most complex codebases. Get Started Trusted by over 100 organizations including... Trusted by over 100 organizations including... Trusted by organizations including... "Engineers loved it instantly—no more debugging after merge, zero maintenance, and no flakes. Once we started using Meticulous, we couldn't imagine working without it." Tony Xu Engineering Leader at Dropbox Testing at a new level of   robustness 01. Meticulous monitors your daily interactions with your application as you develop it Add a script tag to your local development, staging, and preview URL environments to record sessions. Optional: record production sessions too for additional coverage. Learn More 02. Our AI engine generates a continuously evolving test suite that covers every corner of your application By tracking the code branches executed by each interaction Meticulous curates a suite of visual end-to-end tests that cover of every line of your codebase. Every user flow. Every edge-case. Learn More 03. Open a pull request, and see the impact it will have across user workflows before you hit merge By default Meticulous mocks out the responses from your backend by saving and replaying the original recorded responses - this means side-effect free tests with no false positives from changing data, and no need to set up special test accounts or mock test data for each test run. Just add the recorder script, click to install the integration for your CI and you're good to go. Learn More Never write, fix or maintain a test again: your tests automatically evolve as your app evolves. Iterate at velocity Dramatically increase the speed you can ship reliable regression-free code. Meticulous continually adds new tests as new features or edge cases are introduced, and removes old tests as they become out of date - ensuring your test suite is always up to date and complete, without any intervention required by developers. Built to eliminate all flakes, from the ground up Built from the Chromium level up with a deterministic scheduling engine – making it the only testing tool that eliminates flakes. This technology also allows Meticulous to execute tests at lightning fast speeds. Battle-tested to work with even the most complex applications. "We piloted the tool, were immediately impressed and rolled it out across the entire engineering organization. Meticulous is unlike anything else, developers love it and it is now an essential guardrail of our software development process." Erdem A. Head of Developer Experience at Notion What makes meticulous different from other testing tools for me is the amount of effort we're putting in for the value. We're getting a lot of feedback points across our application for no investment. Colin Hanna Principal Software Engineer at Engine Use in combination with your existing test suite, or as a replacement You can use Meticulous to complement any existing tests you have, or replace your existing tests entirely. Lightning fast testing – at scale Tests are heavily parallelized across a compute cluster, allowing you to test 1000s of screens and get results in under 120 seconds. Integrations  &  Security Docs get started by adding the meticulous   recorder script tag NextJS React Vue Angular Nuxt SvelteKit Add to your _document.js <Head> or /app/layout.tsx <head>: 
+ 
+ { process .env. NODE_ENV  === " development " && (
+   <script
+     data-project-id =" ... "
+     src =" https://snippet.meticulous.ai/v1/meticulous.js "
+  ></script> 
+ )} 
+ import  { tryLoadAndStartRecorder }  from   '@alwaysmeticulous/recorder-loader' 
+ 
+ async function   startApp () { 
+   // Record all sessions on localhost, staging stacks and preview URLs 
+   if (!isProduction()) { 
+     await   tryLoadAndStartRecorder ({     
+       projectId : ' ... ', 
+       isProduction : false, 
+     }); 
+   } 
+   
+   ReactDOM. render (component, document. getElementById ( 'root' )); 
+ } 
+ 
+ function   isProduction () { 
+   return  window.location.hostname. indexOf ("your-production-site.com") > -1; 
+ } 
+ 
+ startApp (); import  Vue  from   "vue" ; 
+ import  App  from   "./App.vue" ; 
+ import  router  from   "./router" ; 
+ import  store  from   "./store" ; 
+ import  { tryLoadAndStartRecorder }  from   '@alwaysmeticulous/recorder-loader' ; 
+ 
+ async function   startApp () { 
+   if (!isProduction()) { 
+     await   tryLoadAndStartRecorder ({     
+       projectId:  ' ... ', 
+       isProduction : false, 
+     }); 
+   } 
+   
+   new Vue({   router ,   store ,   render : h =>  h (App) }). $mount (" #app" ); 
+ } 
+ 
+ function   isProduction () { 
+  return  window.location.hostname. indexOf ("your-production-site.com") > -1; 
+ } 
+ 
+ startApp (); import  { platformBrowserDynamic }  from   '@angular/platform-browser-dynamic' ; 
+     import  { AppModule }  from   './app/app.module' ; 
+     import  { tryLoadAndStartRecorder }  from   '@alwaysmeticulous/recorder-loader' 
+     async function   startApp () { 
+         if (!isProduction()) { 
+           await   tryLoadAndStartRecorder ({     
+             projectId:  ' ... ', 
+             isProduction : false, 
+           }); 
+         }  
+         
+         // Initalise app after the Meticulous recorder is ready, for example: 
+         platformBrowserDynamic (). bootstrapModule (AppModule) 
+          . catch (err => console. error (err)); 
+     } 
+     
+     function   isProduction () { 
+         return  window.location.hostname. indexOf ("your-production-site.com") > -1; 
+     } 
+     
+     startApp (); { 
+  head : { 
+   script :  process.env.NODE_ENV  ===  "production"  ? [] : [ 
+    { 
+     src :  'https://snippet.meticulous.ai/v1/meticulous.js' , 
+      ["data-project-id"] : ' ... ', 
+      ["data-is-production-environment"]  false, 
+     } 
+    ], 
+   } 
+ } <svelte :head > 
+ { #if  !import.meta.env.PROD} 
+   < script 
+    data-project-id =" ... " 
+    data-is-production-environment = "false" 
+    src = "https://snippet.meticulous.ai/v1/meticulous.js" 
+   ></ script >  
+  { /if } 
+ <svelte :head > Get Started Meticulous  in Action Ready to start? Set up in minutes and generate tests to cover your whole application. Get Started What How it Works Security Docs who About Us Blog Connect Linkedin Twitter © 2026 Meticulous. All rights reserved. Terms Privacy

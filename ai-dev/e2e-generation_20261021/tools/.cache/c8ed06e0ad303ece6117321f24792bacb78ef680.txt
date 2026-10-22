@@ -1,0 +1,281 @@
+__HTTP 200__
+
+ 
+   
+ 
+ Caching AI Planning and DOM Localization - Midscene.js - AI UI Automation and E2E Testing 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+   
+     Are you an LLM? View /llms.txt for optimized Markdown documentation, or /llms-full.txt for full documentation bundle. This page is also available as Markdown at /caching.md Search K Versions Changelog Midscene.js v0.x Midscene.js v1.x English English 简体中文 Theme Languages English English 简体中文 Menu ON THIS PAGE Discover Midscene Introduction The basics Showcases Getting started Try the GUI Agent Create a test project Control any platform with Skills Models Model selection guide Use a model API Key Use a ChatGPT subscription Advanced configuration & debugging Platform integrations Platform overview Integrate with Playwright Integrate with Puppeteer Bridge to the desktop Chrome Android iOS HarmonyOS Desktop Midscene Test Framework overview Create and run test projects Configure test projects Develop custom Nodes Run in GitHub Actions Legacy YAML automation YAML script runner Workflow in YAML format Migrate to Midscene Test Reference GUI Agent API Advanced guides Provide application knowledge to a GUI Agent Process report files Write BDD scripts with Gherkin Integrate with any interface Cache AI plans & DOM locators Resources FAQ Changelog Awesome Midscene Data privacy Benchmark AndroidWorld benchmark MobileWorld benchmark AppControlBench benchmark # Caching AI Planning and DOM Localization   
+ Midscene supports caching two kinds of data: AI Planning steps and matched element localization information. The former can be used across automation workflows to reduce AI model calls and improve execution efficiency; for web automation, the DOM localization part (XPath) in the latter can significantly reduce repeated locating overhead, but it is currently web-only and has  certain limitations . 
+ Effect 
+ With caching hit, time cost is significantly reduced. For example, in the following case, execution time was reduced from 51 seconds to 28 seconds. 
+ 
+ before 
+ 
+ 
+ 
+ after 
+ 
+ 
+ # Cache files and storage 
+ Midscene's caching mechanism is based on input stability and output reusability. When the same task instructions are repeatedly executed in similar page environments, Midscene will prioritize using cached results to avoid repeated AI model calls, significantly improving execution efficiency. 
+ The core caching mechanisms include: 
+ 
+ Task instruction caching : For planning operations (such as  ai ,  aiAct ), Midscene uses the prompt instruction as the cache key to store the execution plan returned by AI 
+ Element location caching (web only) : For location operations (such as  aiLocate ,  aiTap ), the system uses the location prompt as the cache key to store element XPath information, and verifies whether the XPath is still valid on the next execution 
+ Invalidation mechanism : When cache becomes invalid, the system automatically falls back to AI model for re-analysis 
+ Plan cache fallback : If a cached  aiAct  plan fails at runtime, for example because an optional popup no longer appears, Midscene falls back to normal AI planning for the current run and clears the stale cache record's flow 
+ Never cache query results : The query results like  aiBoolean ,  aiQuery ,  aiAssert  will never be cached. 
+ 
+ When this fallback path is used, Midscene does not write the fallback-generated flow back to the original prompt's plan cache, even if the current run succeeds. The cached steps may have already changed the page state before failing, so the fallback plan may only describe the remaining work and may not be valid from the initial page state. On the next run with the same prompt, the empty flow is treated as an unavailable cache entry and Midscene regenerates a complete plan cache from the initial state. 
+ Cache contents will be saved in the  ./midscene_run/cache  directory with the  .cache.yaml  as the extension name. 
+ # Cache strategies 
+ By configuring the  cache  option, you can enable caching for your agent. 
+ # Disable cache 
+ Configuration:  cache: false  or not configuring the  cache  option 
+ Completely disable cache functionality, always call AI model for every operation. Suitable when you need real-time results or for debugging. By default, if you don't configure the  cache  option, caching is disabled. 
+ // Direct Agent creation 
+ const  agent  =  new  PuppeteerAgent (page ,  { 
+   cache :  false , 
+ }); 
+ # YAML configuration 
+ agent : 
+   cache :  false 
+ # Read-write mode 
+ Configuration:  cache: { id: "my-cache-id" }  or  cache: { strategy: "read-write", id: "my-cache-id" } 
+ Automatically read existing cache and update cache files during execution. The default value of  strategy  is  read-write . 
+ // Direct Agent creation - explicit cache ID 
+ const  agent  =  new  PuppeteerAgent (page ,  { 
+   cache :  { id :  "my-cache-id"  } , 
+ }); 
+ 
+ // Explicitly specify strategy 
+ const  agent  =  new  PuppeteerAgent (page ,  { 
+   cache :  { strategy :  "read-write" ,  id :  "my-cache-id"  } , 
+ }); 
+ # YAML configuration - explicit cache ID 
+ agent : 
+   cache : 
+     id :  "my-cache-test" 
+ 
+ # Explicitly specify strategy 
+ agent : 
+   cache : 
+     id :  "my-cache-test" 
+     strategy :  "read-write" 
+ YAML mode also supports  cache: true  to automatically use the file name as the cache ID. 
+ # Read-only, manual write 
+ Configuration:  cache: { strategy: "read-only", id: "my-cache-id" } 
+ Only read cache, no automatic writing to cache files. Requires manual  agent.flushCache()  call to write cache files. Suitable for production environments to ensure cache consistency. 
+ // Direct Agent creation 
+ const  agent  =  new  PuppeteerAgent (page ,  { 
+   cache :  { strategy :  "read-only" ,  id :  "my-cache-id"  } , 
+ }); 
+ 
+ // Manual cache write required 
+ await  agent .flushCache (); 
+ # YAML configuration 
+ agent : 
+   cache : 
+     id :  "my-cache-test" 
+     strategy :  "read-only" 
+ # Write-only mode 
+ Configuration:  cache: { strategy: "write-only", id: "my-cache-id" } 
+ Only write to cache, do not read existing cache contents. Always call AI model for each execution and write results to cache file. Suitable for initially building cache or updating cache. 
+ // Direct Agent creation 
+ const  agent  =  new  PuppeteerAgent (page ,  { 
+   cache :  { strategy :  "write-only" ,  id :  "my-cache-id"  } , 
+ }); 
+ # YAML configuration 
+ agent : 
+   cache : 
+     id :  "my-cache-test" 
+     strategy :  "write-only" 
+ # Compatibility mode (not recommended) 
+ Configuration via  MIDSCENE_CACHE=1  environment variable with cacheId, equivalent to read-write mode. 
+ // Old way, requires MIDSCENE_CACHE=1 environment variable and cacheId 
+ const  agent  =  new  PuppeteerAgent (originPage ,  { 
+   cacheId :  'puppeteer-swag-sab' 
+ }); 
+ MIDSCENE_CACHE = 1  tsx  demo.ts 
+ # Using Playwright AI Fixture from  @midscene/web/playwright 
+ When using  PlaywrightAiFixture  from  @midscene/web/playwright , pass the same  cache  options to control caching behaviour. 
+ # Disable cache 
+ // fixture.ts in sample code 
+ export  const  test  =  base .extend < PlayWrightAiFixtureType >( 
+   PlaywrightAiFixture ({ 
+     cache :  false , 
+   }) , 
+ ); 
+ # Read-write mode 
+ // fixture.ts in sample code 
+ // Auto-generate cache ID from test metadata 
+ export  const  test  =  base .extend < PlayWrightAiFixtureType >( 
+   PlaywrightAiFixture ({ 
+     cache :  true , 
+   }) , 
+ ); 
+ 
+ // fixture.ts in sample code 
+ // Explicitly provide cache ID 
+ export  const  test  =  base .extend < PlayWrightAiFixtureType >( 
+   PlaywrightAiFixture ({ 
+     cache :  { id :  "my-fixture-cache"  } , 
+   }) , 
+ ); 
+ # Read-only, manual write 
+ // fixture.ts in sample code 
+ export  const  test  =  base .extend < PlayWrightAiFixtureType >( 
+   PlaywrightAiFixture ({ 
+     cache :  { strategy :  "read-only" ,  id :  "readonly-cache"  } , 
+   }) , 
+ ); 
+ When you run the fixture in read-only mode you need to manually persist the cache after your test steps. Use the  agentForPage  helper provided by the fixture to fetch the underlying agent, then call  agent.flushCache()  at the point where you want to write the cache file: 
+ test .afterEach ( async  ({ page ,  agentForPage } ,  testInfo)  =>  { 
+   // Only flush cache if the test passed 
+   if  ( testInfo .status  ===  'passed' ) { 
+     console .log ( 'Test passed, flushing Midscene cache...' ); 
+     const  agent  =  await  agentForPage (page); 
+     await  agent .flushCache (); 
+   }  else  { 
+     console .log ( `Test  ${ testInfo .status } , skipping Midscene cache flush.` ); 
+   } 
+ }); 
+ 
+ test ( 'manual cache flush' ,  async  ({ agentForPage ,  page ,  aiTap ,  aiWaitFor })  =>  { 
+   const  agent  =  await  agentForPage (page); 
+ 
+   await  aiTap ( 'first highlighted link in the hero section' ); 
+   await  aiWaitFor ( 'the detail page loads completely' ); 
+ 
+   await  agent .flushCache (); 
+ }); 
+ # Write-only mode 
+ // fixture.ts in sample code 
+ export  const  test  =  base .extend < PlayWrightAiFixtureType >( 
+   PlaywrightAiFixture ({ 
+     cache :  { strategy :  "write-only" ,  id :  "write-only-cache"  } , 
+   }) , 
+ ); 
+ In write-only mode, each test will call the AI model and automatically write results to cache file without reading existing cache. 
+ # Cache Cleaning 
+ Midscene supports cleaning unused cache records when flushing cache to file, ensuring cache files stay lean and maintainable. This feature is  completely manual  and requires explicit call to  agent.flushCache({ cleanUnused: true }) . 
+ # Manual Cleaning Mechanism 
+ When calling  agent.flushCache({ cleanUnused: true }) , the system will: 
+ 
+ Keep used caches : Cache records that were matched and used in the current run will be retained 
+ Keep new caches : Cache records newly generated in the current run will be retained 
+ Remove unused caches : Old cache records that were not accessed will be automatically deleted 
+ Write to file : The cleaned cache will be written to file 
+ 
+ # Usage 
+ Call in test afterEach: 
+ describe ( 'test suite' ,  ()  =>  { 
+   let  resetFn :  ()  =>  Promise < void >; 
+   let  agent :  PuppeteerAgent ; 
+ 
+   afterEach ( async  ()  =>  { 
+     // Clean cache and write to file 
+     if  (agent) { 
+       await  agent .flushCache ({ cleanUnused :  true  }); 
+     } 
+ 
+     // Then close the page 
+     if  (resetFn) { 
+       await  resetFn (); 
+     } 
+   }); 
+ 
+   it ( 'test case' ,  async  ()  =>  { 
+     const  {  originPage ,  reset  }  =  await  launchPage ( 'https://example.com/' ); 
+     resetFn  =  reset; 
+     agent  =  new  PuppeteerAgent (originPage ,  { 
+       cache :  { id :  'my-cache-id'  } , 
+     }); 
+ 
+     // ... test logic 
+   }); 
+ }); 
+ For Playwright AI Fixture users: 
+ test .afterEach ( async  ({ page ,  agentForPage })  =>  { 
+   const  agent  =  await  agentForPage (page); 
+   await  agent .flushCache ({ cleanUnused :  true  }); 
+ }); 
+ # Cleanup Behavior by Mode 
+ 
+ read-write mode : Calling  flushCache({ cleanUnused: true })  will clean and write to file 
+ read-only mode : Calling  flushCache({ cleanUnused: true })  will also clean and write to file (manual flush overrides read-only restriction) 
+ write-only mode : No cleanup (does not read cache) 
+ 
+ Note : If you don't pass  cleanUnused: true  parameter,  flushCache()  will only write to file without cleaning unused caches. 
+ # FAQ 
+ # No cache file is generated 
+ Please ensure you have correctly configured caching: 
+ 
+ Direct Agent creation : Set  cache: { id: "your-cache-id" }  in the constructor 
+ Playwright AI Fixture mode : Set  cache: true  or  cache: { id: "your-cache-id" }  in fixture configuration 
+ YAML script mode : Set  agent.cache.id  in the YAML file 
+ Read-only mode : Ensure you called the  agent.flushCache()  method 
+ Legacy approach : Set  cacheId  and enable  MIDSCENE_CACHE=1  environment variable 
+ 
+ # How to check if the cache is hit? 
+ You can view the report file. If the cache is hit, you will see the  cache  tip and the time cost is obviously reduced. 
+ # Why the cache is missed on CI? 
+ You need to commit the cache files to the repository in CI and recheck the cache hit conditions. 
+ # Does it mean that AI services are no longer needed after using cache? 
+ No. Caching is the way to accelerate the execution, but it's not a tool for ensuring long-term script stability. We have noticed many scenarios where the cache may miss when the DOM structure changes. AI services are still needed to reevaluate the task when the cache miss occurs. 
+ # How to manually remove the cache? 
+ You can remove the cache file in the  ./midscene_run/cache  directory, or edit the contents in the cache file. 
+ # How to disable the cache for a single API? 
+ You can use the  cacheable  option to disable the cache for a single API. 
+ Please refer to the documentation of the corresponding  API  for details. 
+ # Limitations of XPath in caching element location 
+ Midscene uses  XPath  to cache the element location. ⁠We are using a relatively strict strategy to prevent false matches. In these situations, the cache will not be accessed: 
+ 
+ The text content of the new element at the same XPath is different from the cached element. 
+ The DOM structure of the page is changed from the cached one. 
+ 
+ Additionally, since element location caching relies on DOM structure, caching is not available in the following scenarios: 
+ 
+ Canvas elements : Graphics content inside Canvas does not have DOM nodes and cannot be located via XPath. 
+ Cross-origin iframes : Browser security policies restrict access to the internal DOM of cross-origin iframes. 
+ Shadow DOM (closed mode) : Closed Shadow DOM cannot be accessed from outside. 
+ WebGL / Dynamic SVG content : Dynamically generated graphics may not have a stable DOM structure. 
+ 
+ When the cache is not hit or not available, the process will fall back to using AI services to find the element. 
+ # Get more debug logs for caching 
+ You can set the  DEBUG=midscene:cache:*  environment variable to get more debug logs for caching. Edit this page Last Updated :  10/21/2026, 4:13:55 PM Previous page Integrate with any interface Next page FAQ ON THIS PAGE Cache files and storage Cache strategies Disable cache Read-write mode Read-only, manual write Write-only mode Compatibility mode (not recommended) Using Playwright AI Fixture from  @midscene/web/playwright Disable cache Read-write mode Read-only, manual write Write-only mode Cache Cleaning Manual Cleaning Mechanism Usage Cleanup Behavior by Mode FAQ No cache file is generated How to check if the cache is hit? Why the cache is missed on CI? Does it mean that AI services are no longer needed after using cache? How to manually remove the cache? How to disable the cache for a single API? Limitations of XPath in caching element location Get more debug logs for caching Edit this page Copy Markdown Open in chat 
+     
+   
+ 

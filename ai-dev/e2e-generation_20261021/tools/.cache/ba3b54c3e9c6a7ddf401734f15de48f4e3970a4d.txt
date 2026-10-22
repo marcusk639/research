@@ -1,0 +1,35 @@
+__HTTP 200__
+Welcome - Revyl Documentation Documentation Search ⌘ K Get started Welcome Quickstart Core concepts Install the CLI Authentication Atlas Atlas Atlas from the CLI Explore your app Explore from the CLI Agents Proof of changes Verify agent changes MCP setup Agent skills Sandboxed environments Runtime Sessions Web Alpha Mobile Computers Alpha Tests Tests Create a test Your first test from the CLI Write tests as YAML Run tests Sync tests Run tests in CI Workflows Reports Library Launch configuration Builds Builds Build branches Artifact requirements CI builds Remote builds Frameworks Frameworks Web Alpha Mobile Integrations GitHub GitLab Slack Expo Cursor Capy Alpha Partners Partners Connect accounts Dashboard links API reference For customers Security and network Allowlist IP addresses AWS PrivateLink Open Revyl Support On this page Get started Welcome Revyl gives your agents a runtime to run and verify software in, and keeps what it observes in Atlas for your team and your agents to query. Copy Markdown Open The runtime platform for cloud agents Revyl gives agents a runtime to run and verify software, and your team a shared record of what it does. Search the docs ⌘ K 
+ From code changes to observed behavior Copy Anchor Link 
+ Coding and cloud agents can write changes faster than a person can watch them run.
+A diff shows what changed in the code, not what happens when someone uses the app.
+What the team knows about that behavior is spread across tests, recordings, bug reports,
+and the people who last worked on it. 
+ Revyl connects the change to a run you can inspect, then keeps what the run observed
+so the next person or agent can use it. 
+ Run, verify, and ask again Copy Anchor Link 
+ Start with an intent: a pull request to verify, or a question about your app.
+Your coding agent or the Revyl agent runs the software in a runtime suited to the work,
+such as an app  session  or a  computer  (Alpha).
+Revyl works with the agent you already use. 
+ The run leaves evidence you can open.  Proof of changes  adds a verdict
+about the changed behavior. A  session  keeps its recording and report.
+A  computer  keeps its activity and desktop recording;
+its app sessions have their own reports. 
+ App-session observations feed  Atlas , your company's shared behavioral record.
+People query it in the dashboard, and agents query it through the  CLI .
+You can follow an observed path, inspect its evidence, or find a gap to explore next.
+Atlas records what ran, not everything your app might do. 
+ 
+ Atlas shows an observed screen and its transitions to other screens. 
+ Next steps Copy Anchor Link 
+ 
+ Set up proof of changes  to get a verdict on your pull requests before review. 
+ Connect your coding agent  to run and verify changes from the place you write code. 
+ Install the CLI  to start sessions, run checks, and query Atlas from your terminal. 
+ Open Atlas  to follow observed flows and inspect the evidence behind them. 
+ 
+ See it in Revyl Copy Anchor Link 
+ Proof of changes See the verdict and the evidence for a pull request. Atlas Follow a flow through the screens Revyl has observed. Agent actions Inspect what your agent did and what it checked. Runtimes Browse live and past sessions, including Web (Alpha). Builds Bring builds from your CI, or build on Revyl's runners. 
+ Setup and reference Copy Anchor Link 
+ Core concepts Runtimes, evidence, Atlas, and the objects behind them Frameworks Build setup for Web (alpha), iOS, Android, React Native, Expo, Flutter, KMP, and Bazel Library Modules, variables, scripts, and files shared across your organization Integrations GitHub, GitLab, Slack, Expo, Cursor, and Capy Security and network IP allowlists and AWS PrivateLink CLI reference Every  revyl  command and flag Quickstart Next Page

@@ -1,0 +1,391 @@
+__HTTP 200__
+                                          Reverse Engineering User Stories from Code using
+                                                      Large Language Models
+                                                  Mohamed Ouf                     Haoyu Li                    Michael Zhang                 Mariam Guizani
+                                                Queen’s University           Queen’s University              Queen’s University            Queen’s University
+                                                Kingston, Canada             Kingston, Canada                 Kingston, Canada             Kingston, Canada
+                                                24blr2@queensu.ca            17hl66@queensu.ca               18jz111@queensu.ca        mariam.guizani@queensu.ca
+
+
+
+                                            Abstract—User stories are essential in agile development, yet  reduce transportation costs and meet delivery deadlines”).
+                                         often missing or outdated in legacy and poorly documented         This shift from implementation to intent makes user stories
+
+
+
+
+arXiv:2509.19587v1 [cs.SE] 23 Sep 2025
+                                         systems. We investigate whether large language models (LLMs)      more accessible to non-technical stakeholders—product man-
+                                         can automatically recover user stories directly from source code
+                                         and how prompt design impacts output quality. Using 1,750         agers, clients, and end-users alike—and enables more intuitive
+                                         annotated C++ snippets of varying complexity, we evaluate five    progress tracking. Open-source software (OSS) communities
+                                         state-of-the-art LLMs across six prompting strategies. Results    stand to benefit significantly from this approach due to issues
+                                         show that all models achieve, on average, an F1 score of 0.8 for  such as fragmented documentation, high contributor turnover,
+                                         code up to 200 NLOC. Our findings show that a single illustrative and barriers to entry [5]–[7]. For newcomers, clearly articulated
+                                         example enables the smallest model (8B) to match the performance
+                                         of a much larger 70B model. In contrast, structured reasoning     user stories can foster understanding and inclusion, potentially
+                                         via Chain-of-Thought offers only marginal gains, primarily for    improving retention and engagement. In both OSS and industry
+                                         larger models.                                                    settings, reverse engineering user stories can help navigate
+                                            Index Terms—User story automation; Agile development; Large    undocumented legacy systems.
+                                         language models; LLM;                                                Despite its broad potential, the automatic recovery of user
+                                                                                                           stories directly from source code remains largely unexplored.
+                                                                 I. I NTRODUCTION                          To our knowledge, this is the first work to investigate this prob-
+                                            User stories are a cornerstone of agile development, capturing lem. We explore its feasibility and provide the first empirical
+                                         stakeholder needs and guiding feature delivery with a focus foundation for reverse engineering user stories across varying
+                                         on user value. Typically structured as “As a [user role], I levels of code complexity.
+                                         want [goal] so that [benefit]”, these concise narratives align This paper makes the following contributions:
+                                         development activities with business goals and user expectations
+                                                                                                              • We present the first study to evaluate the automatic gen-
+                                         [1], [2]. Recent research has explored automating user story
+                                                                                                                 eration of user stories from code.
+                                         generation from textual artifacts during requirements elicita-
+                                                                                                              • We release a dataset of 1,750 C++ code–story pairs.
+                                         tion. For instance, Rahman and Zhu used GPT-4 to distill
+                                                                                                              • We empirically analyze how model size and prompt de-
+                                         requirement documents into user stories [3], while Veitia et al.
+                                                                                                                 sign, including structured reasoning (SCoT) and few-shot
+                                         applied NLP techniques to extract stories from software issue
+                                                                                                                 techniques, impact generation quality.
+                                         records [4]. These methods reduce reliance on manual effort
+                                         but require existing textual specifications.                      We address two research questions:
+                                            In contrast, source code remains the most persistent and          • RQ1: Can large language models generate user stories
+                                         widely available artifact, often outliving design notes, meeting        from code? How do code complexity and model architec-
+                                         records, and other documentation especially in legacy systems           ture affect story quality?
+                                         or after team turnover. This makes code a promising source           • RQ2: To what extent do prompting techniques (e.g., SCoT,
+                                         for automated recovery of user stories, particularly in contexts        k-shot) improve user story generation?
+                                         where traditional documentation is sparse or outdated. Auto-
+                                         matically generating user stories from code has both technical                           II. R ELATED W ORK
+                                         and managerial value. For example, agile teams can use code-         Existing research on user stories has primarily focused on
+                                         derived stories during retrospectives to compare intended and extracting them from textual artifacts, such as test cases [8],
+                                         implemented functionality. New team members can use them [9], diagrams [10], [11], and use case scenarios [12]. Raharjana
+                                         to understand the goals behind features, improving onboarding. et al. [13] highlight two major limitations in this space: limited
+                                            Unlike code summaries, which describe how a system func- coverage of diverse software artifacts and a lack of benchmark
+                                         tions (e.g., “This module implements Dijkstra’s algorithm to datasets tailored to user-story–related tasks. Significant efforts
+                                         compute shortest paths in a graph”), user stories emphasize the have explored generating user stories from textual sources.
+                                         underlying user need and value (e.g., “As a logistics manager, Techniques have been applied to requirements documents [3],
+                                         I want to find the most efficient delivery routes so that I can [14], issue records [4], [15], stakeholder interviews [16], [17],
+                                                  Fig. 1. Overview of our Approach.
+
+
+
+and design specifications [12]. For instance, Rahman and Zhu non-commenting lines of code (NLOC) across 950 classes and
+[3] introduced “GeneUS”, a GPT-4-powered tool that trans- 15400 functions. Functions averaged 55 NLOC, while classes
+forms requirement documents into structured user stories, while ranged from 100 to 200. Based on this, we created 35 equal-
+Abed et al. [16] investigated the use of AI for generating user length strata (1–10, 11–20, . . . , 341–350 NLOC) and randomly
+stories from stakeholder interviews and evaluated the results sampled 50 CodeNet files per stratum, yielding 1,750 snippets.
+using the Quality User Stories (QUS) framework. However, We highlight the 100 to 200 NLOC as our range of interest,
+these approaches all rely on the presence of existing textual the grayed range in our figures in the findings section. Prompt
+specifications and do not extend to generating user stories lengths ranged from 350 input tokens (zero-shot, 1–10 NLOC)
+directly from code. Large Language Models (LLMs) have to 3500 tokens (few-shot + SCoT, 341–350 NLOC). This range
+increasingly been adopted for various software engineering tests both logical complexity and LLM robustness to the “lost
+tasks, including code refactoring [18], [19], commit message in the middle” effect [34].
+generation [20], debugging [21], and requirements elicitation        Three C++ proficient researchers independently authored user
+[18]. As demonstrated by Wong et al. [22], transformer-based stories for each code snippet, then reconciled differences; inter-
+LLMs trained on large code corpora can capture both syntactic rater reliability measured via Cohen’s κ was 0.86, indicating
+and semantic program structures—enabling new capabilities in almost perfect agreement [35]. Our dataset mapping 1,750 C++
+downstream tasks such as automated code summarization.            code snippets of varying complexity to user stories is available
+   The closest body of work to ours is code summarization. in the supplemental material [36].
+This field has evolved from rule-based approaches [23], [24],
+to neural models [25], [26], and more recently, to LLM-based B. Model Selection, Characteristics & Configuration
+techniques [27], [28]. Zhu et al. [29] show that fine-tuning LLM     Our study evaluates five large language models chosen to
+parameters improves summarization performance. However, capture the effect of parameter count, architecture, and eco-
+while code summarization aims to describe what the code nomic cost shown in Table I on the automatic generation of
+does, primarily for technical audiences, our goal is to surface user stories from code.
+why the code exists, capturing user-facing intent and benefits.      We use three instruction-tuned variants of LLAMA 3.1—8B,
+This distinction makes user stories more suitable for diverse 70B, and 405B parameters. These models share the same trans-
+stakeholders, including non-developers and newcomers in open- former architecture and training data, but differ by two orders
+source or distributed development settings. Despite the growth of magnitude in scale. Because the 8B model can run locally on
+in both user story generation from text and LLM-based code a single GPU, the 70 B requires a modest cloud instance, and
+summarization, no prior work has explored generating user the 405 B needs multi-GPU servers, these three models isolate
+stories directly from source code. This paper addresses this the “more parameters ⇒ better quality” hypothesis without
+gap.                                                              confounding architectural changes.
+                      III. M ETHODOLOGY                              We include DeepSeek-R1 to investigate whether architec-
+   Figure 1 illustrates our approach for reverse engineering user tural optimizations for step-by-step reasoning translate into
+stories from source code using LLMs.                              higher-quality  user stories. DeepSeek-R1 augments the vanilla
+                                                                  transformer with explicit reasoning controllers and built-in
+A. Dataset Selection and Ground-Truth Development                 structured chain-of-thought (SCoT).
+   C++ ranks 6th on GitHub with 10% of public contributions          OpenAI’s GPT-4 O - MINI represents a widely-used commer-
+[30] and remains in the TIOBE top 3 throughout 2024 [31]. Its cial LLM. We test it “as-is” and with lightweight fine-tuning
+prevalence makes it well-suited for studying reverse-engineered (70 in-context examples) to gauge the marginal benefits of
+user stories.                                                     task-specific adaptation.
+   We use the Project_CodeNet_C++1400 subset of IBM                  Table I lists the pay-as-you-go prices (USD per 106 tokens)
+CodeNet, which contains approximately 420,000 accepted C++ advertised at the time of writing. While input tokens, costs rise
+solutions to 1400 competitive-programming tasks [32], [33].       steeply with scale and proprietary licensing. The new GPT-
+   To define realistic size bands, we cloned the top 200 C++ O1 reasoning model is ~200× more expensive for inputs and
+GitHub repositories by stars (as of March 2025) and measured ~160× for outputs, and even standard GPT-4o is three to five
+                                  TABLE I                                                          ROUGE (both default and no_stem), and BLEU (with and
+                      M ODEL COST PER -1M- TOKEN (USD).                                            without smoothing). Table II summarizes the average precision
+                                                                                                   scores in these categories.
+ Model                  Input        Output         Model                  Input        Output
+                                                                                                      The result showed that BLEU and ROUGE have marginal
+ L LAMA 3.1-8B          0.05$       0.25$ [37]      L LAMA 3.1-70B        0.65$      2.75$ [37]
+ L LAMA 3.1-405B        9.50$       9.50$ [37]      DeepSeek-R1            0.55$      2.19$ [38]   differentiation between Paraphrase-50 (65 and 55 respectively)
+ GPT-4 O - MINI         0.80$       3.20$ [39]      O1                    10.00$     40.00$ [39]
+                                                                                                   and Different-Meaning pairs (56 and 50). Both BLEU and
+                                                                                                   ROUGE fail to distinguish between outputs that preserve
+                                   TABLE II                                                        the intended meaning (semantic equivalence) and those that
+                           AVERAGE SIMILARITY SCORES .
+                                                                                                   do not. Among BERTScore variants, roberta-large and
+     Metric             Model                    Twin-Minimal Paraphrase-50 Different-Meaning      microsoft/ deberta-large has limited discrimination for
+                      bert-base-uncased               97            85             60
+     BERTScore-P (F1) roberta-large                   99            96             81              meaning-altered pairs (Different-Meaning scores: 81 and 84).
+                      microsoft/deberta-large         97            90             84
+                        default                       90            65             56              Only bert-base-uncased demonstrated a good scoring
+     BLEU-P (F1)        smoothing                     90            65             56
+                        default                       89            55             50
+                                                                                                   gradient: near-perfect for Twin-Minimal (97), lower for
+     ROUGE-L (F1)       no-stem                       89            55             50
+                                                                                                   Paraphrase-50 (85), and distinct for Different-Meaning (60).
+                                                                                                      Therefore, we adopt bert-base-uncased and interpret its
+                                                                                                   F1 scores as follows:
+times costlier than DeepSeek-R1. Reasoning-centric models are
+                                                                                                      • Faithful generation (≥ 0.9)
+more verbose. In our experimentation, DeepSeek-R1 averaged
+                                                                                                      • Adequate paraphrases (0.66 – 0.9)
+620 output tokens (occasionally exceeding 2500 ), roughly a
+                                                                                                      • Meaning-divergent generation (≤ 0.65)
+5 × increase over the 100 to 130 token range observed for
+LLAMA-70B, and GPT-4 O MINI.                                                                       E. Experimental Setup
+C. Prompt Design                                                                                      We investigate three core dimensions influencing user story
+   We designed prompts through iterative refinement by two                                         generation from source code. First, we evaluate model ar-
+researchers who met on a weekly basis to discuss and refine                                        chitecture effects by comparing five large language models
+the prompts. This process resulted in six templates combin-                                        representing distinct design paradigms: parameter-scaled vari-
+ing three techniques zero-shot, one-shot, few-shot, with and                                       ants of the LLAMA 3.1 family (8B, 70B, and 405B parameters)
+without Structured Chain of Thought (SCoT) reasoning. All                                          to isolate scale-dependent capabilities; the reasoning-optimized
+prompt variants are available in Supplemental Material [36].                                       DeepSeek-R1 architecture; and OpenAI’s production-grade
+Unlike standard Chain-of-Thought (CoT), which produces free-                                       GPT-4o-mini both in its base configuration and a fine-tuned
+form reasoning in natural language [40], Structured Chain-of-                                      alternative. All models were deployed through the Replicate
+Thought (SCoT) imposes programmatic structure by decom-                                            platform [42] to ensure consistent execution environments.
+posing reasoning into sequence, branch, and loop primitives                                           Second, we measure the impact of Structured Chain-of-
+[41]. This alignment with code structure (e.g., control flow)                                      Thought (SCoT) reasoning augmentation across all models.
+makes SCoT suitable for reverse engineering user stories.                                          Each model was evaluated in paired configurations: with stan-
+   We added directives (e.g., “Output user stories in ’As a...’                                    dard prompting and with SCoT-enhanced prompting. Third,
+format”) at the beginning of the prompt to combat the “lost                                        we conduct focused prompt engineering on the smallest model
+in the middle” effect [34], where LLMs might forget central                                        (LLaMA-8B) to determine if exemplar-based techniques can
+content in long contexts. This optimization improved instruction                                   compensate for parameter limitations. This investigation em-
+adherence by 22% in pilot tests.                                                                   ploys six prompt variants: three strategies (zero-shot, one-shot,
+                                                                                                   few-shot) each tested with and without SCoT augmentation to
+D. Evaluation of Semantic Similarity Metrics                                                       isolate improvement potential from both knowledge injection
+   To identify the most suitable metric for comparing LLM-                                         (via examples) and structured reasoning.
+generated user stories against ground-truth references, we con-                                       All experiments share consistent decoding parameters: tem-
+ducted an experiment using 60 curated user-story pairs divided                                     perature=0, minimum output length=50 tokens, and repetition
+into three categories. The Twin-Minimal category included 20                                       penalty=0.2. Evaluations are stratified across 35 code complex-
+pairs with only minor lexical changes that preserved identical                                     ity bands (1-10 to 341-350 non-comment lines of code).
+meaning (e.g., “sum two large numbers” → “add two significant
+                                                                                                                           IV. F INDINGS
+numbers”). The Paraphrase-50 category consisted of 20 pairs
+with approximately 50% lexical variation while maintaining                                         A. RQ1: Can LLMs generate user stories from code? And how
+semantic equivalence (e.g., “merge tasks into streamlined sched-                                   do different code complexity levels and LLMs architectures
+ule” → “organize tasks into clear schedule”). The Different-                                       factor in the generated user stories?
+Meaning category featured 20 pairs exhibiting fundamental                                             1) Overall performance: Our findings show that overall,
+semantic divergence (e.g., “encrypted storage for document                                         LLMs can generate user stories from code. However, across
+security” → “compression for storage reduction”). Each pair                                        all six models, the F1 score decreases as NLOC increases
+was evaluated using multiple metrics: three BERTScore variants                                     (See Fig. 2 and Table III). This highlights that despite overall
+(bert-base-uncased, roberta-large, and microsoft/deberta-large),                                   adequate performance scaling the generation of user stories
+Fig. 2. BERTScore F1 across all NLOC range across all different models   similarly to LLAMA-8B across all code complexity levels as
+using zero-shot prompting without SCOT.                                  shown in Table III. This suggests that parameter count is not
+                                                                         always equated with better performance.
+                                                                            This might be due to the fact that the reasoning architecture
+                                                                         of DeepSeek-R1 was trained mainly on code and mathematics
+                                                                         tasks [43], whereas user-story generation requires capturing
+                                                                         both code functionality and the human goals and intentions
+                                                                         behind it.
+                                                                            Our findings show that light fine-tuning of GPT-4o-mini pro-
+                                                                         duces performance improvement for small to medium NLOC
+                                                                         ranges (see Figure 2). It is worth noting that fine-tuning does
+                                                                         have the added benefit of reducing output token usage by 80%
+                                                                         which can be particularly useful when inference is run at scale
+                                                                           RQ1 Answer. Overall, LLMs can adequately generate
+                                                                           user stories from source code, averaging F1 scores of
+                                                                           0.8 for code up to 200 NLOC. Up to a certain model
+from code, our future research focus, can be challenging. For              size, increasing the number of parameters has diminishing
+code with less than 100 NLOC, every model achieves an F1                   returns. Reasoning models do not outperform standard
+score of 0.78 or above. None of the models’ average F1 scores              models, while light fine-tuning a smaller model improves
+were below 0.83 as shown in Table III, which is within the high            performance for small to medium NLOC ranges and reduces
+end of the Adequate-Paraphrasing threshold (0.66 - 0.9), where             output size by 80%.
+the generated user story exhibits different lexical variations
+while maintaining its overall meaning. For code within the 100           B. RQ2: To what extent do prompting techniques (SCoT, k-shot)
+to 200 NLOC range, which represents functionality complexity             optimize user story generation?
+in practice, F1 scores range from 0.77 to 0.84, maintaining                 The impact of SCoT reasoning on model performance is
+Adequate Paraphrasing quality.                                           contingent upon model size, as illustrated in Table III. Larger
+   Even when exceeding 200 NLOC, none of the models falls                models, such as LLAMA-70B and LLAMA-405B, show im-
+below the 0.74 F1 score. This highlights that no model crosses           provements in F1 scores, up to 4% in the 101-200 and 201-350
+the Meaning-divergent boundary (≤ 0.65), where the semantic              NLOC ranges when SCoT reasoning is employed. In contrast,
+meaning of the user story is compromised. The decreasing F1              smaller models, including LLAMA-8B, GPT-4o-mini, and fine-
+in the 200+ NLOC range could be attributed to the “lost-in-              tuned GPT-4o-mini, exhibit either no significant performance
+the-middle” effect, where tokens in the middle of long prompts           change or a reduction in F1 scores across all NLOC ranges.
+have less attention [34].                                                This suggests that smaller models may lack the representa-
+   2) Model–specific trends: As illustrated in Figure 2, the             tional capacity to effectively integrate the additional reasoning
+LLAMA-8B model consistently underperforms relative to its                instructions provided by SCoT.
+larger counterparts, the LLAMA-70B and LLAMA-405B mod-
+els. Notably, the LLAMA-8B model shows a marked decline                  Fig. 3. Comparing all prompting techniques using LLAMA-8B model to base
+in performance, particularly at lower levels of code complexity,         LLAMA-70B model.
+where it consistently achieves the lowest F1 scores up to 255
+NLOC. Beyond this threshold, the performance of the LLAMA-
+405B model falls below that of the LLAMA-8B, underscoring
+the challenges smaller models face in generating user stories,
+even for relatively simple code samples.
+   In contrast, the performance trajectories of the LLAMA-70B
+and LLAMA-405B are similar up to 100 NLOC, at which point
+the difference in performance increases. LLAMA-70B model
+consistently outperforms the LLAMA-405B across increasingly
+complex code samples (> 55 NLOC), and this performance gap
+continues to expand as complexity increases. This highlights
+that up to a certain number of parameters, higher parameter
+count does not necessarily result in a performance increase.               As for the example-based prompting, our findings show that
+   Given that the 70B model costs significantly less than the            having one example (one-shot) is beneficial, while additional
+405B variant (Table I), it represents the most cost-effective            examples (few-shot) offer diminishing returns.
+open-source option.                                                        Table IV shows that moving from zero-shot to one-shot
+   Despite its larger parameter count, DeepSeek-R1 performs              prompt increases LLAMA-8B’s F1 scores by 4% in the 101-200
+                                                                TABLE III
+C OMPARISON OF G ROUND T RUTH VS . G ENERATED U SER S TORIES WITH AVERAGE PRECISION , RECALL AND F1 SCORES , BOLD RESULTS = INCREASING
+                                                      FROM N O SCOT TO WITH SCOT.
+
+           NLOC                         LLAMA 8B                      LLAMA 70B                         LLAMA 405B             GPT 4o-mini       GPT 4o-mini Fine-tuned
+                                No SCOT      With SCOT           No SCOT        With SCOT           No SCOT   With SCOT    No SCOT   With SCOT   No SCOT    With SCOT
+                       P           0.82         0.81                0.87              0.85            0.86      0.84         0.87       0.84       0.88        0.86
+           1–100       R           0.84         0.82                0.85              0.83            0.85      0.84         0.85       0.83       0.89        0.87
+                       F1          0.83         0.81                0.86              0.84            0.86      0.84         0.86       0.84       0.88        0.87
+                       P           0.75         0.75                0.79              0.83            0.75      0.78         0.78       0.78       0.74        0.73
+           101–200     R           0.79         0.77                0.82              0.84            0.81      0.83         0.80       0.81       0.79        0.78
+                       F1          0.77         0.77                0.80              0.83            0.78      0.80         0.79       0.79       0.76        0.75
+                       P           0.72         0.72                0.76              0.78            0.72      0.73         0.76       0.76       0.76        0.75
+           201-350     R           0.79         0.79                0.80              0.83            0.78      0.81         0.80       0.80       0.80        0.80
+                       F1          0.75         0.75                0.78              0.80            0.75      0.77         0.78       0.78       0.78        0.77
+
+
+
+
+and 201-350 NLOC ranges. However, few-shot prompting adds                                                                   V. T HREATS TO VALIDITY
+only 1% improvements over one-shot approaches. This pattern
+suggests that LLAMA-8B can effectively extract implicit rules                                               Our study relies on CodeNet’s competitive programming
+from a single worked example. SCoT shows minimal impact                                                  solutions, which may not reflect the complexity of large-scale
+when combined with example-based prompting. Table IV shows                                               production systems. We mitigate this by noting that these tasks
+that adding SCoT to one-shot and few-shot configurations                                                 provide self-contained functional units suitable for proof-of-
+produces negligible F1 changes or sometimes reduces it.                                                  concept validation. The focus on snippets up to 350 NLOC
+                                                                                                         also simplifies the problem space, though this range aligns with
+                               TABLE IV                                                                  typical class and function sizes observed in popular GitHub
+AVERAGED P RECISION , R ECALL , AND F1 FOR LLAMA 8B ACROSS NLOC                                          repositories and we hierarchical extraction and chunking can
+BANDS , SC OT USAGE , AND PROMPT TYPES . B OLD = SC OT IMPROVEMENT;
+   ↑ = O NE /F EW-S HOT N O -SC OT GAIN OVER Z ERO -S HOT N O -SC OT.
+                                                                                                         be used as strategies for larger systems in future work. Our
+                                                                                                         restriction to C++ limits generalizability, yet its popularity and
+  NLOC                      Zero-Shot                 One-Shot                      Few-Shot             prevalence in codebases justifies the choice, and the approach is
+                   No SCoT       With SCoT   No SCoT      With SCoT        No SCoT      With SCoT        transferable to other languages. Finally, while ground-truth user
+            P        0.82           0.81      0.81           0.81           0.82             0.81
+  1–100     R        0.84           0.82      0.81           0.81           0.81             0.80        stories involve subjective interpretation, they were authored
+            F1       0.83           0.81      0.81           0.81           0.81             0.80        by three C++ proficient annotators with reconciled differences
+            P        0.75           0.75      0.80↑          0.78           0.81↑            0.78
+ 101–200    R        0.79           0.77      0.82↑          0.82           0.82↑            0.81
+                                                                                                         and achieved strong agreement (Cohen’s κ = 0.86), supporting
+            F1       0.77           0.77      0.81↑          0.80           0.81↑            0.79        the reliability of our dataset.
+            P        0.72           0.72      0.79↑          0.76           0.79↑            0.77
+ 201-350    R        0.79           0.79      0.80↑          0.81           0.81↑            0.80
+            F1       0.75           0.75      0.79↑          0.78           0.80↑            0.78
+                                                                                                                       VI. C ONCLUSION AND F UTURE W ORK
+    Prompt engineering improves LLAMA-8B performance, en-          We analyzed 1,750 C++ snippets and demonstrated that
+abling it to match larger models despite parameter limitations. large language models can successfully reverse-engineer user
+    As shown in Figure 3, the basic LLAMA-8B configuration stories from source code with at least Adequate-paraphrase
+achieves a maximum F1 score of 0.73 across all complexity fidelity. A key finding is that a lightweight 8B model can match
+levels when using minimal prompting instructions. One-shot the performance of a much larger 70B model, enabling cost-
+and few-shot prompting deliver performance improvements for effective and locally deployable solutions. Looking forward,
+LLAMA-8B, allowing it to consistently outperform LLAMA- we plan to extend our approach to larger codebases through
+70B after the 120 NLOC mark. SCoT showed mixed results, hierarchical extraction, where function-level stories aggregate
+when combined with example-based prompting, it produces into class- and module-level narratives using chunking strate-
+±1% F1 change, and when used without exemplar prompting, gies for code exceeding 200 NLOC. Beyond scalability, we
+it improved LLAMA-8B performance beyond the 150 NLOC envision user story recovery as a validation mechanism for
+mark. These findings highlight that strategic prompting can AI coding assistants. This verification can detect divergences
+improve the performance of smaller models, especially for from user intent, enabling automatic hallucination detection and
+medium-complexity code generation tasks. Such tasks, which self-correction. Such validation directly addresses a pressing
+reflect typical functionality complexity in practice, provide a need as AI tools become increasingly integrated into software
+foundation for scaling this approach to larger codebases.       development workflows.
+   RQ2 Answer. One-shot prompts yield the most substantial
+   gains for LLAMA-8B, whereas few-shot and SCoT provide                         VII. ACKNOWLEDGMENT
+   minimal additional benefit. Exemplar prompting alone
+   allows the smaller 8B model to match or even exceed             This work was supported by NSERC Discovery Grant
+   the performance of a 70B model for medium-sized code.        RGPIN-2024-06511.
+                               R EFERENCES                                               engineering requirements using large language models,” Systems, vol. 11,
+                                                                                         no. 7, p. 352, 2023.
+ [1] G. Lucassen, F. Dalpiaz, J. M. E. Van Der Werf, and S. Brinkkem-               [20] J. Y. Lee, S. Kang, J. Yoon, and S. Yoo, “The github recent bugs
+     per, “Forging high-quality user stories: towards a discipline for agile             dataset for evaluating llm-based debugging applications,” in 2024 IEEE
+     requirements,” in 2015 IEEE 23rd international requirements engineering             Conference on Software Testing, Verification and Validation (ICST).
+     conference (RE). IEEE, 2015, pp. 126–135.                                           IEEE, 2024, pp. 442–444.
+ [2] B. Ramesh, L. Cao, and R. Baskerville, “Agile requirements engineering         [21] S. MacNeil, P. Denny, A. Tran, J. Leinonen, S. Bernstein, A. Hellas,
+     practices and challenges: an empirical study,” Information Systems                  S. Sarsa, and J. Kim, “Decoding logic errors: a comparative study on
+     Journal, vol. 20, no. 5, pp. 449–480, 2010.                                         bug detection by students and large language models,” in Proceedings
+ [3] T. Rahman and Y. Zhu, “Automated user story generation with                         of the 26th Australasian Computing Education Conference, 2024, pp.
+     test case specification using large language model,” arXiv preprint                 11–18.
+     arXiv:2404.01558, 2024.                                                        [22] M.-F. Wong, S. Guo, C.-N. Hang, S.-W. Ho, and C.-W. Tan, “Natural
+                                                                                         language generation and understanding of big code for ai-assisted
+ [4] A. Chinnaswamy, B. Sabarish, and R. Deepak Menan, “User story based
+                                                                                         programming: A review,” Entropy, vol. 25, no. 6, p. 888, 2023.
+     automated test case generation using nlp,” in International Conference
+                                                                                    [23] M. Kim, D. Notkin, D. Grossman, and G. Wilson, “Identifying and sum-
+     on Computational Intelligence in Data Science. Springer, 2024, pp.
+                                                                                         marizing systematic code changes via rule inference,” IEEE Transactions
+     156–166.
+                                                                                         on Software Engineering, vol. 39, no. 1, pp. 45–62, 2012.
+ [5] M. Guizani, A. Chatterjee, B. Trinkenreich, M. E. May, G. J. Noa-
+                                                                                    [24] C. Zhang, J. Wang, Q. Zhou, T. Xu, K. Tang, H. Gui, and F. Liu, “A
+     Guevara, L. J. Russell, G. G. Cuevas Zambrano, D. Izquierdo-Cortazar,
+                                                                                         survey of automatic source code summarization,” Symmetry, vol. 14,
+     I. Steinmacher, M. A. Gerosa et al., “The long road ahead: Ongoing
+                                                                                         no. 3, p. 471, 2022.
+     challenges in contributing to large oss organizations and what to do,”
+                                                                                    [25] A. Bansal, S. Haque, and C. McMillan, “Project-level encoding for neural
+     Proceedings of the ACM on Human-Computer Interaction, vol. 5, no.
+                                                                                         source code summarization of subroutines,” in 2021 IEEE/ACM 29th
+     CSCW2, pp. 1–30, 2021.
+                                                                                         International Conference on Program Comprehension (ICPC). IEEE,
+ [6] M. Guizani, B. Trinkenreich, A. A. Castro-Guzman, I. Steinmacher,                   2021, pp. 253–264.
+     M. Gerosa, and A. Sarma, “Perceptions of the state of d&i and d&i              [26] A. LeClair, A. Bansal, and C. McMillan, “Ensemble models for neural
+     initiative in the asf,” in Proceedings of the 2022 ACM/IEEE 44th                    source code summarization of subroutines,” in 2021 IEEE International
+     International Conference on Software Engineering: Software Engineering              Conference on Software Maintenance and Evolution (ICSME). IEEE,
+     in Society, 2022, pp. 130–142.                                                      2021, pp. 286–297.
+ [7] I. Steinmacher, M. A. G. Silva, M. A. Gerosa, and D. F. Redmiles, “A           [27] W. Sun, Y. Miao, Y. Li, H. Zhang, C. Fang, Y. Liu, G. Deng, Y. Liu,
+     systematic literature review on the barriers faced by newcomers to open             and Z. Chen, “Source code summarization in the era of large language
+     source software projects,” Information and Software Technology, vol. 59,            models,” arXiv preprint arXiv:2407.07959, 2024.
+     pp. 67–85, 2015.                                                               [28] S. Yun, S. Lin, X. Gu, and B. Shen, “Project-specific code summarization
+ [8] A. Genaid et al., “Connecting user stories and code for test development,”          with in-context learning,” Journal of Systems and Software, vol. 216, p.
+     in 2012 third international workshop on recommendation systems for                  112149, 2024.
+     software engineering (rsse). IEEE, 2012, pp. 33–37.                            [29] J. Zhu, Y. Miao, T. Xu, J. Zhu, and X. Sun, “On the effectiveness of
+ [9] J. Fischbach, A. Vogelsang, D. Spies, A. Wehrle, M. Junker, and                     large language models in statement-level code summarization,” in 2024
+     D. Freudenstein, “Specmate: Automated creation of test cases from                   IEEE 24th International Conference on Software Quality, Reliability and
+     acceptance criteria,” in 2020 IEEE 13th international conference on                 Security (QRS). IEEE, 2024, pp. 216–227.
+     software testing, validation and verification (ICST). IEEE, 2020, pp.          [30] GitHub, “The top programming languages on github — octoverse 2022,”
+     321–331.                                                                            https://octoverse.github.com/2022/top-programming-languages, 2022, c++
+[10] M. Elallaoui, K. Nafil, and R. Touahni, “Automatic generation of uml                ranked 6th with 8% of contributions; accessed 30 May 2025.
+     sequence diagrams from user stories in scrum process,” in 2015 10th            [31] TIOBE Software, “Tiobe index for 2024,” https://www.tiobe.com/tiobe-
+     international conference on intelligent systems: theories and applications          index/, 2024, c++ ranked in top 3 throughout 2024; accessed 31 May
+     (SITA). IEEE, 2015, pp. 1–6.                                                        2025.
+[11] ——, “Automatic transformation of user stories into uml use case                [32] R. Puri, D. S. Kung, G. Domeniconi, and et al., “Project codenet: A
+     diagrams using nlp techniques,” Procedia computer science, vol. 130,                large-scale ai for code dataset for learning a diversity of coding tasks,” in
+     pp. 42–49, 2018.                                                                    NeurIPS Datasets & Benchmarks, 2021, dataset overview and benchmark
+[12] F. Gilson, M. Galster, and F. Georis, “Generating use case scenarios                definitions.
+     from user stories,” in Proceedings of the international conference on          [33] IBM Research, “Project codenet – ibm developer exchange,”
+     software and system processes, 2020, pp. 31–40.                                     https://developer.ibm.com/exchanges/data/all/project-codenet/, 2021.
+[13] I. K. Raharjana, D. Siahaan, and C. Fatichah, “User stories and natural        [34] N. F. Liu, N. Scharli, A. Lewkowycz, J. P. Lee, K. Guu, I. Schlag, A. M.
+     language processing: A systematic literature review,” IEEE access, vol. 9,          Dai, A. W. Yu, M. van Zuylen, and D. Zhou, “Lost in the middle: How
+     pp. 53 811–53 826, 2021.                                                            language models use long contexts,” arXiv preprint arXiv:2307.03172,
+[14] P. V. Nistala, A. Rajbhoj, V. Kulkarni, S. Soni, K. V. Nori, and R. Reddy,          2023.
+     “Towards digitalization of requirements: generating context-sensitive user     [35] J. Cohen, “A coefficient of agreement for nominal scales,” Educational
+     stories from diverse specifications,” Automated Software Engineering,               and psychological measurement, vol. 20, no. 1, pp. 37–46, 1960.
+     vol. 29, no. 1, p. 26, 2022.                                                   [36] Anonymized, “Supplemental material for reverse engineering user stories
+[15] G. Colavito, F. Lanubile, N. Novielli, and L. Quaranta, “Leveraging                 from code using large language models,” 2025, supplemental Material.
+     gpt-like llms to automate issue labeling,” in 2024 IEEE/ACM 21st                    [Online]. Available: https://doi.org/10.5281/zenodo.15849709
+     International Conference on Mining Software Repositories (MSR). IEEE,          [37] Meta AI, “meta-llama-3-8b – run with an api on replicate,” 2024.
+     2024, pp. 469–480.                                                             [38] DeepSeek, “Models & pricing – deepseek api docs,” 2024.
+[16] O. Abed, K. Nebe, and A. B. Abdellatif, “Ai-generated user stories             [39] OpenAI, “Api pricing,” https://openai.com/api/pricing/, 2025, gPT-4o-
+     supporting human-centred development: An investigation on quality,” in              mini price card, accessed 30 May 2025.
+     International Conference on Human-Computer Interaction. Springer,              [40] M. Fujita, T. Onaga, and Y. Kano, “Llm tuning and interpretable cot:
+     2024, pp. 3–13.                                                                     Kis team in coliee 2024,” in JSAI International Symposium on Artificial
+[17] A. B. Marques, A. F. Costa, I. Santos, and R. Andrade, “Enriching user              Intelligence. Springer, 2024, pp. 140–155.
+     stories with usability features in a remote agile project: a case study,” in   [41] J. Li, G. Li, Y. Li, and Z. Jin, “Structured chain-of-thought prompting
+     Proceedings of the XXI Brazilian Symposium on Software Quality, 2022,               for code generation,” ACM Transactions on Software Engineering and
+     pp. 1–10.                                                                           Methodology, 2023.
+[18] N. Marques, R. R. Silva, and J. Bernardino, “Using chatgpt in software         [42] Replicate - run machine learning models in the cloud. Accessed:
+     requirements engineering: A comprehensive review,” Future Internet,                 2024-12-05. [Online]. Available: https://replicate.com/
+     vol. 16, no. 6, p. 180, 2024.                                                  [43] DeepSeek-AI, “Deepseek-r1: Incentivizing reasoning capability in llms
+[19] A. Tikayat Ray, B. F. Cole, O. J. Pinon Fischer, A. P. Bhat, R. T.                  via reinforcement learning,” 2024.
+     White, and D. N. Mavris, “Agile methodology for the standardization of
+

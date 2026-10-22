@@ -1,0 +1,16 @@
+__HTTP 200__
+
+ 
+ 
+ 
+
+ 
+WWW2007 Paper Details
+ 
+
+ 
+ 
+ 
+ Track: Security, Privacy, Reliability, and Ethics Paper Title: A Fault Model and Mutation Testing of Access Control Policies Authors: Evan Martin (North Carolina State University) Tao Xie (North Carolina State University) Abstract: To increase confidence in the correctness of specified policies, policy developers can conduct policy testing by supplying typical test inputs (requests) and subsequently checking test outputs (responses) against expected ones.  Unfortunately, manual testing is tedious and few tools exist for automated testing of XACML policies.  We present a fault model for access control policies and a framework to explore it. The framework includes mutation operators used to implement the fault model, mutant generation, equivalent-mutant detection, and mutant-killing determination. This framework allows us to investigate our fault model, evaluate coverage criteria for test generation and selection, and determine a relationship between structural coverage and fault-detection effectiveness. We have implemented the framework and applied it to various XACML policies. Our experimental results offer valuable insights into choosing mutation operators in mutation testing and choosing coverage criteria in test generation and selection. Slot: Shaughnessy, Saturday, May 12, 2007, 3:30pm to 5:00pm. Full-text:  PDF version 
+ 
+ 

@@ -1,0 +1,816 @@
+__HTTP 200__
+                                        JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                                       1
+
+
+
+
+                                                  Seeing is Believing: Vision-driven Non-crash
+                                                   Functional Bug Detection for Mobile Apps
+                                                     Zhe Liu, Cheng Li, Chunyang Chen, Junjie Wang Member, IEEE, Mengzhuo Chen, Boyu Wu,
+                                                                         Yawen Wang, Jun Hu, Qing Wang Member, IEEE
+
+
+
+                                            Abstract—Mobile app GUI (Graphical User Interface) pages                    to 2024, approximately 61.3% describe non-crash functional
+                                        now contain rich visual information, with the visual semantics                  bugs, with 47.7% of them tagged as “important”. These non-
+                                        of each page helping users understand the application logic.                    crash functional bugs can significantly impair functionality
+
+
+
+
+arXiv:2407.03037v2 [cs.SE] 4 Dec 2024
+                                        However, these complex visual and functional logic present new
+                                        challenges to software testing. Existing automated GUI testing                  and even lead to disastrous consequences in various sectors
+                                        methods, constrained by the lack of reliable testing oracles, are               and everyday routines. For instance, on February 29, 2024,
+                                        limited to detecting crash bugs with obvious abnormal signals.                  a software payment functionality bug caused widespread mal-
+                                        Consequently, many non-crash functional bugs, ranging from                      functions in self-service payment systems at gas stations across
+                                        unexpected behaviors to logical errors, often evade detection                   New Zealand, resulting in severe repercussions [10].
+                                        by current techniques. While these non-crash functional bugs
+                                        can exhibit visual cues that serve as potential testing oracles,                   On the other hand, we have observed that many non-crash
+                                        they often entail a sequence of screenshots, and detecting them                 functional bugs reveal clear visual cues. While some of these
+                                        necessitates an understanding of the operational logic among                    cues are obvious, such as component occlusions and text
+                                        GUI page transitions, which is challenging traditional techniques.              overlaps as investigated in previous studies [11], [12], more
+                                        Considering the remarkable performance of Multimodal Large                      often they involve issues with the visual logic of the page. For
+                                        Language Models (MLLM) in visual and language understand-
+                                        ing, this paper proposes Trident, a novel vision-driven, multi-                 instance, in the first bug shown in Fig. 1, the page is supposed
+                                        agent collaborative automated GUI testing approach for detecting                to display items sorted by the lowest price, but categories
+                                        non-crash functional bugs. It comprises three agents: Explorer,                 with lower prices appear at the end instead. Similarly, in the
+                                        Monitor, and Detector, to guide the exploration, oversee the test-              third bug, clicking “wish” fails to display the corresponding
+                                        ing progress, and spot issues. We also address several challenges,              item on the wishlist page. These bugs necessitate not only
+                                        i.e., align visual and textual information for MLLM input, achieve
+                                        functionality-oriented exploration, and infer test oracles for non-             a semantic understanding of the GUI page content but also
+                                        crash bugs, to enhance the performance of functionality bug                     a comprehension of the overall operational logic underlying
+                                        detection. We evaluate Trident on 590 non-crash bugs and                        these GUI page transitions, making automated detection signif-
+                                        compare it with 12 baselines, it can achieve more than 14%-112%                 icantly challenging. Only human testers with both sharp eyes
+                                        and 108%-147% boost in average recall and precision compared                    and knowledge from extensive training can identify those bugs.
+                                        with the best baseline. The ablation study further proves the
+                                        contribution of each module. Moreover, Trident identifies 43                       However, human testing is time-consuming and suffers from
+                                        new bugs on Google Play, of which 31 have been fixed.                           inherent scalability and high-cost issues. Although researchers
+                                                                                                                        begin to explore detecting non-crash or functional bugs with
+                                          Index Terms—Multimodal Large Language Model, Android
+                                        app, Non-crash bugs                                                             visual information, most of them are typically designed to
+                                                                                                                        identify specific types of bugs (e.g., display [11], game
+                                                                                                                        glitches [13]). What makes it worse is that all of them require
+                                                                  I. I NTRODUCTION
+                                                                                                                        either a set of rules that are easy to be out of date, or a large
+                                           With the proliferation of mobile applications, their im-                     amount of training dataset which takes much human effort
+                                        pact on everyday life and commercial operations has grown                       for annotation. This specialization leaves a gap in the testing
+                                        significantly. To meet the increasing demands for advanced                      landscape for a more generalized, lightweight and intelligent
+                                        functionalities, app features have become more complex, in-                     approach that can adapt to the diverse challenges of mobile
+                                        evitably leading to the introduction of bugs. Existing research                 app testing especially for non-crash bugs.
+                                        primarily focuses on crash bugs due to their clear test oracles                    Thanks to the emerging Multimodal Large Language Model
+                                        [1]–[9]. However, there is a substantial number of non-crash                    (MLLM) [14], it is trained on the ultra-large-scale corpus and
+                                        functional bugs that remain underexplored. According to our                     potentially able to understand the GUI pages as well as the
+                                        statistics on over 100,000 GitHub issue reports from 2021                       information changes along with the page transition. Inspired by
+                                           This work was supported in part by the National Natural Science Foundation   this, we propose Trident, a novel vision-driven, multi-agent
+                                        of China under Grant 62232016, Grant 62072442, and Grant 62272445; in part      collaborative automated GUI testing approach for detecting
+                                        by Youth Innovation Promotion Association Chinese Academy of Sciences.          non-crash functional bugs. It comprises three agents: Explorer,
+                                           Zhe Liu, Cheng Li, Junjie Wang, Mengzhuo Chen, Boyu Wu, Yawen Wang,
+                                        Jun Hu, and Qing Wang are with State Key Laboratory of Intelligent Game,        Monitor, and Detector. The Explorer Agent navigates through
+                                        Institute of Software Chinese Academy of Sciences, University of Chinese        the app, captures view hierarchies and screenshots, and guides
+                                        Academy of Sciences, Beijing 100190, China (e-mail: junjie@iscas.ac.cn;         the exploration towards diverse GUI pages while focusing on
+                                        liuzhe2020@iscas.ac.cn; wq@iscas.ac.cn).
+                                           Chunyang Chen is with the Technical University of Munich, D-80333            the app’s functionalities. The Monitor Agent supervises the
+                                        Munich, Germany (e-mail: chunyang.chen@monash.edu).                             testing process, records the exploration history, and triggers
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                                 2
+
+
+
+
+Fig. 1. Example of bugs with visual cues
+
+
+the detector agent at the appropriate time. The Detector Agent          Trident1 which includes a vision-driven explorer,
+identifies potential functional bugs by examining whether there         process-aware monitor, and function-aware detector to
+are any issues in the logical transitions that occur during GUI         identify non-crash functional bugs through MLLM.
+page changes.                                                         • Effectiveness and usefulness evaluation of the Trident
+
+   While the design of Trident’s three agents is intuitive,             in real-world apps with practical bugs detected and con-
+improving their effectiveness in revealing functional bugs              firmed (Section IV-A and IV-C).
+presents several challenges. The first challenge is aligning
+visual and textual information for MLLM input. We develop
+a screenshot annotation method to guide the MLLM to better
+understand the GUI page, along with an alignment method
+that integrates text properties with visual context to enable
+the MLLM to capture comprehensive information. The sec-
+ond challenge involves achieving functionality-oriented explo-
+ration. We design a method to infer and abstract the tested
+functionality from detailed exploration sequences, and use the
+abstracted history when communicating with MLLM to avoid
+exceeding token limits and enhance the detection of functional
+bugs. The third challenge is inferring test oracles for non-crash
+bugs. We design a mechanism to determine when to trigger
+the detector agent, and develop the functionality-aware chain-
+of-thought method to enable the MLLM to first explicitly
+infer oracles and then detect functional bugs based on these
+inferences, potentially reducing hallucinations in MLLM’s
+decision-making process.
+   We evaluate the effectiveness of Trident on 590 non-
+crash bugs. Compared with 12 common-used and state-of-the-
+art baselines, Trident can achieve more than 14%-112% and
+108%-147% boost in average recall and precision compared
+with the best baseline, resulting in 50%-72% precision and
+42%-52% recall. To further understand the role of each sub-
+module of the approach, we conduct ablation experiments             Fig. 2. Overview of Trident
+to further demonstrate its effectiveness. We also evaluate
+the usefulness of Trident by detecting unseen non-crash
+                                                                                               II. A PPROACH
+bugs in real-world apps from Google Play. Among 187 apps,
+Trident detects 43 new crash bugs with 31 of them being                This paper proposes Trident, a novel vision-driven,
+fixed and 12 of them being confirmed by developers.                 multi-agent collaborative automated GUI testing approach for
+   The contributions of this paper are as follows:                  detecting non-crash functional bugs. Inspired by manual GUI
+                                                                    testing, where human testers navigate through the app, observe
+  • The pioneering work to formulate the non-crash func-            the testing process, and identify bugs through visual and
+    tional bugs detection problem to an interactive multi-          logical analysis, Trident comprises three agents: Explorer,
+    modal question & answering task, enabling the MLLM to           Monitor, and Detector, as demonstrated in Fig. 2.
+    identify bugs by comprehending GUI visual information
+    and functional logic.                                             1 We release the source code, dataset, and experimental results on our
+  • A vision-driven automated GUI testing approach                  website https://github.com/testtest2024-art/Trident.
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                              3
+
+
+
+   The Explorer Agent navigates through the app, captures            A. Vision-driven Explorer Agent
+view hierarchies and screenshots, and guides the exploration            The Explorer Agent serves as the foundation of Trident,
+towards diverse GUI pages while focusing on the app’s func-          which visually inspects a GUI page, understands its semantics,
+tionalities. The Monitor Agent supervises the testing process,       and conducts the exploration. Before the MLLM, existing
+records the exploration history, and triggers the detector agent     automated GUI testing approaches [6], [15]–[18] typically
+at the appropriate time. The Detector Agent identifies potential     relied on view hierarchy files to extract attribute information
+functional bugs by examining whether there are any issues in         (text, coordinates, actions, etc.) of app widgets to capture the
+the logical transitions that occur during GUI page changes.          current context and determine which widgets should be acted
+   While the design of Trident’s three agents is intuitive,          upon. This can be inefficient as it may lose the structural
+how to make them more effective in revealing functional bugs         semantics of the GUI when converting screenshots to text.
+is difficult. Below, we outline three specific challenges.           Thanks to the MLLM, it allows us to use screenshot images
+   Challenge 1: Aligning visual and text for MLLM input.             as input directly. However, relying solely on images can also
+Although MLLMs can directly process images and plan ex-              be limited due to the concise nature of GUI text and icons.
+plorations based on screenshots, their outputs are limited to        Therefore, we design a method to align visual and textual
+text. This means that MLLMs cannot directly mark the next            information to enhance the MLLM’s understanding of the GUI
+actionable widgets on a screenshot; they must rely on textual        page semantics.
+descriptions. To cope with this, we propose an alignment                1) Alignment between Text and Image: For the text, we
+method that integrates text properties with visual context           extract three types of information: app details, current GUI
+(see Section II-A). This allows the MLLM to have a more              page context, and the contained widgets. The app information
+comprehensive understanding of the GUI, thereby better guid-         is obtained from the AndroidManifest.xml file, while page and
+ing subsequent exploration. Furthermore, screenshots often           widget information are extracted from the view hierarchy file
+contain numerous elements. If fed directly to the MLLM,              of the current GUI page using UIAutomator [19]. Initially,
+it may overlook critical details. To mitigate this, we design        we gather information such as the {App name}, {Activities}
+a screenshot annotation method, guiding the MLLM to pay              and {Activity name} to provide the MLLM with a general
+attention to different types of actionable widgets, and also         understanding of the app’s functionalities. Subsequently, we
+resolve the issue of overlapping annotations caused by the           extract page information and widget information including
+density of widgets on the GUI page.                                  fields such as “text”, “hint-text”, “resource-id”, “class”, “click-
+                                                                     able”, “long-clickable”, “checkable”, “scroll”, and “bounds”,
+   Challenge 2: Functionality-oriented exploration. During
+                                                                     which facilitate the MLLM in suggesting appropriate actions
+app testing, a sequence of actions and accompanying page
+                                                                     related to these widgets.
+transitions is generated. These actions focus on the operational
+level of the app, making it difficult for LLM to plan explo-
+ration paths from a functional perspective, thus impacting the
+detection of functional bugs. To address this, we develop a
+method to infer and abstract the current functionality from
+detailed exploration sequences (in Section II-B). It helps in
+two ways: 1) avoids exceeding token limits when interacting
+with the LLM; 2) enables the exploration more focusing on
+the functionality aspect for identifying functional bugs.
+   Challenge 3: Inferring test oracle. Accurately obtaining
+test oracles is a time-consuming and labor-intensive task,           Fig. 3. Example of alignment text with image
+which has long been a limiting factor in the development of             For the image, we design a screenshot annotation method
+automated testing [6], [7], [15]–[17]. In GUI testing, it requires   to guide the MLLM’s attention towards actionable widgets, as
+determining what the current GUI page should be like after           illustrated in Fig. 3. Trident supports five basic operational
+each performed action. This not only involves information            actions: click, input, long-click, check, and scroll, while the
+from a single page (e.g., missing text) but also considers a         less standardized actions such as drag-and-drop or multi-
+series of previous pages and actions (e.g., an item added not        finger gestures are excluded, following existing studies [5]–
+appearing on the list page), which is quite challenging. To          [9]. Bounding boxes are drawn around each actionable widget
+address this, we let the Monitor Agent trigger the Detector          based on their coordinates from the “bounds” field, with
+Agent at the end of each functionality exploration (see Section      different colors indicating different action types. For instance,
+II-B). This allows the Detector Agent to assess functionality        a red bounding box indicates a “clickable” widget, a blue
+by analyzing a manageable sequence of actions and states,            box indicates an “EditText” widget requiring text input, and
+thus focusing on the functionality and providing accurate infer-     other colors are used for long-clickable, checkable, and scrol-
+ences. Additionally, we develop the functionality-aware Chain-       lable widgets. If a widget supports multiple actions, a green
+of-Thought (COT) to enable the MLLM to first explicitly              bounding box is used, with specific actions described in the
+infer oracles and then detect functional bugs based on these         accompanying text. Inspired by the screen reader [20], we
+inferences, potentially reducing the hallucinations in MLLM’s        label each widget with numbers from top to bottom and left to
+decision-making process (in Section II-C1).                          right, marking only the first widget of each row to reduce the
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                            4
+
+
+
+overlapping annotations and letting the MLLM infer others. To       B. Process-aware Monitor Agent
+help the MLLM better understand the annotation information             The Monitor Agent acts as the central control unit of
+on the image, we also provide a {legend of image} in the            Trident, overseeing the test progress, abstracting the tested
+prompt as shown in Fig. 4.                                          functionalities history for the Explorer Agent, and trigger-
+                                                                    ing the Detector Agent at appropriate times. It continuously
+                                                                    captures the fine-grained exploration sequence of the app,
+                                                                    including view hierarchies and screenshots of each explored
+                                                                    GUI page, and the related actions on those pages. Based on
+                                                                    this information, it generates two views of testing histories: a
+                                                                    higher-level text view in the form of explored functionalities
+                                                                    and a detailed snapshot of testing records in an image view.
+                                                                    During the testing process, these views, which represent trans-
+                                                                    formed testing histories, are provided to the Explorer Agent,
+                                                                    which addresses the token limit for LLM’s inputs while also
+                                                                    enhancing the understanding of the testing process. During
+                                                                    the monitoring process, if the Monitor Agent determines that
+                                                                    the current functionality is still under exploration, it instructs
+                                                                    the Explorer Agent to continue. Once it identifies that a
+                                                                    new functionality starts to test, the Monitor Agent pauses the
+                                                                    Explorer Agent and triggers the Detector Agent to analyze
+                                                                    potential bugs in the previously tested functionality.
+
+
+
+
+                                                                    Fig. 5. Example of function-based history
+                                                                       1) Function-based Testing History Construction: To fa-
+                                                                    cilitate exploration of the app’s functionality, it is important
+                                                                    to know the testing process, as the functions are usually
+Fig. 4. Example of explorer prompt                                  accomplished by following a sequence of GUI pages. We
+                                                                    maintain a complete testing history database, including textual
+                                                                    descriptions and screenshots, and offer two views supporting
+   We associate each annotated widget in the screenshot with
+                                                                    the follow-up exploration and bug detection, as demonstrated
+the extracted GUI text information. In prompts related to text
+                                                                    in Fig. 5.
+and image information (details in Fig. 4), detailed alignment
+                                                                       The text view depicts the higher-level catalog of testing
+information is omitted due to input length constraints of the
+                                                                    progress, organized according to the functionalities. A catalog
+MLLM. Instead, this alignment is used to verify whether the
+                                                                    of tested functionalities {Functionality list} with their {Visit
+MLLM suggests interactive widgets according to the correct
+                                                                    number} (visit counts) and {Functionality status} (e.g., fully
+logical process, akin to an explicit chain-of-thought mecha-
+                                                                    tested, partially tested). This assists the MLLM in avoiding
+nism. When querying general actions or text input, we request
+                                                                    redundant exploration and identifying untouched functionali-
+the widget ID from the screenshot and the corresponding
+                                                                    ties. During testing, the MLLM infers the current functionality
+widget text. If these sources do not align, we infer potential
+                                                                    being tested through a functionality inquiry prompt, enabling
+errors in the MLLM’s decision-making and prompt it to retry.
+                                                                    the collection of functionality-specific statistics.
+To prevent continuous errors and infinite loops, we limit retries
+                                                                       The image view offers a detailed snapshot of the testing
+to three attempts before triggering a fallback strategy.
+                                                                    records through screenshots, providing a granular view of
+   2) Explorer Prompt: Fig. 4 demonstrates the explorer             the testing process. Each GUI page is marked with widgets
+prompt. It is composed of the GUI information and screenshots       or actions performed, and screenshots are associated with
+as described in this section, and the testing history outlining     page descriptions. This ensures alignment between visual and
+the dynamic testing process provided by the Monitor agent           textual information and supports thorough exploration and bug
+(in Section II-B), as well as the explore optimization feedback     detection.
+from the Detector agent (in Section II-C). It queries the MLLM         2) Monitor Prompt: Fig. 6 demonstrates the monitor
+about the interactive widget and the action that needs to be        prompt. It inputs the testing recording of the current function
+taken.                                                              and the whole testing history, in the form of both text and
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                          5
+
+
+
+
+Fig. 6. Example of monitor prompt
+
+
+image, and queries the MLLM about the GUI page description,
+currently tested function and its status.
+
+C. Function-aware Detector Agent
+   The Detector Agent is the vigilant observer of Trident
+that identifies potential functional bugs by analyzing the logi-
+                                                                    Fig. 7. Example of detector prompt
+cal transitions and interactions within the GUI pages. Upon
+activation by the Monitor Agent, the Detector Agent first
+examines the execution sequence of functionality to identify        name and description. This helps the model understand the
+logical inconsistencies for bug detection, in which we design       specific functionality it needs to analyze. Expected Path: The
+the functionality-driven Chain-of-Thought strategy and enrich       model predicts the exploration steps for the functionality based
+the prompt with examples to enhance the performance. The            on its description. This step sets a benchmark for the expected
+Detector then analyzes the sequence to uncover any potential        behavior. Actual Path: The model reviews the actual sequence
+bug-triggering operations that have not yet been explored.          of actions and states encountered during testing. Each page
+It also identifies any unusual or abnormal operations within        and corresponding action are listed sequentially, allowing the
+the execution sequence that might influence the exploration         model to compare this path against the expected behavior. The
+performance. These results are fed back to the Explorer             prompt also includes an annotated image of the test sequence,
+Agent, which will integrate these insights into the follow-up       with each screenshot labeled according to the type of action
+exploration. This iterative cycle ensures that the GUI testing is   (e.g., click, input). This visual representation helps the model
+thorough and efficient, enhancing the likelihood of uncovering      correlate the text information with the GUI elements.
+non-crash functional bugs while systematically addressing any          2) Enriching Detector Prompt with Examples: It is usu-
+anomalies detected during the process.                              ally difficult for MLLM to perform as well on domain-specific
+   1) Functionality-driven Chain of Thought (COT): We               tasks as ours, and common practice would be employing
+design a functionality-driven Chain of Thought (COT) method,        the in-context learning schema to boost the performance. It
+which guides the LLM through a structured, sequential anal-         provides the MLLM with examples to demonstrate what the
+ysis of the testing functionality. This ensures that each step      instruction is, which enables the MLLM to better understand
+is carefully evaluated, reducing the likelihood of hallucination    the task. Following the schema, along with the prompt for the
+and enhancing the overall effectiveness of the bug detection        detector, as described in Fig. 7, we additionally provide the
+process.                                                            MLLM with examples of the non-crash logical bugs.
+   The MLLM first analyzes the functionality being tested, the         To achieve this, we first build a basic example dataset of
+expected path, and the actual path taken during testing. This       non-crash functional bugs from the issue reports of open-
+involves the following steps: Functionality Identification: The     source mobile apps and continuously enlarge it. For each
+model identifies the functionality being tested, including its      data instance, it records the bug description, bug screenshot
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                          6
+
+
+
+and natural language described bug reproduction path which                           III. E XPERIMENT D ESIGN
+facilitates the MLLM understanding of what the non-crash              •  RQ1: (Coverage and bugs detection performance)
+functional bugs are. We select 200 bugs with the highest                 How effective of Trident in testing coverage and bug
+quality and complete information as the example data. We also            detection?
+enrich the example dataset with the newly emerged non-crash
+                                                                       For RQ1, we first present some general views of Trident
+functional bugs that run on various apps.
+                                                                    for coverage of the explorer and bug detection of the detector.
+   Although examples can provide intuitive guidance to the          Then we compare Trident with commonly-used and state-
+LLM in accomplishing a task, excessive examples might               of-the-art baseline approaches.
+mislead the LLM and cause the performance to decline. There-
+                                                                       • RQ2: (Ablation Study) What is the contribution of
+fore, we design a retrieval-based example selection method
+                                                                         the (sub-) modules of Trident for coverage and bug
+to choose the most suitable examples (i.e., the bug page’s
+                                                                         detection performance?
+description is most similar to the currently tested GUI page’s
+description) for MLLM. The similarity comparison is based              For RQ2, We conduct ablation experiments to evaluate the
+on the activity name of the tested page. Similar to previous        impact of each (sub-) module on the performance.
+works [21], We use Word2Vec [22] to encode the context                 • RQ3: (Usefulness Evaluation) How does our proposed
+information of each activity into a sentence embedding, and              Trident work in real-world situations?
+calculate the cosine similarity between the activity and each          For RQ3, we use Trident to automatically explore the
+data instance in the example dataset. We choose the top-K data      app, and detect unseen non-crash functional bugs, and issue
+instance with the highest similarity score and set K as 5.          the detected bugs to the development team.
+   3) Detector Prompt: Fig. 7 demonstrates the detector
+prompt. It consists of the bug examples (as shown in Sec-           A. Datasets
+tion II-C2), functionality-driven COT (as shown in Section
+II-C1) analyzing the functionality being tested, and the real          For RQ1-RQ2, the experimental dataset comes from three
+exploration sequence in the form of screenshots. It queries         sources. The first is from the Odin and RegDroid datasets
+the MLLM about the bug detection, possible bug path, and            [25], [26] (We name them baseline dataset), which contains
+exception path.                                                     131 non-crash functional bugs that can be reproduced in our
+                                                                    experimental environment.
+                                                                       Meanwhile, we notice that these apps are updated between
+                                                                    2018 and 2021, and some of them are now incompatible with
+D. Implementation                                                   the latest systems. To further investigate the effectiveness of
+                                                                    Trident on more recently updated apps and new types of
+   In our implementation, we utilize the GPT-4 Vision model2
+                                                                    bugs (the baseline dataset only with 5 categories such as
+(gpt-4-vision-preview) to handle both textual and visual infor-
+                                                                    “Content related issues”, “Structure related issues”, “Incorrect
+mation during the testing process. It obtains the view hierarchy
+                                                                    interaction logic”, etc.), we collect a second dataset (Github
+file of the current GUI page through UIAutomator [19] to
+                                                                    dataset) following similar procedures as the baseline dataset,
+extract text information of the input widgets. Trident is
+                                                                    which contain a total of 9 categories of bugs1 , such as “Page
+implemented as a fully automated GUI testing tool, which
+                                                                    loading failure”, “Feedback missing”, “Numerical calculation
+uses or extends the following tools: VirtualBox and the
+                                                                    errors”, “Data operation failures”, “Navigation and link er-
+Python pyvbox [23] for running and Android Debug Bridge
+                                                                    rors”, .etc. In detail, we crawl the 50 most popular apps of
+(ADB) [24] for interacting with the app under test.
+                                                                    each category from Google Play [27], and we keep the ones
+   To manage the token limit constraints of the GPT-4V API,         with at least one update after June. 2024, resulting in 437
+we combine multiple screenshots from the testing sequences          apps in 13 Google Play categories [27]. Then we manually
+into a single large image. This approach allows us to input         review each issue report and app, and filter them according to
+comprehensive visual information cohesively, ensuring the           the following criteria: (1) the app wouldn’t constantly crash on
+model processes all necessary contexts together. On average,        the emulator; (2) it can run all baselines; (3) UIAutomator [19]
+each API call consumes approximately 2,000 to 3,000 tokens.         can obtain the view hierarchy file and its GUI screenshot; (4)
+We maintain concise representations of the testing history by       the issue report involve non-crash bug and it can be manually
+using functionality names and summaries, reducing the token         reproduced for validation; (5) the app is not used in the bug
+count. Additionally, when the limit is exceeded, we delete the      example dataset. Please note that we follow the name of the
+earlier test records until it satisfies the constraints.            app to ensure that there is no overlap between the datasets.
+   To enhance efficiency and reduce costs, we merge the             Finally, 83 apps with 387 non-crash bugs remain for further
+prompts for Explorer and Monitor into a single request. This        experiments.
+integrated prompt simultaneously queries the MLLM about                To avoid potential data leakage issues caused by the use
+the current exploration state (for explorer) and the tested         of MLLM and further analyze the bug detection capability
+functionalities (for monitor), which makes the implementation       of Trident, we construct a third dataset (Injection dataset)
+more efficient and cost-effective.                                  through bug injection, which can ensure that MLLM has
+                                                                    not learned about these bugs in the open-source repositories.
+  2 https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4   Specifically, we obtain the source code of the second dataset
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                                                                      7
+
+
+
+
+                                                                          TABLE I
+                                                        R ESULT OF COVERAGE AND BUG DETECTION (RQ1)
+
+                                      Baseline data                                       GitHub data                                       Bug injection data
+     Method
+                      Act     Cod     Rep      Bug       P        R      Act      Cod     Rep    Bug         P       R       Act     Cod      Rep      Bug        P      R
+   OwlEyes+M          0.21    0.18      77      10      0.13     0.08    0.33     0.28     140      62     0.44     0.16     0.35    0.31      96      13        0.14   0.18
+  NightHawk+M         0.21    0.18      63      13      0.21     0.10    0.33     0.28     136      62     0.46     0.16     0.35    0.31      60      15        0.25   0.21
+  DiffDroid+M         0.21    0.18      61      15      0.25     0.11    0.33     0.28     133      55     0.41     0.14     0.35    0.31      46      12        0.26   0.17
+   dVermin+M          0.21    0.18      53       4      0.08     0.03    0.33     0.28      98      28     0.29     0.07     0.35    0.31      33      11        0.33   0.15
+   OwlEyes+A          0.29    0.27      92      18      0.20     0.14    0.43     0.37     161      85     0.53     0.22     0.42     0.4      93      10        0.11   0.14
+  NightHawk+A         0.29    0.27      86      21      0.24     0.16    0.43     0.37     157      91     0.58     0.24     0.42     0.4      67      16        0.24   0.22
+  DiffDroid+A         0.29    0.27      87      20      0.23     0.15    0.43     0.37     147      68     0.46     0.18     0.42     0.4      44       7        0.16   0.10
+   dVermin+A          0.29    0.27      67       6      0.09     0.05    0.43     0.37     101      31     0.31     0.08     0.42     0.4      35       9        0.26   0.13
+    OwlEyes+F         0.39    0.37     107      17      0.16     0.13    0.47     0.42     180      79     0.44     0.20     0.43    0.39      94      12        0.13   0.17
+   NightHawk+F        0.39    0.37     100      20      0.20     0.15    0.47     0.42     161      92     0.57     0.24     0.43    0.39      59      15        0.25   0.21
+   DiffDroid+F        0.39    0.37      94      20      0.21     0.15    0.47     0.42     131      72     0.55     0.19     0.43    0.39      53      12        0.23   0.17
+    dVermin+F         0.39    0.37      41       8      0.20     0.06    0.47     0.42      90      35     0.39     0.09     0.43    0.39      67       8        0.12   0.11
+   OwlEyes+H          0.38    0.35      97      12      0.12     0.09    0.48     0.44     157      79     0.50     0.20     0.43    0.39      93      14        0.15   0.19
+  NightHawk+H         0.38    0.35      88      16      0.18     0.12    0.48     0.44     146      79     0.54     0.20     0.43    0.39      88      13        0.15   0.18
+  DiffDroid+H         0.38    0.35      75      17      0.23     0.13    0.48     0.44     143      57     0.40     0.15     0.43    0.39      57      15        0.26   0.21
+   dVermin+H          0.38    0.35      33       5      0.15     0.04    0.48     0.44      82      40     0.49     0.10     0.43    0.39      41       8        0.20   0.11
+   OwlEyes+G          0.47    0.43      99      17      0.17     0.13    0.51     0.47     162      79     0.49     0.20     0.47    0.41      95      14        0.15   0.19
+  NightHawk+G         0.47    0.43      95      18      0.19     0.14    0.51     0.47     157      96     0.61     0.25     0.47    0.41      68      12        0.18   0.17
+  DiffDroid+G         0.47    0.43      85      16      0.19     0.12    0.51     0.47     142      76     0.54     0.20     0.47    0.41      47       9        0.19   0.13
+   dVermin+G          0.47    0.43      37       6      0.16     0.05    0.51     0.47      75      47     0.63     0.12     0.47    0.41      42       9        0.21   0.13
+    iFixdataloss      0.33     0.3      21       8      0.38     0.06    0.48     0.43     101      45     0.45     0.12     0.43    0.39      41      10        0.24   0.14
+      SetDroid        0.31    0.27      22       8      0.36     0.06    0.48     0.43     164      64     0.39     0.17     0.43    0.39      47      11        0.23   0.15
+       Genie          0.32    0.31      55      12      0.22     0.09    0.48     0.43     123      46     0.37     0.12     0.43    0.39      43       8        0.19   0.11
+       Odin           0.33     0.3      57      22      0.39     0.17    0.48     0.43     107      59     0.55     0.15     0.43    0.39      57      11        0.19   0.15
+       Lint            -        -       1        1      1.00     0.01      -       -       54       30     0.56     0.08      -        -        2       2        1.00   0.03
+    LiveDroid          -        -       1        1      1.00     0.01      -       -       58       24     0.41     0.06      -        -        1       1        1.00   0.01
+     GPT-4            0.39    0.31      55      12      0.22     0.09    0.47     0.45     123     48      0.39     0.12     0.43    0.39      35       8        0.23   0.11
+    AppAgent          0.41    0.38      47       6      0.13     0.05    0.44     0.43     113     12      0.11     0.03     0.39    0.37      31       4        0.13   0.06
+    Trident           0.57    0.55     109      55      0.50     0.42    0.65     0.62     278     201     0.72     0.52     0.61    0.59      67      47        0.70   0.65
+
+  Notes: “Act” is activity coverage, “Cod” is Code coverage. “Rep” is number of bugs reported by tools, “Bug” is true bug in the reported bug, “P” is precision and “R” is the
+  recall. “+M” means it with Monkey, “+A” means it with APE, “+F” means it with Fastbot, “+H” means it with Hunmanoid, and “+G” means it with GPTDroid.
+
+
+
+apps from GitHub and manually verify whether the app could                               occlusion). DVermin [31] detects scaling issues by compar-
+conduce the bug injection by modifying the code through                                  ing GUI pages under different page settings. DiffDroid [32]
+repackaging. Among them, 33 apps can run normally after                                  compares the GUI pages of an app on two different devices
+bug injection. We conduct the injection based on the bug                                 to find compatibility issues. The input of these techniques are
+description, bug repair code, and bug root cause from GitHub,                            screenshots/visual hierarchy files and need to be integrated
+and implement it following the existing bug injection approach                           with automated testing approaches to fetch the required in-
+[28]–[30]. Finally, 33 apps with 72 non-crash bugs remain for                            formation during the exploration. We respectively pair them
+further experiments.                                                                     with five popular automated GUI testing tools, i.e., random-
+   The three datasets totally have 590 non-crash bugs for                                based tool Monkey [33], model-based tools APE [8] and
+comprehensive evaluation of the effectiveness of Trident.                                Fastbot [34], learning-based tool Humanoid [15] and LLM-
+   For RQ3, we further evaluate the usefulness of Trident                                based GPTDroid [21].
+in detecting unseen bugs. We randomly selected 187 popular                                  We utilize 6 baselines of logical bug detection for mobile
+apps based on app type and download number. We use the                                   apps. iFixdataloss [35] is the most recent work of finding data
+same configurations as the previous experiments. Once a bug                              loss issues. SetDroid [36] uses metamorphic testing to find
+is spotted, we create an issue report by describing the bug, and                         system setting-related functional bugs. Genie [37] uses the
+report them to the app development team through the issue                                metamorphic relation of independent view property to find
+reporting system or email.                                                               non-crash functional bugs, while Odin [26] uses the implicit
+                                                                                         knowledge of “bugs as deviant behavior” to find non-crash
+                                                                                         functional bugs. Android Lint [38] is a popular static analysis
+B. Baselines                                                                             tool for finding different issues in Android apps based on
+   To demonstrate the advantage of Trident, we compare                                   predefined rules. LiveDroid [39] is also a static analysis tool
+it with 12 common-used and state-of-the-art GUI testing                                  for detecting data loss issues.
+techniques.                                                                                We also employ 2 MLLM-based methods as our baselines.
+   There are 4 mobile app display issue detection techniques.                            AppAgent [40] is a novel MLLM-based framework that en-
+OwlEyes [11] and NightHawk [12] use deep learning to                                     ables agents to interact with apps through a simplified action
+detect UI display issues (e.g., overlapping texts, component                             space, mimicking human-like interactions such as tapping and
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                                                       8
+
+
+
+                                                                      TABLE II
+                                                   C ONTRIBUTION OF DIFFERENT SUB - MODULES (RQ2)
+
+                                           Baseline data                               GitHub data                               Bug injection data
+       Sub-modules
+                             Act    Cod     Rep     Bug     P      R     Act    Cod    Rep    Bug     P      R     Act    Cod       Rep     Bug     P     R
+        Trident              0.57   0.55    109     55     0.50   0.42   0.65   0.62   278    201    0.72   0.52   0.61   0.59      67      47    0.70   0.65
+ w/o Screenshot annotation   0.41   0.48    55      27     0.49   0.21   0.41   0.39   101    49     0.49   0.13   0.38   0.36      39      15    0.38   0.21
+   w/o GUI information       0.49   0.47    69      33     0.48   0.25   0.52   0.50   222    129    0.58   0.33   0.49   0.45      52      31    0.60   0.43
+    w/o Testing history      0.39   0.37    43      21     0.49   0.16   0.42   0.39   131    53     0.40   0.14   0.44   0.42      43      19    0.44   0.26
+     w/o Optimization        0.47   0.45    39      16     0.41   0.12   0.44   0.42   87     38     0.44   0.10   0.42   0.41      42      17    0.40   0.24
+    w/o Image Legend         0.38   0.36    27      12     0.44   0.09   0.39   0.38   78     31     0.40   0.08   0.42   0.41      39      15    0.38   0.21
+    w/o Test Recoding        0.42   0.39    38      18     0.47   0.14   0.48   0.46    98    51     0.52   0.13   0.43   0.42      41      19    0.46   0.26
+    w/o Bug example          0.53   0.52    47      9      0.19   0.07   0.59   0.58    51    17     0.33   0.04   0.54   0.52      38      5     0.13   0.07
+    w/o Function COT         0.51   0.49    54      11     0.20   0.08   0.58   0.55    63    23     0.37   0.06   0.55   0.53      39      7     0.18   0.10
+
+
+
+
+swiping. We modify AppAgent by adding a query in its prompt                     and 32% (0.62 vs. 0.47) code coverage higher even compared
+after each test interaction to check for any detected bugs on                   with the best baseline (GPTDroid) across three datasets. This
+the page. Additionally, we include GPT-4 as another baseline.                   indicates the effectiveness of Trident in covering more
+We provided GPT-4 with annotated screenshots of the app.                        activities and codes, thus bringing higher confidence to app
+GPT-4 was then tasked with generating actions based on these                    quality, potentially uncovering more bugs.
+screenshots and detecting any potential bugs.                                      The average precision and recall of Trident in three
+                                                                                datasets achieve 50%-72%, and 42%-65%, respectively. It
+C. Experimental Setup                                                           achieves between 14% (0.72 vs. 0.63) and 112% (0.70 vs.
+   We deploy the baselines and our approach on a 64-bit                         0.33) precision and between 108% (0.52 vs. 0.25) and 147%
+machine and evaluate them on Google Android emulators.                          (0.42 vs. 0.17) recall higher even compared with the best base-
+Following common practice [6], [7], [9], we registered separate                 line across three datasets. Please note that although some base-
+accounts for each bug that requires login and wrote the                         line methods can achieve higher precision, they detect fewer
+login scripts, and during testing reset the account data before                 bugs. In terms of the number of detected bugs, Trident
+each run to avoid possible interference. To ensure fair and                     can still achieve a higher detection rate. We also compare
+reasonable use of resources, we set up the running time of                      the similarities and differences of the bugs between the best
+each tool in one app to 50 minutes, which is widely used in                     baselines (Odin and NightHawk) and our approach, and the
+other GUI testing studies [7], [9], [16], [34]. We run each tool                results show that all bugs detected by them are also detected
+3 times and take the average value as the result to mitigate                    by Trident. This indicates the effectiveness of Trident
+potential bias [7], [9], [16], [34].                                            in detecting bugs and helps to ensure app quality.
+                                                                                   The advantages of Trident are due to three aspects.
+D. Evaluation Metrics                                                           First, Trident designs the vision prompt which can better
+                                                                                capture the GUI context, while the baselines mainly rely
+   We measure the performance from coverage and bug detec-                      on the view hierarchy file in which the widgets might have
+tion, respectively corresponding to the explorer and detector                   meaningless “text” or “resource-id”, hindering them from
+in Trident. For coverage, we obtain the activity coverage                       effectively understanding the GUI pages. Second, Trident
+and code coverage [9], [15], [41]–[44], in which we treat the                   plans the exploration path both considering the semantics of a
+activities defined in the AndroidManifest.xml file of an Android                single GUI page and the exploration history which can enable
+app as the whole set of activities [6], [17], [45].                             the function-aware exploration, while the baselines can hardly
+   For bug detection, following existing studies [26], [37], we                 understand the inherent business logic of the app, resulting
+report the detected bugs by Trident, true bugs among the                        in aimless exploration. Third, Trident detects the bugs by
+detected bugs. Since we know the entire set of bugs, we also                    understanding the semantics of a sequence of GUI pages,
+calculate the precision and recall of the bug detection.                        while the baselines can only detect specific types of bugs or
+                                                                                have low detection accuracy.
+                     IV. R ESULTS AND A NALYSIS
+                                                                                   Fig. 1 and Fig. 8 show some examples of bugs detected by
+A. Coverage and Bug Detection Performance (RQ1)                                 Trident. These bugs belong to different types and are not
+  We present the coverage and bug detection performance                         detected by the baseline method. In Fig. 8 (a), when the user
+of Trident and baselines, in terms of the baseline dataset,                     adds income, enter $520. After returning to the main page,
+GitHub dataset and the bug injection dataset in Table I.                        the income was repeatedly displayed in the list, resulting in
+  We first present the coverage of Trident, which can                           the same income being incorrectly recorded twice. In Fig. 8
+cover far more activities and code than the baselines. In three                 (b), the user clicks on the “Devices” tab and then clicks on
+datasets, the average activity coverage is between 57% and                      the “Notifications”. As a result, the app returns to the main
+65%, and the average code coverage is between 55% and                           page instead of the correct notification page. We can see that
+62%. It achieves between 21% (0.57 vs. 0.47) to 27% (0.65                       Trident is adept at determining whether the functional logic
+vs. 0.51) activity coverage, and between 28% (0.55 vs. 0.43)                    of the app is abnormal based on the semantics of the test path
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                              9
+
+
+
+                                                                 possible path of the functionality based on its description, and
+                                                                 then judge the testing path, improving MLLM’s understanding
+                                                                 of the functionality and bug detection performance.
+
+
+
+
+                                                                 Fig. 9. Different number of examples (RQ2)
+                                                                    2) Influence of Different Number of Examples: Fig. 9
+                                                                 demonstrates the performance under the different number of
+Fig. 8. Example of bugs detected by Trident
+                                                                 examples provided in the prompt. We can see that the non-
+and GUI information.                                             crash bug detection performance increases with more exam-
+                                                                 ples, reaching the highest bug detection rate with 4 examples.
+                                                                 And after that, the performance would gradually decrease even
+B. Ablation Study (RQ2)                                          increasing the examples. This indicates that too few or too
+   1) Contribution of Sub-modules: Table II further demon-       many examples would damage the performance, because of
+strates the performance of Trident and its 8 variants. We        the tiny information or the noise in the provided examples.
+remove each sub-module of the Trident in Fig. 2 separately,
+                                                                                              TABLE III
+i.e., Screenshot annotation, GUI information, Testing history,                  I NFORMATION OF THE FIXED BUGS . (RQ3)
+Optimization, Image Legend, Test Recoding, Bug example and
+                                                                     Id       APP Name          Download       Category      Version
+Function COT. For removing the Screenshot annotation, We
+                                                                     1             Waze          500M+             map        4.103
+adopt the direct annotation method shown in Fig. 3 (a). For          2            MEGA           100M+        productivity     13.5
+                                                                     3            Swiggy         100M+             food        4.61
+removing GUI information, Testing history, and Optimization,         4        AlfredCamera        50M+            house      2024.2
+we separately delete three corresponding parts from the prompt       5          LG ThinQ          50M+          lifestyle     5.0.2
+                                                                     6         SmartNews          50M+             news      24.7.55
+in Fig. 4. For removing the Image Legend, we delete the image        7            Da Fit          50M+             sport      2.7.7
+                                                                     8            Blinkit         50M+             food      16.11.0
+legend in three prompts. For removing the Test Recoding, we          9             Bose           5M+             music       10.2.4
+                                                                     10          TomTom           5M+              map         9.51
+delete it from the prompt in Fig. 6. For removing the Bug            11        ExpressPlus        5M+           medical       4.12.0
+example and Function COT, we delete them from the prompt             12          Property         5M+             house      5.267.0
+                                                                     13        Plant Parent       5M+           lifestyle      1.76
+in Fig. 7.                                                           14
+                                                                     15
+                                                                                   NOS
+                                                                               CommBank
+                                                                                                  5M+
+                                                                                                  10M+
+                                                                                                                   news
+                                                                                                                 finance
+                                                                                                                             202405
+                                                                                                                              5.11.0
+   The experiment results (Table II) demonstrate that removing       16            AIMP           10M+            music         4.1
+                                                                     17            Wise           10M+           finance       8.71
+any of the sub-modules would result in a noticeable perfor-          18        Smart Life         10M+          lifestyle     5.15.1
+                                                                     19            Zepp           10M+             sport       8.11
+mance decline, indicating the necessity and effectiveness of         20       Hungerstation       10M+             food       8.0.1
+the designed sub-modules. Removing the bugs example (w/o-            21         Lumosity          10M+         education     2024.02
+                                                                     22      Canvas Student       10M+         education      7.5.0
+Bug example) has the greatest impact on the performance,             23
+                                                                     24
+                                                                             Khan Academy
+                                                                              Healthengine
+                                                                                                  10M+
+                                                                                                  1M+
+                                                                                                               education
+                                                                                                                  health
+                                                                                                                              8.1.1
+                                                                                                                             10.1.11
+reducing the bug detection performance by 54% (0.33 vs.              25      Virgin Australia     1M+             travel      2.33.0
+                                                                     26        Opal Travel        1M+             travel      9.8.2
+0.72) precision and 92% (0.04 vs. 0.52) recall. This indicates       27       NAB Banking         1M+            finance     9.153.0
+                                                                     28          Flybuys          1M+          shopping       24.7.1
+that by providing similar examples, the MLLM can quickly             29     EverydayRewards       1M+          shopping      24.11.0
+think out what should the non-crash bugs look like, which            30        Woolworths         1M+          shopping      24.14.0
+                                                                     31      Home Assistant       1M+             house      2024.5
+further indicates the demonstration can facilitate the MLLM
+in producing the required output.
+   We also notice that, the w/o-Screenshot annotation, w/o-      C. Usefulness Evaluation (RQ3)
+Testing history and w/o-Image Legend, the activity coverage         For the 187 apps, Trident detects 102 non-crash bugs in
+has an impact, reducing the activity coverage by 37% (0.41       74 apps, of which 43 bugs in 42 apps are never discovered
+vs. 0.65), 35% (0.42 vs. 0.65) and 40% (0.39 vs. 0.65). This     before. Furthermore, only 9 of these new bugs are detected
+further indicates that the alignment of text with images can     by Genie [37] and Odin [26]. We submitted these 43 bugs
+help MLLM understand the structure and semantic information      to developers, and all of them have been fixed/confirmed so
+of GUI pages and make reasonable judgments. The history          far (31 fixed and 12 confirmed, none of them rejected). This
+can help retain knowledge during testing and gain global         further indicates the effectiveness of our proposed Trident
+viewpoints to reach uncovered areas.                             in bug detection. Due to space limit, Table III presents a part
+   Besides, (w/o-Function COT) would also largely influence      of fixed/confirmed bugs, and the full lists can be found on
+the performance, and decrease the bug detection performance      our website1 . We also collect the feedback from developers
+by 56% (0.37 vs. 0.72) precision and 88% (0.06 vs. 0.52)         regarding the bugs we submitted.“This bug is crucial because it
+recall. This indicates that through COT, MLLM can infer the      affects a core functionality that users frequently interact with.”,
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                             10
+
+
+
+“We’re aware that this bug is hindering users’ ability. It’s a          However, these methods require first converting the GUI
+high priority for us to address this issue.”. These feedbacks           visual information into text, which can cause significant visual
+also demonstrate the importance of Trident in detecting                 information loss during the process. Moreover, a large number
+non-crash bugs.                                                         of app widgets and pages are generated through dynamic
+                                                                        rendering, and the attribute information of image widgets will
+                           V. D ISCUSSION                               be lost when obtaining view hierarchy files. As a result, the
+   This Section further discusses the generality of Trident             coverage of automated testing is low, and many widgets and
+across platforms. Almost the existing studies of non-crash              operations are missed. This study employs the MLLM for the
+bug detection [26], [35]–[37], [39] are designed for a specific         GUI testing, which is more effective through aligning the GUI
+platform (Android), which limits its applicability in real-world        screenshot with text information for the vision prompt.
+practice. In comparison, the primary idea of Trident is to
+explore the app and detect the non-crash functional bugs with           B. Non-crash Functional Bug Detection
+a visual understanding of MLLM. Since the screenshots from
+different platforms (e.g., Android, iOS, Harmony OS) exert                 According to the sources of test oracle, current research
+almost no difference, Trident can be generalized for App                can be divided into four types. The first type utilizes oracle
+exploration and bug detection in other platforms. For platforms         provided by testers [53] to find non-crash bugs in differ-
+like iOS and Harmony OS, where text extraction might not                ent strategies (such as ChimpCheck [54], AppFlow [55],
+be as reliable or feasible, we adapt Trident by deleting                ACAT [56], AppTestMigrator [57], CraftDroid [58]). Unlike
+the textual GUI information from the prompts, and using the             them, this paper doesn’t require manual direct/indirect oracle.
+remaining modules of Trident to guide the app exploration                  The second type uses differential testing to overcome the
+and bug detection process.                                              problem of missing oracles. Genie [37] and Odin [26] used
+                                                                        the metamorphic relation of independent view property to find
+                            TABLE IV
+                                                                        bugs. SPAG-C [59], DiffDroid [32] and dVermin [31] compare
+            C ROSS PLATFORM PERFORMANCE OF T R I D E N T                screenshots between two different mobile devices or platform
+                                                                        versions to identify bugs.
+ Platform   Code coverage      Report bug     Real bug      Precision
+                                                                           The third type is the automatic generation of test oracle for
+   IOS            0.47             15             9           0.60
+ Harmony          0.57             19            13           0.69      specific categories of user interactions. ITDroid [60] compared
+                                                                        the GUI pages of an app under two different language settings
+   We conduct a small-scale experiment for the popular plat-            to find i18n issues. SetDroid [36] generated the oracle for
+form iOS and Harmony OS, and collect 10 open-source apps                system settings bugs, but can’t detect other types of bugs.
+for testing on each platform. As shown in Table IV, results                The fourth type is to use labeled large-scale bug data to
+show that the average code coverage is 0.47 in IOS and 0.57             train computer vision models for detecting bugs related to GUI
+in Harmony OS. The bug detection precision in IOS is 0.60               display. The OwlEyes [11], Gilb [13] and NightHawk [12] are
+and the precision in Harmony OS is 0.60. This is comparable             based on large-scale labeled UI bug data, to train computer
+to the performance in Android, and further demonstrates the             vision models that can be used to detect the display bugs.
+generality of Trident. We will conduct more thorough                       However, these bug detection methods have problems such
+experiments in the future.                                              as a single category of bug detection, requiring a large amount
+                                                                        of manually labeled test oracle data, and being unable to meet
+                         VI. R ELATED W ORK                             complex business scenarios and app functionality.
+A. Automated GUI Testing
+                                                                                             VII. C ONCLUSION
+   To ensure the quality of mobile apps, many researchers
+study the automatic generation of large-scale test scripts to              With the advancement of LLM, there have been tremen-
+test apps [46]. Since Android apps are event-based [47]–[50],           dous applications of LLMs in software engineering-related
+the most common automated testing methods are model-based               tasks such as test case generation with great performance
+automated GUI testing methods [1]–[9], design corresponding             improvement. Subsequently, MLLMs emerge and are applied
+models through the analysis of the apps. Due to the lack                in image-text reasoning, video generation, etc., further ex-
+of consideration for the semantic information of the app’s              panding our understanding of the capabilities of LLMs. this
+GUI pages, the coverage of model-based methods is still low.            paper proposes Trident, a novel vision-driven, multi-agent
+Researchers further proposed human-like testing strategies and          collaborative automated GUI testing approach for detecting
+designed learning-based automated GUI testing methods [15],             non-crash functional bugs. It comprises three agents: Explorer,
+[17]. GPTDroid [21] used GPT-3.5 to generate the testing                Monitor, and Detector. This work contributes as a stepping
+script, aiming at proposing a more effective approach to                stone for future exploration in software engineering, offering
+generate human-like actions for testing the app. AppAgent [40]          insights and guidance on the potential applications of MLLM.
+is a novel LLM-based multimodal agent framework, that                      In the future, we will further improve this approach for
+enables the agent to operate apps through a simplified action           better performance. Meanwhile, beyond Android apps, we will
+space. Qtypist [51] and AudoDroid [52] combine LLM and                  customize and apply our approach to other platforms such as
+traditional GUI testing tools during the exploration process.           web, desktop and automotive OS for software testing.
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                                                                                                     11
+
+
+
+                               R EFERENCES                                         [21] Z. Liu, C. Chen, J. Wang, M. Chen, B. Wu, X. Che, D. Wang,
+                                                                                        and Q. Wang, “Chatting with gpt-3 for zero-shot human-like mobile
+ [1] N. Mirzaei, J. Garcia, H. Bagheri, A. Sadeghi, and S. Malek, “Reducing             automated gui testing,” arXiv preprint arXiv:2305.09434, 2023.
+     combinatorics in gui testing of android applications,” in 2016 IEEE/ACM       [22] T. Mikolov, K. Chen, G. Corrado, and J. Dean, “Efficient estimation of
+     38th International Conference on Software Engineering (ICSE). IEEE,                word representations in vector space,” ICLR, 2013.
+     2016, pp. 559–570.                                                            [23] “pyvbox,” https://pypi.org/project/pyvbox/, 2023.
+ [2] S. Yang, H. Wu, H. Zhang, Y. Wang, C. Swaminathan, D. Yan, and                [24] “Android debug bridge (adb),” https://developer.android.com/studio/
+     A. Rountev, “Static window transition graphs for android,” Automated               command-line/adb.html#forwardports, 2020.
+     Software Engineering, vol. 25, no. 4, pp. 833–873, 2018.                      [25] Y. Xiong, M. Xu, T. Su, J. Sun, J. Wang, H. Wen, G. Pu, J. He, and
+ [3] W. Yang, M. R. Prasad, and T. Xie, “A grey-box approach for automated              Z. Su, “An empirical study of functional bugs in android apps,” in
+     gui-model generation of mobile applications,” in International Confer-             Proceedings of the 32nd ACM SIGSOFT International Symposium on
+     ence on Fundamental Approaches to Software Engineering. Springer,                  Software Testing and Analysis, 2023, pp. 1319–1331.
+     2013, pp. 250–265.                                                            [26] J. Wang, Y. Jiang, T. Su, S. Li, C. Xu, J. Lu, and Z. Su, “Detecting
+ [4] X. Zeng, D. Li, W. Zheng, F. Xia, Y. Deng, W. Lam, W. Yang, and T. Xie,            non-crashing functional bugs in android apps via deep-state differential
+     “Automated test input generation for android: Are we really there yet              analysis,” in Proceedings of the 30th ACM Joint European Software
+     in an industrial case?” in Proceedings of the 2016 24th ACM SIGSOFT                Engineering Conference and Symposium on the Foundations of Software
+     International Symposium on Foundations of Software Engineering, 2016,              Engineering, 2022, pp. 434–446.
+     pp. 987–992.                                                                  [27] “Google play,” https://play.google.com/store/apps/, 2022.
+ [5] K. Mao, M. Harman, and Y. Jia, “Sapienz: Multi-objective automated            [28] A. Ghaleb and K. Pattabiraman, “How effective are smart contract
+     testing for android applications,” in Proceedings of the 25th International        analysis tools? evaluating smart contract static analysis tools using bug
+     Symposium on Software Testing and Analysis, 2016, pp. 94–105.                      injection,” in Proceedings of the 29th ACM SIGSOFT International
+ [6] T. Su, G. Meng, Y. Chen, K. Wu, W. Yang, Y. Yao, G. Pu, Y. Liu, and                Symposium on Software Testing and Analysis, 2020, pp. 415–427.
+     Z. Su, “Guided, stochastic model-based gui testing of android apps,” in       [29] P. Bhattacharya, L. Ulanova, I. Neamtiu, and S. C. Koduru, “An
+     Proceedings of the 2017 11th Joint Meeting on Foundations of Software              empirical analysis of bug reports and bug fixing in open source android
+     Engineering, 2017, pp. 245–256.                                                    apps,” in 2013 17th European Conference on Software Maintenance and
+ [7] Z. Dong, M. Böhme, L. Cojocaru, and A. Roychoudhury, “Time-                       Reengineering. IEEE, 2013, pp. 133–143.
+     travel testing of android apps,” in 2020 IEEE/ACM 42nd International          [30] G. Hu, X. Yuan, Y. Tang, and J. Yang, “Efficiently, effectively detecting
+     Conference on Software Engineering (ICSE). IEEE, 2020, pp. 481–492.                mobile app bugs with appdoctor,” in Proceedings of the Ninth European
+ [8] T. Gu, C. Sun, X. Ma, C. Cao, C. Xu, Y. Yao, Q. Zhang, J. Lu, and                  Conference on Computer Systems, 2014, pp. 1–15.
+     Z. Su, “Practical gui testing of android applications via model abstraction   [31] Y. Su, C. Chen, J. Wang, Z. Liu, D. Wang, S. Li, and Q. Wang, “The
+     and refinement,” in 2019 IEEE/ACM 41st International Conference on                 metamorphosis: Automatic detection of scaling issues for mobile apps,”
+     Software Engineering (ICSE). IEEE, 2019, pp. 269–280.                              in Proceedings of the 37th IEEE/ACM International Conference on
+ [9] J. Wang, Y. Jiang, C. Xu, C. Cao, X. Ma, and J. Lu, “Combodroid:                   Automated Software Engineering, 2022, pp. 1–12.
+     generating high-quality test inputs for android apps via use case com-        [32] M. Fazzini and A. Orso, “Automated cross-platform inconsistency
+     binations,” in ICSE, 2020, pp. 469–480.                                            detection for mobile apps,” in ASE. IEEE, 2017.
+[10] “‘leap      year    glitch’     shuts    some      new     zealand     fuel   [33] A. Developers, “Ui/application exerciser monkey,” 2012.
+     pumps,”                        https://www.reuters.com/world/asia-pacific/    [34] T. Cai, Z. Zhang, and P. Yang, “Fastbot: A multi-agent model-based
+     leap-year-glitch-shuts-some-new-zealand-fuel-pumps-2024-02-29/,                    test generation system beijing bytedance network technology co., ltd.”
+     2024.                                                                              in Proceedings of the IEEE/ACM 1st International Conference on
+[11] Z. Liu, C. Chen, J. Wang, Y. Huang, J. Hu, and Q. Wang, “Owl eyes:                 Automation of Software Test, 2020, pp. 93–96.
+     Spotting ui display issues via visual understanding,” in ASE. IEEE,           [35] W. Guo, Z. Dong, L. Shen, W. Tian, T. Su, and X. Peng, “Detecting and
+     2020.                                                                              fixing data loss issues in android apps,” in Proceedings of the 31st ACM
+[12] ——, “Nighthawk: Fully automated localizing ui display issues via                   SIGSOFT International Symposium on Software Testing and Analysis,
+     visual understanding.” IEEE, 2022, pp. 1–16.                                       2022, pp. 605–616.
+[13] K. Chen, Y. Li, Y. Chen, C. Fan, Z. Hu, and W. Yang, “Glib: towards           [36] J. Sun, T. Su, K. Liu, C. Peng, Z. Zhang, G. Pu, T. Xie, and Z. Su,
+     automated test oracle for graphically-rich applications,” in Proceedings           “Characterizing and finding system setting-related defects in android
+     of the 29th ACM Joint Meeting on European Software Engineering                     apps,” IEEE Transactions on Software Engineering, 2023.
+     Conference and Symposium on the Foundations of Software Engineering,          [37] T. Su, Y. Yan, J. Wang, J. Sun, Y. Xiong, G. Pu, K. Wang, and
+     2021, pp. 1093–1104.                                                               Z. Su, “Fully automated functional fuzzing of android apps for detecting
+[14] S. Bubeck, V. Chandrasekaran, R. Eldan, J. Gehrke, E. Horvitz, E. Ka-              non-crashing logic bugs,” Proceedings of the ACM on Programming
+     mar, P. Lee, Y. T. Lee, Y. Li, S. Lundberg et al., “Sparks of artificial           Languages, vol. 5, no. OOPSLA, pp. 1–31, 2021.
+     general intelligence: Early experiments with gpt-4,” arXiv preprint           [38] http://tools.android.com/tips/lint, 2020.
+     arXiv:2303.12712, 2023.                                                       [39] U. Farooq, Z. Zhao, M. Sridharan, and I. Neamtiu, “Livedroid: Identify-
+[15] Y. Li, Z. Yang, Y. Guo, and X. Chen, “Humanoid: a deep learning-                   ing and preserving mobile app state in volatile runtime environments,”
+     based approach to automated black-box android app testing,” in 2019                Proceedings of the ACM on Programming Languages, vol. 4, no.
+     34th IEEE/ACM International Conference on Automated Software En-                   OOPSLA, pp. 1–30, 2020.
+     gineering (ASE). IEEE, 2019, pp. 1070–1073.                                   [40] Z. Yang, J. Liu, Y. Han, X. Chen, Z. Huang, B. Fu, and G. Yu,
+[16] ——, “Droidbot: a lightweight ui-guided test input generator for an-                “Appagent: Multimodal agents as smartphone users,” arXiv preprint
+     droid,” in 2017 IEEE/ACM 39th International Conference on Software                 arXiv:2312.13771, 2023.
+     Engineering Companion (ICSE-C). IEEE, 2017, pp. 23–26.                        [41] Y. He, L. Zhang, Z. Yang, Y. Cao, K. Lian, S. Li, W. Yang, Z. Zhang,
+[17] M. Pan, A. Huang, G. Wang, T. Zhang, and X. Li, “Reinforcement                     M. Yang, Y. Zhang et al., “Textexerciser: feedback-driven text input
+     learning based curiosity-driven testing of android applications,” in               exercising for android applications,” in 2020 IEEE Symposium on
+     Proceedings of the 29th ACM SIGSOFT International Symposium on                     Security and Privacy (SP). IEEE, 2020, pp. 1071–1087.
+     Software Testing and Analysis, 2020, pp. 153–164.                             [42] P. Liu, X. Zhang, M. Pistoia, Y. Zheng, M. Marques, and L. Zeng,
+[18] K. Moran, M. Tufano, C. Bernal-Cárdenas, M. Linares-Vásquez,                     “Automatic text input generation for mobile testing,” in 2017 IEEE/ACM
+     G. Bavota, C. Vendome, M. Di Penta, and D. Poshyvanyk, “Mdroid+:                   39th International Conference on Software Engineering (ICSE). IEEE,
+     A mutation testing framework for android,” in 2018 IEEE/ACM 40th                   2017, pp. 643–653.
+     International Conference on Software Engineering: Companion (ICSE-            [43] Y. L. Arnatovich, L. Wang, N. M. Ngo, and C. Soh, “Mobolic:
+     Companion). IEEE, 2018, pp. 33–36.                                                 An automated approach to exercising mobile application guis using
+[19] UIAutomator, “Python wrapper of android uiautomator test tool.” https:             symbiosis of online testing technique and customated input generation,”
+     //github.com/xiaocong/uiautomator, 2021.                                           Software: Practice and Experience, vol. 48, no. 5, pp. 1107–1142, 2018.
+[20] X. Zhang, L. de Greef, A. Swearngin, S. White, K. Murray, L. Yu,              [44] W. Wang, W. Yang, T. Xu, and T. Xie, “Vet: identifying and avoiding
+     Q. Shan, J. Nichols, J. Wu, C. Fleizach et al., “Screen recognition:               ui exploration tarpits,” in FSE, 2021, pp. 83–94.
+     Creating accessibility metadata for mobile applications from pixels,”         [45] “Android,” https://developer.android.google/topic/, 2022.
+     in Proceedings of the 2021 CHI Conference on Human Factors in                 [46] Q. Xie and A. M. Memon, “Designing and comparing automated test
+     Computing Systems, 2021, pp. 1–15.                                                 oracles for gui-based software applications,” ACM Transactions on
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021                          12
+
+
+
+     Software Engineering and Methodology (TOSEM), vol. 16, no. 1, pp.
+     4–es, 2007.
+[47] S. Anand, M. Naik, M. J. Harrold, and H. Yang, “Automated concolic
+     testing of smartphone apps,” in Proceedings of the ACM SIGSOFT 20th
+     International Symposium on the Foundations of Software Engineering,
+     2012, pp. 1–11.
+[48] T. Wu, X. Deng, J. Yan, and J. Zhang, “Analyses for specific defects
+     in android applications: A survey,” Frontiers of Computer Science, pp.
+     1–18, 2019.
+[49] R. Jabbarvand, J.-W. Lin, and S. Malek, “Search-based energy testing
+     of android,” in ICSE. IEEE, 2019, pp. 1119–1130.
+[50] R. Matinnejad, S. Nejati, and L. C. Briand, “Automated testing of hybrid
+     simulink/stateflow controllers: industrial case studies,” in Proceedings of
+     the 2017 11th Joint Meeting on Foundations of Software Engineering,
+     2017, pp. 938–943.
+[51] Z. Liu, C. Chen, J. Wang, X. Che, Y. Huang, J. Hu, and Q. Wang,
+     “Fill in the blank: Context-aware automated text input generation for
+     mobile gui testing,” in 2023 IEEE/ACM 45th International Conference
+     on Software Engineering (ICSE). IEEE, 2023, pp. 1355–1367.
+[52] H. Wen, Y. Li, G. Liu, S. Zhao, T. Yu, T. J.-J. Li, S. Jiang, Y. Liu,
+     Y. Zhang, and Y. Liu, “Autodroid: Llm-powered task automation in
+     android,” in Proceedings of the 30th Annual International Conference
+     on Mobile Computing and Networking, 2024, pp. 543–557.
+[53] C. Q. Adamsen, G. Mezzetti, and A. Møller, “Systematic execution of
+     android test suites in adverse conditions,” in Proceedings of the 2015
+     International Symposium on Software Testing and Analysis, 2015.
+[54] E. S. Lam, P. Zhang, and B.-Y. E. Chang, “Chimpcheck: property-
+     based randomized test generation for interactive apps,” in Proceedings
+     of the 2017 ACM SIGPLAN International Symposium on New Ideas,
+     New Paradigms, and Reflections on Programming and Software, 2017,
+     pp. 58–77.
+[55] G. Hu, L. Zhu, and J. Yang, “Appflow: using machine learning to
+     synthesize robust, reusable ui tests,” in Proceedings of the 2018 26th
+     ACM Joint Meeting on European Software Engineering Conference and
+     Symposium on the Foundations of Software Engineering, 2018, pp. 269–
+     282.
+[56] A. Rosenfeld, O. Kardashov, and O. Zang, “Automation of android
+     applications functional testing using machine learning activities clas-
+     sification,” in Proceedings of the 5th international conference on mobile
+     software engineering and systems, 2018, pp. 122–132.
+[57] F. Behrang and A. Orso, “Test migration between mobile apps with
+     similar functionality,” in 2019 34th IEEE/ACM International Conference
+     on Automated Software Engineering (ASE). IEEE, 2019, pp. 54–65.
+[58] J.-W. Lin, R. Jabbarvand, and S. Malek, “Test transfer across mobile
+     apps through semantic mapping,” in 2019 34th IEEE/ACM International
+     Conference on Automated Software Engineering (ASE). IEEE, 2019,
+     pp. 42–53.
+[59] Y.-D. Lin, J. F. Rojas, E. T.-H. Chu, and Y.-C. Lai, “On the accuracy,
+     efficiency, and reusability of automated test oracles for android devices,”
+     IEEE Transactions on Software Engineering, vol. 40, no. 10, pp. 957–
+     970, 2014.
+[60] C. Escobar-Velásquez, M. Osorio-Riaño, J. Dominguez-Osorio,
+     M. Arevalo, and M. Linares-Vásquez, “An empirical study of i18n
+     collateral changes and bugs in guis of android apps,” in 2020 IEEE
+     international conference on software maintenance and evolution
+     (ICSME). IEEE, 2020, pp. 581–592.
+

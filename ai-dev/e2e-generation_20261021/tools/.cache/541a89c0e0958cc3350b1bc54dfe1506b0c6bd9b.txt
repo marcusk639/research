@@ -1,0 +1,667 @@
+__HTTP 200__
+                                                Streamlining Acceptance Test Generation for
+                                                Mobile Applications Through Large Language
+                                                     Models: An Industrial Case Study
+                                                   Pedro Luís Fonseca                          Bruno Lima                                João Pascoal Faria
+                                                 Critical TechWorks and             LIACC, Faculty of Engineering,             INESC TEC, Faculty of Engineering,
+                                                 Faculty of Engineering,                 University of Porto                          University of Porto
+                                                   University of Porto                     Porto, Portugal                             Porto, Portugal
+                                                     Porto, Portugal                     brunolima@fe.up.pt                              jpf@fe.up.pt
+                                                  up202008307@up.pt
+
+
+
+
+arXiv:2510.18861v1 [cs.SE] 21 Oct 2025
+                                            Abstract—Mobile acceptance testing remains a bottleneck in         processing [6], yet real-world industrial applications of LLMs
+                                         modern software development, particularly for cross-platform          to automate AT for mobile applications are only beginning to
+                                         mobile development using frameworks like Flutter. While de-           emerge.
+                                         velopers increasingly rely on automated testing tools, creating
+                                         and maintaining acceptance test artifacts still demands significant      Despite adoption of robust tools like Appium and Espresso,
+                                         manual effort. To help tackle this issue, we introduce AToMIC,        industrial mobile teams face persistent obstacles in effective
+                                         an automated framework leveraging specialized Large Language          acceptance testing [7]. Platform fragmentation remains a fun-
+                                         Models to generate Gherkin scenarios, Page Objects, and exe-          damental challenge for acceptance testing, as variations in
+                                         cutable UI test scripts directly from requirements (JIRA tickets)     screen sizes, OS versions, and hardware significantly increase
+                                         and recent code changes. Applied to BMW’s MyBMW app,
+                                         covering 13 real-world issues in a 170+ screen codebase, AToMIC       the number of required configurations [5]. For Flutter, in
+                                         produced executable test artifacts in under five minutes per fea-     particular, the widget-based and asynchronous model poses
+                                         ture on standard hardware. The generated artifacts were of high       unique problems that traditional testing workflows rarely ad-
+                                         quality: 93.3% of Gherkin scenarios were syntactically correct        dress natively, often forcing engineering teams to develop
+                                         upon generation, 78.8% of PageObjects ran without manual edits,       significant custom infrastructure [4].
+                                         and 100% of generated UI tests executed successfully. In a survey,
+                                         all practitioners reported time savings (often a full developer-day      Continuous evolution of mobile applications adds further
+                                         per feature) and strong confidence in adopting the approach.          difficulty, with frequent feature changes routinely necessitating
+                                         These results confirm AToMIC as a scalable, practical solution        extensive reworking of test scripts and infrastructure. The cost
+                                         for streamlining acceptance test creation and maintenance in          of maintaining and updating Page Objects, test scenarios, and
+                                         industrial mobile projects.                                           ensuring overall compatibility can quickly absorb considerable
+                                            Index Terms—Acceptance Testing, Large Language Models,
+                                         Mobile Applications, Flutter, Test Case Generation, Cross-
+                                                                                                               engineering time, slowing down release cycles and risking
+                                         Platform Development, Gherkin, Test Automation                        quality compromises [8]. These bottlenecks are especially
+                                                                                                               acute in industrial projects, as observed in BMW’s MyBMW
+                                                                I. I NTRODUCTION                               app, where large, distributed teams are required to maintain
+                                                                                                               rigorous acceptance validation at scale across hundreds of
+                                            Acceptance Testing (AT) remains a critical and resource-           screens and features.
+                                         intensive step in delivering high-quality software, especially           To address these pressing, industrial-scale obstacles, we
+                                         as mobile ecosystems grow more complex and release cycles             introduce AToMIC (Acceptance Testing for Mobile Intelligent
+                                         accelerate [1].                                                       Code), an automated workflow that leverages the strengths
+                                            This challenge is heightened in cross-platform environments        of recent LLMs to streamline and, where possible, fully
+                                         like Flutter, where a single codebase must perform reliably           automate the generation and maintenance of acceptance test
+                                         across a wide range of devices and operating systems [2],             artifacts for cross-platform mobile applications. Rather than
+                                         [3]. While Flutter has emerged as a leading framework for             replacing established frameworks, AToMIC is designed to
+                                         building native-quality apps from a unified codebase [4],             work in tandem with existing tools, targeting the most labor-
+                                         its flexibility introduces new testing complexities. Traditional      intensive components of AT, including the transformation of
+                                         tools often struggle with Flutter’s widget-based architecture,        requirements (such as JIRA tickets) directly into traceable
+                                         and the diversity of target platforms makes comprehensive test        Gherkin scenarios, the automatic construction and mainte-
+                                         coverage increasingly difficult to achieve [5].                       nance of Page Objects mapped cleanly to code, and the
+                                            Meanwhile, Large Language Models (LLMs) are proving                synthesis of executable UI test scripts ready for immediate
+                                         increasingly adept at code generation and natural language            use in CI/CD pipelines.
+   This solution has been validated in a real-world industrial      TABLE I: Comparison of Testing Frameworks for Flutter
+context through a partnership with BMW on the MyBMW ap-             Projects
+plication, a highly complex and feature-rich Flutter codebase.       Feature                       Espresso               Appium     Flutter Driver
+Our research goals are threefold: first, to demonstrate the prac-    Flutter Compatib.              Limited                 Good        Excellent
+tical feasibility and limitations of LLM-driven AT automation        Gherkin Support                  Yes                    Yes           Yes
+at this scale; second, to provide comprehensive measurement          Language                     Java/Kotlin             Multiple        Dart
+                                                                     Flutter-Spec. APIs               No                  Limited          Yes
+and practitioner feedback on the efficiency, output quality, and     Test Exec. Speed                Faster                Slower        Faster
+actual cost savings delivered in daily industrial workflows; and     Cross-platform              Android only                Yes      Flutter only
+third, to extract actionable guidance for organizations that may     Learning Curve                  Steep                Moderate        Easy
+face similar scalability and maintainability challenges.
+   The results from this industrial evaluation show that auto-
+mated artifact generation can be reliably integrated into large,       Flutter-based applications present distinct testing challenges
+established development environments. By aligning require-          compared to traditional web or native mobile testing. Table I
+ments analysis, code change detection, navigation mapping,          compares testing frameworks for Flutter projects. While Ap-
+and test artifact generation within a single automated process,     pium offers cross-platform capabilities, Flutter Driver provides
+AToMIC has delivered tangible reductions in manual effort,          the most seamless integration with Flutter applications.
+while maintaining traceability, quality, and compatibility with        In summary, AT plays an indispensable role in ensuring that
+the workflows required in production-scale software engineer-       mobile applications deliver robust, user-centered functionality
+ing.                                                                across diverse platforms. While frameworks such as Appium2 ,
+   The remainder of this paper is organized as follows. Section     Espresso3 , and Flutter Driver4 offer essential tooling to auto-
+II reviews related work in testing automation, LLM applica-         mate this process, the unique challenges posed by Flutter’s
+tions, as well as, necessary context. Section III details the       architecture and mobile ecosystem fragmentation necessitate
+AToMIC system architecture and implementation. Section IV           continuous innovation. The integration of structured languages
+presents our empirical evaluation methodology and results.          like Gherkin enhances clarity and collaboration, yet manual ef-
+Section V concludes with future research directions.                fort in test case creation and maintenance remains a significant
+                                                                    bottleneck.
+           II. BACKGROUND AND R ELATED W ORK
+   This section provides essential background on AT for mo-         B. Mobile UI Testing in the MyBMW App
+bile applications and reviews current advancements in LLM-             The MyBMW app uses a three-tier architecture in Flutter
+driven test automation. We focus on the fundamentals of AT,         and Dart (see Figure 1). The UI layer, built with Flutter,
+challenges specific to Flutter-based applications, and the state-   handles user interaction and presentation, utilizing the BLoC
+of-the-art in LLM-based test generation for mobile apps.            (Business Logic Component) design pattern5 for state manage-
+                                                                    ment related to the UI. The domain layer (pure Dart) contains
+A. Acceptance Testing and Mobile Automation
+                                                                    cross-cutting business logic and coordinates data access via
+   AT aims to validate a system’s behavior from the end-user        repositories, while the raw data layer connects to external
+perspective. It complements other testing layers such as unit       sources like HTTP clients, GPS, and secure storage. The
+and integration testing. Unit testing focuses on verifying in-      BLoC pattern separates business logic from the UI, promoting
+dividual components, while integration testing ensures proper       maintainability and a clear separation of concerns [10], [11]:
+interaction between different modules. Acceptance tests, al-        user events are dispatched to BLoCs, which process them,
+though fewer in number, provide high-level assurance that the       interact with the domain layer, and emit new states for the UI.
+application meets business and user requirements.
+   Black-box testing forms the foundation of AT, evaluating
+a system solely based on its external behavior without access
+to internal implementation details [7]. Testers design scenarios
+based on requirements and user stories, concentrating on inputs
+and expected outputs. This approach is especially relevant in                  Fig. 1: MyBMW’s Three-Tiered Architecture
+mobile applications, where user experience and business logic
+must align closely with customer expectations [9].                    The test automation infrastructure for MyBMW uses Flutter
+   The integration of Gherkin1 grammar has significantly en-        Driver, enabling robust interaction with Flutter widgets via
+hanced AT by improving communication between technical              unique ValueKey identifiers. UI tests are implemented in
+teams and stakeholders. Gherkin uses a structured syntax with       Kotlin, following the Page Object design pattern, in which
+keywords such as Given, When, and Then to define acceptance         each app screen is abstracted as a dedicated class encapsulating
+criteria. In the Appendix, a real-world example from the            both UI elements and user interactions.
+MyBMW application is showcased, demonstrating a Gherkin-              2 https://appium.io/docs/en/latest/
+                                                                      3 https://developer.android.com/training/testing/espresso
+based testing scenario.
+                                                                      4 https://api.flutter.dev/flutter/flutter_driver/
+  1 https://cucumber.io/docs/gherkin/                                 5 https://pub.dev/packages/bloc
+                                                                   modal reasoning, VisiDroid significantly improved task-
+                                                                   completion accuracy compared to previous text-only methods,
+                                                                   demonstrating the benefits of incorporating visual context into
+                                                                   test script generation processes [13].
+                                                                      LELANTE further emphasizes automated Android testing
+                                                                   by employing LLMs to generate and maintain test scripts. Its
+                                                                   effectiveness lies in automating test case creation directly from
+                                                                   natural language descriptions, offering substantial productivity
+Fig. 2: UI Test Development Workflow in the MyBMW Project          enhancements and reductions in manual effort. This research
+                                                                   underscores the capacity of LLMs to streamline mobile test
+                                                                   automation tasks effectively [14].
+   Figure 2 illustrates the standard UI test development work-        LLMDroid specifically addresses coverage improvement in
+flow used on the MyBMW project. The process starts when            mobile GUI testing by guiding automated test case genera-
+developers make UI changes, leading to the creation or update      tion through LLMs. It systematically enhances test scenarios,
+of corresponding Page Object classes that abstract the new or      demonstrating measurable improvements in test coverage and
+modified screens. Subsequently, relevant test data is prepared,    scenario effectiveness, reinforcing the potential for LLM guid-
+often via comprehensive mocking of backend services, to            ance in comprehensive mobile GUI testing [15].
+ensure that tests are reliable and deterministic. Then, concrete      AToMIC stands out from prior mobile testing tools by
+test cases are implemented, utilizing the Page Object APIs to      integrating multiple innovations: unlike XUAT-Copilot and
+describe test scenarios at a high level of abstraction. These      LELANTE, it supports artifact generation with full traceability,
+test cases are then categorized (e.g., as smoke, regression, or    derives user flows directly from code structure rather than
+feature tests) and integrated into automated CI/CD pipelines,      GUI exploration, and employs specialized LLMs for different
+where they are executed on real or simulated devices. Test         subtasks, enabling a novel, privacy-compatible multi-model
+results are analyzed and promptly shared with the development      architecture for industrial CI/CD pipelines.
+team to resolve issues before code reaches production.                Distinct from these existing works, AToMIC integrates
+   Key practices supporting this workflow include assigning        structured software artifacts such as JIRA issues and GitHub
+unique ValueKeys to widgets for stable selection, using the        commits into its pipeline. Focusing specifically on Flutter ap-
+Page Object pattern to centralize UI logic and reduce redun-       plications, it produces structured and maintainable acceptance
+dancy, and employing reliable mock data for consistent test        test artifacts, including Gherkin scenarios, Page Object classes,
+results. Integrating these tests into CI pipelines enables early   and UI test scripts, optimized for seamless integration into
+issue detection and helps maintain release quality.                industrial CI/CD processes. This explicit alignment with real-
+   Despite these best practices, traditional UI test development   world industrial practices, as exemplified in BMW’s MyBMW
+for Flutter apps remains labor-intensive and error-prone. Keep-    application, directly addresses critical needs around scalability,
+ing Page Objects aligned with changing UI code, preparing          maintainability, and traceability.
+test data, and updating scripts as requirements evolve require
+significant effort. In large projects like MyBMW, this of-                        III. AT O MIC S YSTEM D ESIGN
+ten creates bottlenecks that slow development and limit test       A. Architecture Overview
+coverage, highlighting the need for more efficient, automated         AToMIC is designed as a modular framework that inte-
+acceptance test generation.                                        grates seamlessly with existing development workflows and
+                                                                   tools, enabling adoption without major changes to established
+C. LLMs in Test Generation for Mobile Apps
+                                                                   practices. Its deployment and validation in the MyBMW app
+   The use of LLMs for automating acceptance test generation       demonstrate its effectiveness in industrial settings.
+has recently gained substantial traction in mobile software           Figure 3 presents the workflow for AToMIC. The work-
+development, driven by persistent challenges such as platform      flow begins with JIRA issue specification, where stakeholders
+fragmentation, rapid release cycles, and increasing application    define requirements using standard templates and acceptance
+complexity.                                                        criteria. The system then retrieves associated code changes
+   XUAT-Copilot represents one of the early industrial-scale       from GitHub commits, analyzing modifications to identify
+applications of LLM-driven automation specifically for mobile      affected UI components and navigation flows.
+user acceptance testing. Deployed in the WeChat Pay app,              The system then constructs a navigation map that models
+XUAT-Copilot employs a multi-agent architecture, coordinat-        possible user flows through the application. This graph-based
+ing agents for state inspection, action planning, and parameter    representation captures the relationships between screens and
+generation. It achieves near-human accuracy, highlighting the      user actions, providing essential context for test generation.
+practical potential of LLM-based solutions in production en-          Finally, AToMIC generates three types of artifacts: Gherkin
+vironments [12].                                                   scenarios that formalize acceptance criteria, Page Object
+   VisiDroid extends this domain by combining visual and           classes that abstract UI interactions, and executable test scripts
+textual inputs for Android GUI testing. By leveraging multi-       that can be integrated into CI/CD pipelines.
+                                                                     Fig. 4: Activity Diagram for Page Objects Generation
+
+Fig. 3: High-Level Activity Diagram of the AToMIC System          enforcing strict naming and structural conventions, combined
+                                                                  with automated analysis and code generation.
+B. LLM Integration Strategy                                          Page Objects serve as an abstraction layer between auto-
+                                                                  mated tests and the Flutter UI, each representing a screen
+   Privacy considerations in industrial settings often preclude   with methods for user interactions. In large-scale apps like
+the use of cloud-based LLM services. Our approach addresses       MyBMW, standardized Page Objects are essential for main-
+this constraint by utilizing local LLM deployment through         tainability, traceability, and automated navigation reasoning.
+Ollama6 , enabling secure processing of proprietary code and         To ensure consistency, we require each Dart UI screen
+requirements. Within the available open-source options, we        file to end with _page.dart, and its corresponding
+conducted internal evaluations of several candidates, selecting   Kotlin Page Object to use the same CamelCase name
+a configuration that provided the best balance between accu-      (e.g., profile_page.dart maps to ProfilePage.kt).
+racy, performance, and efficiency under these constraints.        Directory structures are mirrored between the app and
+   We employ different models for different tasks, optimizing     test code, and widget keys follow a structured format
+for the specific requirements of each workflow component.         (context_keyIdentifier_pageItGoesTo) to embed
+DeepSeek-R1 handles complex reasoning tasks like Gherkin          navigation metadata for automated extraction.
+scenario generation [16], while DeepSeek-Coder-V2 focuses            The system features a fully automated Page Object gener-
+on code generation for Page Objects and test scripts valida-      ation and update pipeline. When changes occur in the Flutter
+tion [17]. Gemma3:1b provides efficient code summarization        codebase, the system identifies which _page.dart files are
+capabilities [18]. This specialization approach proved crucial    affected and, using a precomputed dependency graph built
+for maintaining reasonable performance with local deploy-         from all Dart files in the MyBMW app, traces the widgets that
+ment. By matching model capabilities to task requirements,        make up each page—even when they are distributed across
+we achieve better results than using a single general-purpose     multiple files. This dependency graph operates at industrial
+model for all tasks.                                              scale: for the MyBMW application, with approximately 3
+   Finally, AToMIC’s modular architecture enables straight-       million lines of code, it models more than 36,000 Dart files as
+forward integration of alternative LLMs, ensuring that per-       nodes. The graph enables the system to systematically resolve
+formance improvements from newer models can be readily            all UI components and dependencies for any page. It then
+incorporated without requiring architectural changes.             extracts the relevant widget keys used to identify UI elements
+C. Requirements Processing                                        for testing.
+    The system extracts structured information from JIRA is-         At this point, the system checks whether a Page Object
+sues, including summaries, acceptance criteria, and labels.       already exists. If it does, it updates the Page Object with
+This information provides the business context necessary for      the new elements or logic. If not, it initiates the creation
+generating meaningful test scenarios.                             of a new Page Object. For generation, the system passes
+    Code change analysis locates all modified files and applies   an example Page Object along with the extracted keys and
+project-specific filters to focus on user-facing functionality.   structural data to an LLM (specifically, DeepSeek-Coder-v2),
+Files irrelevant to the UI, such as those in /test/, /utils/,     which synthesizes a compliant Page Object class.
+/repository/, or configuration files, are excluded, while            This entire flow is illustrated in Figure 4, automating a
+Dart files within main feature clusters are prioritized. This     typically manual and error-prone process, whilst ensuring test
+filtering approach, based on established directory and naming     code remains consistent with the rapidly evolving Flutter UI.
+conventions, ensures that all relevant screen and widget files    E. Navigation Map and Navigation Paths Generation
+are captured.                                                        Traditional mobile testing frameworks struggle with nav-
+D. Page Object Generation                                         igation complexity because they lack a comprehensive un-
+  Maintaining alignment between evolving Flutter UI code          derstanding of application structure. AToMIC addresses this
+and test abstractions is a persistent challenge in mobile au-     by constructing a complete navigation model that enables
+tomation. Our Page Object generation system addresses this by     systematic exploration of user journeys.
+                                                                     The navigation map formalizes all possible transitions be-
+ 6 https://ollama.com/                                            tween screens in the application and is essential for ensuring
+both coverage and effective test automation. It is imple-         coverage with practical test suite size, allowing the system to
+mented as a directed multigraph, where the nodes correspond       adapt the number of scenarios based on the complexity and
+to Page Objects that represent individual screens (such as        scope of each JIRA issue rather than arbitrary limits.
+VehicleTabPage), and the edges represent navigation ac-              A key supporting component is code summarization, per-
+tions between screens, as inferred from Page Object methods       formed using gemma3:1b. Instead of feeding entire source files
+and widget key conventions.                                       to the LLM, which can be inefficient and noisy, the system
+   The construction algorithm leverages the modular code          generates concise summaries highlighting relevant functional-
+structure and naming standards. The full map for MyBMW            ity and UI elements.
+(v5.5.2) has 174 nodes and 232 edges, with parallel edges            The prompt structure used for LLM generation incorporates
+representing variant flows.                                       several layers of contextual information:
+   Based on this navigation map and the Page Objects affected        • JIRA fields, including issue description, acceptance cri-
+by code changes, the system then identifies valid navigation            teria, and labels, form the foundation of business context.
+paths from the app’s entry point (e.g., VehicleTabPage)              • Code summaries provide a distilled view of implemen-
+to the target screens (corresponding to the affected Page               tation details relevant to the issue.
+Objects), using a depth-limited breadth-first traversal of the       • Navigation paths, derived as explained in the previous
+navigation map. The discovered paths are prioritized based on           section, are included to ensure that the scenario aligns
+their length, corresponding to the most direct user journeys.           with valid user flows in the application.
+This ensures comprehensive test coverage across different user       This multi-source prompt enables the LLM to generate
+flows.                                                            Gherkin scenarios that are both technically grounded and
+   The discovered navigation paths provide essential context      aligned with business requirements.
+for Gherkin scenario generation and UI test script synthesis.        The resulting scenario files serve as formalized accep-
+For a concrete example of navigation paths, see the Appendix.     tance tests. They maintain traceability to JIRA tickets and
+F. Gherkin Scenario Generation                                    are directly linked to navigable user paths through the app,
+                                                                  facilitating alignment between QA, development, and product
+                                                                  stakeholders.
+                                                                     Figure 5 presents the full activity flow for this generation
+                                                                  process, from input aggregation to final scenario creation.
+                                                                     An example illustrating some of the mentioned artifacts is
+                                                                  provided in the Appendix.
+                                                                  G. UI Test Script Generation
+                                                                     The final stage of the workflow is the generation of exe-
+                                                                  cutable UI test scripts from Gherkin scenarios and the potential
+                                                                  navigation paths. This process is primarily deterministic, trans-
+                                                                  lating the identified navigation paths (corresponding to possi-
+ Fig. 5: Activity Diagram for Gherkin Scenario Generation         ble user journeys) into Kotlin test functions through a custom-
+                                                                  built generator developed for this project. The generator scaf-
+   Gherkin scenarios act as a crucial bridge between business     folds necessary imports, manages base class inheritance, and
+requirements and technical implementation. Our system au-         integrates PageObjects to ensure consistency with BMW’s
+tomates their generation by combining multiple sources of         testing framework. A final LLM validation step then refines the
+information in a gray-box approach: JIRA acceptance criteria      results to ensure alignment with the Gherkin scenarios derived
+for business context, code summaries for technical insight, and   from the business requirements (see Figure 3).
+navigation paths to ensure realistic user flows.                     For each path, the system deterministically generates a
+   The generation process is LLM-driven and adaptive. It          Kotlin test function. These functions leverage Page Object
+can produce both simple scenarios and more complex edge           methods to traverse the application, access the target screen,
+cases, depending on the depth and richness of the provided        and return to the initial state. This approach ensures that each
+inputs. This flexibility is enabled through DeepSeek-R1, which    test executes in isolation while accurately reflecting realistic
+handles natural language synthesis of scenarios based on          user behavior.
+structured prompts. AToMIC does not apply a hard limit               When corresponding Gherkin scenarios are available, a
+during initial scenario generation. Instead, our approach gen-    code-specialized LLM (DeepSeek-Coder-V2) performs vali-
+erates all plausible candidate scenarios and then, at posterior   dation and refinement of the generated test script. It ensures
+phases in the workflow, applies multi-stage filtering: first,     alignment between test steps and the scenarios, removes
+a deduplication process removes semantically overlapping          unrelated logic, and inserts explanatory comments to enhance
+scenarios; second, LLM-based validation eliminates scenarios      clarity.
+that are technically infeasible, redundant, or misaligned with       The final test scripts are placed into the appropriate module
+the acceptance criteria. This strategy balances comprehensive     and are ready for CI/CD execution.
+                 IV. E MPIRICAL E VALUATION
+   This section presents a comprehensive empirical evaluation
+of the AToMIC system for automating acceptance test gen-
+eration in industrial Flutter mobile application development.
+The study was conducted using BMW’s MyBMW app, a
+production system with over 170 screens.
+
+A. Research Questions
+  This evaluation aims to answer four research questions:
+  RQ1: Accuracy and Completeness: To what extent are
+         the generated artifacts accurate and complete when
+         using LLMs for automating AT in mobile apps?
+  RQ2: Time Efficiency: Is the process of generating ac-               Fig. 6: Traceability Tree Showcasing the Different Artifacts
+         ceptance test scripts using LLMs more time-efficient
+         compared to traditional manual methods?
+  RQ3: Accessibility: How accessible and understandable
+         are the generated acceptance test scripts for individ-           Page Object generation proved to be the most challenging
+         uals with varying levels of technical expertise?              step. Of the 52 Page Objects generated, 78.8% could be used
+  RQ4: Challenges and Limitations: What are the main                   without any manual modification. The remainder primarily
+         challenges and limitations encountered when apply-            suffered from technical issues, incorrect inheritance from the
+         ing LLMs to acceptance test generation for mobile             expected base class or imprecise function return types, which
+         applications, and how do they impact the overall              in several cases required moderate developer intervention.
+         process?                                                      While many fixes were straightforward (such as changing a
+                                                                       single function signature), 7 Page Objects required deeper
+B. Experimental Setup                                                  structural changes.
+   The evaluation follows a mixed-methods strategy, combin-               Gherkin scenario generation achieved a 93.3% success rate
+ing quantitative analysis with qualitative insights to provide a       (56 out of 60 scenarios valid), as determined by a syntactic val-
+well-rounded view of AToMIC’s performance.                             idation of each generated file. This verification step was carried
+   On the quantitative side, the focus is on measuring artifact        out through manual checking, namely ensuring the presence
+quality, generation time, and LLM token usage across real-             of required Gherkin keywords (Feature, Scenario, and
+world tasks. In parallel, qualitative validation was conducted         Given/When/Then blocks). The few invalid cases, con-
+through a survey of MyBMW practitioners, capturing percep-             centrated within a single issue, typically involved missing
+tions of AToMIC’s usability, output clarity and usefulness, im-        background steps but remained easily readable and correctable
+pact on productivity, trust in the generated tests, and likelihood     within minutes. In practice, Gherkin scenarios were used as
+of integration into regular workflows.                                 documentation and validation artifacts, reviewed by stake-
+   All validation activities were performed using 13 real JIRA         holders and developers to ensure alignment with acceptance
+issues from the MyBMW Flutter codebase. These issues,                  criteria rather than executed directly as tests. This human-in-
+linked to a total of 67 commits (since organizational policies         the-loop approach was essential, with participants confirming
+require every pull request and commit to reference a JIRA              scenario clarity and relevance in the survey and artifact quality
+issue key), reflect diverse functionality and navigation com-          assessment (see Section IV-E1).
+plexity, ensuring a realistic and representative test set. Minor          UI test script generation demonstrated robust outcomes
+adjustments were made to the workflow and code structure               after integrating the LLM-based validation step. Out of 89
+by applying the technical standards and naming conventions             initially generated test cases, 48 were retained after filtering
+introduced in this work directly to the files and modules              by automatically cross-checking against the corresponding
+associated with these issues.                                          Gherkin scenarios. Every retained test was executed to confirm
+   All experiments were conducted locally using a MacBook              its syntactic correctness and practical executability within the
+Pro with M2 Pro processor and 32GB RAM. This hardware                  test automation environment, with 100% success. Subsequent
+configuration represents typical development environments              manual analysis by the development team confirmed they were
+and demonstrates the feasibility of local LLM deployment for           also semantically valid and thorough.
+this type of automation.                                                  Overall, this traceability analysis confirms that AToMIC
+                                                                       achieves high requirements coverage and practical validity
+C. Artifact Validity                                                   across all major artifact types. The consistently high Gherkin
+  Figure 6 presents a traceability tree summarizing AToMIC’s           and UI test success rates, in combination with human review
+ability to generate valid test artifacts across the full AT pipeline   and execution-based verification, provide strong evidence for
+on 13 JIRA issues of the MyBMW project.                                the system’s applicability in industrial acceptance testing.
+D. Time Efficiency                                                projects with specific contexts bring some complexity to the
+  The efficiency gains achieved by AToMIC were substantial.       LLM,” highlighting a potential limitation in highly specialized
+Complete artifact generation, including Gherkin scenarios,        environments.
+Page Objects, and UI test scripts, took on average 259 seconds       Page Objects also received generally positive feedback,
+per issue when executed locally, as shown in Table II.            though with some noted concerns. The main technical issues
+                                                                  cited were related to inheritance hierarchy problems and
+TABLE II: Average execution time and token usage per issue.       return type mismatches. Despite these challenges, respondents
+                                                                  consistently emphasized the time savings achieved. Several
+ Artifact            Time (s)   Input Tokens     Output Tokens
+ Page Objects         142.6        21,911            1,979
+                                                                  practitioners reported that AToMIC could save “up to one full
+ Gherkin Scenarios    100.5        11,263            4,334        day of work,” and one user remarked that “AToMIC will reduce
+ UI Tests              15.5         676               483         a lot of workloads for the developers since the tests will be
+ Total                258.6        33,850            6,796        generated and only small adjusts will need to be done.”
+                                                                     UI test scripts received the most enthusiastic responses. All
+   To better understand LLM usage, Table II also shows the        respondents (100%) agreed that no manual adjustments were
+number of input and output tokens processed by the language       needed after generation (as confirmed in qualitative feedback),
+models. As expected, Page Object generation accounted for         and that the generated test cases were both accurate and well-
+the largest share of execution time and token consumption,        aligned with the intended scenarios.
+followed by Gherkin scenario generation.
+   It should be noted that execution times can be reduced by
+an estimated factor of 10x using cloud-based LLMs [19], to
+approximately 26 seconds per issue, with an estimated cloud
+cost below $0.01 per issue.
+   From a practical standpoint, developer feedback strongly
+supported the time savings observed. Several participants
+estimated that tasks such as Page Object creation, which pre-
+viously consumed hours, could now be completed in minutes.
+Comments like “a full day saved” were not uncommon when
+discussing repetitive test maintenance workflows.
+
+E. Practitioner Survey and Qualitative Results
+   To complement the technical evaluation, a practitioner sur-
+vey was conducted using a convergent mixed-methods design.
+This approach combined quantitative ratings and qualitative
+feedback to assess the perceived quality, usability, and adop-
+tion potential of AToMIC-generated artifacts in a real-world
+industrial setting.
+   The survey was distributed to nine practitioners directly
+involved with the 13 JIRA issues. All participants reported            Fig. 7: Artifact Quality Assessment Survey Results
+being at least “somewhat familiar” with the selected issues,
+with 67% indicating they were “very familiar.” The respondent        2) Usability and Adoption: Practitioners reported that
+pool was composed of seven developers, complemented by            AToMIC integrated smoothly into existing workflows. All
+a Scrum Master and a Product Owner. In terms of expe-             participants agreed that the tool reduced the time required for
+rience, 44% reported 1–3 years in their current role, 33%         test creation, and only 11% felt that technical support was
+had 4–5 years, and 22% had over five years of experience.         needed to use it effectively (see Figure 8). The learning curve
+This distribution ensured that the feedback was grounded in       was perceived as low, with most respondents disagreeing that
+both hands-on development practice and broader product and        significant training would be necessary.
+process perspectives.                                                Importantly, every participant indicated they would recom-
+   1) Artifact Quality: The survey responses reflected strong     mend incorporating AToMIC into daily development practice,
+confidence in the quality of AToMIC’s outputs across all          highlighting its immediate applicability and value within the
+artifact types, as shown in Figure 7.                             team’s tooling ecosystem.
+   Gherkin scenarios were universally well-received. All re-         3) Qualitative Insights: Open-ended responses were ana-
+spondents (100%) agreed that the generated scenarios accu-        lyzed using a structured thematic approach, revealing three
+rately captured acceptance criteria, adhered to best practices,   core themes.
+and required minimal adjustments. Additionally, 89% found            Time and Productivity Gains. The most frequently men-
+the scenarios accessible to non-technical stakeholders. While     tioned benefit was the time saved by automating repetitive
+overall satisfaction was high, one participant noted that “huge   tasks. Developers cited examples such as “saving about one
+                                                                      RQ2: Is the process of generating acceptance test scripts
+                                                                   using LLMs more time-efficient compared to traditional
+                                                                   manual methods?
+                                                                      Quantitative results show that AToMIC significantly reduces
+                                                                   test generation time—averaging 259 seconds per issue lo-
+                                                                   cally. Estimated cloud execution times suggest a potential
+                                                                   10× speed-up, with negligible cost. In contrast, practitioners
+                                                                   estimated a full day of manual effort per issue, yielding over
+                                                                   95% time savings. These gains match or exceed results from
+                                                                   comparable LLM-based studies [6], with no major bottlenecks
+                                                                   and smooth workflow integration reported. It is important to
+Fig. 8: Usability & Adoption Potential Assessment Survey           note that while automation inherently provides time-efficiency
+Results                                                            benefits, these gains would not be as meaningful without the
+                                                                   high quality of the generated artifacts.
+                                                                      RQ3: How accessible and understandable are the gen-
+full day of work” on Page Object generation. AToMIC was            erated acceptance test scripts for individuals with varying
+described as freeing practitioners from “boring” manual tasks,     levels of technical expertise?
+allowing them to focus on more meaningful work.                       Practitioner survey results show that AToMIC’s artifacts are
+   Quality and Reusability of Outputs. Several respondents         accessible to both technical and non-technical users. Gherkin
+highlighted that AToMIC provides a reliable starting point for     scenarios were praised for their clarity and traceability, while
+Gherkin scenarios, Page Objects, and UI tests. One participant     Page Objects and test scripts were well-structured and needed
+noted that it “helps in reducing the time needed for develop-      only minor adjustments. All participants agreed that the gen-
+ment” by offering a foundation that require minimal polishing.     erated artifacts ease test comprehension and maintenance.
+   Requests for Workflow Enhancements. While feedback                 RQ4: What are the main challenges and limitations
+was largely positive, respondents suggested improvements           encountered when applying LLMs to acceptance test
+such as tighter integration with test management tools like        generation for mobile applications, and how do they impact
+Xray and JIRA, enhanced automatic file placement, and bet-         the overall process?
+ter prompt contextualization through expanded use of story            The evaluation revealed several challenges, reflecting both
+descriptions. These requests point to natural next steps for       model and workflow limitations. Page Object generation some-
+improving usability and workflow alignment.                        times required minor manual fixes, such as correcting base
+                                                                   class inheritance and method signatures. The complexity and
+   Finally, feedback revealed a balanced understanding of
+                                                                   modularity of large-scale Flutter projects complicated nav-
+AToMIC’s role in the development lifecycle. Practitioners
+                                                                   igation mapping, which required strict standardization and
+consistently framed it as an intelligent assistant rather than a
+                                                                   developer discipline in widget key naming. Privacy constraints
+replacement for human judgment. Several noted that while the
+                                                                   also limited LLM execution to local environments, preventing
+system performs well, it still struggles with complex, domain-
+                                                                   the use of the latest large-scale commercial models. Addi-
+specific contexts, particularly in large projects. Nonetheless,
+                                                                   tionally, some users suggested improvements like integration
+they saw clear value in the system’s current capabilities and
+                                                                   with test management tools. Despite these issues, practitioners
+expressed confidence in its future potential.
+                                                                   consistently found that AToMIC’s productivity gains, artifact
+                                                                   quality, and strong traceability outweighed the drawbacks.
+F. Answers to Research Questions                                      In summary, the evaluation affirmatively answered all re-
+                                                                   search questions: AToMIC enables efficient, high-quality, and
+   This subsection synthesizes the quantitative and qualitative    accessible generation of acceptance test artifacts for industrial
+findings to answer the research questions guiding AToMIC’s         Flutter projects, while addressing workflow, technical, and
+empirical evaluation.                                              organizational challenges observed in real-world deployments.
+   RQ1: To what extent are the generated artifacts accurate
+and complete when using LLMs for automating AT in                  G. Threats to Validity
+mobile apps?                                                         Internal Validity. To ensure consistency, all experiments
+   Empirical results show that AToMIC generates highly ac-         used the same hardware, software stack, and local LLM de-
+curate and complete artifacts for industrial-scale Flutter apps.   ployment. However, minor manual steps—such as Page Object
+Gherkin scenarios were 93.3% syntactically correct, and all        mapping setup and artifact corrections—may have introduced
+artifacts were usable by both technical and non-technical          some subjectivity. While human interventions were minimised,
+stakeholders. Page Objects and UI tests reached executability      their exact frequency was not systematically tracked, which
+rates of 78.8% and 100% (after LLM filtering), with minimal        could slightly overstate productivity gains. Transparent re-
+manual fixes. Practitioners confirmed strong traceability and      porting, shared artifacts, and independent practitioner surveys
+semantic alignment with requirements.                              helped mitigate bias and enhance reliability.
+   External Validity. While our evaluation focuses on Flut-              While AToMIC performs effectively in production, several
+ter applications within BMW’s development environment,                directions remain for future work. Enhancing Page Object
+AToMIC’s architectural design supports broader applicability.         generation to better handle complex widget structures, return
+More than half of the workflow components are platform-               type inference, and dynamic flows is a key area. Adapting
+agnostic. Issue retrieval, commit analysis, navigation mod-           the system to newer, high-capacity LLMs—cloud-based or on-
+eling, and Gherkin generation can all be applied to any               premises—may further boost quality and scalability, provided
+mobile framework. The primary adaptation challenge lies in            compliance with data privacy constraints. Broadening appli-
+PageObject generation, which requires framework-specific UI           cability to other platforms beyond Flutter (e.g., native An-
+abstraction patterns. Although the MyBMW app is repre-                droid/iOS or other cross-platform frameworks) would expand
+sentative of complex, modular systems, broader evaluations            its impact.
+across diverse projects and organizational contexts would                Overall, AToMIC demonstrates that LLM-based automation
+strengthen the generalizability of our findings. Future work          can significantly streamline the creation of high-quality, main-
+will assess AToMIC’s effectiveness on other platforms and             tainable AT artifacts, reducing manual effort while supporting
+develop framework-specific PageObject generation modules to           collaboration across technical and non-technical stakeholders
+enable wider adoption.                                                in industrial software engineering.
+   Construct Validity. Artifact quality and efficiency were
+assessed through syntactic checks and practitioner feedback.                              ACKNOWLEDGMENTS
+Participants’ prior familiarity with the workflow may have               This work was financially supported by: UID/00027 of the
+positively influenced perceptions. To reduce bias, surveys            LIACC - Artificial Intelligence and Computer Science Labo-
+were administered independently and supported by objective            ratory - funded by Fundação para a Ciência e a Tecnologia,
+metrics.                                                              I.P./ MCTES through the national funds.
+   In conclusion, while the study employed multiple strate-
+gies to mitigate threats—including consistent setup, detailed                                 A PPENDIX
+documentation, and independent evaluation—some limitations                         A RTIFACTS G ENERATION E XAMPLE
+remain. Future research will expand validation scope and
+further reduce manual intervention.                                      This appendix illustrates AToMIC’s generation workflow for
+                                                                      a JIRA issue related to the charging adapter functionality in the
+                                                                      MyBMW app. For confidentiality reasons, only some excerpts
+           V. C ONCLUSIONS AND F UTURE W ORK
+                                                                      of the artifacts are shown.
+   This work addressed the persistent challenge of manual,               The Jira issue has the following characteristics:
+time-consuming, and error-prone acceptance test generation in            • Key: NWAP-165701
+mobile software development, particularly for cross-platform             • Summary: Add link to Driver’s Guide
+frameworks like Flutter. We presented AToMIC, a modu-                    • Labels: Backend, Mobile
+lar system that automates the generation of Gherkin sce-                 • Acceptance Criteria:
+narios, Page Objects, and UI test scripts directly from re-
+                                                                             1) The "BMW Driver’s Guide" link on the "About
+quirements and code changes, leveraging locally deployed
+                                                                                 Adapters" page redirects to the BMW Driver’s
+LLMs. AToMIC integrates into industrial CI/CD pipelines and
+                                                                                 Guide app if installed.
+supports realistic mobile workflows through systematic Page
+                                                                             2) If the app is not installed, the link redirects to the
+Object abstraction and navigation modelling.
+                                                                                 App Store.
+   The empirical evaluation demonstrates that AToMIC                         3) When redirected, the user should land on the Charg-
+achieves high efficiency and quality in automated acceptance                     ing Vehicle section in the correct language.
+artifact generation for complex industrial Flutter applications.
+                                                                         • Description:
+Quantitative results showed significant time savings—over
+95% compared to manual test creation—and high artifact                       1   Goal
+correctness and usability. Practitioner feedback confirmed the               2   Create deeplink to Driver’s Guide.
+                                                                             3
+value of the generated artifacts in terms of productivity, clarity,          4 Background
+traceability, and ease of adoption. These findings affirm the                5 In one of our onboarding screens, we provide
+feasibility and impact of LLM-driven test automation in real-                        a link to the Driver’s Guide to inform
+                                                                                   users about NACS adapters. We need to
+world settings.                                                                    create a deeplink for this purpose.
+   Our main contributions include: (i) an end-to-end automated               6 [...]
+
+workflow from issue tracking and version control to executable
+test artifacts, (ii) formalized methods for Page Object gener-
+ation and navigation modeling, (iii) prompt engineering and           A. GitHub Commit Identification & File Filtering
+LLM deployment strategies tailored for privacy-constrained               AToMIC identified a single commit directly associated with
+environments, and (iv) a validated implementation based on            this issue. The commit introduced modifications exclusively
+thirteen real-world issues in the MyBMW app.                          in the ’adapters_configuration’ module, affecting 4 .dart files.
+B. Page Object Generation                                         D. Gherkin Feature File Generation
+  From the code changes, AToMIC generated 3 Kotlin Page              The Gherkin generator produced a feature file with two
+Objects for the updated screens. Listing 1 shows an extract of    user flows: with and without the BMW Driver’s Guide app
+one of such pages - the ‘AddAdapterPage‘, encapsulating the       installed, as shown in Listing 3, expressing the acceptance
+UI elements and user interactions involved in adapter selection   criteria as executable test scenarios.
+and saving.                                                         1   Feature: Add link to BMW Driver’s Guide
+                                                                    2
+  1 package pages.chargingequipments.                               3 Scenario: User has BMW Driver’s Guide installed
+        adaptersconfiguration                                       4   Given The user clicks on the "Add Adapter"
+  2 import pages.base.BaseTabPage                                           button in the About Adapters widget
+  3 ...                                                             5   When The BMW driver’s guide link appears in the
+  4 class AddAdapterPage<T : BaseTabPage>(                                   About Adapters widget
+        previousPage: AdaptersMainPage<T>) :                        6   Then The user is redirected to the BMW Driver’s
+        BasePopupPage<AdaptersMainPage<T>>(                                  Guide app with correct language displayed
+        previousPage) {                                             7
+  5     ...                                                         8 Scenario: User does not have BMW Driver’s Guide
+  6     override fun ensurePageVisible() {                                installed
+  7         driver.wait(WaitingConstants.                           9   Given The user clicks on the "Add Adapter"
+                PAGE_SWITCH_WAITING_TIME,                                   button in the About Adapters widget
+                selectAdapterListItemSelector)                     10   When The BMW driver’s guide link appears in the
+  8     }                                                                    About Adapters widget
+  9     fun selectAdapter(): AboutAdaptersPage<T> {                11   Then The user is redirected to the App Store
+ 10         driver.scrollAndClick(                                          with correct language displayed
+                selectAdapterListItemSelector)
+ 11         return AboutAdaptersPage(this)                        Listing 3: Generated Gherkin Feature File for NWAP-165701
+ 12     }
+ 13     fun save(): AdaptersMainPage<T> {
+ 14         driver.wait(WaitingConstants.
+                PAGE_SWITCH_WAITING_TIME,                         E. Generated UI Test Class
+                selectAdapterListItemSelector)
+ 15         driver.waitAndClick(saveButtonSelector)
+                                                                     Finally, AToMIC compiles the generated Page Objects and
+ 16         previousPage.ensurePageVisible()                      navigation paths into an executable UI test class. Listing 4
+ 17         return previousPage                                   presents an excerpt of a generated test case, following Path 1
+ 18     }
+ 19 }
+                                                                  in Listing 2.
+                                                                    1   package uitest.vehicletab
+Listing 1: Generated Page Object for the Add Adapter Page           2
+                                                                    3   import pages.vehicle.VehicleTabPage
+                                                                    4   ...
+                                                                    5
+
+C. Navigation Path Discovery                                        6   @Priority1
+                                                                    7   class AddLinktoDriversGuideinAboutAdaptersPage :
+                                                                            BaseUiTest() {
+   AToMIC identified several relevant navigation paths re-          8
+quired to reach the target feature. Listing 2 outlines a subset     9       private lateinit var vehicleTabPage:
+of these discovered paths, each specifying page transitions and                 VehicleTabPage
+                                                                   10
+actions.                                                           11       public override fun setup() {
+                                                                   12         vehicleTabPage = initApp(). ...
+  1 Path 1:                                                        13       }
+  2   VehicleTabPage                                               14
+  3   -> ElectricMobilityPage (via charging)                       15       // Scenario: When all adapters are configured
+  4   -> AdaptersMainPage (via adaptersConfiguration)                           and the user navigates via charging link
+  5   -> DriversGuide (via openDriversGuide)                                    to About Adapters page
+  6
+                                                                   16       @RetryingTest(2)
+  7 Path 2:                                                        17       fun driversGuideTest() {
+  8   VehicleTabPage                                               18         vehicleTabPage
+  9   -> MyVehicleListPage (via enterGarage)                       19           .charging().adaptersConfiguration() //
+ 10   -> ManualVinEntryInfoPage (via                                                Navigate from Charging to Adapters
+          enterToManualVinEntryInfoPage)                                            Configuration
+ 11   -> ManualVinEntryPage (via                                   20           .openDriversGuide() // Open the Driver’s
+          enterToAddVehicleEnterVinPage)                                            guide
+ 12   -> BmwIntroPage (via submitVin)                              21           .back() // Go back to the previous page (
+ 13   -> VehicleTabPage (via submitLetsGoBtn)                                       Charging)
+ 14   -> ElectricMobilityPage (via charging)                       22           .back() // Go back again to reach the
+ 15   -> AdaptersMainPage (via adaptersConfiguration)                               initial state (Vehicle Tab Page)
+ 16   -> DriversGuide (via openDriversGuide)                       23       }
+ 17 [...]
+                                                                   24   }
+ Listing 2: Discovered Navigation Paths for NWAP-165701                 Listing 4: Generated UI Test Class for NWAP-165701
+                              R EFERENCES
+ [1] John Watkins and Simon Mills, “User Acceptance Testing,” in Testing
+     IT: An Off-the-Shelf Software Testing Process. Cambridge University
+     Press, 2010, pp. 77–83.
+ [2] Samah W.G. AbuSalim and Rosziati Ibrahim and Jahari Abdul
+     Wahab, “Comparative Analysis of Software Testing Techniques
+     for Mobile Applications,” Journal of Physics: Conference Series,
+     vol. 1793, no. 1, p. 012036, feb 2021. [Online]. Available:
+     {https://dx.doi.org/10.1088/1742-6596/1793/1/012036}
+ [3] De Oliveira, Livia Fernanda and Rodrigues, Cassio Leonardo
+     and Bulcao-Neto, Renato De Freitas, “Characterizing the Software
+     Acceptance Testing and the Inclusion of People with Disabilities
+     by Means of a Systematic Mapping,” IEEE Latin America
+     Transactions, vol. 21, no. 1, p. 35 – 46, 2023. [Online].
+     Available:         {https://www.scopus.com/inward/record.uri?eid=2-s2.
+     0-85147426373&doi=10.1109%2fTLA.2023.10015143&partnerID=
+     40&md5=f8aa0b4b9cdfa2cb6c80f63291f3e9e2}
+ [4] Sattar, Arif and Soni, Preetam and Kr, Mritunjay and Ranjan, Mritunjay
+     and Kumar, Amar and Sahu, Chandrahas and Saxena, Shilpi and
+     Chaudhari, Prafulla, “Open Source Developments Accelerating Cross-
+     platform Development with Flutter Framework,” JOURNAL OF OPEN
+     SOURCE DEVELOPMENTS, vol. 10, pp. 1–11, 08 2023.
+ [5] Yu, Shengcheng and Fang, Chunrong and Tuo, Ziyuan and Zhang,
+     Quanjun and Chen, Chunyang and Chen, Zhenyu and Su, Zhendong,
+     “Vision-Based Mobile App GUI Testing: A Survey,” arXiv preprint
+     arXiv:2310.13518, 2023.
+ [6] Hou, Xinyi and Zhao, Yanjie and Liu, Yue and Yang, Zhou and Wang,
+     Kailong and Li, Li and Luo, Xiapu and Lo, David and Grundy, John
+     and Wang, Haoyu, “Large Language Models for Software Engineering:
+     A Systematic Literature Review,” ACM Trans. Softw. Eng. Methodol.,
+     Sep. 2024. [Online]. Available: {https://doi.org/10.1145/3695988}
+ [7] Yu, Shengcheng and Fang, Chunrong and Yun, Yexiao and Feng, Yang,
+     “Layout and Image Recognition Driving Cross-Platform Automated
+     Mobile Testing,” in 2021 IEEE/ACM 43rd International Conference on
+     Software Engineering (ICSE), vol. , no. , 2021, pp. 1561–1571.
+ [8] Pan, Minxue and Xu, Tongtong and Pei, Yu and Li, Zhong and Zhang,
+     Tian and Li, Xuandong, “GUI-Guided Test Script Repair for Mobile
+     Apps,” IEEE Transactions on Software Engineering, vol. 48, no. 3, p.
+     910 – 929, 2022. [Online]. Available: {https://www.scopus.com/inward/
+     record.uri?eid=2-s2.0-85127571177&doi=10.1109%2fTSE.2020.
+     3007664&partnerID=40&md5=90a598db8a8bc48522b0d8482b57409d}
+ [9] Menegassi, A. and Endo, A., “Automated tests for cross-platform mobile
+     apps in multiple configurations,” Iet Software, vol. 14, pp. 27–38, 2020.
+[10] BMW Group, “MyBMW Documentation,” 2022, Accessed: 2025-06-29.
+[11] Bloc Developers, “Bloc Documentation,” 2025, Accessed: 2025-06-29.
+     [Online]. Available: {https://bloclibrary.dev/architecture/}
+[12] Z. Wang, W. Wang, Z. Li, L. Wang, C. Yi, X. Xu, L. Cao, H. Su,
+     S. Chen, and J. Zhou, “Xuat-copilot: Multi-agent collaborative system
+     for automated user acceptance testing with large language model,” arXiv
+     preprint arXiv:2401.02705, 2024.
+[13] H. Phung, H. Pham, T. Nguyen, and V. Nguyen, “Visidroid: An
+     approach for generating test scripts from task descriptions for mobile
+     testing,” in Pacific Rim International Conference on Artificial Intelli-
+     gence. Springer, 2024, pp. 67–78.
+[14] S. Fatin, M. H. Al-Quvi, H. S. Shahgir, S. Barua, A. Iqbal, S. Sharmin,
+     M. M. Akbar, K. K. Pal, and A. Rashid, “Lelante: Leveraging llm for
+     automated android testing,” arXiv preprint arXiv:2504.20896, 2025.
+[15] C. Wang, T. Liu, Y. Zhao, M. Yang, and H. Wang, “Llmdroid: Enhancing
+     automated mobile app gui testing coverage with large language model
+     guidance,” Proceedings of the ACM International Conference on the
+     Foundations of Software Engineering, vol. 2, no. FSE, pp. 1001–1022,
+     2025.
+[16] Deepseek, “Deekseep-R1,” 2025, Accessed: 2025-06-30. [Online].
+     Available: {https://github.com/deepseek-ai/DeepSeek-R1}
+[17] ——, “Deekseep-Coder-V2,” 2025, Accessed: 2025-06-30. [Online].
+     Available: {https://github.com/deepseek-ai/DeepSeek-Coder-V2}
+[18] Google, “Gemma3:1b,” 2025, Accessed: 2025-06-30. [Online].
+     Available: {https://ollama.com/library/gemma3}
+[19] Avanika Narayan, Dan Biderman, Sabri Eyuboglu, Avner May, Scott
+     Linderman, James Zou, Christopher Re, “Minions: Cost-efficient Col-
+     laboration Between On-device and Cloud Language Models,” 2025.
+

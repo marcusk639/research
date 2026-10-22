@@ -1,0 +1,33 @@
+__HTTP 200__
+API (v1) - Mailpit 
+ Mailpit
+ 
+ About Documentation 
+ 
+ Search docs... 
+GitHub
+ 
+Docker
+ 
+ 
+ 
+ 
+ 
+ 
+GitHub 
+Docker 
+ 
+Dark theme
+ 
+ 
+ 
+Light theme Documentation Mailpit features Installation Configuration Usage Integration testing Development API (v1) Websocket Mailtrap (for teams) 
+ 
+Documentation navigation API (v1) Mailpit provides a simple REST API to access, search and delete stored messages.
+It also allows you to send messages via HTTP, modify message tags, and release messages via a preconfigured SMTP relay server. Open the online API documentation There is also some documentation about receiving message notifications via the  websocket endpoint , however this is not part of the official API. If the Mailpit server is set to use Basic Authentication, then all API requests must use Basic Authentication too. Send API Authentication (v1.26.0):  The Send API endpoint ( /api/v1/send ) can have  separate authentication  configured, independent of other API endpoints. When separate Send API authentication is configured, the Send API will use its own credentials, while all other API endpoints continue to use UI authentication. You can also view the  interactive  API documentation directly within Mailpit by going to  http://localhost:8025/api/v1/  (you may need to adjust to the IP address of your Mailpit instance). The auto-generated Mailpit Swagger 2.0 file (aka OpenAPI 2.0) can be found  here . 
+ Edit this page 
+ [[ r.item.title ]] [[ r.item.description ]] No results.... Type to start searching Github stars 
+ Latest release 
+ Docker pulls 
+ Sponsors 
+ Supported by Mailtrap 

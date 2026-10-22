@@ -1,0 +1,82 @@
+__HTTP 200__
+
+ 
+ 
+   The Daikon dynamic invariant detector 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+[  Home 
+|  FAQ 
+|  Download 
+|  Documentation 
+|  Publications 
+|  Mailing lists 
+]
+ 
+
+ 
+
+ The Daikon invariant detector 
+
+ 
+
+ Daikon  is an implementation of
+dynamic detection of likely invariants; that is, the Daikon invariant
+detector reports likely program invariants.  An invariant is a property
+that holds at a certain point or points in a program; these are often
+seen in assert statements, documentation, and formal specifications.
+Invariants can be useful in program understanding and a host of other
+applications.  Examples include “x.field > abs(y)”; “y = 2*x+3”;
+“array a is sorted”; “for all list objects lst, lst.next.prev =
+lst”; “for all treenode objects n, n.left.value < n.right.value”; “p
+!= null => p.content in myArray”; and many more.  You can extend Daikon
+to add new properties (see  Enhancing Daikon output , or
+see  New invariants  in  Daikon Developer Manual ).
+ 
+ Dynamic invariant detection runs a program, observes the values that the
+program computes, and then reports properties that were true over the
+observed executions.
+Daikon can detect properties in C, C++, C#, Eiffel, F#, Java, Perl, and
+Visual Basic programs;
+in spreadsheet files; and in other data sources.  (Dynamic invariant
+detection is a machine learning technique that can be applied to
+arbitrary data.)  It is easy to extend Daikon to other applications.
+ 
+ Daikon is freely available for download from
+ http://plse.cs.washington.edu/daikon/download .
+Daikon’s  license  permits unrestricted use.
+The distribution includes both source code
+(also available on  GitHub )
+and
+ documentation ,
+Many researchers and practitioners have used Daikon; those uses, and Daikon
+itself, are described in various
+ publications .
+ 
+
+ 
+
+ 
+[  Home 
+|  FAQ 
+|  Download 
+|  Documentation 
+|  Publications 
+|  Mailing lists 
+]
+ 
+
+ 
+
+ UW Program Languages and Software Engineering Group 
+
+ 
+ 
+
+ 

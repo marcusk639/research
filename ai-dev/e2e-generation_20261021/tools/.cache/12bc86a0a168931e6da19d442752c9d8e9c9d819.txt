@@ -1,0 +1,46 @@
+__HTTP 200__
+  Maestro MCP: An introduction                   00.0k Documentation Cloud Community Blog Pricing 00.0k                         Blog   
+/
+     Tutorial   
+/
+     Maestro MCP: An introduction            April 14, 2026   3 min read      Maestro MCP: An introduction        Simon Gilmurray            
+ Keeping up with the pace of development in this new agentic AI world has become one of the biggest challenges that teams face. 
+ One of the key things to come out of these new workflows is that validation and testing are now more important than ever. 
+ Enter:  Maestro MCP 
+ What is MCP? 
+ The Model Context Protocol is an open standard that provides a uniform interface for connecting Large Language Models to external data sources, tools, and services. MCP defines a client-server architecture where: 
+ 
+ MCP Servers  expose resources like data sources, APIs, and tools through a standardised interface 
+ MCP Clients , such as AI apps, consume these resources via the protocol 
+ Transport Layer  handles communication using JSON Remote Procedure Call (RPC) 2.0 over stdio, HTTP with Server-Sent Events (SSE), or WebSocket connections 
+ 
+ This architectural pattern decouples LLMs from specific integrations, allowing Maestro to function as an MCP server that exposes its capabilities through a protocol-defined interface rather than requiring custom SDK implementations for each client. These can then be directly integrated with MCP-compliant client apps such as Claude, Cursor, Codex, Github Copilot, Gemini and Windsurf. 
+ Main use-cases 
+ Test creation 
+ An AI agent can inspect the live view hierarchy of a mobile app, take screenshots and generate Maestro flow YAML - removing the need to manually figure out element IDs or app structure. Being able to describe scenarios and steps in plain language, and having them translated into Maestro syntax is a game-changer. 
+ Interactive test execution 
+ Drive a real device/emulator directly through the agent: launch apps, tap elements, input text, scroll, go back - all in a conversational loop without switching tools. Also known as closing the agentic loop. 
+ Test maintenance 
+ Inspect what’s on screen and iterate on failing tests interactively. The agent can diagnose why a tap is missing or an assertion is failing by looking at the hierarchy live. Provided with context, the agent can work on self-healing a failing test which can greatly reduce the maintenance burden. You can also even run self-healing flows between your Agent and Maestro Cloud which is truly awesome! 
+ Device management 
+ List available devices, start a specific emulator/simulator, and target runs at a particular device - useful when working across iOS and Android in parallel. 
+ Documentation querying & reference 
+ Being able to easily query the documentation and pull back relevant code and syntax is extremely helpful. 
+ Tip - test creation/execution/maintenance can all be supercharged by using Maestro MCP in conjunction with your app source code - your agent will use the context from the codebase to assist with constructing your Maestro flows 
+ Getting Started with Maestro MCP 
+ 
+ Run the Maestro MCP Server  using  maestro mcp  in your terminal 
+ Configure the MCP server  on your IDE by including the below json configuration on your chosen workspace tool: 
+ 
+ { 
+   "mcpServers" : { 
+     "maestro" : { 
+       "command" :  "maestro" , 
+       "args" : [ 
+         "mcp" 
+       ] 
+     } 
+   } 
+ } 
+ What’s Next? 
+ Maestro MCP is an extremely powerful tool to have under your belt for generating and maintaining tests and we’re just getting started. We’re working on improving the MCP further to add more functionality and improve integration with  Maestro Cloud .       Share   𝕏 Twitter   in LinkedIn   🔗 Copy link      Get the next one in your inbox Pick what you want to hear about. Unsubscribe any time. Email address Subscribe What to send you Newsletter Office Hours invites, community news, the occasional deep dive Product updates New releases and changelogs   ← Previous New Maestro Studio Next → CLI 2.4.0: iOS 26 and more devices on Maestro Cloud     Related posts                 Tutorial   4 min read       Mobile UI Testing with Claude Code, Cursor and Codex     Have Claude Code, Cursor or Codex run a UI test on an iOS Simulator or Android emulator, then save it as a Flow and run the same test again.     Ashish Kharche ·   Sep 1, 2026                   Tutorial   4 min read       Maestro MCP for AI Coding Agents     Give your coding agent a real device. With Maestro MCP, agents like Claude Code, Cursor, and Codex can operate your live app, run flows, and check the UI without leaving the chat.     Ashish Kharche ·   Jul 6, 2026                   Tutorial   3 min read       Automating Apple Maps: Dead Simple E2E Testing with Maestro        Leland Takamine ·   Sep 4, 2025                   On this page What is MCP? Main use-cases Test creation Interactive test execution Test maintenance Device management Documentation querying & reference Getting Started with Maestro MCP What’s Next?               ↑      Product Maestro Studio Maestro CLI Cloud Pricing Resources Documentation Blog Playground Community GitHub Slack X/Twitter Email us Legal Terms of Service Privacy Notice              

@@ -1,6 +1,6 @@
 # 09 — Financials and Funding
 
-> As of 2026-10-19. Labels: see [REPORT.md](REPORT.md#labels-used). Figures are the base case from the 3-year financial model (Low/Base/High scenarios). TODO: spreadsheet location is not recorded.
+> As of 2026-10-19. Labels: see [REPORT.md](REPORT.md#labels-used). Figures are the base case from the 3-year financial model (Low/Base/High scenarios). The original spreadsheet's location is not recorded; a regenerated model is at [model/private-ai-3yr-model-2026-10-20.xlsx](model/private-ai-3yr-model-2026-10-20.xlsx).
 
 **Summary.** In the base case, revenue grows from ~$155K in Year 1 to ~$860K in Year 3. The operating result moves from about −$95K to about +$155K, and founder salary steps from $70K to $130K. The base case needs about $375K; the plan raises $400K in layers, debt first, then friends-and-family or angel equity, with veteran grants as upside only.
 
@@ -16,6 +16,8 @@
 | Operating result           | ~−$95K                     | ~+$15K | ~+$155K   |
 
 **Use these figures.** An early research brief had different numbers: ~$160K/$455K/$800K revenue and a $350–500K raise. They are superseded by the corrected financial model above.
+
+**Revised (Oct 20, 2026):** [14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md) moves the first hire to about months 15–24 and redirects the $25K "first hire" line to contract engineering, student help and key-person insurance. It sets Year-1 industrial at $35–60K (base), The calendar changes were adopted the same day. The 3-year model was regenerated ([model/private-ai-3yr-model-2026-10-20.xlsx](model/private-ai-3yr-model-2026-10-20.xlsx); results in [14](14-revised-plan-2026-10-20.md#5-regenerated-3-year-model)). Base case: revenue ~$190K / $507K / $898K; operating result −$66K / +$78K / +$217K; capital need ~$220K. Every scenario needs ~$75–85K before the raise closes in month 5.
 
 Points to reconcile against the spreadsheet, all in [12-open-questions.md](12-open-questions.md#contradictions-found):
 
@@ -111,7 +113,7 @@ Breakeven at months 23–24 doesn't sit easily with a positive full-year Year-2 
 ## If the raise comes in under $250K
 
 - Defer the demo appliance and use TWK's system for demos.
-- Push the first hire to month 15.
+- Push the first hire to month 15. Revised (Oct 20): month 24 or later, since the base case is now months 15–24 ([14-revised-plan-2026-10-20.md](14-revised-plan-2026-10-20.md#6-revised-gates-and-kill-criterion)).
 - Lean on industrial and contractor work.
 
 Funding-shortfall risk and trigger: [10-risks-and-kill-criteria.md](10-risks-and-kill-criteria.md).

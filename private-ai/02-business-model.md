@@ -82,6 +82,7 @@ Hardware margin is excluded.
 
 - 12-month term, auto-renewing.
 - 5% annual escalator (the MSP norm is 5–8%).
+- **Decision (Oct 20, 2026):** setup billed 50% at signing, 50% at acceptance ([14](14-revised-plan-2026-10-20.md#6-revised-gates-and-kill-criterion)).
 - Hardware is a separate line the client pays for directly, or passed through at cost plus 8%. The company never carries inventory.
 
 The contract framework (MSA, SOW, DPA) is in [07-compliance-and-legal.md](07-compliance-and-legal.md#contracts).

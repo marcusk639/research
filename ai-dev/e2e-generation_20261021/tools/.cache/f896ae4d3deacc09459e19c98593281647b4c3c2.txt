@@ -1,0 +1,44 @@
+__HTTP 200__
+  Quora | Customers | Momentic 
+                  Mo is live. Point Mo at your app, get bugs back.    Start a bug bash                               Platform             Enterprise       Customers       Resources             Pricing          Sign in Contact sales Try for free                             Agents                 Mo the AI QA engineer   New     Explore your app from a prompt. Review findings, recordings, and repro steps.                 Agentic testing      Give AI actions a goal. Keep preset steps and assertions in YAML files in your repo.                 MCP server      Use MCP to write, run, and debug tests from your coding agent.       Platforms                 Web testing      Run Chromium and Chrome tests on local or hosted browsers.                 iOS testing      Test iOS apps on local or Momentic-hosted simulators.                 Android testing      Test Android apps on local or Momentic-hosted emulators.       Run anywhere                 Infrastructure      Run tests on your own machines, in CI, or on Momentic-hosted infrastructure.                 CLI      Author and run tests from your terminal, locally or in CI.                 CI      Run your suite on every push from GitHub Actions, GitLab, or any CI provider.                                    Docs      Install the CLI, write your first test, wire it into CI.                 Blog      Notes on agentic testing from the engineers building it.                 Developers      CLI setup, MCP server, API keys, test format, and CI guides.             Resources      Cross-Platform Test Automation: One Suite for Web, iOS and Android           Wei-Wei Wu     
+ 
+  10 min read                             Platform                 Mo the AI QA engineer  New    Agentic testing    MCP server    Web testing    iOS testing    Android testing    Infrastructure    CLI    CI              Resources                 Docs    Blog    Developers              Enterprise   Customers   Pricing      Try for free Contact sales Sign in                                  customers   / quora                     Consumer   250+ employees             See how Quora cut QA time from 7 hours to   30 minutes   with Momentic.      ↳ 7 hrs → 30 min   OCT 2025                       30 minutes for daily     test execution (down from 7 hours)       500+ manual test cases     replaced with automated coverage       100% of critical tests     created in one month                     
+On this page
+        Manual testing couldn’t keep up       The search for the right AI QA solution       Expanding coverage with minimum engineering lift       A 14x speed up              When Quora launched   Poe.com  , the goal was simple: to bring together the best AI models from leading AI companies in a single interface across all devices. Today, Poe has grown into a unified hub where anyone can access more than 100 of the best text, image, video, and audio models, along with millions of bots built on top of them, all in one place. Achieving this hinges on three essentials: reliability, responsiveness, and seamless interactions. With multiple production deployments a day, the team needed to continuously validate performance, stability, and user experience across their platform. With much of the interactions happening across an extremely dynamic chat interface, they needed a quality solution that can adapt intelligently. Challenge Manual testing couldn’t keep up Quora’s Product Operations team is responsible for a vast variety of things, including but not limited to product support, product operations, internationalization, and QA. QA was mostly manual, with almost 500 test cases documented in a Google Sheets spreadsheet. These were key to ensure releases from the engineering team had no regressions. “It wasn’t sustainable - we needed a faster, more reliable way to keep up with releases.” Head of QA Executing critical test cases daily consumed up to 7 hours. With these tests running every weekday, the time investment became substantial. It was time for a change. The search for the right AI QA solution What followed was a thorough RFP process, where the Product Operations team evaluated a range of agentic QA solutions based on the following key criteria: A truly native generative AI solution - Quora needed a modern solution that could simplify testing while handling the dynamic nature of   Poe.com  ’s AI. Quality of the tool & UI - The AI agent needed to feel intuitive for Quora’s internal teams. Depth of integration - The tool had to integrate seamlessly with Quora’s existing test case management system to ensure context about bugs never gets lost. After evaluation, Momentic was selected for the project. Solution Expanding coverage with minimum engineering lift Quora had a clear goal: give the Product Operations team the ability to build and automate end-to-end tests of critical user flows in   Poe.com  . Momentic’s natural language test editor and multi-modal assertions meant the team could describe expected behavior in plain English, critical for a team that was deeply embedded in workflows but never trained in Playwright or Selenium code. “I really appreciate this AI feature in one of our QA test automation tools - it instantly gives me feedback on my prompt and helps me craft the best instruction on-the-go.” Senior Program Manager By the end of the month, the team had automated all critical tests in Momentic with minimal support from the engineering team. As Poe.com continues to grow and evolve, Momentic has played a helpful role in their process, contributing to smoother deployments. Results A 14x speed up Over the next three months, the Product Operations team automated hundreds of critical test cases. Today, the daily test executions take a mere 30 minutes instead of 7 hours. This 14x speedup not only saved time but also streamlined processes and made updates smoother, reducing dependence on manual steps.                    More  stories  like this.    See all                8x     increase in release cadence     “It's like giving someone your QA checklist and watching them execute it for you!”    Sriram S.   Engineering Lead, Source Control, Retool      6x     faster end-to-end test creation     “We've already seen a 30% decrease in production incidents thanks to Momentic's automated testing.”    Hanna K.   Head of QA, CoverGo      80%     faster release cycles     “With Momentic, we've caught bugs that would have eluded even our most diligent internal tests.”    Alex C.   CTO, GPTZero                Close the  feedback  loop.             Point Momentic at your app. Free to start, no credit card.      Try for free         Contact sales                                 
+Quality infrastructure for engineers & agents. Built in San
+          Francisco, trusted by engineering teams.
+                           Platform      Mo the AI QA engineer   Agentic testing   Web   iOS   Android   Infrastructure   CLI   CI/CD   MCP server        Compare      Playwright   Selenium   BrowserStack   mabl   QA Wolf   MobileBoost   Autosana   Testlio   Ranger   Autonoma   Playwright MCP   Stagehand   Appium   Maestro   Build vs buy        Resources      Docs   Quickstart   Guides   Blog   Developers   Changelog   Trust Center        Company      About   Pricing   Enterprise   Customers   Careers   Y Combinator   Security        Legal      Terms   Privacy   Security                 
+© 2026 Momentic
+       
+Tests for engineers and coding agents
+                            
+Tests for engineers and coding agents
+   
+© 2026 Momentic
+                                
+Build
+             
+Review
+             
+Test
+             
+Prod
+                 Click to play           
+HI 0
+   
+0
+   
+Bugs prevented
+                           
+to move
+       
+SPACE
+   
+to shoot
+       
+ESC
+   
+to pause
+                             
+We use cookies to understand how the site is used. See our  Privacy Policy .
+     Decline   Accept                 

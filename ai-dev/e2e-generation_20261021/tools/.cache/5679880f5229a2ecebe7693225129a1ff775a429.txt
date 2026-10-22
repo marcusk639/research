@@ -1,0 +1,825 @@
+__HTTP 200__
+                                                  Feature-Driven End-To-End Test Generation
+                                                          Parsa Alian                               Noor Nashid                         Mobina Shahbandeh
+                                                 University of British Columbia            University of British Columbia          University of British Columbia
+                                                     Vancouver, Canada                         Vancouver, Canada                        Vancouver, Canada
+                                                      palian@ece.ubc.ca                        nashid@ece.ubc.ca                      mobinashb@ece.ubc.ca
+
+                                                                       Taha Shabani                                            Ali Mesbah
+                                                              University of British Columbia                          University of British Columbia
+                                                                   Vancouver, Canada                                       Vancouver, Canada
+                                                                taha.shabani@ece.ubc.ca                                   amesbah@ece.ubc.ca
+
+
+
+
+arXiv:2408.01894v2 [cs.SE] 6 Jan 2025
+                                           Abstract—End-to-end (E2E) testing is essential for ensuring       we propose AUTO E2E, the first technique designed to generate
+                                        web application quality. However, manual test creation is time-      feature-driven E2E tests autonomously. Our approach is cen-
+                                        consuming, and current test generation techniques produce            tered on the ability to automatically infer features embedded
+                                        incoherent tests. In this paper, we present AUTO E2E, a novel
+                                        approach that leverages Large Language Models (LLMs) to au-          within the web application and translate them into a sequence
+                                        tomate the generation of semantically meaningful feature-driven      of user actions that form an E2E test scenario. We approximate
+                                        E2E test cases for web applications. AUTO E2E intelligently infers   potential features and employ a novel probabilistic scoring
+                                        potential features within a web application and translates them      method that deduces the likelihood of a feature’s existence
+                                        into executable test scenarios. Furthermore, we address a critical   based on its observed frequency within the web application.
+                                        gap in the research community by introducing E2EB ENCH, a new
+                                        benchmark for automatically assessing the feature coverage of        In our probabilistic approximation, we leverage LLMs, such
+                                        E2E test suites. Our evaluation on E2EB ENCH demonstrates that       as GPT-4 O [15] or C LAUDE 3 [16], which exhibit enhanced
+                                        AUTO E2E achieves an average feature coverage of 79%, outper-        abilities to comprehend content within applications compared
+                                        forming the best baseline by 558%, highlighting its effectiveness    to traditional models.
+                                        in generating high-quality, comprehensive test cases.
+                                           Index Terms—Feature Inference, End-to-End Testing, Large             A critical challenge we encountered was the absence of a
+                                        Language Models                                                      suitable dataset for evaluating E2E test cases. To address this,
+                                                                                                             we create a novel benchmark, called E2EB ENCH comprising 8
+                                                              I. I NTRODUCTION                               open-source web applications. For each application, we extract
+                                                                                                             all available features and employ instrumentation techniques
+                                           End-to-End (E2E) testing assesses whether various inte-           to monitor front-end code, enabling us to track the actions
+                                        grated components in an application work together correctly          performed on the web application during E2E tests. We
+                                        from the user interface (UI) to the back-end, by simulating real     establish a mapping between each application’s features and
+                                        user interactions and verifying the application’s functionality.     the corresponding sequences of actions performed. As part
+                                        In E2E, the application is tested as a whole, in its entirety,       of the benchmark, we develop a tool capable of automatically
+                                        and from the perspective of the end-user [1].                        monitoring E2E test suite execution and assessing its coverage
+                                           The predominant method of creating E2E tests has relied           across all existing features within each application.
+                                        heavily on human intervention, with developers manually
+                                                                                                                In summary, this work makes the following contributions:
+                                        assessing application features and using frameworks such as
+                                        Selenium [2] to script the user scenarios. Efforts to automate       • A formal formulation of feature-driven E2E test case gen-
+                                        E2E test generation have explored reinforcement learning               eration, providing a theoretical foundation for developing
+                                        (RL) [3] and model-based approaches [4], [5], [6]. More                practical, automated E2E testing tools.
+                                        recently, the rise of large language models (LLMs) has spurred       • A probabilistic method for automatically inferring features
+                                        their application to various testing tasks. While LLMs have            in a web application. Our feature inference system assesses
+                                        shown promise in generating unit tests for various applications        the likelihood of feature existence based on the frequency
+                                        [7], [8], [9], [10], [11] and mobile testing [12], [13], their         of the observed user actions.
+                                        application to web app E2E test generation remains an open           • A novel technique, called AUTO E2E, capable of au-
+                                        area of research. Our recent work, FormNexus, has focused on           tonomously generating feature-driven E2E test cases. Each
+                                        automating web form testing [14], highlighting the potential           test contains a sequence of actions to cover an inferred
+                                        for LLMs to enhance E2E testing methodologies.                         feature.
+                                           In this paper, we formalize the notion of feature-driven E2E      • E2EB ENCH , a novel benchmark designed for automatic
+                                        testing, including definitions of application features and a new       evaluation of E2E test suites, quantifying their effectiveness
+                                        metric called feature coverage for assessing E2E tests. Then,          in feature coverage.
+       (a) Select search bar           (b) Search for a product          (c) Select the product             (d) Add to cart
+                                    Fig. 1: Add to Cart feature on Amazon’s web application
+
+
+   Our evaluation results demonstrate that AUTO E2E achieves         true (M = True), and the parameter set includes the search
+a feature coverage of 79%, surpassing the best baseline,             term entered by the user (P = “search term”). It is important
+C RAWLJAX, by 558%, and a significant 731% improvement               to distinguish between viewing a list of search results (M =
+over the best LLM agent-based baseline, B ROWSER G YM,               True) and viewing the details of a single product (M = False),
+highlighting the effectiveness of our methodology for auto-          as these are distinct operations within the system.
+mated E2E test generation. In addition to achieving superior            Configuration operations are prevalent in various software
+coverage, AUTO E2E generates more complex test cases. Fur-           systems. For example, logging into a system involves updating
+thermore, the test cases ranked as more likely to exist by our       the Authentication configuration to reflect the user’s
+likelihood estimation system exhibit a higher correspondence         authorized status. Toggling a Dark Mode setting modifies the
+with actual features within the web applications, further vali-      application’s visual appearance, while changing a Language
+dating the effectiveness of our approach.                            configuration alters the language in which content is displayed
+             II. F EATURE -D RIVEN E2E T ESTING                      to the user.
+   To illustrate the challenges and opportunities in E2E test        Definition 2 (Application Feature). An application feature,
+generation, we utilize the Amazon web application [17] as a          denoted by F, is characterized by the following properties:
+motivating example, with a few representative pages illustrated
+                                                                     • F can be realized through a finite ordered sequence of user
+in Figure 1. Before deploying such apps, developers must
+                                                                       operations (Definition 1), denoted as U1 → U2 → · · · →
+conduct rigorous testing to guarantee proper functionality.
+                                                                       Un , where each Ui represents a distinct user operation.
+Testing can occur at various levels, including unit tests,
+                                                                     • Each user operation Ui within the sequence is essential for
+integration tests, and E2E tests. E2E tests, in particular, focus
+                                                                       achieving F. Removing any Ui would result in an altered
+on executing specific features and functionalities that users will
+                                                                       or unattainable outcome.
+engage with from start to finish, ensuring that different features
+                                                                     • The outcome O of executing the sequence U1 , U2 , . . . , Un
+and scenarios within the app behave as expected. Within the
+                                                                       is visually presented to the user upon completion, signifying
+context of E2E testing, we define:
+                                                                       the successful realization of F.
+Definition 1 (User Operation). A user operation, denoted             • The label L is an abstract, natural language description
+by U , is a sequence of user actions {Ai } (e.g., clicking,            of the feature F, independent of the parameters Pi in the
+submitting forms). Each user operation can be classified into          operations Ui .
+one of the following types:
+                                                                        For instance, consider the common feature F on the
+• Entity Operations: These operations involve creating, read-        Amazon web application labeled as “Adding a Product to
+  ing, updating, or deleting data entities within the system.        the Shopping Cart”. As illustrated in Figure 1, this feature
+  An entity operation is represented by a tuple (X, E, M, P ),       entails a specific sequence of user operations Ui : (1) viewing
+  where X signifies the CRUD action (Create, Read, Update,           (Read) a list of products, (2) viewing (Read) the details of a
+  or Delete), E denotes the target entity or entity set, M is        specific product, (3) Creating a cart item. This operation chain
+  a boolean indicating whether the operation affects single          culminates in a visible change to the user’s cart, representing
+  or multiple entities, and P is a set of parameter values           the outcome O.
+  providing additional context or control.                              Each operation in this sequence is crucial for the successful
+• Configuration Operations: These operations modify sys-
+                                                                     completion of F. For instance, removing the search operation
+  tem configurations or settings. They are represented by a          would prevent the user from finding the desired product, while
+  tuple (C, P ), where C identifies the specific configuration       omitting the product selection step would leave the system
+  being altered, and P specifies the new value.                      without a specific item to add to the cart. In contrast, opera-
+   On the Amazon web application, searching for a product is         tions not essential to achieving the feature, such as changing
+classified as an entity operation, specifically a read operation     the application’s language, or background color should not be
+(X = Read) on the Product entity set (E = Product). As               included in the defining sequence.
+a search typically returns multiple results, the multiplicity is        The abstract nature of F labeling implies that it should not
+     be tied to specific parameters from the constituent operations.    state, ensuring the presence of expected elements, validating
+     Whether the user searches for “shoes” or “electronics”, or         displayed content, and confirming successful navigation.
+     chooses a particular brand or model, the fundamental fea-          Challenges in E2E Testing. Both manual test creation
+     ture of “Adding a Product to the Shopping Cart” remains            and automated test generation present distinct challenges.
+     unchanged.                                                         Developer-written test cases, while potentially comprehensive,
+     Manual Testing. In practice, manual E2E test creation often        are often expensive and time-consuming to develop. Model-
+     relies on developers or quality assurance (QA) engineers           based techniques offer a partial solution by automating test
+     exploring the application or utilizing design documents to         case generation. However, the resulting tests may lack the
+     extract features, functionalities, and user flows within the       coherence and relevance of human-written scenarios. This is
+     application, outlining key scenarios to test. After specifying     evident in the sample model-based test case (Listing 1), which,
+     the features, test scripts for those features are often written    despite covering several states and transitions, the sequence
+     using specialized frameworks like Selenium [2], Cypress [18],      of actions performed is not relevant to a specific application
+     or Playwright [19] to simulate user interactions within the        feature (Definition 2). While developer-written tests typically
+     app. These scripts typically involve executing specific actions    follow meaningful features (e.g., adding an item to a cart),
+     on the app, such as clicking buttons, filling out forms, and       model-based tests prioritize coverage over coherence, leading
+     navigating through pages. They also include assertions to          to seemingly random sequences of actions. This trade-off
+     verify that the application responds as expected at each stage.    between coverage and relevance highlights a key challenge
+     Test Generation. Model-based testing has emerged as a              in automated test generation. To more effectively evaluate the
+     prominent technique for automated E2E test generation in           quality of generated E2E tests, we propose a new metric,
+     web applications [20], [21], [5], [6]. This approach involves      feature coverage:
+     systematically exploring the application’s state space by exer-    Definition 3 (Feature Coverage). Let F = {f1 , f2 , . . . , fm }
+     cising available actions, such as clicking links, hovering over    be the set of all features (Definition 2) in an application, and
+     elements, and submitting forms. The resulting state transitions    let T = {t1 , t2 , . . . , tn } be a set of test cases in a test suite
+     are then captured and integrated into a model representing the     designed to test these features. Define a relation R ⊆ T × F
+     application’s behavior.                                            where each (ti , fj ) ∈ R indicates that test case ti exercises
+        For instance, consider a model of the Amazon web applica-       feature fj . Feature coverage C is then defined as the ratio of
+     tion (illustrated in Figure 1). This model would encompass the     the number of unique features exercised by the test suite to
+     states and action sequences necessary to add an item to the        the total number of features, given by:
+     shopping cart. Furthermore, it would incorporate transitions
+                                                                                     |{fj ∈ F | ∃ti ∈ T such that (ti , fj ) ∈ R}|
+     facilitated by persistent navigation elements, such as the menu          C=
+     bar, enabling navigation between key pages like the landing                                        |F|
+     page, login page, and shopping cart from any point within          where each test case ti targets exactly one feature fj and it is
+     the application. Once constructed, this model serves as the        permissible for multiple test cases to cover the same feature.
+     foundation for automatic test case generation. Test cases are
+                                                                           This metric shifts the focus from purely syntactical (code
+     derived as sequences of actions extracted from the model’s
+                                                                        coverage) or structural coverage (such as state and transition
+     transitions, with the objective of achieving comprehensive
+                                                                        coverage) to a more user-centric perspective, emphasizing the
+     coverage based on predefined criteria, such as state coverage
+                                                                        testing of distinct application features. Automating test case
+     or transition coverage.
+                                                                        creation while achieving a high feature coverage necessitates
+        Listing 1 illustrates a model-based generated test case,
+                                                                        a nuanced understanding of the application’s context and
+     showcasing a path within the Amazon web application.
+                                                                        content, a capability that remains absent in existing automation
+ 1   test("generated test case 1", () => {                              techniques. To address this gap, a novel feature-driven E2E
+ 2       cy.visit("https://amazon.com");
+ 3       cy.get("search-bar").type("smartwatch");                       test generation approach is required. This approach must be
+ 4       // assertion 1                                                 capable of inferring the features existing within the app, con-
+ 5       cy.get("login").click();
+ 6       // assertion 2                                                 necting the available actions to those features, and generating
+ 7       cy.get("home").click();                                        the sequence of actions corresponding to the coverage of each
+ 8       // assertion 3
+ 9       cy.get("cart").click();                                        feature as a test case.
+10       // assertion 4
+11   });                                                                                         III. A PPROACH
+          Listing 1: Sample model-based generated test case                In this work, we introduce AUTO E2E, a novel approach
+                                                                        for automatically generating semantically meaningful E2E
+        This Cypress-based test simulates user interactions such as     tests, each targeting a distinct application feature (Definition
+     searching for a product (“smartwatch”), navigating from the        2), aiming to achieve high feature coverage (Definition 3).
+     search results to the login page, returning to the landing page,   Our primary focus is addressing the challenge of inferring
+     and finally proceeding to the cart page. At each stage, asser-     application features from the contextual information present in
+     tions are made to verify the correctness of the application’s      various application states. We propose a method that assesses
+                                                                           III.C - Feature Inference
+                                                Screenshot
+                                                                                                             III.D - Feature Aggregation
+
+                                                Metadata
+                                                                               Context Extractor                        Update
+                                                                                                                                                 Filter
+                                                                                                                        Scores
+                                                                                                         Feature DB          Action-Feature DB
+                                                                                                                                                          III.E - Test Cases
+                              Extract Actions         Action List
+                                                                                    Context
+
+             Webpage
+                                                                                                             Map                   Insert
+              Execute
+
+            Next Action                                Action
+
+                              Crawling Queue                                                             Feature List
+                                                                               Feature Extractor
+
+                          III.B - Exploration Loop
+
+
+
+
+                                                                    Fig. 2: Overview of our framework
+
+
+the likelihood of features existing within an application based                                  This approach aligns with how humans typically extract
+on observed user actions. By integrating this method with                                     features and design test scenarios. Users explore the appli-
+LLMs, we establish a workflow to identify the features present                                cation’s interface, inferring available features based on ob-
+in the application and the corresponding sequences of actions                                 servations. For instance, when presented with the application
+required to trigger them. These action sequences are then                                     states depicted in Figure 1, a human can intuitively infer the
+transformed into comprehensive test cases for the application.                                presence of features such as searching for products, purchasing
+The architecture for AUTO E2E is illustrated in Figure 2.                                     products, viewing account details, and reviewing order details.
+                                                                                              These inferences are based on the visual cues and interactive
+A. Feature Inference Modeling                                                                 elements present in the observed states, leading to a higher
+   We first formalize the feature inference task in order to                                  likelihood of these features being available within the Amazon
+leverage LLMs more effectively. A web app typically consists                                  web application.
+of various application states and transitions between them:                                      However, constructing a generative model capable of accu-
+                                                                                              rately estimating p(F|S) is a challenging task due to the vast
+Definition 4 (Application States and Transitions). An appli-                                  complexity of both the feature and state space. To address
+cation state Si represents a snapshot of the web app at a                                     this challenge, we introduce a simplified model that enhances
+particular moment, characterized by the runtime values of                                     tractability while retaining the essence of the generative ap-
+relevant variables, as well as the dynamic structure and content                              proach.
+as rendered in the browser. A transition Ai initiated by a user                                  1) Feature Independence: Given complete access to all
+action (e.g., clicking a button, submitting a form) can cause a                               states S within an application, the inference of individual
+state change, e.g., from S1 to S2 .                                                           features Fi can be considered independent. While certain
+   Figure 1 provides a visual representation of this concept,                                 features may often imply the existence of others (e.g., an “add
+where each image depicts a distinct state within the Amazon                                   to cart” feature suggests a “remove from cart” functionality),
+web application. Furthermore, the actions available within                                    knowledge of the complete state space allows for direct obser-
+these images represent potential transitions to other states.                                 vation and inference. For instance, the presence of a “remove”
+   Given a web app with K states, {S1 , S2 , . . . , SK }, and                                button on the Cart page confirms the existence of the “remove
+M potential features, {F1 , F2 , . . . , FM }, the task of inferring                          from cart” feature, independent of knowledge about the “add
+features becomes that of constructing a generative model to                                   to cart” feature. Leveraging this feature independence given S,
+estimate the following distribution:                                                          the joint probability distribution in Equation 1 simplifies to:
+
+         p(F1 , F2 , . . . , FM |S1 , S2 , . . . , SK ) = p(F|S)                   (1)                   p(F|S) = p(F1 |S)p(F2 |S) . . . p(FM |S)
+
+   In this formulation, the probability distribution p(F|S) rep-                                 Based on this notion, instead of attempting to infer all
+resents the likelihood of a feature set F being present within                                features simultaneously, we can leverage the conditional in-
+an application, given the information observed in the set of                                  dependence and generate features individually using the dis-
+states S. A generative model could learn this distribution from                               tribution p(Fi |S). By sampling the top M generated values
+data and subsequently generate a feature set F that maximizes                                 from this distribution, we can effectively identify the most
+this probability.                                                                             probable existing features within the application.
+   2) Action-Centric Feature Inference: Feature determination             on a rating value. Crucially, this estimation of the next action
+in web applications can typically be accomplished through an              relies solely on the current action and the intended feature,
+action-centric lens, focusing on the available actions on a page          regardless of the user’s prior interactions and the specific path
+rather than the specific content. As illustrated in Figure 1d,            taken to reach the current state. Whether the user arrived at the
+the “Add to Cart” feature on a product page is discernible                product page through searching, browsing categories, or any
+solely from the context of the page and the presence of                   other means is irrelevant. Consequently, based on this property,
+the corresponding action, regardless of the product’s details.            we can simplify Equation 3:
+Having a general context for the page is particularly valuable                                                   N
+when dealing with actions that have ambiguous descriptions,
+                                                                                                                 Y
+                                                                                 p(F|S) = α(A)p(F)p(A1 |F)             p(Ai |Ai−1 , F)
+such as a “continue” button. In such cases, the context of                                                       i=2
+the current page (e.g., checkout page) aids in clarifying the
+intended purpose of the action. By adopting this action-centric                          p(F)p(A1 |F) = p(A1 )p(F|A1 )
+perspective, we shift the focus from analyzing the entirety                                           p(F|Ai , Ai−1 )p(Ai |Ai−1 )
+of the application’s state information to a more targeted                         p(Ai |Ai−1 , F) =
+                                                                                                             p(F|Ai−1 )
+examination of the actions and their associated contextual
+                                                                                                               N
+information. Formally, we can express this as:                                                                 Y   p(F|Ai , Ai−1 )
+                                                                                 → p(F|S) = β(A)p(F|A1 )                                 (4)
+                                                                                                                     p(F |Ai−1 )
+             p(F|S) = p(F|A1,1 , A1,2 , . . . , AK,nK )             (2)                                        i=2
+
+where Ai,j and ni represent the j-th action and the number                   In the presented equations, α(A) and β(A) denote general-
+of actions on state Si respectively.                                      ized action probabilities. These terms are not specific to any
+   3) Sequential Action Chains: The features within web apps              particular application or feature but rather capture the inherent
+are designed to be executed through a sequential chain of                 likelihood of observing certain actions across all the different
+actions, as can be observed in Definitions 1 and 2. For a                 web interactions. For instance, these terms might encapsulate
+given feature F, there exists an ordered sequence of actions              the probability of encountering a “Login” action in any web
+A1 , A2 , . . . , AN that leads to its execution:                         application, essentially providing a baseline expectation for
+                                                                          the occurrence of actions. Since our goal is to maximize
+                    F : A1 → A2 → . . . → AN                              the distribution over F , these functions become irrelevant.
+                                                                          Therefore, we can further simplify the task of feature inference
+  Crucially, a feature should be derivable solely from its
+                                                                          into the following equation:
+action chain. For example, when adding an item to a shopping
+cart, the presence of actions for rating or commenting on                                          N 
+                                                                                                   X                             
+products is irrelevant. This allows us to eliminate unrelated                       F = arg max          log p(F | Ai , Ai−1 )
+                                                                                               F
+actions from the context of Equation 2, focusing solely on the                                     i=1
+                                                                                                           
+actions {Ai } relevant to the feature:                                                   − log p(F | Ai−1 )                              (5)
+                 p(F |S) = p(F |A1 , A2 , . . . , AN )                       This result has an intuitive interpretation. If we are predict-
+                                                                          ing the existence of a certain feature based on an action, we
+Then we can use Bayes’ theorem and chain rule of probabil-
+                                                                          should observe further evidence supporting that feature after
+ities to simplify this to:
+                                                                          performing the action.
+                         p(F, A1 , A2 , . . . , AN )                         Equation 5 provides a flexible foundation for various im-
+                     =
+                          p(A1 , A2 , . . . , AN )                        plementations, as it applies broadly to web applications and is
+        p(F )p(A1 |F )p(A2 |A1 , F ) . . . p(AN |A1 , . . . , F )         not constrained by any specific implementation details in its
+    =                                                               (3)   derivation. In this work, we implement our method based on
+                      p(A1 , A2 , . . . , AN )
+                                                                          this equation by utilizing LLMs to estimate the distributions
+   4) Dependence of Subsequent Actions: The sequential na-                p(F |Ai ) and p(F |Ai , Ai−1 ). This is achieved by feeding
+ture of user interactions within web applications can be                  {Ai } and {Ai−1 , Ai } as context to the LLM, respectively,
+modeled by recognizing the dual dependency of each action:                and prompting it to infer features based on this context. We
+an action Ai depends on the immediately preceding action                  then aggregate the generated results to assess the likelihood
+Ai−1 and the specific feature F the user intends to execute.              of existing features within the application. The remaining
+This dependency allows us to estimate the most probable                   sections of our approach will detail how we leverage LLMs
+subsequent actions based on the current action and feature.               and aggregate their outputs to infer both features and their
+   Consider the scenario illustrated in Figure 1c, where a user           corresponding chains of actions.
+clicks on a product within a list of search results. If the user
+intends to purchase the product (feature F), we can predict               B. Exploration Loop
+that the next likely action would be clicking on “Add to Cart.”              As illustrated in Figure 2, AUTO E2E operates on an explo-
+Conversely, if the user intends to rate the product (a different          ration loop paradigm, interfacing with the target web applica-
+feature F), the most probable next action would be clicking               tion, capturing user actions, and systematically queuing them
+for execution. Each executed action potentially reveals new            limitation hinders the direct calculation of p(F|Aij ∈ Ai )
+application states, driving exploration until no further novel         and p(F|Aij ∈ Ai , Ai−1 ) in Equation 5. To address this, we
+states are discovered or a timeout occurs. AUTO E2E employs            incorporate Chain of Thought (CoT) prompting in the LLM
+a breadth-first search (BFS) strategy for state exploration,           prompt, asking it to generate a list of R features ordered
+queuing, and recursively crawling neighboring states from              by their perceived probability of existence. CoT prompting
+the current state. Feature extraction inferences are performed         encourages the LLM to provide more reasoned and reliable
+concurrently during state visits, feeding the extracted actions        responses, increasing the validity of the feature ordering. Hav-
+into the rest of the workflow to infer features.                       ing access to this ordering, we employ a geometric distribution
+                                                                       to estimate the probability of an inferred feature based on its
+C. Feature Inference                                                   rank:
+   As the exploration loop discovers new states and extracts                                                                   
+their associated actions, AUTO E2E concurrently analyzes each                  rank score(r|r ≤ R) = log p(F is ranked r)
+action to infer the specific features with which it interacts.
+                                                                           = log (1 − p)r−1 p = (r − 1) log(1 − p) + log(p)
+                                                                                                
+For the following sections, imagine our exploration has led                                                                         (6)
+us to state Si via the action sequence A1 → . . . → Ai−1 .             where p is a manually set parameter. A p value close to 1
+In this state, we observe a set of available actions Ai =              creates a significant difference in probability between the top-
+{Ai1 , Ai2 , . . . , Ain }, where Aij denotes the jth action on Si .   ranked item and the rest, while a p value near 0 assigns nearly
+   1) State Context Extraction: As discussed in Equation 2,            equal probability to each rank. As there is often more than
+actions are represented alongside their corresponding con-             one feature associated with an action, we seek a balance that
+text—the high-level purpose of the page where the action               allows our model to recognize these multiple features while
+occurs. This contextual information is essential for accurate          still distinguishing between higher and lower-ranked items.
+feature inference, particularly when the content associated with       Therefore, we set p to 0.5.
+an action is ambiguous (e.g., a button labeled “Continue”) and            Since the list of our inferred features is limited to the top R,
+requires further disambiguation.                                       we must also take into account the probability that a feature
+   Identifying page context requires multiple data sources. The        is not in the top R, but appears at a certain rank if we extend
+application’s description and category provide high-level infor-       our list. For every feature that does not appear in the top R
+mation, while the page’s content (text, HTML, images) offers           inferred features, we use a constant score:
+more specific details. We prioritize image-based analysis over
+HTML due to HTML’s verbosity. Additionally, the history of                     rank score(r|r > R) = R log(1 − p) + log(p)            (7)
+actions leading to the current page provides further contextual
+clues. Consequently, our context extraction employs a multi-             This constant score is used in the aggregation phase.
+modal approach, incorporating a screenshot of the Si rendered
+                                                                       D. Feature Aggregation
+in a browser, a description of the entire application, and the
+most immediate action Ai−1 leading to Si . As an example, the             During the exploration process, upon encountering a new
+following is the extracted context for the page in Figure 1c:          state, we extract potential features associated with each action
+A webpage displaying search results for a product query,               within that state. Importantly, these feature inferences are con-
+allowing users to browse and filter options for purchasing.            ducted in isolation. Features derived using the current action
+   2) Feature Extraction: Following the extraction of contex-          context {Aij } are independent of those inferred using both the
+tual information from Si , we can now utilize that context             current and preceding actions {Aij , Ai−1 }. Furthermore, both
+in conjunction with the actions present on the state, Ai , and         sets of newly inferred features are initially disconnected from
+prompt an LLM to predict possible features connected to each           any previously generated features. To reconcile these disparate
+action. We follow the result in Equation 5 derived in Section          inferences, we enter the aggregation phase. To manage the
+III-A to infer the features by querying the LLM twice. The             aggregation, we employ two interconnected databases.
+first prompt requests the LLM to generate features based on               1) Feature Database (FD): The Feature Database (FD) is
+the individual actions in Si , corresponding to p(F|Aij ∈ Ai ).        a vector database storing a global list of discovered features.
+The second prompt asks the LLM to generate features based              Each entry in FD contains a label, i.e., a textual description
+on the actions in Si plus the most recent action that led to the       of the feature, its corresponding embedding, and a confidence
+current state, representing p(F|Aij ∈ Ai , Ai−1 ). To illustrate       score derived from Equation 5. This score reflects the likeli-
+this process, consider Figure 1d. For the first prompt, the            hood of the feature’s existence within the application.
+LLM would be asked to generate features solely based on                   2) Action-Feature Database (AFD): FD is complemented
+the “Add to Cart” button. However, for the second prompt,              by the Action-Feature Database (AFD). Each row in AFD
+the LLM would consider both the “Add to Cart” button and               associates an action within a state with its corresponding
+the preceding action that led to this page, which is clicking          inferred features from FD. Additionally, it records a rank score
+the product link in Figure 1c.                                         calculated using Equation 6 and indicates whether the infer-
+   Estimating the probability of a result generated by an LLM,         ence utilized solely the current action Aij or both the current
+particularly in proprietary models, is not always feasible. This       state’s action and preceding action Aij , Ai−1 as context.
+       The information stored in FD and AFD is dynamic, evolv-           based on the observed action sequence. The first term,
+    ing as the application is explored. These databases contin-          rank score(Fjk |Aij , Ai−1 ), represents the probability of the
+    uously interact, influencing each other to update the overall        feature given both the current and preceding actions. The
+    confidence scores of features. This iterative refinement ensures     second term, rank score(Fjk |Ai−1 ), represents the probability
+    that the feature model remains accurate and comprehensive as         of the feature given only the preceding action. The difference
+    new observations are made.                                           between these two terms reveals the incremental impact of
+       3) Mapping inferred features to FD: To update feature             action Aij on our confidence in the existence of feature Fjk .
+    scores, we first map the newly inferred features to existing            To address cases where feature Fjk exists in the LLM’s
+    entries in the FD. This is achieved by leveraging the textual        inference for (Aij , Ai−1 ) but not for Ai−1 , we substitute the
+    embeddings of feature descriptions stored in FD. We query            rank score(Fjk |Ai−1 ) term in Equation 8 with the constant
+    FD using the embedding of an inferred feature and retrieve           ranking score from Equation 7. Using the score update
+    the top results based on cosine similarity. This metric identifies   formula, we then locate Fjk ’s corresponding entry in FD and
+    features in FD that are semantically closest to the inferred         update its score. This process is repeated throughout the app
+    feature. By establishing these connections, we can then update       exploration.
+    the confidence scores of the corresponding features in FD, in-
+                                                                         E. Generating Test Cases
+    corporating the information gained from the new observations.
+       While querying the FD using textual embeddings can                   Following the exploration phase, we sort the features within
+    identify semantically similar features, it does not guarantee a      the FD. From this sorted list, we filter and retain the top-
+    perfect match. To ensure accuracy, we introduce an additional        scoring features as those identified within the application.
+    validation step using an LLM. This step involves querying the        This filtering process involves selecting a lower bound cutoff,
+    LLM to assess whether the inferred feature aligns with any of        determined by Equation 6 as log(p). This choice of cutoff is
+    the similar feature descriptions retrieved from FD. The LLM          motivated by the possibility of single-action features, which
+    acts as a semantic arbiter, determining if any of the retrieved      could be correctly predicted by the LLM with a rank of 1
+    descriptions truly describe the same feature. Listing 2 provides     and a corresponding score of log(p). By setting the cutoff at
+    a concrete example of this process, showcasing how the LLM           this value, we ensure the inclusion of such features in our
+    helps refine the initial matches obtained from FD for an “Add        generated tests.
+    to Cart” action’s feature in Figure 1d.                                 After filtering, we then extract the corresponding chains
+                                                                         of actions from the AFD and translate them into test cases.
+1   // A feature inferred for an action
+2   "Add a product to the cart"                                          This process leverages the accumulated evidence gathered
+3                                                                        during exploration to identify the most likely features and
+4   // FD retrieval results
+5   "Adding to the cart"            // exact match                       their associated action sequences, ultimately generating test
+6   "View product details"          // mismatch                          cases that semantically cover the application features.
+7   "Remove item from the cart"     // mismatch
+8   "Explore product categories"    // mismatch
+9   "Navigate to homepage"          // mismatch
+                                                                         F. Implementation
+                                                                            AUTO E2E is implemented in Python using the LangChain
+                 Listing 2: Example for FD querying
+                                                                         framework [22], offering flexibility in LLM selection. For
+       If no match is found in FD, this indicates that the feature       our evaluations, we opted for C LAUDE 3.5 S ONNET due to
+    is a novel observation within the application. In such cases,        its recognized performance among the most advanced LLMs.
+    the feature data, along with an initial confidence score of 0,       Textual embeddings for feature descriptions and FD utilize
+    is inserted into FD. Following the matching (or insertion) of        the ADA architecture [23], and the E2E tests are generated
+    a feature in FD, we then create a corresponding entry in             in Selenium [2]. Our databases, FD and AFD, are hosted on
+    the AFD. This entry includes a pointer to the relevant FD            MongoDB Atlas1 , which provides a vector search functionality
+    entry, establishing the connection between the two databases.        well-suited for querying the feature description embeddings.
+    With these updates in place, we can then proceed to refine                        IV. B ENCHMARK C ONSTRUCTION
+    the confidence score of the feature in FD, incorporating the
+                                                                            Assessing E2E test cases presents a significant challenge in
+    information gained from the new observation.
+       4) Updating the Scores: For each action Aij , we have             software testing automation. To the best of our knowledge,
+    inferred a corresponding set of features {Fj1 , Fj2 , . . .}, as     there is an absence of datasets for E2E test case evaluation
+    detailed in Section III-C. To update the feature scores based        that hinders further progress in this area of study. To address
+    on these new observations, we employ the following formula,          this gap, we embarked on the creation of such a benchmark,
+    derived from Equations 5 and 6:                                      called E2EB ENCH. This section elucidates the complexities
+                                                                         inherent in dataset creation and outlines the methodological
+         score update(Fjk ) = rank score(Fjk |Aij , Ai−1 )−              steps undertaken to achieve this goal.
+                         rank score(Fjk |Ai−1 )                   (8)    Benchmark Construction Challenges. The lack of a bench-
+                                                                         mark for assessing Feature Coverage in E2E test cases arises
+       This formula calculates the change in the score for
+    feature Fjk (the kth feature associated with action Aij )              1 https://www.mongodb.com/
+from the inherent challenges of evaluating this metric. As sample feature grammar for purchasing a product in an e-
+evident in Definition 3, this evaluation hinges on two crit- commerce application would be the following:
+ical steps: identifying the features within an application and
+                                                                  1 "c1-product-element" "c10-add-to-cart"
+mapping E2E test cases to these features to measure coverage. 2 "c22-cart-icon" "c12-checkout-button"
+   The first challenge in this process is the identification and 3 ("t5-credit-number"    | "t16-credit-date" |
+                                                                          "t23-credit-cvv")+ "c35-complete-purchase"
+quantification of features within a web application. Features
+are often difficult to define and vary widely depending on                Listing 3: Feature Grammar for “product purchase”
+the context, making their extraction difficult and subjective.
+Once features are identified, the second challenge is deter-           In this feature grammar, the sequence of actions begins by
+mining which specific feature a test case targets. This becomes clicking on the product, followed by adding it to the cart
+particularly complex in large-scale applications like Amazon and navigating to the cart page. Subsequently, the checkout
+(illustrated in Figure 1), where a feature such as “Viewing button is clicked, leading to the purchase page where credit
+the product’s details” can be accessed through multiple path- card information is required. The input fields for credit card
+ways—whether by clicking on a product from the landing details can be filled in any order, represented by the logical OR
+page, filtering through categories, or using the search function. operator. Additionally, the information in the text boxes can be
+As the number of available actions increases, so does the modified multiple times, denoted by the “+” sign indicating
+complexity of tracking these diverse paths. For example, the repetition. Finally, the purchase is completed by clicking a
+Amazon web application with millions of products could have confirmation button.
+numerous valid E2E test cases for viewing product details,             The extraction of feature grammar for each subject was
+each following a distinct path. An effective evaluation tool conducted independently by each author, followed by a col-
+must be capable of accounting for and managing this inherent laborative discussion to consolidate the findings. This iterative
+path redundancy.                                                    process ensured a comprehensive identification of features,
+                                                                    with consensus reached on both the features themselves and
+Feature Identification. Regarding the first challenge, we
+                                                                    any alternative paths to achieve the same functionality. The
+have established a precise and formal definition of a feature
+                                                                    resulting grammars then serve as a basis for evaluating the
+(Definition 2) in this work, providing a foundation for sys-
+                                                                    coverage of a test suite over all of the functionalities.
+tematic and objective identification of features within software
+applications.                                                       Benchmark Subjects. A list of the apps in our benchmark is
+                                                                    available in Table I. These applications, most of which have
+Instrumentation for Feature Mapping. To address the sec-
+                                                                    been previously used in web testing research [24], [25], [26],
+ond challenge in mapping test cases to features, we need to
+                                                                    [27], encompass a diverse range of categories, including bug
+track user (i.e., E2E test) interactions within web applications.
+                                                                    tracking (MantisBT), e-commerce (Saleor), and translation
+To automate this tracking, we select open-source web appli-
+                                                                    management (EverTraduora).
+cations for our benchmark, enabling us to directly instrument
+their code. The instrumentation adds logging mechanisms Automatic Coverage Evaluation. During test case execution,
+to capture every user action within the app, encompassing our benchmark continuously monitors the performed actions,
+clicks, hovers, and various input types (selects, texts, radio trying to map the sequence to one of the identified function-
+buttons, checkboxes). Each unique action component within alities within the application. This allows us to assess the
+the app generates a distinct log message containing a unique coverage of an E2E test suite across all the distinct features in
+identifier. To handle path redundancy, we leverage the inherent our benchmark subjects. The calculation of feature coverage
+modularity of web applications. For example, consider an is performed completely automatically based on the grammar
+open-source e-commerce application: products are typically extracted in the previous phase, resulting in an objective
+rendered using a collection of Product components. By measurement of the Feature Coverage (Definition 3).
+leveraging this component-based structure, we can instrument
+component code to track the interactions by the E2E test cases.                             V. E VALUATION
+This approach effectively circumvents the challenge of near-           We have framed the following research questions to measure
+infinite pathways, as each action within a path is implemented the effectiveness of AUTO E2E:
+within a discrete component, regardless of its frequency of
+                                                                    • RQ1: How effective is AUTO E2E in generating feature-
+occurrence.
+                                                                       driven E2E tests?
+Feature Grammar Extraction. With the tracking system • RQ2: How accurate is the feature inference of AUTO E2E?
+established, we then map the chain of logs to specific features • RQ3: How does AUTO E2E compare to other state-of-the-
+within each subject application. This process involves identi-         art techniques?
+fying the available features for each subject in the benchmark
+and executing sequences of actions to trigger them while Process. We use E2EB ENCH to evaluate the efficacy of
+tracking the corresponding logs. These logs are subsequently AUTO E2E and other methods in achieving feature coverage.
+transformed into a feature grammar, which serves as a ground- For running our experiments, we set the temperature parameter
+truth reference for assessing E2E test cases. To illustrate, a of the LLMs to 0 to produce the same response every time.
+                TABLE I: Benchmark Subjects                          test cases were correct based on the evaluation metrics. The
+ App Name            Category               Features    LOC
+                                                                     total recall of the model, which is the same as the average
+                                                                     Feature Coverage across all features in all applications, reaches
+ PetClinic           Health                       23     51K         0.72. This means that our generated test cases successfully
+ Conduit             Blog                         17     53K
+ Taskcafe            Task Manager                 32     67K         cover 72% of the total features present. The precision and
+ Dimeshift           Expense Tracker              21     10K         recall values result in an F1 score of 0.62, demonstrating a
+ MantisBT            Bug Tracker                  27    118K         reasonable balance between AUTO E2E’s ability to identify
+ EverTraduora        Translation Manager          41     25K         relevant test cases and its ability to capture the full spectrum
+ Saleor Storefront   E-Commerce                   13     58K         of application features.
+ Saleor Dashboard    E-Commerce Admin            130    1.1M
+                                                                                     TABLE II: Inference Statistics
+
+Baselines. To the best of our knowledge, no existing technique        App Name        Total   Correct    Precision    Recall     F1
+directly addresses feature-driven E2E test generation. Recent         PetClinic          29         19         0.66     0.83   0.73
+advances in LLM-based agents such as W EB C ANVAS [28]                Conduit            19         14         0.67     0.82   0.76
+and B ROWSER G YM [29] have demonstrated the potential                Taskcafe           50         22         0.42     0.66   0.51
+to navigate web applications and execute user instructions.           Dimeshift          40         17         0.42     0.81   0.56
+                                                                      MantisBT           45         22         0.47     0.75   0.58
+However, adapting these agents for E2E test generation poses
+                                                                      EverTraduora       69         30         0.42     0.73   0.54
+several challenges. First, they often require pre-existing fea-       Storefront         21         13         0.62      1.0   0.76
+ture extraction, which is the primary focus of our approach.          Dashboard         123         85         0.69     0.65   0.67
+Second, these agents may struggle to interpret abstract task          Total             396        222         0.55     0.72   0.62
+descriptions and instead require concrete, detailed instructions
+for execution.
+                                                                        However, the effectiveness of our approach is not solely
+   To assess the effectiveness of our proposed methodology, we
+                                                                     determined by the number of correct features. As detailed
+evaluate AUTO E2E against these specific-purpose agents, W E -
+                                                                     in Section III, we employ a scoring and filtering system to
+B C ANVAS and B ROWSER G YM , both of which utilize GPT-
+                                                                     prioritize feature generation and test case creation. If this
+4 O as their underlying LLM. We also compare AUTO E2E
+                                                                     system functions as intended, features with higher scores
+with more generalized agents: AutoGPT [30], which employs
+                                                                     should be more likely to correspond to actual features within
+GPT-4 O for both task planning and execution, and OpenDevin
+                                                                     the application.
+[31], a code-focused agent that utilizes the C LAUDE 3 LLM.
+                                                                        Figure 3 illustrates the coverage of top-k features in relation
+Additionally, we benchmark against a model-based technique,
+                                                                     to the ratio of k to the total number of features present in the
+represented by C RAWLJAX’s test generation module [20], [5].
+                                                                     application, referred to as the Rank Ratio. The left half of this
+All agents are instructed to navigate web applications and
+                                                                     figure demonstrates the coverage against the rank ratio for
+generate end-to-end (E2E) test cases.
+                                                                     AUTO E2E, while the lower half displays the moving average
+A. Effectiveness (RQ1)                                               of coverage for AUTO E2E and the baseline methods. In an
+   The primary objective of our method is to maximize the            ideal scenario, where all top-k inferred features are accurately
+extent of Feature Coverage as defined in Definition 3. As            identified, the plotted line would follow a 45-degree trajectory.
+described in Section III, AUTO E2E generates a set of E2E test       The figure reveals the extent of coverage achieved as the
+cases. We evaluate the generated tests using the methodology         feature list expands to encompass more candidates.
+detailed in section IV.                                                 As evident in the figure, AUTO E2E generally follows the
+   AUTO E2E demonstrates the ability to generate test cases          expected 45-degree line up to a rank ratio of approximately
+that cover an average of 79% of features across the applica-         0.75. This indicates that, on average, for an application with
+tions in the E2EB ENCH benchmark. Considering all features           N features, the first 0.75N generated test cases are almost all
+across all applications, AUTO E2E achieves a total Feature           correct. However, a divergence is observed beyond this point,
+Coverage of 72%. A more granular breakdown of the feature            suggesting that while the remaining generated test cases may
+coverage for each app is presented in the Recall column              be correct in certain instances, they do not consistently cover
+of Table II. These results underscore the effectiveness of           features with the same level of accuracy.
+AUTO E2E in effectively inferring features and generating
+                                                                     C. Comparison (RQ3)
+corresponding test cases across a diverse range of applications.
+                                                                        We evaluated the generated tests by each baseline against
+B. Feature Inference (RQ2)                                           E2EB ENCH as described in section IV. The Feature Coverage
+   As described in Section III, AUTO E2E infers a list of            results for different subjects and baselines are presented in Fig-
+features along with their scores by the end of the inference         ure 4. AUTO E2E achieves an average Feature Coverage rate of
+phase. Table II provides statistics for both correct and incorrect   79%, significantly outperforming C RAWLJAX (12.0%), W EB -
+predictions within the inferred feature list. AUTO E2E achieves      C ANVAS (0%), B ROWSER G YM (9.5%), AUTO GPT (6.1%),
+a total precision of 0.55, indicating that 55% of the generated      and O PEN D EVIN (7.9%). Notably, AUTO E2E surpasses the
+                     Expected             Conduit          Dimeshift
+                     PetClinic            TaskCafe         MantisBT                           AutoE2E               AutoGPT             BrowserGym
+                     Storefront           Traduora         Dashboard                          OpenDevin             Crawljax
+                   100%                                                                 100%
+
+
+
+
+                                                                         Feature Coverage
+                   80%                                                                      80%
+                   60%                                                                      60%
+                   40%                                                                      40%
+                                                                                            20%
+                   20%
+
+
+
+Feature Coverage
+                                                                                             0%
+                                                                                                        ic nt it fe ra ift T rd
+                    0% 0.0        0.5      1.0       1.5   2.0                                   et Clin orefroConduaskCaraduo imesh antisBshboa
+                                                                                                P St               T T D M Da
+                    Expected            OpenDevin          BrowserGym
+                    AutoE2E             AutoGPT            Crawljax     Fig. 4: Feature Coverage of different methods on the subjects
+                   100%
+                                                                                                  TABLE III: Feature action chain length
+                   80%
+                                                                                            Tool Name        Min    Max     Average     Median
+                   60%                                                                      AUTO E2E            1       7        3.8          4
+                                                                                            C RAWLJAX           1       7        2.9          3
+                   40%                                                                      W EB C ANVAS        0       0        0.0          0
+                                                                                            B ROWSER G YM       1       3        2.0          2
+                   20%                                                                      AUTO GPT
+                                                                                            O PEN D EVIN
+                                                                                                                1
+                                                                                                                1
+                                                                                                                        3
+                                                                                                                        4
+                                                                                                                                 1.2
+                                                                                                                                 1.7
+                                                                                                                                              1
+                                                                                                                                              1
+                                                                                            All Features        1       7        3.4          4
+                    0% 0.0        0.5      1.0       1.5   2.0
+                                   Rank Ratio                           the question of whether forcing a tool to generate more test
+                     Fig. 3: Feature Coverage vs. rank ratio            cases would necessarily lead to increased feature coverage.
+                                                                        The lower half of Figure 3 sheds light on this by illustrating the
+                                                                        moving average of Feature Coverage for the methods across
+  next best performing tool, C RAWLJAX, by 558%, and best               all subjects. Notably, the baselines reach a plateau in coverage
+  agent-based tool, B ROWSER G YM, by 731%. W EB C ANVAS                at a relatively low rate, suggesting that simply increasing
+  has not been included in Figure 4 since it did not generate           the number of test cases does not guarantee a corresponding
+  any test cases.                                                       increase in feature coverage.
+     The F1 scores for the generated test cases were 0.62 for
+                                                                                                            VI. D ISCUSSION
+  C RAWLJAX, 0.11 for B ROWSER G YM, 0.08 for AUTO GPT,
+  and 0.08 for O PEN D EVIN, compared to 0.62 for AUTO E2E.                The framework developed in this work, particularly the
+     1) Feature Complexity: While the coverage rate treats all          findings from Section III-A, is platform- and implementation-
+  features equally, it is important to acknowledge that features        agnostic. This means the underlying principles can be extended
+  vary in complexity. Some features within an application neces-        to generate test cases for other platforms, such as mobile
+  sitate longer chains of ordered actions to be successfully exe-       applications. Furthermore, this implementation independence
+  cuted. Different tools may encounter difficulties with extended       allows for significant potential improvements in performance
+  action chains due to the challenge of maintaining context over        and cost-effectiveness in future iterations, as the framework is
+  longer periods. Table III provides a statistical analysis of action   not rigidly tied to any specific technology or tool. Additionally,
+  chain complexity across different tools.                              the introduction of E2EB ENCH provides a standardized and
+     The average length of feature chains in the benchmark              automated means of evaluating E2E test case generation
+  is 3.4 actions. Notably, AUTO E2E demonstrates proficiency            techniques. This benchmark fills a crucial gap in the research
+  in handling longer chains, averaging 3.8 actions per feature,         community, enabling more rigorous comparison and develop-
+  compared to 2.9 for C RAWLJAX, 1.4 for B ROWSER G YM, 1.2             ment of novel approaches in the field of automated E2E test
+  for AUTO GPT, and 1.7 for O PEN D EVIN.                               generation.
+     2) Test Case Count: The number of test cases generated             Limitations. Despite its strengths, our approach has limita-
+  varies across different tools, as each tool employs its own           tions. Currently, AUTO E2E focuses on a one-to-one mapping
+  criteria for determining the appropriate quantity. This raises        between test cases and features, whereas real-world scenarios
+often require multiple test cases per feature to assess diverse    [43], [44], [45]. These newer agents have been proposed by
+interactions. Additionally, our implementation generates asser-    academic research, open-source communities [22], [30], and
+tions using the entire state after each action, which may not      large-scale companies [15].
+always be the most meaningful or targeted approach.                LLM-based Testing. Recent studies have increasingly fo-
+Threats to Validity. It is important to acknowledge potential      cused on using LLMs to automate software and web testing
+threats to the validity of our findings and the steps taken to     processes. Some research concentrates on software unit test
+mitigate them. One such threat lies in the representativeness      generation [46], [47], [48]. Some studies focus on accessibility
+of the web applications selected for E2EB ENCH. To address         testing, utilizing LLMs to identify and address accessibility
+this, we have carefully curated a diverse set of applications      issues [49]. Other studies have directed their attention towards
+spanning a wide range of categories. This diversity aims to        GUI testing, including software GUI testing [50] and mobile
+enhance the generalizability of our results and reduce potential   application GUI testing [12], [13], [51]. Our recent work
+biases associated with specific application types.                 has focused on automated web form testing, where LLMs
+   Another potential threat stems from the inherent subjectivity   simulate user interactions and validate form functionalities
+in defining and extracting features. To mitigate this, we have     through constraint-based testing [14].
+established a precise and formal definition of a feature (Def-     E2E Test Generation. A specific but less extensive area of
+inition 2). Furthermore, we employed multiple authors in the       research focuses on generating end-to-end (e2e) test scenarios.
+feature identification process during benchmark construction,      Earlier approaches in this field worked on mapping applica-
+promoting a more objective and comprehensive perspective.          tions to page objects and creating test cases for them [52].
+   Finally, the use of different LLMs in the evaluation process    However, recent studies use LLMs for automated test gen-
+could pose a threat to validity. While our goal was to maintain    eration [53], [54], [55]. For example, a recent prominent
+consistency by utilizing the same LLMs across all meth-            study [55] uses prompting patterns to track executed actions,
+ods, certain constraints necessitated variations. Specifically,    directing the LLM to select actions based on the high-level
+among the selected agents and baselines, only O PEN D EVIN         task in the application. These actions are then formulated into
+supported C LAUDE 3.5 S ONNET, while others (AUTO GPT,             test cases for the overarching task.
+W EB C ANVAS, B ROWSER G YM) lacked support for Anthropic
+models at the time of evaluation, requiring the use of GPT-                                 VIII. C ONCLUSION
+4 O. However, it is important to note that both C LAUDE 3.5           Automated E2E test case generation remains challenging.
+S ONNET and GPT-4 O exhibit very similar performance in            In this paper, we formally defined the problem, introduced a
+reported benchmarks [32], [33]. Therefore, we anticipate that      novel methodology (AUTO E2E) for feature-driven test gener-
+these variations in LLM usage would not significantly impact       ation, and developed E2EB ENCH, a benchmark for automated
+the overall performance trends observed in our evaluation.         evaluation. AUTO E2E achieves 79% feature coverage, outper-
+                                                                   forming baselines by 558%. Future work includes enhancing
+                    VII. R ELATED W ORK                            AUTO E2E’s performance and exploring assertion generation
+                                                                   for more comprehensive test coverage.
+Web Navigation Agents. In the academic context, extensive
+research has been conducted on automating the execution of                               IX. DATA AVAILABILITY
+tasks defined in natural language [34], [35], [36], [37], [38],       We have made AUTO E2E and E2EB ENCH publicly avail-
+[39], [40]. The aim is for an agent to determine and execute a     able [56] to facilitate reproducibility of our results. Detailed
+sequence of actions within a web application that fulfills these   instructions for replicating our experimental setup are also
+instructions. This research is divided into two principal cate-    provided.
+gories: traditional methods utilizing Reinforcement Learning
+(RL) agents and newer approaches that focus on LLMs.                                             R EFERENCES
+   The traditional techniques involve deep learning models to       [1] F. Ricca, M. Leotta, and A. Stocco, “Three open problems in the context
+translate natural language instructions into embeddings [34],           of E2E web testing and a vision: NEONATE,” Advances in Computers,
+[35], [36], [37], [39], [40]. These embeddings are then mapped          vol. 113, pp. 89–133, 2019.
+                                                                    [2] “Selenium,” https://www.selenium.dev, 2024, accessed: 2024-06-28.
+to specific actions on the web page. Variations in these            [3] X. Chang, Z. Liang, Y. Zhang, L. Cui, Z. Long, G. Wu, Y. Gao,
+methods are seen in the architecture of the deep learning               W. Chen, J. Wei, and T. Huang, “A Reinforcement Learning Approach
+models, the strategies of the RL policies, and how actions              to Generating Test Cases for Web Applications,” in 2023 IEEE/ACM
+                                                                        International Conference on Automation of Software Test (AST), 2023,
+are modeled. Additionally, some methods might include or                pp. 13–23.
+omit certain components. Techniques in this category often          [4] S. Yu, C. Fang, X. Li, Y. Ling, Z. Chen, and Z. Su, “Effective, platform-
+incorporate demonstrations by expert users [39], [40], use              independent gui testing via image embedding and reinforcement learn-
+                                                                        ing,” ACM Transactions on Software Engineering and Methodology.
+heuristics based on human-designed systems [41], or confine         [5] R. K. Yandrapally and A. Mesbah, “Fragment-Based Test Generation
+the agent’s actions to a predetermined set [37], [38].                  for Web Apps,” IEEE Transactions on Software Engineering, vol. 49,
+   Contrastingly, newer methods leveraging LLMs typically               no. 3, pp. 1086–1101, 2023.
+                                                                    [6] M. Biagiola, A. Stocco, F. Ricca, and P. Tonella, “Dependency-Aware
+forgo the RL training phase. These models delegate the                  Web Test Generation,” in 2020 IEEE 13th International Conference on
+decision-making about subsequent actions to the LLMs [42],              Software Testing, Validation and Verification (ICST), 2020, pp. 175–185.
+ [7] Z. Xie, Y. Chen, C. Zhi, S. Deng, and J. Yin, “Chatunitest: a              [28] Y. Pan, D. Kong, S. Zhou, C. Cui, Y. Leng, B. Jiang, H. Liu, Y. Shang,
+     chatgpt-based automated unit test generation tool,” arXiv preprint              S. Zhou, T. Wu et al., “Webcanvas: Benchmarking web agents in online
+     arXiv:2305.04764, 2023.                                                         environments,” arXiv preprint arXiv:2406.12373, 2024.
+ [8] S. Kang, J. Yoon, and S. Yoo, “Large language models are few-shot          [29] A. Drouin, M. Gasse, M. Caccia, I. H. Laradji, M. Del Verme, T. Marty,
+     testers: Exploring llm-based general bug reproduction,” in Proceedings          D. Vazquez, N. Chapados, and A. Lacoste, “WorkArena: How capable
+     of the 45th International Conference on Software Engineering. IEEE              are web agents at solving common knowledge work tasks?” in Proceed-
+     Press, 2023, p. 2312–2323.                                                      ings of the 41st International Conference on Machine Learning, ser.
+ [9] C. Lemieux, J. P. Inala, S. K. Lahiri, and S. Sen, “CodaMosa: Escaping          Proceedings of Machine Learning Research, vol. 235. PMLR, 21–27
+     Coverage Plateaus in Test Generation with Pre-Trained Large Language            Jul 2024, pp. 11 642–11 662.
+     Models,” in Proceedings of the 45th International Conference on Soft-      [30] AutoGPT Team, “AutoGPT,” https://github.com/Significant-Gravitas/
+     ware Engineering, ser. ICSE ’23. IEEE Press, 2023, p. 919–931.                  AutoGPT, 2024, accessed: 2024-07-30.
+[10] N. Nashid, M. Sintaha, and A. Mesbah, “Retrieval-Based Prompt Selec-       [31] OpenDevin Team, “OpenDevin: An Open Platform for AI Soft-
+     tion for Code-Related Few-Shot Learning,” in Proceedings of the 45th            ware Developers as Generalist Agents,” https://github.com/OpenDevin/
+     International Conference on Software Engineering, ser. ICSE ’23. IEEE           OpenDevin, 2024, accessed: 2024-07-30.
+     Press, 2023, p. 2450–2462.                                                 [32] OpenAI, “Hello gpt-4o,” https://openai.com/index/hello-gpt-4o/, 2024,
+[11] M. Schäfer, S. Nadi, A. Eghbali, and F. Tip, “Adaptive test generation         accessed: 2024-12-19.
+     using a large language model,” arXiv preprint arXiv:2302.06527, 2023.      [33] Anthropic, “Claude 3.5 sonnet,” https://www.anthropic.com/news/
+                                                                                     claude-3-5-sonnet, 2024, accessed: 2024-12-09.
+[12] Z. Liu, C. Chen, J. Wang, M. Chen, B. Wu, X. Che, D. Wang, and
+                                                                                [34] P. C. Humphreys, D. Raposo, T. Pohlen, G. Thornton, R. Chhaparia,
+     Q. Wang, “Make llm a testing expert: Bringing human-like interaction to
+                                                                                     A. Muldal, J. Abramson, P. Georgiev, A. Santoro, and T. Lillicrap, “A
+     mobile gui testing via functionality-aware decisions,” in Proceedings of
+                                                                                     data-driven approach for learning to control computers,” in International
+     the IEEE/ACM 46th International Conference on Software Engineering,
+                                                                                     Conference on Machine Learning. PMLR, 2022, pp. 9466–9482.
+     2024, pp. 1–13.
+                                                                                [35] Y. Li and O. Riva, “Glider: A reinforcement learning approach to extract
+[13] Z. Liu, C. Chen, J. Wang, M. Chen, B. Wu, Z. Tian, Y. Huang, J. Hu, and         ui scripts from websites,” in Proceedings of the 44th International
+     Q. Wang, “Testing the limits: Unusual text inputs generation for mobile         ACM SIGIR Conference on Research and Development in Information
+     app crash detection with large language model,” in Proceedings of               Retrieval, 2021, pp. 1420–1430.
+     the IEEE/ACM 46th International Conference on Software Engineering,        [36] S. Mazumder and O. Riva, “FLIN: A flexible natural language interface
+     2024, pp. 1–12.                                                                 for web navigation,” in Annual Conference of the North American
+[14] P. Alian, N. Nashid, M. Shahbandeh, and A. Mesbah, “Semantic                    Chapter of the Association for Computational Linguistics (NACCL
+     constraint inference for web form test generation,” in Proceedings of           2021), 2021.
+     the 33rd ACM SIGSOFT International Symposium on Software Testing           [37] S. Jia, J. Kiros, and J. Ba, “Dom-q-net: Grounded rl on structured
+     and Analysis, ser. ISSTA 2024. New York, NY, USA: Association                   language,” arXiv preprint arXiv:1902.07257, 2019.
+     for Computing Machinery, 2024, p. 932–944. [Online]. Available:            [38] N. Xu, S. Masling, M. Du, G. Campagna, L. Heck, J. Landay, and
+     https://doi.org/10.1145/3650212.3680332                                         M. Lam, “Grounding open-domain instructions to automate web support
+[15] J. Achiam, S. Adler, S. Agarwal, L. Ahmad, I. Akkaya, F. L. Aleman,             tasks,” in Proceedings of the 2021 Conference of the North American
+     D. Almeida, J. Altenschmidt, S. Altman, S. Anadkat et al., “Gpt-4               Chapter of the Association for Computational Linguistics: Human
+     technical report,” arXiv preprint arXiv:2303.08774, 2023.                       Language Technologies, K. Toutanova, A. Rumshisky, L. Zettlemoyer,
+[16] “The claude 3 model family: Opus, sonnet, haiku,” https://www-cdn.              D. Hakkani-Tur, I. Beltagy, S. Bethard, R. Cotterell, T. Chakraborty, and
+     anthropic.com/de8ba9b01c9ab7cbabf5c33b80b7bbc618857627/Model                    Y. Zhou, Eds. Association for Computational Linguistics, 2021, pp.
+     Card Claude 3.pdf, 2024, accessed: 2024-07-26.                                  1022–1032.
+[17] “Amazon web application,” https://www.amazon.com/, 2024, accessed:         [39] I. Gur, U. Rueckert, A. Faust, and D. Hakkani-Tur, “Learning to navigate
+     2024-07-10.                                                                     the web,” arXiv preprint arXiv:1812.09195, 2018.
+[18] “Cypress,” https://www.cypress.io/, 2024, accessed: 2024-06-28.            [40] E. Z. Liu, K. Guu, P. Pasupat, T. Shi, and P. Liang, “Reinforcement
+[19] “Playwright,” https://playwright.dev/, 2024, accessed: 2024-06-28.              learning on web interfaces using workflow-guided exploration,” arXiv
+[20] A. Mesbah, A. Van Deursen, and S. Lenselink, “Crawling ajax-based               preprint arXiv:1802.08802, 2018.
+     web applications through dynamic analysis of user interface state          [41] Y. Zheng, Y. Liu, X. Xie, Y. Liu, L. Ma, J. Hao, and Y. Liu, “Automatic
+     changes,” ACM Transactions on the Web (TWEB), vol. 6, no. 1, pp.                web testing using curiosity-driven reinforcement learning,” in 2021
+     1–30, 2012.                                                                     IEEE/ACM 43rd International Conference on Software Engineering
+[21] M. Biagiola, A. Stocco, F. Ricca, and P. Tonella, “Diversity-based web          (ICSE). IEEE, 2021, pp. 423–435.
+     test generation,” in Proceedings of the 2019 27th ACM Joint Meeting        [42] L. Wang, C. Ma, X. Feng, Z. Zhang, H. Yang, J. Zhang, Z. Chen,
+     on European Software Engineering Conference and Symposium on the                J. Tang, X. Chen, Y. Lin et al., “A survey on large language model
+     Foundations of Software Engineering, 2019, pp. 142–153.                         based autonomous agents,” arXiv preprint arXiv:2308.11432, 2023.
+                                                                                [43] I. Gur, O. Nachum, Y. Miao, M. Safdari, A. Huang, A. Chowdhery,
+[22] H. Chase, “Langchain,” October 2022. [Online]. Available: https:
+                                                                                     S. Narang, N. Fiedel, and A. Faust, “Understanding html with large
+     //github.com/langchain-ai/langchain
+                                                                                     language models,” arXiv preprint arXiv:2210.03945, 2022.
+[23] A. Neelakantan, T. Xu, R. Puri, A. Radford, J. M. Han, J. Tworek,          [44] H. Furuta, O. Nachum, K.-H. Lee, Y. Matsuo, S. S. Gu, and I. Gur, “Mul-
+     Q. Yuan, N. Tezak, J. W. Kim, C. Hallacy et al., “Text and code em-             timodal web navigation with instruction-finetuned foundation models,”
+     beddings by contrastive pre-training,” arXiv preprint arXiv:2201.10005,         arXiv preprint arXiv:2305.11854, 2023.
+     2022.                                                                      [45] P. Sodhi, S. Branavan, and R. McDonald, “Heap: Hierarchical policies
+[24] R. K. Yandrapally and A. Mesbah, “Fragment-based test generation for            for web actions using llms,” arXiv preprint arXiv:2310.03720, 2023.
+     web apps,” IEEE Transactions on Software Engineering, vol. 49, no. 3,      [46] M. Schäfer, S. Nadi, A. Eghbali, and F. Tip, “An empirical evaluation of
+     pp. 1086–1101, 2022.                                                            using large language models for automated unit test generation,” IEEE
+[25] R. Yandrapally, S. Sinha, R. Tzoref-Brill, and A. Mesbah, “Carving ui           Transactions on Software Engineering, vol. 50, no. 1, pp. 85–105, 2024.
+     tests to generate api tests and api specification,” in 2023 IEEE/ACM       [47] Y. Chen, Z. Hu, C. Zhi, J. Han, S. Deng, and J. Yin, “Chatunitest: A
+     45th International Conference on Software Engineering (ICSE). IEEE,             framework for llm-based test generation,” in Companion Proceedings of
+     2023, pp. 1971–1982.                                                            the 32nd ACM International Conference on the Foundations of Software
+[26] A. Stocco, M. Leotta, F. Ricca, and P. Tonella, “Clustering-aided               Engineering, 2024, pp. 572–576.
+     page object generation for web testing,” in Web Engineering: 16th          [48] Z. Yuan, M. Liu, S. Ding, K. Wang, Y. Chen, X. Peng, and Y. Lou,
+     International Conference, ICWE 2016, Lugano, Switzerland, June 6-9,             “Evaluating and improving chatgpt for unit test generation,” Proc.
+     2016. Proceedings 16. Springer, 2016, pp. 132–151.                              ACM Softw. Eng., vol. 1, no. FSE, jul 2024. [Online]. Available:
+[27] M. Biagiola, A. Stocco, A. Mesbah, F. Ricca, and P. Tonella, “Web               https://doi.org/10.1145/3660783
+     test dependency detection,” in Proceedings of the 2019 27th ACM Joint      [49] M. Taeb, A. Swearngin, E. Schoop, R. Cheng, Y. Jiang, and
+     Meeting on European Software Engineering Conference and Symposium               J. Nichols, “Axnav: Replaying accessibility tests from natural
+     on the Foundations of Software Engineering, 2019, pp. 154–164.                  language,” in Proceedings of the CHI Conference on Human Factors
+     in Computing Systems, ser. CHI ’24. New York, NY, USA:
+     Association for Computing Machinery, 2024. [Online]. Available:
+     https://doi.org/10.1145/3613904.3642777
+[50] D. Zimmermann and A. Koziolek, “Automating gui-based software
+     testing with gpt-3,” in 2023 IEEE International Conference on Software
+     Testing, Verification and Validation Workshops (ICSTW), 2023, pp. 62–
+     65.
+[51] Z. Liu, C. Chen, J. Wang, X. Che, Y. Huang, J. Hu, and Q. Wang,
+     “Fill in the blank: Context-aware automated text input generation for
+     mobile gui testing,” in 2023 IEEE/ACM 45th International Conference
+     on Software Engineering (ICSE), 2023, pp. 1355–1367.
+[52] A. Stocco, M. Leotta, F. Ricca, and P. Tonella, “Apogen: automatic
+     page object generator for web testing. softw. qual. j. 25 (3), 1007–1039
+     (2016).”
+[53] Z. Wang, W. Wang, Z. Li, L. Wang, C. Yi, X. Xu, L. Cao, H. Su,
+     S. Chen, and J. Zhou, “Xuat-copilot: Multi-agent collaborative system
+     for automated user acceptance testing with large language model,” arXiv
+     preprint arXiv:2401.02705, 2024.
+[54] Z. Liu, C. Chen, J. Wang, M. Chen, B. Wu, X. Che, D. Wang,
+     and Q. Wang, “Chatting with gpt-3 for zero-shot human-like mobile
+     automated gui testing. arxiv 2023,” arXiv preprint arXiv:2305.09434.
+[55] ——, “Make llm a testing expert: Bringing human-like interaction to
+     mobile gui testing via functionality-aware decisions,” in Proceedings of
+     the IEEE/ACM 46th International Conference on Software Engineering,
+     ser. ICSE ’24. Association for Computing Machinery, 2024.
+[56] “Autoe2e and e2ebench,” https://github.com/parsaalian/autoe2e, 2024.
+

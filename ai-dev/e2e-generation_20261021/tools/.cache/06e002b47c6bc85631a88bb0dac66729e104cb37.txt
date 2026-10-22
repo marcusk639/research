@@ -1,0 +1,73 @@
+__HTTP 200__
+Specs - Features - Docs - Kiro Loading image... Product About Kiro Agents IDE CLI Web Mobile Crew Pricing Downloads For Enterprise Startups Students Community Overview Ambassadors Case studies Discord Events Powers Shop Showcase Resources Docs Blog Changelog FAQs Videos Report a bug Suggest an idea Billing support Social English Site Terms License Responsible AI Policy Legal Privacy Policy Cookie Preferences English Loading image... Agents Apps Enterprise Pricing Docs Community Resources SIGN IN DOWNLOADS Loading image... Get Started Installation Authentication Your first project Models Overview Available models Reasoning effort AWS GovCloud (US) models Features How Kiro works Local command sandbox ACP integrations Specs Feature Specs Bugfix Specs Quick Spec Plan mode Analyze Requirements Correctness Best practices Steering Hooks MCP Permissions Custom agents Workflows Agent Skills Powers Cloud sessions Memory Compaction Kiroignore Checkpoints and rewind Built-in tools Configuration scopes IDE 1.x What's new in 1.0 Setup & First Run Editor Chat Experimental Troubleshooting 0.x reference CLI What's new in V3 Setup & First Run Terminal UI Chat Fullscreen mode Voice mode Headless mode ACP Auto complete Experimental 2.x reference Crew Quick start Installation Running 24/7 Chat Agent Capabilities Features Interfaces Apps System & storage Configuration Security Troubleshooting Web Setup & First Run Identity Center Connect your repositories Working with the agent Autonomous mode Automations Configuration Sync Sandbox Mobile - Preview Overview Commands and Reference CLI commands Slash commands Built-in tools Exit codes Settings Billing Overview Managing your subscription Upgrading your plan Downgrading your plan Cancelling your plan Purchasing add-on credits Managing your payments Managing usage notifications Managing your taxes Contacting billing support Deleting your account Related questions Enterprise Concepts Onboarding quickstart Connecting your identity provider Deployment options Subscribe your team Manage subscriptions Governance Monitor and track Settings Managed updates Billing IAM Supported regions AWS GovCloud (US) Privacy and Security Overview Data protection Code references Compliance validation Infrastructure security IAM permissions Firewalls, proxies, and data perimeters VPC endpoints (AWS PrivateLink) Guides Overview Running Kiro in the cloud Language support Learn by playing Migration Migrating from Q Developer Migrating from VSCode Upgrading from Q CLI Docs Features Specs Copy page View as Markdown Specs Copy page View as Markdown What are specs? 
+ Specs or specifications are structured artifacts that formalize the development process for features and bug fixes in your application. They provide a systematic approach to transform high-level ideas into detailed implementation plans with clear tracking and accountability. 
+ Capability IDE CLI Web Mobile Feature Specs ✓ ✓ ✓ — Bugfix Specs ✓ ✓ ✓ — Quick Spec ✓ ✓ ✓ — Parallel task execution ✓ ✓ ✓ — Analyze Requirements ✓ ✓ — — Correctness  (property-based testing) ✓ — — — 
+ With Kiro's specs, you can: 
+ 
+ Break down requirements  into user stories with acceptance criteria 
+ Build design docs  with sequence diagrams and architecture plans 
+ Track implementation progress  across discrete tasks 
+ Collaborate effectively  between product and engineering teams 
+ 
+ Core Structure 
+ Every spec generates three key files that form the foundation of your specification: 
+ 
+ requirements.md  (or  bugfix.md ) - Captures user stories, acceptance criteria, or bug analysis in structured notation 
+ design.md  - Documents technical architecture, sequence diagrams, and implementation considerations 
+ tasks.md  - Provides a detailed implementation plan with discrete, trackable tasks 
+ 
+ Loading diagram... 
+ Three-Phase Workflow 
+ All specs follow a three-phase workflow that transforms your idea into executable implementation: 
+ Requirements or Bug Analysis  - Define what needs to be built or fixed 
+ 
+ Feature Specs: User stories and acceptance criteria in  requirements.md 
+ Bugfix Specs: Bug analysis with current/expected/unchanged behavior in  bugfix.md 
+ 
+ Design  - Create technical architecture and implementation approach in  design.md 
+ 
+ System architecture and component design 
+ Sequence diagrams and data flow 
+ Error handling and testing strategy 
+ 
+ Tasks  - Generate discrete, executable implementation tasks in  tasks.md 
+ 
+ Trackable tasks with clear outcomes 
+ Real-time status updates as you implement 
+ Run tasks individually or all at once 
+ 
+ Task Execution 
+ IDE CLI Web Kiro provides a task execution interface for  tasks.md  files that displays real-time status updates. Tasks are updated as in-progress or completed, allowing you to efficiently track implementation progress. 
+ Running tasks in parallel 
+ When you run all tasks on a spec, Kiro analyzes your task list, figures out which tasks depend on each other, and runs independent tasks concurrently. For most feature specs, this cuts execution time significantly without any setup. 
+ Kiro builds a  dependency graph  of the tasks in your  tasks.md  and groups independent tasks into  waves : 
+ 
+ Wave 1  - all tasks with no dependencies. These run concurrently. 
+ Wave 2  - all tasks whose dependencies were satisfied by Wave 1. These run concurrently. 
+ Wave N  - continues until all tasks are complete. 
+ 
+ Waves execute sequentially; tasks within a wave execute concurrently. 
+ 
+ Types of Specs 
+ Kiro supports two types of specs to match your development needs: 
+ Feature Specs 
+ For building new features and capabilities in your application. Feature Specs guide you through requirements gathering, technical design, and implementation planning with two workflow variants: Requirements-First and Design-First. For well-understood features, you can also use  Quick Spec  to auto-generate all three artifacts without approval gates. 
+ Learn more about Feature Specs → 
+ Bugfix Specs 
+ For systematically diagnosing and fixing bugs with surgical precision while preventing regressions. Bugfix Specs help you identify root causes, design fixes, and validate that nothing else breaks. 
+ Learn more about Bugfix Specs → 
+ Getting Started 
+ IDE CLI Web 
+ From the Kiro pane, click the  +  button under  Specs . Alternatively, choose  Spec  from the chat pane. 
+ Kiro will ask if you are developing a Feature or fixing a Bug 
+ 
+ If you choose Feature, describe your feature and choose your workflow:  Requirements-First  or  Design-First 
+ If you choose Bug, describe your bug 
+ 
+ 
+ As you move through each phase, select the floating  Review  button on requirements, design, bugfix, or behavior documents. It opens  Markdown Review , where you can comment on exact passages and send your comments to Kiro at once. 
+ Follow the workflow through each phase to implementation 
+ 
+ Learn more 
+ Go deeper into Kiro's Spec system with these guides: 
+ Feature Specs Build new features with structured workflows. Quick Spec Generate requirements, design, and tasks in one pass without approval gates. Analyze Requirements Catch inconsistencies, ambiguities, and gaps in your requirements before design. Bugfix Specs Fix bugs surgically while preventing regressions. Best Practices FAQs on best practices when working with specs. Page updated:   October 15, 2026 ACP integrations Feature Specs

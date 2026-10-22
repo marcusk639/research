@@ -1,0 +1,1311 @@
+__HTTP 200__
+                                                                    Just-in-Time Catching Test Generation at Meta
+                                              Matthew Becker, Yifei Chen, Nicholas Cochran, Pouyan Ghasemi, Abhishek Gulati, Mark Harman* ,
+                                               Zachary Haluza, Mehrdad Honarkhah, Herve Robert, Jiacheng Liu, Weini Liu, Sreeja Thummala,
+                                                                           Xiaoning Yang, Rui Xin, Sophie Zeng
+                                                                                              Meta Platforms, London UK, Seattle and California, USA
+                                         ABSTRACT                                                                                        1    INTRODUCTION
+                                         We report on Just-in-Time catching test generation at Meta, de-                                 Most work on unit test generation [6, 9, 18, 26, 34, 45, 50, 59, 61] is
+                                         signed to prevent bugs in large scale backend systems of hundreds                               concerned with ‘hardening’ tests. That is, tests that pass at gener-
+                                         of millions of line of code. Unlike traditional hardening tests, which                          ation time, and land into the code base to ‘harden’ against future
+                                         pass at generation time, catching tests are meant to fail, surfac-                              regressions. By contrast, ‘catching’ tests fail at test generation time
+
+
+
+
+arXiv:2601.22832v1 [cs.SE] 30 Jan 2026
+                                         ing bugs before code lands. The primary challenge is to reduce                                  by design, with the aim of catching bugs in proposed changes [37].
+                                         development drag from false positive test failures. Analyzing 22,126                            A catching test cannot land together with the changes that it tests,
+                                         generated tests, we show code-change-aware methods improve                                      since it fails on those changes. Therefore, the catching test must
+                                         candidate catch generation 4x over hardening tests and 20x over                                 either be discarded (because it is deemed unhelpful), or its signal
+                                         coincidentally failing tests. To address false positives, we use rule-                          must be addressed (to fix the changes and make the test pass).
+                                         based and LLM-based assessors. These assessors reduce human                                        We target regression catching tests that fail on the proposed
+                                         review load by 70%. Inferential statistical analysis showed that                                changes (a code revision) but pass on the parent revision. For
+                                         human-accepted code changes are assessed to have significantly                                  catching tests we cannot rely on the implicit oracle [12]. Our auto-
+                                         more false positives, while human-rejected changes have signifi-                                generated tests must detect regressions according to the general
+                                         cantly more true positives. We reported 41 candidate catches to                                 oracle—the true, expected behavior, which is often ill-defined and
+                                         engineers; 8 were confirmed to be true positives, 4 of which would                              only partly knowable [12, 69]. The implicit oracle merely captures
+                                         have led to serious failures had they remained uncaught. Overall,                               errors, such as crashes, that are known to be true positive failures
+                                         our results show that Just-in-Time catching is scalable, industri-                              regardless of the specification [12, 32]. By contrast, the general ora-
+                                         ally applicable, and that it prevents serious failures from reaching                            cle is the (usually vague and informal, even unstated) specification
+                                         production.                                                                                     of correct behavior. This inherent vagueness makes it hard (yet no
+                                                                                                                                         less important) to distinguish true from false positive test failures.
+                                         CCS CONCEPTS                                                                                       A weak catch is simply one that fails on the current revision,
+                                                                                                                                         whereas a strong catch is one that also should fail (a true positive
+                                         • Software and its engineering → Software testing and debug-
+                                                                                                                                         failure) according to this general oracle. Its failure reveals a bug in
+                                         ging.
+                                                                                                                                         the code under test. A strictly weak catch is a false positive failure
+                                                                                                                                         that reveals a bug in the test case, including oracle misalignment.
+                                         KEYWORDS                                                                                        The challenge is to determine whether a weak catch is strong. The
+                                         Unit Tests, Automated Testing, LLMs, Test Oracles.                                              problem of automatically generating such strong catching tests
+                                                                                                                                         Just-in-Time (JIT) as revisions are submitted, is called the ‘Catching
+                                         ACM Reference Format:
+                                                                                                                                         JiTTest Challenge’, introduced in the FSE 2025 keynote paper [37].
+                                          Matthew Becker, Yifei Chen, Nicholas Cochran, Pouyan Ghasemi, Abhishek
+                                         Gulati, Mark Harman* , Zachary Haluza, Mehrdad Honarkhah, Herve Robert,
+                                                                                                                                            At Meta, a revision submitted to the Continuous Integration (CI)
+                                         Jiacheng Liu, Weini Liu, Sreeja Thummala, Xiaoning Yang, Rui Xin, Sophie                        system is called a ‘diff’ (short for differential). Our catch generation
+                                         Zeng . 2026. Just-in-Time Catching Test Generation at Meta. In Companion                        workflows are deployed at diff submission time. We focus on the
+                                         Proceedings of the 34th ACM International Conference on the Foundations of                      potential for a diff to introduce a severe regression. It is important
+                                         Software Engineering (FSE Companion ’26), June, 2026, Montreal. ACM, New                        to focus on severe regressions, because catching test generation is
+                                         York, NY, USA, 18 pages. https://doi.org/123456789                                              inherently computationally expensive; many tests must be gener-
+                                                                                                                                         ated to increase the chances of finding a strong catch. We prioritize
+                                                                                                                                         catching severe bugs using a targeting mechanism similar to Diff
+                                         * The corresponding author is Mark Harman. Author order is alphabetical.
+                                                                                                                                         Risk Score (DRS) [1], trained on previous code changes and running
+                                                                                                                                         overnight (west coast USA) using spare capacity. The workflow is
+                                                                                                                                         triggered for all the diffs submitted for the previous day that are
+                                         Permission to make digital or hard copies of all or part of this work for personal or
+                                         classroom use is granted without fee provided that copies are not made or distributed           flagged as high risk by the targetter. We seek to answer the follow-
+                                         for profit or commercial advantage and that copies bear this notice and the full citation       ing question for automated software test generation:
+                                         on the first page. Copyrights for components of this work owned by others than the
+                                         author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or
+                                         republish, to post on servers or to redistribute to lists, requires prior specific permission          How can we automatically generate tests that find the
+                                         and/or a fee. Request permissions from permissions@acm.org.                                            most severe bugs in proposed changes, before the bugs
+                                         FSE Companion ’26, June, Montreal                                                                      cause severe failures and with high enough true posi-
+                                         © 2026 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+                                         ACM ISBN 979-8-4007-0658-5/24/07                                                                       tive rate that the test signal does not impede engineer
+                                         https://doi.org/123456789                                                                              velocity?
+FSE Companion ’26, June, Montreal                                                                                                        Becker et al.
+
+
+   We deployed two catch generation workflows and three                   2.2    Hardening test generation workflows as
+true/false positive assessors. We used them to test Meta’s systems               catching workflows
+of hundreds of millions of lines of code used by over 3.5 billion
+                                                                          To provide additional baselines on the chance of generating a weak
+people worldwide every day. Our primary findings are as follows:-
+                                                                          catch using existing approaches, we also collected results from the
+Effectiveness of diff-awareness: Based on a study of 22,126 tests
+                                                                          application of TestGen-LLM [6], and ACH [25] to the parent of
+generated, we found that diff-aware catch generation workflows
+                                                                          the tested diff. TestGen-LLM [6] is a traditional LLM-based test
+produce approximately 4 times as many weak catches as hardening
+                                                                          generation system that elevates coverage, stimulating the LLM to
+workflows. They generate 20 times as many as a baseline that simply
+                                                                          generate test cases to target code that is currently uncovered by
+attempts to find tests that fail on the diff, and coincidentally pass
+                                                                          any existing test case. The system is based on line coverage and has
+on its parent revision.
+                                                                          been deployed (and regularly updated and evolved) at Meta for two
+Scaling Human-in-the-loop: Based on a manual study of 600 diffs
+                                                                          years now. For establishment of a hardening-based baseline, we
+with weak catches, we found that the LLM-as-judge ensemble
+                                                                          use the original system as reported in the literature [6]. ACH is a
+helped reduce human-in-the loop review load by approximately
+                                                                          mutation-based test generation system [25] that generates mutants
+70%, allowing us to scale evaluation capacity to approximately 4
+                                                                          and test cases that kill them.
+times that of manual review alone.
+                                                                             These two approaches are both deployed at Meta to generate
+Consistent with human labelling: Based on a study of diffs
+                                                                          hardening test cases. These are merely ‘baseline’ approaches, be-
+reviewed by humans, and thereby labelled as ‘Good’ (accepted
+                                                                          cause they use existing technologies ‘out of the box’. When such a
+to land into the code base) or ‘Bad’ (not accepted to land), we
+                                                                          test case, generated for the parent, fails on the child, it denotes a
+found statistically significantly more false positive assessments for
+                                                                          ‘Weak Catch’ as well as a ‘Harden’ according to the ‘Harden and
+tests that weakly catch diffs labelled ‘Good’ and significantly more
+                                                                          Catch‘ Framework [37].
+true positive assessments for those labelled ‘Bad’. We also found
+                                                                             For the TestGen-LLM workflow, we also experimented by re-
+only modest inter-rater agreement and rank correlation between
+                                                                          moving the requirement to construct tests that achieve additional
+LLM-based and rule-based assessors. Taken together, these findings
+                                                                          coverage. That is, we simply require that the workflow should gen-
+suggest that the assessors provide complementary discriminating
+                                                                          erate a test that builds and passes on the parent revision. This gives
+signals.
+                                                                          the hardening workflow the greatest chance of generating a valid
+Severe failures averted: Finally, and most importantly, from
+                                                                          catching test, since we know that approximately half the tests that
+41 reach outs to engineers based on failing test signals from catch,
+                                                                          find simulated bugs do not improve coverage [25].
+8 were immediately confirmed to be strong catches, yielding an
+                                                                             Neither of these hardening workflows are diff–aware. That is, the
+engineer-experienced true positive rate of 19.5%. Of the 8 strong
+                                                                          diff is the current revision, but each of the two workflows is applied,
+catches, 4 would have led to serious failures in production. These 4
+                                                                          not to the current revision, but to its parent (the base revision on
+serious failures were thus averted by Catching JiTTests. We also
+                                                                          which the diff is based). Therefore, neither workflow is supplied
+found that dismissing false positives took only a few minutes and
+                                                                          with any information about the diff itself. In their production de-
+therefore had negligible drag on developer velocity.
+                                                                          ployment as ‘hardeners’, they cannot ‘know’ about the diff, since
+                                                                          they have to cater for any future (unknown) changes.
+
+
+2     BASELINES FOR JUST IN TIME CATCHING                                 3     DIFF-AWARE WORKFLOWS
+A prerequisite for any approach to generate strong catches on a           Unlike hardening workflows, a catch generation workflow can al-
+diff is the ability to generate weak catches. In order to assess the      ways choose to exploit information about the diff to help it find ways
+degree to which existing technologies can generate weak catches,          to make the test fail on that diff. A purpose-built catch workflow
+we used three ‘baseline’ approaches, described below.                     is thus ‘diff-aware’. We have experimented with two approaches
+                                                                          to generating weak catches, based on this diff-awareness (both
+                                                                          depicted in Figure 1). The ‘dodgy diff’ workflow is aware of the
+                                                                          diff, but makes no attempt to infer anything about its intention.
+                                                                          Rather, it treats the diff as if it were a mutant of its parent, implicitly
+2.1     Coincidental regression catches found                             asserting that the diff is ‘buggy’ (hence the ‘dodgy diff’ moniker).
+        during ACH hardening deployment                                       We know, from previous studies, that the vast majority of code
+We have already deployed mutation-guided LLM-based hardening              changes do not induce failures (a corollary of the competent pro-
+test generation [25] into Meta’s continuous integration system,           grammer hypothesis [42]). Nevertheless, it makes sense to have a
+Phabricator [24]. As a byproduct of this hardening test generation        workflow that maximizes the number of weak catches and thereby
+deployment, we also produce tests that fail on the diff under test. Ac-   maximizes the pool of candidates from which to find a strong
+cording to the mutation-guided workflow [25] these are discarded          catch. The dodgy diff approach relies upon the existence of post-
+since they cannot land, by construction. However, where such tests        processing to weed out false positive failures, a topic to which we
+also happen to pass on the parent of the tested diff, these tests         will return Section 6.
+denote a weak catch. We call these catches ‘coincidental catches’,            We also want a workflow that favors the generation of tests
+because the goal of the test generation was not to produce a weak         that are more likely to reveal genuine bugs rather than to simply
+catch, but to produce a strong hardening test.                            elevate the chances of generating a weak (but not necessarily strong)
+Just-in-Time Catching Test Generation at Meta                                                                                                   FSE Companion ’26, June, Montreal
+
+
+
+
+                                                                                                                       Retained tests
+                                                                          Extended                                       to run on                                 Weak
+                                                                                                             Yes                                            Yes
+                                                                         Tests                                                                                    Catches
+                                                                                                                      mutants and diff
+                                                                                            Test build and                                Test build and
+      Class Under         Processes to       LLM: generate                                 pass on parent?                               f ail on mutants
+          Test            make mutants      extra test cases                                                                                and the diff?
+
+
+
+    Dodgy Diff Workflow                         Intent- aware Workflow
+
+
+
+
+                                                                                                                             Mutant
+                            Mutant                                                                                                                          Yes   Mutants
+                                                                                                                           Candidates
+
+                                                                                                                                           Mutant build and
+         Class Under                            Class Under      LLM: infer diff       Textual        LLM: make                             pass existing
+          Test (Diff                             Test (Diff         risks            description       mutants                                 tests?
+           Version)                               Version)                             of risks    representing the
+                                                                                                         risks
+
+
+
+
+               Figure 1: Architecture of ‘Dodgy diff’ and Intent-Aware Workflows for generating Just-in-Time Catches.
+
+
+catch. We therefore implemented a ‘diff-intent aware’ workflow.                                software testing [12]. Before the advent of LLM-based Software En-
+This workflow attempts to approximate the intention of the diff.                               gineering [23], it would have been presumed a foolhardy endeavor:
+We first describe the intent-aware workflow, and then the dodgy                                how can we know what the intention of a code change is, when all
+diff workflow, which is a simply a projection of the intent-aware                              we have is the code?
+workflow onto a simple subset. Both approaches are inspired by                                    However, as noted previously [37], there is often extra contextual
+mutation testing [42].                                                                         information with a code change, such as the title, summary, emails,
+                                                                                               and discussion between engineers, task descriptions, and other
+3.1      Intent aware workflow                                                                 documentation available. This contextual information can be used
+The intent-aware workflow is depicted in Figure 1 (lower right-hand                            to approximate the intention underlying a code change.
+side). The workflow first stimulates the language model to describe                               We wanted to provide a baseline against which to measure such
+the ways in which an attempt to implement the intent could produce                             richer sources of information, and to understand the degree to
+errors. We call this the ‘risks’ of the diff. The workflow thereby                             which simple LLM code summarization could be used to approxi-
+becomes ‘risk aware’ (based on its intent awareness).                                          mate the intention of a diff. With this in mind, the first version of
+    From the description of these risks, we construct mutants. Each                            the intent-aware workflow we deployed simply used the code itself,
+mutant implements a code modification, based on the parent of the                              and the diff title and summary, and no other contextual information
+tested diff. Each mutant captures a bug that could be introduced as                            in order to infer the diff intent.
+the result of attempting to implement the diff intent. Of course, we
+do not expect that we will necessarily catch a bug in the tested diff,                         3.3     Dodgy diff: intent-unaware workflow
+because it may not precisely mirror one of the inferred risks, even                            The ‘dodgy diff’ workflow is depicted in Figure 1(lower left-hand
+if it is buggy.                                                                                side). As can be seen from Figure 1, the dodgy diff workflow is
+    Nevertheless, from the considerable empirical evidence collected                           simply a projection of the intent-aware workflow. We simply treat
+(over multiple decades) on the mutation ‘coupling hypothesis’ [42],                            the diff as if it were already a mutant (a buggy version of the parent).
+it is reasonable to suppose that real faults may be ‘coupled’ to these                         We then use a Mutation-Guided LLM-based Test Generator [25] to
+mutants. Therefore, capturing the inferred risks as mutants is a                               generate tests that attempt to kill the mutant (that is, to distinguish
+natural first step towards generating tests that check for each risk.                          its behavior from that of its parent).
+    For each of the mutants, we generate a test following the
+Mutation-Guided LLM-based Test Generation workflow on the                                      4     RESULTS OF APPLYING THE WORKFLOWS
+parent. That is, we seek to generate tests that will pass on the
+                                                                                               Table 1 presents the results for the two diff-aware workflows, the
+parent but would fail on the mutated parent version. These tests
+                                                                                               two hardening baselines, and the coincidental catch baseline. The
+are then tested on the diff itself, and those that fail on the diff are
+                                                                                               two diff-aware work flows are part of our production deployment
+harvested as weak catches.
+                                                                                               since September 2025 and so results were simply taken from pro-
+                                                                                               duction for these. The non-diff-aware workflows are not part of our
+3.2      Intent-aware baseline for intent                                                      production deployment and were run solely for the purpose of col-
+         computation                                                                           lecting the results for this paper. We ran the baseline diff-unaware
+Computing the intention behind a code change is inherently prob-                               workflows for a period of 10 days between 14th and 24th Novem-
+lematic. We are essentially tackling, head on, the Oracle problem in                           ber 2025. During the 10-day period of assessment, the workflows
+FSE Companion ’26, June, Montreal                                                                                                                     Becker et al.
+
+
+were applied to the same set of diffs1 as the production workflows.                       tests without any guidance (neither coverage not mutation) we get
+The total number of tests generated for the four workflows (two                           catches for 3.6% of diffs, and with mutation-guidance this is 1.6%. By
+diff-aware and two diff-unaware) was 9,125.                                               contrast, using the dodgy diff approach we generate weak catches
+                                                                                          for 4.0% of diffs, rising to 7.9% of diffs using the intent-aware work-
+4.1      Results for co-incidental catches                                                flow. We conclude that, by taking advantage of information about
+The first row of results concerns coincidental catches. We report                         the diff and an approximation of its intention, we can more than
+the proportion of these ‘fail-on-diff’ tests that also, coincidentally,                   double the number of code changes for which we generate a weak
+pass on the parent of the diff under test, thereby constituting a                         catch.
+weak catch. This proportion is 0.2%; noticeably lower than the                               Looking at the differences between the two diff-aware catch
+other two baselines reported in the table. The low baseline result                        approaches, we also see notable differences in the number of tests
+for coincidental catches highlights the challenges of finding them.                       that are generated. Although the intent-aware approach generates
+The noticeably lower results for the number of weak catches led us                        fewer tests than the ‘dodgy diff’ approach, the tests that it generates
+to abandon any further attempt to harvest ‘co-incidental catching’                        are far more likely to be weak catches, both per test and overall.
+as a practical source of weak catches.                                                    More importantly, the intent-aware workflow is able to produce at
+                                                                                          least one weak catch for almost double the number of diffs. This
+4.2      Results for hardening baseline                                                   provides initial evidence that making the workflow intent aware,
+                                                                                          and focusing on likely risks, can significantly increase the chance
+The TestGen-LLM approach generates 10 times as many catches as
+                                                                                          of generating a weak catch.
+the coincidental catch approach. However, it should be noted that
+                                                                                             We do not claim that our two diff-aware workflows are the best
+this approach simply attempts to generate a test that will build and
+                                                                                          obtainable. These findings merely provide a foundation for further
+pass on the parent of the tested diff. It makes no attempt to give any
+                                                                                          research and development. Much more research is needed to imbue
+assurance that these tests add value. If we focus more specifically
+                                                                                          diff-aware workflows with richer context allowing them to generate
+on those that add coverage, the increase in the number of weak
+                                                                                          more catching tests, and more weak catching tests that are likely
+catches generated becomes 4x that for a coincidental catch, rather
+                                                                                          to also prove to be strong. We present these results to provide a
+than 10x. For the mutation guided approach, we observe a similar
+                                                                                          baseline for future research investigations on catching tests.
+increase in the number of weak catches generated.
+   From these numbers, we can conclude that, if we generate a
+hardening test, then the probability that it proves to be a weak                          5   INITIAL EVIDENCE THAT SIGNIFICANT
+catch on the tested diff is approximately four times greater than the                         REAL WORLD BUGS WILL BE PREVENTED
+probability that a test that happens to fail on the diff will prove to be                     BY TARGETED CATCH
+a weak catch. These results reflect the relative chance of making a
+                                                                                          The primary purpose of the deployment of the catch workflows
+test that passes, compared to the chance of generating, for arbitrary
+                                                                                          was to collect the data reported in the paper and to develop and
+code, a test that fails.
+                                                                                          refine the approaches to removing false positives. However, the
+   The results for the hardening workflows also implicitly assess
+                                                                                          process of determining ground truth on true/false positives inher-
+the probability of a hardening test failing on some possible future
+                                                                                          ently involved reaching out to engineers to confirm whether a weak
+change. Essentially, we have picked an arbitrary change, generated
+                                                                                          catch was a strong catch. During the period from mid-September
+a hardening test on the fly, based on the parent of that change,
+                                                                                          through to the end of October, we reached out to 41 engineers, with
+and then assessed the chances that the hardening test would fail
+                                                                                          a very simple chat-based message asking whether the observed
+for the change. From Table 1 we can see that the probability is
+                                                                                          change was intended or not. Engineers reported that dismissing an
+approximately 0.01 (0.008 for mutation-guided generation and 0.009
+                                                                                          intended change took only a few minutes, and therefore this low
+for coverage-guided generation). As a rough overall expectation
+                                                                                          bandwidth high signal introduces a very minimal degree of friction
+estimate, we therefore would expect hardening tests to fail on
+                                                                                          into the overall development process, and has negligible effects on
+approximately 1% of the diffs to which they are applied.
+                                                                                          developer velocity.
+                                                                                             In the process of reaching out to engineers, we were also able to
+4.3      Results for diff-aware weak catch
+                                                                                          (strongly) catch 8 issues, of which 4 proved to prevent significant
+         generation                                                                       issues that would have led to severe failures had they not been
+We expect that if we implement any diff-aware catch generator,                            intercepted at diff submission time. For each of these four cases, we
+it should perform better than the hardening baselines, because                            undertook a detailed in-depth analysis to confirm that each met the
+it generates tests for a specific (rather than an arbitrary future)                       standard criteria for a severe failure had they not been intercepted
+code change. Indeed, as the results from Table 1 show, both diff-                         and averted by the catching test.
+aware workflows generate far more weak catches per test generated,                           It is extremely encouraging (from the point of view of return
+although fewer overall.                                                                   on test effort) that from 8 issues prevented, 4 of these proved to
+   More importantly, the diff-aware approaches are far more ca-                           be severe. This indicates that targeting catch testing at the most
+pable of finding a weak catch per diff. That is, when we generate                         sensitive code has a very high return on investment. It is extremely
+1 except for coincidental catches which were taken from production over a longer
+                                                                                          unlikely that 8 arbitrary bugs, chosen it random, would yield 4 that
+period, and were initially included as part of the initial production deployment, until   lead to severe errors; most bugs are relatively trivial in nature [51,
+11th November 2025, when the coincidental catch workflow was discontinued.                72]. The scientific literature [51], as well as public bug-reporting
+Just-in-Time Catching Test Generation at Meta                                                                         FSE Companion ’26, June, Montreal
+
+
+                   Table 1: Results from five different approaches to generating weak catches as diffs are submitted
+
+                                                                 Total        Total     %age          Total      Total diffs        %age
+                                                                 Tests       Weak      Weak      Diffs With      with Weak          Diffs
+          Approach                                           generated      Catches    Catch           Tests        Catches       Caught
+
+                 Weak catches found by coincidence while attempting to generate hardening tests for the diff’s parent
+          Coincidental catch                           13,001         29     0.2%           N/A               N/A                      N/A
+
+                                   hardening approaches that are not aware of the diff under test
+          TestGen-LLM [6] – need not add coverage         4,499         89     2.0%          1,185                         43          3.6%
+          TestGen-LLM [6] – must also add coverage2       1,440         14     0.9%           N/A                         N/A          N/A
+          ACH Mutation-Guided [25]                          754          6     0.8%            322                          5          1.6%
+
+
+                                Just-in-Time Catching approaches that are aware of the diff under test
+          Dodgy diff                                        1,621         41    2.5%           654                          26         4.0%
+          Use computed diff intention and risks               811         52    6.4%           617                          49         7.9%
+          Totals                                                  22,126        231        1%            N/A              N/A          N/A
+
+
+systems, such as Bugzilla, tend to suggest that we should expect              reduce this friction, the lower the precision need be overall, and
+approximately 5%-20% of all bugs to be serious, whereas our results           therefore, when trading precision and recall, we can increase recall
+on this (admittedly limited number of bugs) indicates 43%. If these           by effectively reducing the cost of false positives.
+findings scale up, then it would be an extremely encouraging finding              To reduce the cost of false positives, we aim to make it excep-
+concerning the efficiency of targeting.                                       tionally easy for an engineer to clearly dismiss a signal that merely
+   At this point in the evolution of our catch workflows, we have             flags an intended change. We find that this affects the way the
+too few data points to make strong scientific claims of this nature,          technology should interface to the engineer. Rather than showing
+but the results are tantalizing glimpses of a world in which we               them a test case and asking them to debug, it is much better, in
+can focus testing on catching bugs, reporting low friction signal             the first instance, to clearly articulate what the changed behavior
+to engineers, without them ever having to look at test code itself,           is (between parent and child) and to simply ask whether this is
+let alone write it. Most importantly of all, when combined with               expected. In general, we find that engineers can much more quickly
+targeting, it seems that many of the bugs, possibly as much as half,          answer this question, compared to considering test case code.
+will prove to be severe, thereby focusing test effort where it is most            In the rule based approach, therefore, when we have identified
+effective.                                                                    a pattern that likely indicates a true positive, we give it a higher
+   Of the remaining 4 issues caught, 2 lead to fixes involving landing        overall score if it additionally would be very quick and easy to
+defensive programming to prevent future regressions, while for                dismiss. For example, suppose the rule-based pattern that applies
+the other 2, the diffs were simply abandoned by their authors. The            would materialize into an engineer reach out with a message like:
+fact that we were able to catch 7 issues from 41 reach outs, gives            ‘this expression, used to evaluate to true, but now evaluates to
+us an overall true positive rate, as experienced by the engineers             false; is that expected?’. Such a reach out is simple and clear, and
+who received the signal, of 19.5%. When coupled with the almost               if the changed behavior is intended, it is typically easy for the
+negligible effects of false positives, this was a very encouraging            engineer to recognize this.
+signal. We are confident that this baseline performance for engineer-             By contrast, consider a situation where the reach out asks the
+experienced true positive rate can be significantly improved.                 engineer to confirm whether a change in the order of some sub-
+                                                                              set elements of a large composite data structure is expected. This
+                                                                              will typically take orders of magnitude longer to dismiss, should
+5.1     Determining whether to reach out                                      it prove to be a false positive, compared to the boolean change.
+Whether or not either a Human-in-the-Loop or fully automated                  Consequently, we could afford an order of magnitude more false
+system should choose to reach out to an engineer is a trade-off               positives per true positive for the ‘boolean change’ style reach out,
+between precision and recall, and has to take account of the likely           when compared to the ‘large composite data structure ordering
+friction caused to the diff author, who is tasked with checking               mismatch’ reach out. In applying the rule based approach to deter-
+whether the detected change is expected. The friction involved is             mine true/false positives, we therefore also take into account the
+partly related to the simplicity of the changes, and also partly the          ultimate impact on the engineer.
+nature of the test failure. It is interesting to observe that this is not         Fortunately, we have found that the catch deployment model
+just an assessment of the likelihood of a true positive, but also an          significantly reduces the friction caused by false positives. Firstly,
+assessment of the impact, in terms of friction, caused by the human           the catch is reported at diff time; a time when the developer has
+effort of eliminating a false positive. The more that can be done to
+FSE Companion ’26, June, Montreal                                                                                                     Becker et al.
+
+
+maximum mental context on the code change. This makes the signal           give ground truth, but we can aspire to create a rank-based judg-
+highly relevant, which we know is important [36]. Secondly, the            ment of a set of weak catches with reasonable rank correlation to
+initial signal is expressed simply as a ‘sense-check’ on whether a         the ground truth likelihood of a strong catch.
+changed behavior is expected or not. In the case of a false positive,         By contrast, the rule based approach searches for specific pat-
+the engineer simply confirms the change is expected, which can             terns that are either present or absent, and makes deterministic
+take a matter of seconds, and we found, in practice, takes no more         verified judgments about whether these patterns are present. We
+than a few minutes. False positives are thus eliminated with alacrity,     can rely on the veracity of the rule-based approach in the sense
+and consequently a higher proportion can be tolerated than were            that we know that the claimed patterns are guaranteed to exist,
+the engineer required to actually look at test code or code under          but interpreting whether these patterns likely correlate with the
+test.                                                                      strongness of catch also remains more of a question of correlation
+   Finally, only when the sense check fails, and the engineer is sur-      than of ground truth.
+prised by the observed behavior change, do they need to consider              We use these signals together to produce an overall ranking
+test case code itself. Such situations may ultimately prove to be          of weak catch candidates, with those ranked sufficiently highly
+false positives, but the fact that the engineer is surprised makes it      being worthy of further consideration. Ultimately, the aspiration is
+worth the double-check, even in false positive situations; it helps        that this correlation will be found sufficiently close to the ground
+to improve developer understanding of the code. This improved              truth that we will be able to define suitable thresholds, above which
+understanding is particularly valuable in the rapidly emerging sce-        our infrastructure will automatically send the outcome to the diff
+nario [53, 71] whereby a large amount of code is machine-generated         author.
+(under engineer supervision).                                                 In our initial deployment, we also have a human-in-the-loop.
+   Overall, therefore, catch workflows can gain significant real           The purpose of the human is, simultaneously, to determine whether
+world impact by preventing serious failures and with almost neg-           a candidate strong catch signal is sent to the diff author, and to
+ligible drag on developer velocity, and with many other indirect           provide feedback on true and false positive patterns so that we
+advantages on newly-emerging development processes.                        can iteratively improve both the LLM-as-judge and the rule-based
+                                                                           approaches.
+6    REDUCING FALSE POSITIVES AND
+     IDENTIFYING LIKELY TRUE POSITIVES                                     6.1    LLM-as-Judge
+For any workflow that aims to generate weak catches, whether               To maximize robustness and reduce the risk of idiosyncratic model
+diff-aware, intent-aware, both or neither, we must ask the question        errors or biases, we employ an ensemble approach, aggregating
+       What is the probability that this weak catch (a test                judgments from several state-of-the-art LLMs (including Llama3.3-
+       failure) is a strong catch (true positive test failure)?            70B, Gemini 3 Pro, and Claude Sonnet 4). Each model is tasked with
+                                                                           classifying whether a given weak catch represents an unexpected
+    In this section, we report on our initial findings on false and true   bug introduced by the code diff.
+positive identification. We found it more intuitive to combine the
+false positive and true positive identifications into a value between      6.1.1 Input. Each LLM-as-Judge receives the following inputs for
+-1.0 and 1.0, where -1.0 indicates very high probability of a false        each candidate test case:
+positive (a strictly weak catch), while 1.0 represents very high              (1) The code of the weak catch test case
+probability of a true positive (a strong catch). We implement this            (2) The test execution outcome, including the failure code, mes-
+weak/strong catch assessment as a post-processing phase that is                   sage, and test execution trace
+applied to all workflows that attempt to produce weak catches as              (3) The code changes between parent and child (diff)
+candidate strong catches.                                                     (4) The inferred diff intent
+    We call these automated true/false positive decision procedures
+‘assessors’. The assessors enable the overall Catching JiTTest ap-         6.1.2 Output. From the execution of the LLM-as-judge ensemble,
+proach to (1) filter out false positives and prioritize human-in-the-      we obtain three key outputs for each weak catch case:-
+loop review for high-confidence cases, and (2) manage the precision-       Normalized Token Probability Score (TP Prob) (-1 to 1): Token
+recall tradeoff of the overall system.                                     probability was only available for Llama models, and we chose
+    The assessor workflows are only ever deployed when we have a           Llama3.3-70B and tasked the LLM with a binary classification; de-
+candidate weak catch. The existence of a weak catch means that             termining whether a test failure represented by the weak catch is
+the assessor always has the tested diff available to it, when forming      unexpected. The model outputs a ‘yes’ or ‘no’ response, and the
+its judgment. The assessor, therefore, can always be both diff-aware       normalized logarithmic probability of the first token (‘Yes’ or ‘No’)
+and intent-aware, irrespective of whether the workflow that gener-         is assigned to a score between -1 and 1. A ‘yes’ response with high
+ated the weak catch was, itself, aware of diff- or intent- aware.          log-probability yields a score close to 1, indicating confidence in
+    We use two different approaches to judging strong catch like-          a true positive (i.e., strong catch), while a ‘no’ response with high
+lihood; LLM-as-judge [74], and a more traditional rule-based ap-           log-probability yields a score close to -1, indicating confidence in a
+proach called RubFake: Rule Based False-positive Killing Environ-          false positive.
+ment. These two approaches are complementary. While the LLM-               Ensemble Categorical Likelihood Score (Bucket Med) (-1 to
+as-judge has rich semantics available to it, its judgments are both        1): Each LLM in the ensemble also performs a multi-class classifica-
+nondeterministic and challenging to verify. We cannot rely on it to        tion, producing a categorical output that indicates the likelihood
+Just-in-Time Catching Test Generation at Meta                                                                                     FSE Companion ’26, June, Montreal
+
+
+that a weak catch will be unexpected, with possible values of High,                       they considered it to be a true positive catch. This simple deploy-
+Medium, or Low Likelihood. These categorical outputs are subse-                           ment with a Human-in-the-Loop was aimed at refining the rule
+quently transformed to numerical values, i.e., ‘High’ : 1.0, ‘Medium’:                    base approach. Nevertheless, it has already found several important
+0.0, ‘Low’: -1.0, yielding a scale consistent with the normalized to-                     bugs, giving us confidence that the overall approach had comfort-
+ken probability score described above. The final score is determined                      ably passed the ‘proof of concept’ evaluation bar. Section 5 provides
+by taking the median across the ensemble, providing a consensus-                          details of the bugs caught and fixed before reaching production
+based measure of the likelihood that the test failure represents a                        using this approach, and the kind of failures that were thereby
+bug. The median is chosen over the mean because the mapped                                averted.
+values are ordinal rather than continuous, ensuring the aggregation
+method is appropriate for the nature of the data[64].                                     6.2.1 False positive patterns. Table 2 presents information about
+Textual explanation: The LLM is instructed to provide a brief,                            the false positive patterns found. We consider three different sources
+structured rationale for its classification. This rationale describes (i)                 of information when determining a false positive:
+the code behavior change evidenced by the weak catch test failure                            (1) The change made to the code under the test
+and (ii) why this behavior change is judged to be unexpected given                           (2) The generated test code
+the diff and its intent. Although the system employs an ensemble                             (3) The execution trace produced when the test is executed on
+of LLM judges, aggregation of these textual rationales is not cur-                               the diff under test
+rently performed. Instead, the ensemble’s value lies in the diversity
+of explanations, which offers multiple perspectives rather than a                            False positive patterns can be found in any or all of these sources
+synthesized consensus. Each explanation is presented individually,                        of signal.
+allowing human reviewers to evaluate the performance of each
+judge, compare their reasoning, and gain insight into the strengths                       6.3    Flagging true positive patterns
+and weaknesses of different approaches.Future deployments may
+                                                                                          Throughout October and November 2025 the Human-in-the-Loop
+explore methods for aggregating these explanations—such as se-
+                                                                                          process of analyzing weak catches (and consequent occasional
+lecting the rationale from the most confident judge or synthesizing
+                                                                                          reaches out to engineers) gave us insights on true positive pat-
+a consensus explanation—to help diff authors more efficiently in-
+                                                                                          terns as well as false positives. Given the success of rule-based
+terpret test failures and determine appropriate follow-up actions.
+                                                                                          identification of false positives, we decided to also implement a
+   The LLM-as-Judge ensemble thus produces, for each weak catch,
+                                                                                          rule-based approach to identify true positive patterns. While one
+a set of confidence scores and associated rationales, which are sur-
+                                                                                          can never be 100% certain that a pattern is a true positive, we es-
+faced for human review. Empirical evaluation on 600 weak catches
+                                                                                          sentially codified as rules, the patterns that we intuitively found
+showed that the LLM judges achieved over 98% precision3 in iden-
+                                                                                          ourselves responding to when deciding to reach out to engineers.
+tifying false-positive catches when either the normalized token
+                                                                                          These could be regarded as promising patterns for a potential true
+probability score was –1 or the ensemble categorical likelihood
+                                                                                          positive, rather than rule based guarantees of a true positive.
+score was 0. This high precision enabled a reduction of human
+                                                                                             This is to be contrasted with the false positive identification, in
+review workload by approximately 70%, effectively allowing us
+                                                                                          which any candidate identified as a false positive is essentially elim-
+to scale evaluation capacity to approximately 4× that of manual
+                                                                                          inated. Table 3 presents information on the true positive patterns
+review alone.
+                                                                                          identified and used. When codifying true positive likelihood, we
+                                                                                          took account of the ease with which a wrong true positive claim
+6.2      Rule-based false positive identification
+                                                                                          could be eliminated by an engineer with relevant context.
+Between October and November 2025, we manually analyzed                                      As can be seen, a common theme of the identification of a true
+600 weak catches, in order to identify patterns of false positive                         positive pattern is that the test identifies a specific kind of change,
+behavior. We initially had two engineers performing this process,                         such as the boolean transitioning from true to false, thereby
+in which one would conduct the assessment and the other act as                            causing the test to fail on the child when it passes on the parent,
+a checker on this assessment. Subsequently, as we scaled up the                           while not seeing any direct attempt to change the boolean-defining
+deployment, we employed four engineers, each of whom would                                expression in the code itself. We do not claim that it would be
+take a subset of the weak catches and produce an initial assessment                       prudent to always reach out when such a rule applies, but it certainly
+which was checked by the others.                                                          adds weight to the overall pool of evidence available, suggesting
+   This was an informal process, aimed at identifying patterns,                           that it is worth reaching out.
+rather than precisely computing formally-defined inter-rater agree-
+ment or assessment of likelihood of true positive. However, where
+we found a good candidate for a strong catch, we reached out to the
+                                                                                          6.4    Assessing the assessors
+author of the tested diff, and the diff’s reviewers, to check whether                     We analyzed the behavior of our three true/false positive assessors
+3 The tests are drawn from extremely unbalanced population in which almost all of
+                                                                                          using data from two diff-aware catch workflows (Section 3), applied
+them are false positives. Therefore, high precision is expected. It could be obtained
+                                                                                          to code changes from two distinct groups: ‘good’ diffs (accepted
+from a technique that simply assessed every single test as false positive. However, our   or committed by reviewers) and ‘bad’ diffs (reverted, abandoned,
+experience was that it was safe to discard those with the lowest scores, and this is      or flagged for changes). ‘Good’ diffs are those deemed landable by
+what saved 70% of human effort without, we believe, losing any true positive catches.
+Therefore, the important take-home message from these numbers is the 70% saving,          human reviewers, but may still contain bugs. ‘Bad’ diffs may be
+rather than the 98% precision.                                                            abandoned for various reasons, not necessarily due to bugs. Thus,
+FSE Companion ’26, June, Montreal                                                                                                                                                                    Becker et al.
+
+
+                                                                              Table 2: False positive patterns
+
+   Pattern Name                               Likelihood                                                                                                                                             Source(s)
+                                              of false            Description                                                                                                                         checked
+                                              positive            of pattern                                                                                                                       for pattern
+   broken_test_runner                         high                when the test has failed because the test runner itself failed that this is a sign of an infrastructure issue not a             execution log
+                                                                  bug detected
+   reflection                                 high                reflection tends to lead to highly brittle test since it is inherently implementation dependent                       execution log, test code
+   type_missmatch                             high                often the type of methods changes between parent and child and this can lead to false positive test failure           execution log, test code
+   bad_mock_smell                             medium              where the test appears to be failing due to an incorrect mock, we cannot be sure                                               execution log
+   should_be_private_smell                    high                We found that LLMs would generate tests that attempt to enforce private methods                                       execution log, test code
+   method_must_be_protected_smell             high                We found LLMs would occasionally enforce protective methods                                                           execution log, test code
+   mock_broken                                high                we found the LLM’s often incorrectly mock                                                                                      execution log
+   data_provider_broken                       high                we found the LLM’s often constructing incorrect data providers                                                                 execution log
+   not_implemented_exception                  high                almost certainly the engineer intentionally raised an exception to indicate a method signature has been added                  execution log
+                                                                  without an implementation
+   key_value_pair_change                      high                Requiring same key value pairs in the same order is too implementation specific                                                execution log
+   undefined_variable                         high                The undefined variable is likely removed by the code modifications or introduced incorrectly by the test                       execution log
+   expecting_particular_calls_to_functions    high                Clearly implementation dependent expectations such as a method being called a certain number of times or              execution log, test code
+                                                                  with a certain type of parameter
+   web_server_down                            high                test failed due to infrastructure issues                                                                                       execution log
+   flakiness                                  low                 various patterns that may indicate flaky execution                                                                    execution log, test code
+
+
+                                                                               Table 3: True positive patterns
+
+   Pattern                     Execution trace signs                   Corroboration in code/intent                   Explanation
+   Unexpected_key_change       key out of bounds                       No update to keys                              Indexing into container fails even though the key fields have not been updated
+   Empty_container             empty container exception               No changed line directly effects container     A container such as addict, array becomes empty despite not being explicitly changed
+   Create_failure              object creation exception               No direct change to object structure           An exception indicating an object cannot be created is suspicious if the object structure
+                                                                                                                      is not updated
+   changed_bool                True becomes false or vice versa        Context dependent                              When an asserted true becomes false or vice versa service is suspicious, but we need to
+                                                                                                                      check whether those have good reason in the code.
+   refactor                    any specific change in behavior         Intention is to refactor                       most refactorings should be meaning preserving by construction
+   dead_code_removal           any specific change in behavior         Intention is dead code removal                 the code removal is expected to be safe and therefore meaning preserving
+   null_value                  value is null                           Defining expression not updated                suspicious when variables not directly implicated in code changes become null
+   monotonic_change            existing behavior change                Intention is only to add new functionality     The change clearly intended only to add behavior. For example, adding logging, but
+                                                                                                                      existing behavior changed.
+   RBAC                        assert failure flags RBAC change        Code does not specifically affect this role    Rule-Based Access Control (RBAC) can involve complex corner cases, and dependences
+                                                                                                                      so unexpected changes are Suspicious
+
+
+
+diff status does not guarantee bug likelihood, but does provide                                               chance of obtaining a medium or large effect size for samples of
+expert-labeled data.                                                                                          similar size to our ‘good’ and ‘bad’ diffs was computed to be less
+    Although these labels are imperfect (‘landable’ vs. ‘not landable’                                        than 0.00001. We thus pay for more head to medium and larger
+rather than ‘bug-free’ vs. ‘buggy’), they enable cautious statistical                                         effect sizes (and/or multiple related occurrences of small effect sizes,
+analysis. After all, were ‘Good’ and ‘Bad’ diffs to show no differ-                                           for which the joint probability of these occurring by chance is low).
+ences, it would undermine the value of modern code review, yet                                                   Table 5 shows the results for true and false positive assessment
+empirical studies have repeatedly confirmed its effectiveness since                                           according to the three different ways of determining whether a test
+Fagan inspections in the 1970s [11, 22, 60]. Given this extensive lit-                                        failure is true or false positive, for each of the two different test
+erature, we expect statistical differences between ‘Good’ and ‘Bad’                                           generation techniques. As can be seen, the true positive assessor
+diffs and use this expectation to compare test generation methods                                             for all three has a significantly higher rate in the diffs labeled as
+and assessor performance across these labeled diffs.                                                          ‘bad’, compared to those labeled as ‘good’ when using the simple
+    Since we are executing multiple statistical tests, there is a proba-                                      ‘dodgy diff’ test generation approach. Similarly, the two LLM-based
+bility that some 𝑃 values that are found to be significant at the                                             assessors have a noticeably higher false positive assessment rate
+𝛼 = 0.05 level will be spurious. Fortunately we are not using                                                 for tests generated on the good diffs.
+the outcomes to make life-altering decisions about drug treat-                                                   Also, Table 4 reveals modest levels of inter-rater agreement and
+ments [29, 56, 58] so we neither want nor need conservative 𝑝-                                                rank correlation (𝜌 ≤ 0.535), especially for the ‘Needs Revisions’
+value corrections such as Bonferroni or Hochberg [38]. Rather, in                                             sub-category of diffs. Based on this overall relatively modest correla-
+common with almost all Software Engineering applications [10, 35]                                             tion, one might be tempted to assume that some/all assessors simply
+it is not just statistical significance that matters, but the effect size.                                    add noise, but low correlation could also indicate complementarity.
+Therefore, to cater for the influence of multiple statistical tests, we                                       This complementarity interpretation becomes much more probable
+assess the likelihood of obtaining a statistically significant result                                         given the discriminating power revealed by the Fisher exact test,
+with a given effect size, using similar data to that we study using a                                         and results showing the extremely low probability of achieving
+permutation-based resampling procedure [33].                                                                  these effect sizes purely by chance.
+    The resampling computes that the chance of obtaining a single                                                Therefore, we conclude that the assessors have some true/false
+observation of small effect size according to Cohen’s ℎ for two                                               discriminatory power, and that they are likely complementary. How-
+samples deemed statistically significantly different according to                                             ever, there remains no guarantee that, even optimally combined,
+Fisher’s exact test. That chance is approximately 0.04. However, the                                          they cannot be significantly improved upon in terms of ability to
+Just-in-Time Catching Test Generation at Meta                                                                                                                FSE Companion ’26, June, Montreal
+
+
+Table 4: Inter-rater agreement and rank correlation among assessment methods. Spearman (𝜌) and Kendall (𝜏) rank correlations
+show coefficient if 𝑝 < 0.05, otherwise ‘–’. Cohen’s 𝜅 for pairwise agreement on FP/TP classification; Fleiss’ 𝜅 and Krippendorff’s
+𝛼 for overall agreement. Grayscale intensity indicates strength (darker = stronger). G=Good (Accepted/Closed), B=Bad (other sta-
+tuses), 𝐺 ∪ 𝐵=labelled only, UnLab=unlabelled, All=all diffs. Status abbreviations: CLS=Closed, ACC=Accepted, ABD=Abandoned,
+CHP=Changes Planned, NRS=Needs Revision. Interpretation: Pr=Poor, Sl=Slight, Fr=Fair, Mod=Moderate, Sub=Substantial,
+AP=Almost Perfect.
+
+            Spearman Pair Comparison               All        UnLab         𝐺 ∪𝐵            G              B       CLS         ACC          ABD      CHP           NRS         REV
+            𝑛 (diff count)                         531         275           256           150            106       90          60           77       12            16          1
+            RubFake vs TPP                        -0.146        –           -0.196       -0.226         –           –         -0.265         –           –          –              –
+            RubFake vs Bucket                        –          –              –            –           –           –            –           –           –        +0.535           –
+            TPP vs Bucket                         +0.260      +0.266        +0.254       +0.249       +0.229      +0.313         –           –           –        +0.512           –
+
+
+             Kendall Pair Comparison              All         UnLab      𝐺 ∪𝐵               G           B         CLS         ACC           ABD     CHP           NRS         REV
+             𝑛 (diff count)                       531          275        256              150         106         90          60            77      12            16          1
+              RubFake vs TPP                     -0.113         –        -0.152       -0.182            –        -0.164       -0.217         –        –            –           –
+              RubFake vs Bucket                     –           –           –            –              –           –            –           –        –          +0.469        –
+              TPP vs Bucket                      +0.212       +0.219     +0.205       +0.204          +0.183     +0.259          –           –        –          +0.440        –
+
+
+    False Positive Pair             All          UnLab          𝐺 ∪𝐵              G                   B           CLS             ACC              ABD             CHP                 NRS
+    Rubfake vs TP Prob           -0.07 (Pr)     -0.01 (Pr)     -0.15 (Pr)     -0.17 (Pr)         -0.12 (Pr)     -0.16 (Pr)     -0.17 (Pr)        -0.10 (Pr)      -0.24 (Pr)     -0.12 (Pr)
+    Rubfake vs Bucket Med        -0.07 (Pr)     -0.09 (Pr)     -0.06 (Pr)     -0.04 (Pr)         -0.07 (Pr)     -0.04 (Pr)     -0.05 (Pr)        -0.16 (Pr)       0.12 (Sl)      0.26 (Fr)
+    TP Prob vs Bucket Med         0.20 (Sl)      0.20 (Sl)      0.20 (Fr)      0.18 (Sl)          0.20 (Sl)      0.23 (Fr)      0.10 (Sl)         0.14 (Sl)      -0.03 (Pr)    0.62 (Sub)
+    Fleiss’ 𝜅 (all 3)             0.01 (Sl)     0.03 (Sl)      -0.02 (Pr)     -0.04 (Pr)         -0.01 (Pr)     -0.03 (Pr)     -0.06 (Pr)        -0.06 (Pr)      -0.05 (Pr)        0.25 (Fr)
+    Krippendorff’s 𝛼 (all 3)      0.01 (Sl)     0.03 (Sl)      -0.02 (Pr)     -0.04 (Pr)         -0.01 (Pr)     -0.02 (Pr)     -0.06 (Pr)        -0.05 (Pr)      -0.02 (Pr)        0.27 (Fr)
+    Sample size (n)                 531            275            256            150                106            90              60               77               12                16
+
+
+      True Positive Pair              All         UnLab          𝐺 ∪𝐵                G                 B            CLS            ACC              ABD              CHP               NRS
+      Rubfake vs TP Prob           -0.00 (Pr)    -0.02 (Pr)      0.02 (Sl)      0.01 (Sl)          0.01 (Sl)      0.01 (Sl)      0.03 (Sl)        -0.04 (Pr)      -0.16 (Pr)       0.38 (Fr)
+      Rubfake vs Bucket Med        -0.02 (Pr)    -0.03 (Pr)     -0.01 (Pr)      0.07 (Sl)         -0.10 (Pr)      0.00 (Sl)      0.24 (Fr)        -0.16 (Pr)      -0.12 (Pr)       0.18 (Sl)
+      TP Prob vs Bucket Med         0.12 (Sl)     0.14 (Sl)      0.10 (Sl)      0.07 (Sl)          0.10 (Sl)      0.09 (Sl)      0.07 (Sl)         0.09 (Sl)       0.06 (Sl)       0.12 (Sl)
+      Fleiss’ 𝜅 (all 3)            -0.02 (Pr)    -0.02 (Pr)     -0.02 (Pr)     -0.03 (Pr)         -0.05 (Pr)     -0.01 (Pr)     -0.05 (Pr)        -0.10 (Pr)      -0.13 (Pr)       0.19 (Sl)
+      Krippendorff’s 𝛼 (all 3)     -0.02 (Pr)    -0.02 (Pr)     -0.02 (Pr)     -0.03 (Pr)         -0.05 (Pr)     -0.01 (Pr)     -0.05 (Pr)        -0.10 (Pr)      -0.09 (Pr)       0.21 (Fr)
+      Sample size (n)                 531           275            256               150              106            90                60             77              12               16
+Assessment methods: RubFake = rule-based approach; TPP = LLM log-likelihood probability; Bucket = bucketed LLM-ensemble assessment.
+
+
+Table 5: Fisher’s Exact Test p-values comparing assessment rates between good and bad diffs for each catch approach. True
+Positive (TP) columns show p-values for score > 0; False Positive (FP) columns show p-values for score < 0. For significant
+results, effect size (Cohen’s ℎ, [19]) and direction are shown: N=negligible (|ℎ| < 0.2), S=small (0.2 ≤ |ℎ| < 0.5), M=medium
+(0.5 ≤ |ℎ| < 0.8), L=large (|ℎ| ≥ 0.8); G=good has higher rate, B=bad has higher rate. Significant p-values (𝑝 < 0.05) are shown in
+bold. P-values are uncorrected for multiple testing.
+
+                                                         True Positive (score > 0)                                         False Positive (score < 0)
+               Approach                            Rubfake        TP Prob       Bucket Med                           Rubfake         TP Prob Bucket Med
+               intent-aware workflow                  0.586                0.094                     0.104                0.736                0.094             0.003 (S,G)
+               dodgy diff workflow              0.002 (S,B)        <0.001 (M,B)              <0.001 (M,B)                 0.237        <0.001 (M,G)              0.002 (S,G)
+
+
+correctly predict true/false positive. We leave future optimization                               7        COINCIDENTAL HARDENING TESTS
+as an open problem for further research. Our results certainly do                                 Generating tests to find catches can be expensive. It would also be
+indicate that such further research would likely bear significant                                 inefficient if that were all we did with the workflow, because most
+fruit and industrial impact.                                                                      code changes are bug free, and therefore any attempt to generate
+                                                                                                  tests to catch bugs in them would be futile. Fortunately, hardening
+FSE Companion ’26, June, Montreal                                                                                                      Becker et al.
+
+
+                                                       Max    Total         We believe that the ‘Catching JiTTest’ challenge [37] will be-
+                                               No.    Tests    No.       come increasingly important, due to increasing velocity of software
+    Catch                                       of     Per       of      development and consequent volume of code changes and con-
+    Approach                        Outcome   Diffs    Diff   Tests      comitant issues [20]. Tackling this challenge requires determining
+                            All Tests                                    whether a test failure is a true positive, relating directly to the Ora-
+    intent-aware workflow All             1471          42     2923      cle Problem[12]. Rule-based approaches, such as those leveraging
+    dodgy diff workflow     All           1982          62     5880      static and dynamic program analysis [44, 73], have been proposed
+    Both approaches         All           2729          62     8797      to filter out flaky or irrelevant failures. Recent work has explored
+                        All Passing Tests                                the use of large language models (LLMs) for classifying test failures
+    intent-aware workflow Passed          1271          42     2551      and improving oracle quality [39, 40, 52], as well as for automating
+    dodgy diff workflow     Passed        1763          62     5436      the assessment and improvement of test oracles [12, 41].
+    Both approaches         Passed        2517          62     7987         Techniques like coverage-guided prompting [6, 57, 59], adap-
+                        All Failing Tests                                tive test generation [62], and prompt engineering [65, 70] are not
+    intent-aware workflow Failed           168           5      200      focused on Catching JiTTesting. Nevertheless, these methods can
+    dodgy diff workflow     Failed         140           9      205      enhance relevance to code changes, increasing the likelihood of
+    Both approaches         Failed         282           9      405      generating strong catches.
+                                                                            In the past decade, Meta has made considerable investment in
+ Table 6: Co-incidental Hardening from Catch Workflows                   automated unit test generation using a variety of testing techniques
+                                                                         including Metamorphic Testing [3], Mutation testing [25], Obser-
+                                                                         vation based testing [8], and LLM based testing [6]. These unit
+                                                                         based techniques are complemented by automated end-to-end test-
+                                                                         ing [5, 48], and social level testing [2–4, 67], and static analyses [21],
+tests are a very natural and useful byproduct of the workflows to
+                                                                         such as Infer [16] and Zoncolan. However, this is the first approach
+generate catching tests. Table 6 shows the results for coincidentally
+                                                                         at Meta to focus on ‘catching’ rather than ‘hardening’.
+hardening tests found during attempts to generate weak catching
+tests in the period from 11th November 202 to 11th December 2025.        9    CONCLUSIONS AND FUTURE WORK
+   Although coincidental catching tests generated from hardening
+are rare (see Table 1), coincidental hardening test generated by         We reported experience and empirical results from mutation-guided,
+catching are highly prevalent, as Table 6 shows. Therefore, one nat-     LLM-based test generation targeting risky code changes (diffs) to
+ural way to approach the overall combined problems of hardening          uncover faults just before production—the Catching JiTTest Chal-
+and catching test generation, is to simultaneously do both: primar-      lenge [37]. This approach has prevented severe bugs from landing
+ily focussing on generating catching tests, while also harvesting        at Meta. Diff and intent awareness greatly increase the number
+hardening test generated during this process.                            of weak catches found. To transition from weak to strong catches,
+                                                                         LLM-based and rule-based true/false positive assessors reduce hu-
+                                                                         man review load by 70%, with statistical analysis showing strong
+8     RELATED WORK                                                       agreement with human labels.
+Automated test generation has a long history, dating back to the            A key advantage is that engineers rarely need to write or review
+1960s [13], and remaining active through the decades since [43].         tests, avoiding AI code quality issues [28, 30]. Tests are generated
+Currently, established test generation techniques tend to use either     and assessed automatically; engineers only confirm if changes are
+search-based and evolutionary approaches [10, 26, 27, 49] or Sym-        intended, with negligible impact on development velocity. When
+bolic execution [15, 31, 63]. Research has led to the introduction       changes are unexpected, engineers use test code to quickly identify
+of practical publicly available test generation tools such as Evo-       and fix issues. We hope these results encourage further research
+Suite [26], Randoop [54] and Klee [14]. More recent studies have         on just-in-time catching test generation and provide scalable, in-
+focussed on LLM-based code generators such as Codex, Copilot,            dustrially relevant baseline results for future improvements.
+and Code Llama [6, 18, 45, 59, 61, 68].
+   Existing tools primarily generate unit tests to improve coverage,     10    ACKNOWLEDGMENTS
+but coverage may not entail fault revelation; recent research [17]       We would like to thank the leadership of Meta’s Product Compliance
+shows mutation testing is more effective, leading to its practical       and Privacy, Fundamental Artificial Intelligence Research (FAIR),
+adoption at Meta [25]. Whether mutation- or coverage-guided,             Developer Infrastructure (DevInfra), and Instagram Product Foun-
+these approaches automate human-style unit test writing [6, 9, 18,       dation teams for supporting our work over the past decade, and
+26, 34, 45, 50, 59, 61], thereby focusing on hardening rather than       the many Meta software engineers and testers whose experience,
+catching test generation.                                                expertise, and engagement have helped shape the ideas presented
+   By contrast, the focus of this paper is on catching unit tests        here. We would also like to thank the many academics and other
+which are very different: they fail at generation time, a property       researchers with whom we have had the enormous pleasure to
+they share with techniques such as fuzzing [46] and system level         interact over 3+ decades of research work on verification, testing
+test generation with tools like Sapienz [7, 47]. However, unlike these   and AI.
+approaches to catching bugs, we focus on generating catching tests
+with respect to a general oracle rather than the implicit oracle [12].
+Just-in-Time Catching Test Generation at Meta                                                                                               FSE Companion ’26, June, Montreal
+
+
+REFERENCES                                                                                 [19] Jacob Cohen. 1988. Statistical Power Analysis for the Behavioral Sciences (second
+ [1] Rui Abreu, Vijayaraghavan Murali, Peter C Rigby, Chandra Maddila, Weiyan                   ed.). Lawrence Erlbaum Associates, New Jersey.
+     Sun, Jun Ge, Kaavya Chinniah, Audris Mockus, Megh Mehta, and Nachiappan               [20] Kevin Zheyuan Cui, Mert Demirer, Sonia Jaffe, Leon Musolff, Sida Peng, and
+     Nagappan. 2024. Moving Faster and Reducing Risk: Using LLMs in Release                     Tobias Salz. 2024. The Productivity Effects of Generative AI: Evidence from a
+     Deployment. arXiv:2410.06351 [cs.SE] https://arxiv.org/abs/2410.06351                      Field Experiment with GitHub Copilot. An MIT Exploration of Generative AI (mar
+ [2] John Ahlgren, Maria Eugenia Berezin, Kinga Bojarczuk, Elena Dulskyte, Inna                 27 2024). https://mit-genai.pubpub.org/pub/v5iixksv.
+     Dvortsova, Johann George, Natalija Gucevska, Mark Harman, Ralf Laemmel, Erik          [21] Dino Distefano, Manuel Fähndrich, Francesco Logozzo, and Peter W O’Hearn.
+     Meijer, Silvia Sapora, and Justin Spahr-Summers. 2020. WES: Agent-based User               2019. Scaling static analyses at Facebook. Commun. ACM 62, 8 (2019), 62–70.
+                                                                                           [22] Michael E. Fagan. 1976. Design and code inspections to reduce errors in code
+     Interaction Simulation on Real Infrastructure (keynote paper). In 8𝑡ℎ Genetic
+                                                                                                development. IBM Systems Journal 15, 3 (1976), 182–211.
+     improvement workshop (GI at ICSE 2020), Shin Yoo, Justyna Petke, Westley Weimer,
+                                                                                           [23] Angela Fan, Beliz Gokkaya, Mitya Lyubarskiy, Mark Harman, Shubho Sengupta,
+     and Bobby R. Bruce (Eds.). ACM, 276–284.
+                                                                                                Shin Yoo, and Jie Zhang. 2023. Large Language Models for Software Engineering:
+ [3] John Ahlgren, Maria Eugenia Berezin, Kinga Bojarczuk, Elena Dulskyte, Inna
+                                                                                                Survey and Open Problems. In ICSE Future of Software Engineering (FoSE 2023).
+     Dvortsova, Johann George, Natalija Gucevska, Mark Harman, Maria Lomeli, Erik
+                                                                                           [24] Dror G. Feitelson, Eitan Frachtenberg, and Kent L. Beck. 2013. Development and
+     Meijer, Silvia Sapora, and Justin Spahr-Summers. 2021. Testing Web Enabled
+                                                                                                Deployment at Facebook. IEEE Internet Computing 17, 4 (2013), 8–17.
+     Simulation at Scale Using Metamorphic Testing. In International Conference on
+                                                                                           [25] Christopher Foster, Abhishek Gulati, Mark Harman, Inna Harper, Ke Mao, Jillian
+     Software Engineering (ICSE) Software Engineering in Practice (SEIP) track. Virtual.
+                                                                                                Ritchey, Hervé Robert, and Shubho Sengupta. 2025. Mutation-Guided LLM-based
+ [4] John Ahlgren, Kinga Bojarczuk, Sophia Drossopoulou, Inna Dvortsova, Johann
+                                                                                                Test Generation at Meta. In 2025 ACM Conference on Foundations of Software
+     George, Natalija Gucevska, Mark Harman, Maria Lomeli, Simon Lucas, Erik
+                                                                                                Engineering (FSE 2025). ACM. Also available as arXiv preprint arXiv:2501.12862.
+     Meijer, Steve Omohundro, Rubmary Rojas, Silvia Sapora, Jie M. Zhang, and Norm
+                                                                                           [26] Gordon Fraser and Andrea Arcuri. 2011. EvoSuite: automatic test suite generation
+     Zhou. 2021. Facebook’s Cyber–Cyber and Cyber–Physical Digital Twins (keynote
+     paper). In 25th International Conference on Evaluation and Assessment in Software          for object-oriented software. In 8𝑡ℎ European Software Engineering Conference
+     Engineering (EASE 2021). Virtual.                                                          and the ACM SIGSOFT Symposium on the Foundations of Software Engineering
+ [5] Nadia Alshahwan, Arianna Blasi, Kinga Bojarczuk, Andrea Ciancone, Natalija                 (ESEC/FSE ’11). ACM, 416–419.
+     Gucevska, Mark Harman, Michal Krolikowski, Rubmary Rojas, Dragos Martac,              [27] Gordon Fraser and Andrea Arcuri. 2014. A large-scale evaluation of automated
+     Simon Schellaert, et al. 2024. Enhancing Testing at Meta with Rich-State Simu-             unit test generation using evosuite. ACM Transactions on Software Engineering
+     lated Populations. In Proceedings of the 46th International Conference on Software         and Methodology (TOSEM) 24, 2 (2014), 1–42.
+     Engineering: Software Engineering in Practice. 1–12.                                  [28] Yujia Fu, Peng Liang, Amjed Tahir, Zengyang Li, Mojtaba Shahin, Jiaxin Yu, and
+ [6] Nadia Alshahwan, Jubin Chheda, Anastasia Finegenova, Mark Harman, Alexan-                  Jinfu Chen. 2025. Security Weaknesses of Copilot-Generated Code in GitHub
+     dru Marginean, Shubho Sengupta, and Eddy Wang. 2024. Automated unit test                   Projects: An Empirical Study. arXiv:2310.02059 [cs.SE] https://arxiv.org/abs/
+     improvement using Large Language Models at Meta. In ACM International Con-                 2310.02059
+     ference on the Foundations of Software Engineering (FSE 2024) (Porto de Galinhas,     [29] Andrew Gelman, Jennifer Hill, and Masanao Yajima. 2012. Why we (usually) don’t
+     Brazil, Brazil).                                                                           have to worry about multiple comparisons. Journal of research on educational
+ [7] Nadia Alshahwan, Xinbo Gao, Mark Harman, Yue Jia, Ke Mao, Alexander Mols,                  effectiveness 5, 2 (2012), 189–211.
+     Taijin Tei, and Ilya Zorin. 2018. Deploying Search Based Software Engineering         [30] Gitclear. [n. d.]. Coding on Copilot: 2023 Data Suggests Downward Pressure on
+                                                                                                Code Quality. https://www.gitclear.com/coding_on_copilot_data_shows_ais_
+     with Sapienz at Facebook (keynote paper). In 10𝑡ℎ International Symposium
+                                                                                                downward_pressure_on_code_quality
+     on Search Based Software Engineering (SSBSE 2018). Montpellier, France, 3–45.
+                                                                                           [31] Patrice Godefroid, Nils Klarlund, and Koushik Sen. 2005. DART: directed auto-
+     Springer LNCS 11036.
+                                                                                                mated random testing. In Programming Language Design and Implementation
+ [8] Nadia Alshahwan, Mark Harman, Alexandru Marginean, and Eddy Wang. 2024.
+                                                                                                (PLDI 2005), Vivek Sarkar and Mary W. Hall (Eds.). ACM, 213–223.
+     Observation-based unit test generation at Meta. In Foundations of Software Engi-
+                                                                                           [32] Alberto Goffi, Alessandra Gorla, Michael D Ernst, and Mauro Pezzè. 2016. Auto-
+     neering (FSE 2024).
+                                                                                                matic generation of oracles for exceptional behaviors. In Proceedings of the 25th
+ [9] Saswat Anand, Mayur Naik, Mary Jean Harrold, and Hongseok Yang. 2012. Auto-
+                                                                                                international symposium on software testing and analysis. 213–224.
+     mated concolic testing of smartphone apps. In Proceedings of the ACM SIGSOFT
+                                                                                           [33] Phillip Good. 2013. Permutation tests: a practical guide to resampling methods for
+     20th International Symposium on the Foundations of Software Engineering. ACM,
+                                                                                                testing hypotheses. Springer Science & Business Media.
+     59.
+                                                                                           [34] Mark Harman, Yue Jia, and Yuanyuan Zhang. 2015. Achievements, open problems
+[10] Andrea Arcuri and Lionel Briand. 2011. A Practical Guide for Using Statistical
+                                                                                                and challenges for search based software testing (keynote Paper). In 8𝑡ℎ IEEE
+     Tests to Assess Randomized Algorithms in Software Engineering. In 33𝑟𝑑 Inter-
+                                                                                                International Conference on Software Testing, Verification and Validation (ICST
+     national Conference on Software Engineering (ICSE’11) (Waikiki, Honolulu, HI,
+                                                                                                2015). Graz, Austria.
+     USA). ACM, New York, NY, USA, 1–10.
+                                                                                           [35] Mark Harman, Phil McMinn, Jerffeson Teixeira de Souza, and Shin Yoo. 2012.
+[11] Alberto Bacchelli and Christian Bird. 2013. Expectations, outcomes, and chal-
+                                                                                                Search Based Software Engineering: Techniques, Taxonomy, Tutorial. In Empiri-
+     lenges of modern code review. In 2013 35th International Conference on Software
+                                                                                                cal software engineering and verification: LASER 2009-2010, Bertrand Meyer and
+     Engineering (ICSE). IEEE, 712–721.
+                                                                                                Martin Nordio (Eds.). Springer, 1–59. LNCS 7007.
+[12] Earl T. Barr, Mark Harman, Phil McMinn, Muzammil Shahbaz, and Shin Yoo.
+                                                                                           [36] Mark Harman and Peter O’Hearn. 2018. From Start-ups to Scale-ups: Opportu-
+     2015. The Oracle Problem in Software Testing: A Survey. IEEE Transactions on
+                                                                                                nities and Open Problems for Static and Dynamic Program Analysis (keynote
+     Software Engineering 41, 5 (May 2015), 507–525.
+[13] Robert S. Boyer, Bernard Elspas, and Karl N. Levitt. 1975. SELECT – a Formal               paper). In 18𝑡ℎ IEEE International Working Conference on Source Code Analysis
+     System for Testing and Debugging Programs by Symbolic Execution. In Interna-               and Manipulation (SCAM 2018). Madrid, Spain, 1–23.
+     tional Conference on Reliable Software (Los Angeles, California). ACM, New York,      [37] Mark Harman, Peter O’Hearn, and Shubho Sengupta. 2025. Harden and Catch for
+     NY, USA, 234–245.                                                                          Just-in-Time Assured LLM-Based Software Testing: Open Research Challenges
+[14] Cristian Cadar, Daniel Dunbar, Dawson R Engler, et al. 2008. Klee: unassisted              (keynote paper). In 2025 ACM Conference on Foundations of Software Engineering
+     and automatic generation of high-coverage tests for complex systems programs..             (FSE 2025). ACM. Also available as arXiv preprint arXiv:2504.16472.
+     In OSDI, Vol. 8. 209–224.                                                             [38] Yosef Hochberg. 1988. A sharper Bonferroni procedure for multiple tests of
+[15] Cristian Cadar and Koushik Sen. 2013. Symbolic Execution for Software Testing:             significance. Biometrika 75, 4 (1988), 800–802.
+     Three Decades Later. Commun. ACM 56, 2 (Feb. 2013), 82–90.                            [39] Soneya Binta Hossain and Matthew Dwyer. 2024. TOGLL: Correct and strong
+[16] C. Calcagno, D. Distefano, J. Dubreil, D. Gabi, P. Hooimeijer, M. Luca, P. W.              test oracle generation with LLMs. arXiv preprint arXiv:2405.03786 (2024).
+     O’Hearn, I. Papakonstantinou, J. Purbrick, and D. Rodriguez. 2015. Moving             [40] Ali Reza Ibrahimzada, Yigit Varli, Dilara Tekinoglu, and Reyhaneh Jabbarvand.
+     Fast with Software Verification. In NASA Formal Methods - 7th International                2022. Perfect is the enemy of test oracle. In Proceedings of the 30th ACM Joint
+     Symposium. 3–11.                                                                           European Software Engineering Conference and Symposium on the Foundations of
+[17] Thierry Titcheu Chekam, Mike Papadakis, Yves Le Traon, and Mark Harman.                    Software Engineering. 70–81.
+     2017. An empirical study on mutation, statement and branch coverage fault             [41] Gunel Jahangirova, David Clark, Mark Harman, and Paolo Tonella. 2021. An
+     revelation that avoids the unreliable clean program assumption. In Proceedings             Empirical Validation of Oracle Improvement. IEEE Transactions on Software
+     of the 39th International Conference on Software Engineering, ICSE 2017, Buenos            Engineering 47, 8 (2021), 1708–1728. https://doi.org/10.1109/TSE.2019.2934409
+     Aires, Argentina, May 20-28, 2017. 597–608.                                           [42] Yue Jia and Mark Harman. 2011. An Analysis and Survey of the Development of
+[18] Yinghao Chen, Zehao Hu, Chen Zhi, Junxiao Han, Shuiguang Deng, and Jianwei                 Mutation Testing. IEEE Transactions on Software Engineering 37, 5 (September–
+     Yin. 2024. Chatunitest: A framework for LLM-based test generation. In Compan-              October 2011), 649 – 678.
+     ion Proceedings of the 32nd ACM International Conference on the Foundations of        [43] B. Korel. 1990. Automated Software Test Data Generation. IEEE Transactions on
+     Software Engineering. 572–576.                                                             Software Engineering 16, 8 (1990), 870–879.
+FSE Companion ’26, June, Montreal                                                                                                                                 Becker et al.
+
+
+[44] Arun Lakhotia. 1993. Rule–Based Approach to Computing Module Cohesion. In            [70] Jules White, Sam Hays, Quchen Fu, Jesse Spencer-Smith, and Douglas C. Schmidt.
+     15𝑡ℎ Conference on Software Engineering (ICSE-15). 34–44.                                 2023. ChatGPT Prompt Patterns for Improving Code Quality, Refactoring, Re-
+[45] Kaibo Liu, Zhenpeng Chen, Yiyang Liu, Jie M. Zhang, Mark Harman, Yudong Han,              quirements Elicitation, and Software Design. arXiv:2303.07839.
+     Yun Ma, Yihong Dong, Ge Li, and Gang Huang. 2025. LLM-Powered Test Case Gen-         [71] Tao Xiao, Hideaki Hata, Christoph Treude, and Kenichi Matsumoto. 2024. Gen-
+     eration for Detecting Bugs in Plausible Programs. (2025). arXiv:2404.10304 [cs.SE]        erative AI for Pull Request Descriptions: Adoption, Impact, and Developer In-
+     https://arxiv.org/abs/2404.10304                                                          terventions. Proceedings of the ACM on Software Engineering 1, FSE (July 2024),
+[46] Valentin J. M. Manès, HyungSeok Han, Choongwoo Han, Sang Kil Cha, Manuel                  1043–1065.
+     Egele, Edward J. Schwartz, and Maverick Woo. 2018. The Art, Science, and             [72] Andreas Zeller. 2009. Why programs fail: a guide to systematic debugging. Morgan
+     Engineering of Fuzzing: A Survey. CoRR abs/1812.00140 (2018). arXiv:1812.00140            Kaufmann.
+[47] Ke Mao, Mark Harman, and Yue Jia. 2016. Sapienz: Multi-objective Automated           [73] Sai Zhang, Darioush Jalali, Jochen Wuttke, Kivanç Muslu, Wing Lam, Michael D.
+     Testing for Android Applications. In International Symposium on Software Testing          Ernst, and David Notkin. 2014. Empirically revisiting the test independence
+     and Analysis (ISSTA 2016). 94–105.                                                        assumption. In International Symposium on Software Testing and Analysis (ISSTA
+[48] Ke Mao, Timotej Kapus, Lambros Petrou, Ákos Hajdu, Matteo Marescotti, Andreas             2014), Corina S. Pasareanu and Darko Marinov (Eds.). ACM, San Jose, CA, USA,
+     Löscher, Mark Harman, and Dino Distefano. 2022. FAUSTA: Scaling Dynamic                   385–396.
+     Analysis with Traffic Generation at WhatsApp. In 15th IEEE Conference on Soft-       [74] Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu,
+     ware Testing, Verification and Validation, ICST 2022, Valencia, Spain, April 4-14,        Yonghao Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric Xing, et al. 2023. Judg-
+     2022. IEEE, 267–278.                                                                      ing LLM-as-a-judge with MT-bench and chatbot arena. Advances in Neural
+[49] Phil McMinn. 2004. Search-based Software Test Data Generation: A Survey.                  Information Processing Systems (NeurIPS 2023) 36 (2023), 46595–46623.
+     Software Testing, Verification and Reliability 14, 2 (June 2004), 105–156.
+[50] Phil McMinn. 2011. Search-Based Software Testing: Past, Present and Future.
+     In International Workshop on Search-Based Software Testing (SBST 2011) (Berlin,
+     Germany). IEEE, 153–163. Keynote paper.
+[51] Audris Mockus, Roy T Fielding, and James Herbsleb. 2000. A case study of
+     open source software development: the Apache server. In Proceedings of the 22nd
+     international conference on Software engineering. 263–272.
+[52] Facundo Molina, Alessandra Gorla, and Marcelo d’Amorim. 2024. Test Oracle
+     Automation in the era of LLMs. ACM Transactions on Software Engineering and
+     Methodology (2024).
+[53] Daniel Otten, Trevor Stalnaker, Nathan Wintersgill, Oscar Chaparro, and Denys
+     Poshyvanyk. 2025. Prompting in Practice: Investigating Software Developers’ Use
+     of Generative AI Tools. arXiv:2510.06000 [cs.SE] https://arxiv.org/abs/2510.06000
+[54] Carlos Pacheco and Michael D Ernst. 2007. Randoop: feedback-directed random
+     testing for Java. In Companion to the 22nd ACM SIGPLAN conference on Object-
+     oriented programming systems and applications companion. 815–816.
+[55] Judea Pearl. 2009. Causality. Cambridge university press.
+[56] Thomas V Perneger. 1998. What’s wrong with Bonferroni adjustments. British
+     Medical Journal 316, 7139 (1998), 1236–1238.
+[57] Juan Altmayer Pizzorno and Emery D Berger. 2024. Coverup: Coverage-guided
+     LLM-based test generation. arXiv preprint arXiv:2403.16218 (2024).
+[58] Kenneth J Rothman. 1990. No adjustments are needed for multiple comparisons.
+     Epidemiology 1, 1 (1990), 43–46.
+[59] Gabriel Ryan, Siddhartha Jain, Mingyue Shang, Shiqi Wang, Xiaofei Ma, Mu-
+     rali Krishna Ramanathan, and Baishakhi Ray. 2024. Code-aware prompting: A
+     study of coverage-guided test generation in regression setting using LLM. Pro-
+     ceedings of the ACM on Conference on Foundations of Software Engineering 1, FSE
+     (2024), 951–971.
+[60] Caitlin Sadowski, Emma Söderberg, Luke Church, Michal Sipko, and Alberto
+     Bacchelli. 2018. Modern code review: a case study at Google. In Proceedings of
+     the 40th International Conference on Software Engineering: Software Engineering
+     in Practice. 181–190.
+[61] Max Schäfer, Sarah Nadi, Aryaz Eghbali, and Frank Tip. 2023. An empirical
+     evaluation of using large language models for automated unit test generation.
+     IEEE Transactions on Software Engineering (2023).
+[62] Max Schäfer, Sarah Nadi, Aryaz Eghbali, and Frank Tip. 2023. Adaptive Test
+     Generation Using a Large Language Model. arXiv:2302.06527.
+[63] Koushik Sen, Darko Marinov, and Gul Agha. 2005. CUTE: a concolic unit testing
+     engine for C. In 10𝑡ℎ European Software Engineering Conference and 13th ACM
+     International Symposium on Foundations of Software Engineering (ESEC/FSE ’05),
+     Michel Wermelinger and Harald Gall (Eds.). ACM, 263–272.
+[64] Martin J. Shepperd. 1995. Foundations of software measurement. Prentice Hall.
+[65] Jiho Shin, Clark Tang, Tahmineh Mohati, Maleknaz Nayebi, Song Wang, and Hadi
+     Hemmati. 2023. Prompt Engineering or Fine Tuning: An Empirical Assessment
+     of Large Language Models in Automated Software Engineering Tasks. arXiv
+     preprint arXiv:2310.10508 (2023).
+[66] Edward H Simpson. 1951. The interpretation of interaction in contingency tables.
+     Journal of the Royal Statistical Society: Series B (Methodological) 13, 2 (1951),
+     238–241.
+[67] Shreshth Tuli, Kinga Bojarczuk, Natalija Gucevska, Mark Harman, Xiao-Yu Wang,
+     and Graham Wright. 2023. Simulation-Driven Automated End-to-End Test and
+     Oracle Inference. In 45th IEEE/ACM International Conference on Software Engi-
+     neering: Software Engineering in Practice, SEIP@ICSE 2023, Melbourne, Australia,
+     May 14-20, 2023. IEEE, 122–133.
+[68] Junjie Wang, Yuchao Huang, Chunyang Chen, Zhe Liu, Song Wang, and Qing
+     Wang. 2023. Software Testing with Large Language Model: Survey, Landscape,
+     and Vision. arXiv:2307.07221.
+[69] Elaine J. Weyuker. 1982. On Testing Non-Testable Programs. Comput. J. 25, 4
+     (Nov. 1982), 465–470.
+Just-in-Time Catching Test Generation at Meta                                                                     FSE Companion ’26, June, Montreal
+
+
+                       RubFake            TP Prob     Bucket Med                              RubFake          TP Prob       Bucket Med
+     True Positive (score > 0)                                                  True Positive (score > 0)
+     Significant 4271/100000            4359/100000   4379/100000               Significant 2274/100000      3216/100000      2616/100000
+     Small              2977                3839          3544                  Small               48           122               62
+     Medium               0                  0              0                   Medium             1185          1842             1362
+     Large                0                  0              0                   Large              1041          1252             1192
+     Prob. ≥ L        0.00000             0.00000       0.00000                 Prob. ≥ L        0.01041       0.01252          0.01192
+     Prob. ≥ M        0.00000             0.00000       0.00000                 Prob. ≥ M        0.02226       0.03094          0.02554
+     Prob. ≥ S        0.02977             0.03839       0.03544                 Prob. ≥ S        0.02274       0.03216          0.02616
+     Prob. ≥ N        0.04271             0.04359       0.04379
+                                                                                False Positive (score < 0)
+     False Positive (score < 0)                                                 Significant 3349/100000      3350/100000      3320/100000
+     Significant 4243/100000            4262/100000   4629/100000               Small               159          150               108
+     Small              3332                3767          3904                  Medium              1917         1860             1893
+     Medium               0                  0              0                   Large               1273         1340             1319
+     Large                0                  0              0                   Prob. ≥ L         0.01273      0.01340          0.01319
+     Prob. ≥ L         0.00000            0.00000       0.00000                 Prob. ≥ M         0.03190      0.03200          0.03212
+     Prob. ≥ M         0.00000            0.00000       0.00000                 Prob. ≥ S         0.03349      0.03350          0.03320
+     Prob. ≥ S         0.03332            0.03767       0.03904           Table 8: Small sample Fisher’s Exact Test randomization
+     Prob. ≥ N         0.04243            0.04262       0.04629           sense check. Each cell shows the number of significant re-
+Table 7: Fisher’s Exact Test randomization sense check for                sults (𝑝 < 0.05) from 100000 tests on randomly shuffled data.
+Good and Bad diff status groups. Each cell shows the number               Each shuffled iteration simulates arbitrary comparisons us-
+of significant results (𝑝 < 0.05) from 100000 tests on randomly           ing sample sizes ranging from 6 to 48 per group, represen-
+shuffled data. Each shuffled iteration simulates arbitrary                tative of the smallest status pairs that showed significant
+good and bad sets by ignoring labels, with set sizes ranging              results with effect size ≥ medium in Tables 11 and 12. Small,
+from 205 to 232 (mean: 218.5). Small, Medium, and Large                   Medium, and Large rows show counts of significant results
+rows show counts of significant results at each effect size               at each effect size level. Cumulative probability rows (Prob.
+level. Cumulative probability rows (Prob. ≥ X) estimate the               ≥ X) estimate the probability of achieving an effect size at or
+probability of achieving an effect size at or above level X by            above level X by chance. Expected false positives by chance:
+chance (e.g., Prob. ≥ M = (L + M) / 100000). Expected false               5000 (5%).
+positives by chance: 5000 (5%).
+
+
+
+                                                                          A.1     Methodology
+A     DETAILED STATISTICAL ANALYSIS OF                                    In this section we explain the diff labelling, and the influential sta-
+      CATCH APPROACHES ON TRUE/FALSE                                      tistical tests we used, and how we managed the impact of multiple
+                                                                          influential statistical tests being employed.
+      POSITIVE ASSESSORS OVER                                             Implied human ‘labelling’ of diffs: We call the diffs that are
+      HUMAN-LABELLED SETS OF DIFFS                                        accepted to land (or already landed) by human engineers ‘Good’
+Section 6.4 provided an overview of the statistical analysis of the       diffs, and those that are neither accepted nor landed, ‘Bad’ diffs.
+data for catch approaches and true/false positive assessors on hu-        The words ‘Good’ and ‘Bad’ are used here only as a convenient
+man labeled data. For reasons of brevity, Section 6.4 provided only       shorthand. We make no claims that an individual diff labelled ‘good’
+the primary scientific conclusions. For completeness, and to provide      is somehow guaranteed to be better than any labelled ’bad’. Rather,
+more details to support our scientific conclusions and to more fully      we hope that there may be some overall statistical effect (observ-
+support replication, this appendix gives a more in-depth description      able at sufficient scale) that reflects an inherent non-random bias
+of the statistical analysis and results.                                  amongst humans when deciding whether to allow a diff to land
+   We use human labeled diffs, which have a final human designa-          into the code base. This is a kind of implicit human labelling, and
+tion, either landed into the code base or accepted to be landed, (on      although it is not the ground truth for ultimate questions about true
+the positive side). These positive (‘good’) labels are to be contrasted   and false positives, we hope it has some (statistically discoverable)
+with the four ‘bad’ statuses: abandoned, reverted, changes planned        relation to these questions.
+(recognized by the diff author as requiring changes) and with Needs       Why this diff labelling is useful: If there were to be no difference
+revisions (where revisions are required by the diff reviewer).            between diffs we label ‘Good’ and those we label ‘Bad’, then it would
+   Although these labels do not correspond directly to whether or         call the entire modern code review process into question. However,
+not a diff contains a bug, let alone whether a test has caught that       code review has proved to be one of the enduring positive results for
+bug, they do provide a useful source of diffs with human labeled          Software Engineering research and practice. Various forms of code
+acceptance criteria.                                                      review have been repeatedly found successful in Empirical Software
+FSE Companion ’26, June, Montreal                                                                                                                               Becker et al.
+
+
+Table 9: P-value matrices for assessment metrics com-                              Table 10: Catch rate P-value matrices comparing diff
+paring diff status pairs (upper triangle). Bold values are                         status pairs (upper triangle). P-values computed using
+significant at 𝛼 = 0.05. ← 𝑃 = row has higher scores; ↑ 𝑃                          Fisher’s Exact Test; effect sizes using Cohen’s ℎ [19].
+= column has higher scores. Effect size: N=negligible,                             Bold values are significant at 𝛼 = 0.05. ← 𝑃 = row
+S=small, M=medium, L=large. Status abbreviations:                                  catch rate higher; ↑ 𝑃 = column catch rate higher. n =
+CLS=CLOSED, ACC=ACCEPTED, ABD=ABANDONED,                                           total samples, (%) = catch rate. Effect size (Cohen’s ℎ):
+CHP=CHANGES_PLANNED,              NRS=NEEDS_REVISION,                              N=negligible (|ℎ| < 0.2), S=small (0.2 ≤ |ℎ| < 0.5), M=medium
+REV=REVERTED.                                                                      (0.5 ≤ |ℎ| < 0.8), L=large (|ℎ| ≥ 0.8). Status abbreviations:
+                                                                                   CLS=CLOSED, ACC=ACCEPTED, ABD=ABANDONED,
+                                                                 Ba
+                                                                      7)       )   CHP=CHANGES_PLANNED,                 NRS=NEEDS_REVISION,
+                  AC       AB          P                            d      .0%
+                     C       D      CH         NR
+                                                 S
+                                                          RE
+                                                            V
+                                                                 (n=1 0   (0       REV=REVERTED.
+   CLS (n=91) 0.197 0.260 0.429 0.895 N/A
+   ACC (n=62)             0.919 0.975 0.381 N/A                                                            AC          AB        CH                           Ba d
+                                                                                                                                                                       8)
+                                                                                                                                             NR       RE      (n
+   ABD (n=77)                   0.935 0.466 N/A                                                              C           D         P           S        V        =3 9
+   CHP (n=12)                          0.568 N/A                                      CLS n=249 (18.5%)      0.377 ←0.003 (S) 0.263          0.552      0.463
+                                                                                      ACC n=198 (15.2%)                 0.065      0.467     0.282      0.397
+   NRS (n=17)                                N/A
+                                                                                      ABD n=305 (9.5%)                             1.000 ↑0.014 (S) 0.265
+   REV (n=1)                                                                          CHP n=41 (9.8%)                                        0.156      0.310
+   G (n=153)                                             0.633                        NRS n=49 (22.4%)                                                  0.553
+   Overall total n = 260 diffs                                                        REV n=3 (33.3%)
+                                                                                      Good n=447 (17.0%)                                                        ←0.018 (N)
+  (rubfake_overall_likelihood_score. Mann-Whitney U test; effect size:
+                                                                                      Overall total: n=845 (14.3% of which are catches, which is 121 catches in total)
+                                    Cliff’s 𝛿.)                                                                  (intent-aware workflow)
+                                                                      07)                                                                                         3)
+                 AC        AB              P        S       V    Ba         .0%                                                                             Ba
+                                       CH         NR       RE    (n d          )                             AC         D     CH       NR     RE            (n d
+                    C         D                                     =1    (0                                    C     AB        P        S      V              =5 4
+   CLS (n=91) 0.527 ↑0.002 (S)         0.557      0.385    N/A                        CLS n=387 (11.6%)      0.715 0.740 0.371 1.000 1.000
+   ACC (n=62)             ↑0.038 (S)   0.778      0.763    N/A                        ACC n=305 (10.5%)              0.405 0.565 1.000 1.000
+   ABD (n=77)                          0.235      0.302    N/A                        ABD n=381 (12.6%)                     0.224 0.830 1.000
+   CHP (n=12)                                     0.710    N/A                        CHP n=103 (7.8%)                              0.569 1.000
+   NRS (n=17)                                              N/A                        NRS n=57 (10.5%)                                      1.000
+   REV (n=1)                                                                          REV n=2 (0.0%)
+   G (n=153)                                                       ↑0.005 (S)         Good n=692 (11.1%)                                                  0.928
+                                                                                      Overall total: n=1235 (11.3% of which are catches, which is 139 catches in total)
+   Overall total n = 260 diffs
+                                                                                                                    (dodgy diff workflow)
+  (true_positive_probability. Mann-Whitney U test; effect size: Cliff’s 𝛿.)
+                                                                                                                                                                  1)
+                                                                 Ba                                           AC         D       P                          Ba d
+                                                                 (n  d
+                                                                    =1                                                 AB      CH      NR       RE          (n =9
+                  AC         D         P       NR         RE           07 )                                      C                       S        V               4
+                     C     AB       CH            S         V    (0 .0% )             CLS n=636 (14.3%)       0.337 0.099 0.057 0.656 0.540
+    CLS (n=91) 0.922 0.071 0.225 0.120 N/A                                            ACC n=503 (12.3%)               0.584 0.234 0.339 0.486
+    ACC (n=62)             0.076 0.214 0.117 N/A                                      ABD n=686 (11.2%)                      0.375 0.150 0.452
+    ABD (n=77)                   0.889 0.737 N/A                                      CHP n=144 (8.3%)                               0.073 0.371
+                                                                                      NRS n=106 (16.0%)                                      1.000
+    CHP (n=12)                         0.917 N/A
+                                                                                      REV n=5 (20.0%)
+    NRS (n=17)                               N/A                                      Good n=1139 (13.4%)                                                  0.162
+    REV (n=1)                                                                         Overall total: n=2080 (12.5% of which are catches, which is 260 catches in total)
+    G (n=153)                                         ↑0.014 (S)                                              (All Approaches Combined)
+    Overall total n = 260 diffs
+  (true_positive_bucket_median_score. Mann-Whitney U test; effect size:
+                                    Cliff’s 𝛿.)
+                                                                                   differences, and we believe statistical power to be sufficient to reveal
+                                                                                   them, then we would be forced to conclude there is no difference (or
+                                                                                   a difference with negligible effect size) between the techniques for
+Engineering research [11, 60] and code review have been widely                     generating weak catches, and/or that we can have no confidence in
+studied and shown to be correlated with the defect prevention since                the assessments produced by the assessors that determine whether
+the 1970s and the introduction of Fagan inspections [22]. Based                    a weak catch is strong (the test failure is a true positive).
+on this comprehensive previous literature on modern code review,                   Correlation analysis: It is also interesting to speculate that there
+we expect some statistical differences to emerge between the two                   may be some correlation between the true and false positive as-
+broad categories of ‘Good’ and ‘Bad’ diffs.                                        sessors. These are based on the enumeration of different levels of
+   We might also expect some differences between sub-categories                    confidence, with relatively few levels, and therefore it is not appro-
+of diff status (e.g., ‘accepted’ vs. ‘needs revision’), where there is             priate to expect anything other than a rank correlation based on
+a sufficiently large sample size to observe such effects, so we also               this ordinal scale measurement [64]. We therefore report results for
+explore this. If we find no such statistically significant differences,            Spearman and Kendall rank correlation. We use Kendall as well as
+then we may have not collected enough data to observe these                        Spearman, since Spearman can be adversely affected by ties, and
+and have insufficient statistical power. If we observe no significant              there are relatively few discrete rankings employed for Rubfake
+Just-in-Time Catching Test Generation at Meta                                                                                                                            FSE Companion ’26, June, Montreal
+
+
+                                                                                           All Approaches:
+                    AC         AB          CH
+                                               P       NR      RE
+                                                                   V                         AC           AB         CH
+                                                                                                                          P
+                                                                                                                                NR
+                                                                                                                                   S        V
+                                                                                                                                           RE                          AC          AB          CH        NR       RE
+                       C         D                        S                                     C           D                                                             C           D          P          S       V
+ CLS n=91 (11.0%)   0.243      0.368       1.000       0.427   1.000   CLS n=90 (37.8%)       0.178    ↑0.003 (S)    1.000      0.411      1.000    CLS n=90 (10.0%)   0.564     ↑0.022 (S)    0.615     0.386    1.000
+ ACC n=62 (4.8%)             ↑0.033 (S)    0.515       0.110   1.000   ACC n=60 (50.0%)                  0.226       0.754      1.000      1.000    ACC n=60 (6.7%)              ↑0.009 (S)    0.260     0.157    1.000
+ ABD n=77 (16.9%)                          0.682       1.000   1.000   ABD n=77 (61.0%)                              0.225      0.420      0.397    ABD n=77 (23.4%)                           1.000     1.000    1.000
+ CHP n=12 (8.3%)                                       0.622   1.000   CHP n=12 (41.7%)                                         0.718      1.000    CHP n=12 (16.7%)                                     1.000    1.000
+ NRS n=17 (17.6%)                                              1.000   NRS n=16 (50.0%)                                                    1.000    NRS n=16 (18.8%)                                              1.000
+ REV n=1 (0.0%)                                                        REV n=1 (0.0%)                                                               REV n=1 (0.0%)
+                      (a) rubfake                                                             (b) probability                                                   (c) bucket_median_score
+
+
+                                                                                    intent-aware workflow:
+                     AC       AB          CH
+                                            P       NR         RE                                                                                                        AC        AB         CH
+                                                                                                                                                                                                P       NR        RE
+                        C       D                      S         V                                                                                                          C        D                     S        V
+ CLS n=46 (10.9%)    0.697     0.700      0.411     0.571      1.000                        AC
+                                                                                              C
+                                                                                                           D
+                                                                                                          AB        CH
+                                                                                                                      P         NR
+                                                                                                                                   S
+                                                                                                                                             V
+                                                                                                                                            RE      CLS n=45 (8.9%)      0.473     0.051      1.000     1.000     1.000
+ ACC n=30 (6.7%)               1.000      0.322     1.000      1.000   CLS n=45 (31.1%)   ↑0.016 (M)   ↑0.005 (M)   0.588       0.706       1.000   ACC n=28 (14.3%)               0.331      1.000     1.000     1.000
+ ABD n=29 (6.9%)                          0.330     1.000      1.000   ACC n=28 (60.7%)                   0.787     1.000       0.062       0.414   ABD n=29 (27.6%)                          0.550     0.400     1.000
+ CHP n=4 (25.0%)                                    0.267      1.000   ABD n=29 (65.5%)                             0.610     ←0.025 (L)    0.367   CHP n=4 (0.0%)                                      1.000     1.000
+                                                                       CHP n=4 (50.0%)                                          0.520       1.000
+ NRS n=11 (0.0%)                                               1.000   NRS n=10 (20.0%)                                                     1.000   NRS n=10 (10.0%)                                              1.000
+ REV n=1 (0.0%)                                                        REV n=1 (0.0%)                                                               REV n=1 (0.0%)
+                      (d) rubfake                                                             (e) probability                                                   (f) bucket_median_score
+
+
+                                                                                      dodgy diff workflow:
+                                                                                                  AC           D          P             S
+                    AC          AB                P            S                                     C     AB        CH                NR
+                       C          D            CH             NR                                                                                                       AC         AB
+                                                                                                                                                                                    D
+                                                                                                                                                                                                CH
+                                                                                                                                                                                                    P            NR
+                                                                                                                                                                         C                                         S
+ CLS n=45 (11.1%)   0.391       0.173          1.000     ↑0.042 (L)
+                                                                       CLS n=45 (44.4%)           0.817    0.216     1.000        ↑0.023 (L)
+                                                                                                                                                    CLS n=45 (11.1%)   0.072      0.264         0.283         0.186
+ ACC n=32 (3.1%)             ↑0.023 (M)        1.000     ↑0.009 (L)    ACC n=32 (40.6%)                    0.171     1.000        ↑0.020 (L)
+                                                                                                                                                    ACC n=32 (0.0%)             ↑0.005 (L)    ↑0.036 (L)    ↑0.021 (L)
+ ABD n=48 (22.9%)                              0.333       0.173       ABD n=48 (58.3%)                              0.445          0.074           ABD n=48 (20.8%)                            1.000         0.605
+ CHP n=8 (0.0%)                                            0.055       CHP n=8 (37.5%)                                            ↑0.031 (L)        CHP n=8 (25.0%)                                           1.000
+ NRS n=6 (50.0%)                                                       NRS n=6 (100.0%)                                                             NRS n=6 (33.3%)
+                      (g) rubfake                                                             (h) probability                                                   (i) bucket_median_score
+
+Table 11: P-value matrices for true positive rates (score > 0) comparing diff status pairs (upper triangle), grouped by catch
+generation approach. P-values computed using Fisher’s Exact Test; effect sizes using Cohen’s ℎ [19]. Bold values are significant
+at 𝛼 = 0.05. ← 𝑃 = row has higher TP rate; ↑ 𝑃 = column has higher TP rate. Effect size (Cohen’s ℎ): N=negligible (|ℎ| < 0.2),
+S=small (0.2 ≤ |ℎ| < 0.5), M=medium (0.5 ≤ |ℎ| < 0.8), L=large (|ℎ| ≥ 0.8). Status abbreviations: CLS=CLOSED, ACC=ACCEPTED,
+ABD=ABANDONED, CHP=CHANGES_PLANNED, NRS=NEEDS_REVISION, REV=REVERTED.
+
+
+
+and Ensemble Categorical Likelihood, meaning that there may be a                                                The ultimate decision about whether a test failure is true or a false
+larger number of ties in the data.                                                                              positive would best be determined by some aggregated decision
+    The rank correlation investigates the degree to which the three                                             process that takes all of these different assessors into account.
+different techniques for assessing true/false positives would agree                                             Analysis of statistic significant differences: We investigate
+on an ordering. However, these techniques only produce orderings                                                statistical differences between the predictions of true positive, re-
+as an indication of their confidence. Ultimately, they are attempting                                           spectively false positive, between the two categories of diffs (‘Good’
+to approximate a binary classification problem, since either a test                                             vs, ‘Bad’), and also between sub categories of diff status label. For
+failure is a true positive or it is a false positive.                                                           this comparison we use Fisher’s exact test and, where this produces
+    We treat the classification as two separate classification problems.                                        a significant outcome at the 𝛼 = 0.05 level, we also report the effect
+One is the problem of determining whether a test failure is a true                                              size, using Cohen’s ℎ statistic. For the ℎ statistic, we report the
+positive, while the other is that of determining whether it is a false                                          effect size ‘bucket’ according to the (widely-used) rule-of thumb
+positive. We formulate the overall problem in these two distinct                                                suggested by Jacob Cohen himself [19]. That rule-of-thumb buckets
+ways, because the rankings can give the answer zero (neither the                                                an effect size as follows: ‘Small’ (ℎ ≥ 0.2), ‘Medium’ (ℎ ≥ 0.5) and
+true positive nor false positive). We only act on any assessment                                                ‘Large’ (ℎ ≥ 0.8). When the result is significant according to the
+when it gives a confident prediction of one or the other, treating a                                            Fisher test, and Cohen’s ℎ is less than 0.2, we deem the effect size
+zero assessment as ‘no information’.                                                                            to reside in the ‘Negligible’ bucket.
+    We complement the correlation analysis with a report on the                                                 Catering for spurious statistical significance: Since we are
+degree of inter-rater agreement between the classifiers, both collec-                                           executing multiple statistical tests, there is a probability that some
+tively, and pairwise. If it turns out that the classifiers are strongly                                         𝑃 values that are found to be significant at the 𝛼 = 0.05 level
+correlated (and/or have high inter-rater agreement), then this would                                            will be spurious. After all, the 𝛼 level 0.05 simply means that we
+suggest that each is merely a proxy of the other assessors. However,                                            have at most a 1 and 20 chance of a spurious result. However, we
+if they exhibit low correlation, then they may be complementary.
+FSE Companion ’26, June, Montreal                                                                                                                                                              Becker et al.
+
+
+                                                                                  All Approaches:
+                    AC      AB         P      NR      RE                                                                                                        AC         D          P       NR       RE
+                       C       D     CH         S       V                           AC          AB          CH                     V                               C     AB       CH            S         V
+                                                                                                                      NR          RE
+                                                                                       C          D           P          S
+ CLS n=91 (51.6%)   0.622   0.878    0.373    0.795   0.489                                                                                CLS n=90 (77.8%)     0.698    0.059      0.161     0.115    1.000
+                                                              CLS n=90 (62.2%)      0.178     ←0.003 (S)     1.000     0.411      1.000
+ ACC n=62 (56.5%)           0.734    0.750    0.586   0.444                                                                                ACC n=60 (75.0%)              0.195      0.294     0.213    1.000
+                                                              ACC n=60 (50.0%)                  0.226        0.754     1.000      1.000
+ ABD n=77 (53.2%)                    0.536    0.790   0.474   ABD n=77 (39.0%)                               0.225     0.420      0.397    ABD n=77 (63.6%)                         0.755     0.583    1.000
+ CHP n=12 (66.7%)                             0.451   0.385   CHP n=12 (58.3%)                                         0.718      1.000    CHP n=12 (58.3%)                                   1.000    1.000
+ NRS n=17 (47.1%)                                     1.000   NRS n=16 (50.0%)                                                    1.000    NRS n=16 (56.2%)                                            1.000
+ REV n=1 (0.0%)                                               REV n=1 (100.0%)                                                             REV n=1 (100.0%)
+                    (a) rubfake                                                      (b) probability                                                   (c) bucket_median_score
+
+
+                                                                           intent-aware workflow:
+                    AC      AB       CH
+                                       P      NR      RE
+                       C       D                S       V                                                                                                     AC           D             P     NR          V
+                                                                                                                                                                C        AB           CH         S     RE
+ CLS n=46 (65.2%)   0.478   0.298    0.612    0.511   0.362                        AC            AB         CH
+                                                                                                              P        NR           V
+                                                                                                                                   RE
+                                                                                      C             D                    S                 CLS n=45 (84.4%)   0.236    ←0.004 (M)     0.522    0.365   1.000
+ ACC n=30 (56.7%)           0.095    1.000    1.000   0.452   CLS n=45 (68.9%)   ←0.016 (M)    ←0.005 (M)   0.588      0.706       1.000   ACC n=28 (71.4%)              0.175        1.000    1.000   1.000
+ ABD n=29 (79.3%)                    0.241    0.137   0.233   ACC n=28 (39.3%)                   0.787      1.000      0.062       0.414   ABD n=29 (51.7%)                           0.607    0.464   1.000
+ CHP n=4 (50.0%)                              1.000   1.000   ABD n=29 (34.5%)                              0.610    ↑0.025 (L)    0.367
+                                                              CHP n=4 (50.0%)                                          0.520       1.000
+                                                                                                                                           CHP n=4 (75.0%)                                     1.000   1.000
+ NRS n=11 (54.5%)                                     1.000   NRS n=10 (80.0%)                                                     1.000   NRS n=10 (70.0%)                                            1.000
+ REV n=1 (0.0%)                                               REV n=1 (100.0%)                                                             REV n=1 (100.0%)
+                    (d) rubfake                                                      (e) probability                                                   (f) bucket_median_score
+
+
+                                                                             dodgy diff workflow:
+                      AC       AB            CH       NR
+                         C        D            P         S                             AC        AB
+                                                                                                   D        CH            NR
+                                                                                                                               S                                AC        AB
+                                                                                                                                                                            D
+                                                                                                                                                                                    CH
+                                                                                                                                                                                       P
+                                                                                                                                                                                                  NR
+                                                                                                                                                                                                       S
+                                                                                          C                   P                                                    C
+ CLS n=45 (37.8%)      0.163       1.000     0.065    1.000
+                                                              CLS n=45 (55.6%)         0.817     0.216      1.000     ←0.023 (L)           CLS n=45 (71.1%)      0.601    1.000     0.252        0.087
+ ACC n=32 (56.2%)                  0.114     0.439    0.395   ACC n=32 (59.4%)                   0.171      1.000     ←0.020 (L)           ACC n=32 (78.1%)               0.606     0.182      ←0.047 (L)
+ ABD n=48 (37.5%)                            0.063    1.000   ABD n=48 (41.7%)                              0.445       0.074              ABD n=48 (70.8%)                         0.254        0.087
+ CHP n=8 (75.0%)                                      0.277   CHP n=8 (62.5%)                                         ←0.031 (L)           CHP n=8 (50.0%)                                       0.627
+ NRS n=6 (33.3%)                                              NRS n=6 (0.0%)                                                               NRS n=6 (33.3%)
+                    (g) rubfake                                                     (h) probability                                                    (i) bucket_median_score
+
+Table 12: P-value matrices for false positive rates (score < 0) comparing diff status pairs (upper triangle), grouped by catch
+generation approach. P-values computed using Fisher’s Exact Test; effect sizes using Cohen’s ℎ [19]. Bold values are significant
+at 𝛼 = 0.05. ← 𝑃 = row has higher FP rate; ↑ 𝑃 = column has higher FP rate. Effect size (Cohen’s ℎ): N=negligible (|ℎ| < 0.2),
+S=small (0.2 ≤ |ℎ| < 0.5), M=medium (0.5 ≤ |ℎ| < 0.8), L=large (|ℎ| ≥ 0.8). Status abbreviations: CLS=CLOSED, ACC=ACCEPTED,
+ABD=ABANDONED, CHP=CHANGES_PLANNED, NRS=NEEDS_REVISION, REV=REVERTED.
+
+
+
+do not want to adopt an arbitrary conservative 𝑝-value correc-                                          obtaining the statistically significant result at or above a given effect
+tion approach, such as Bonferroni (nor even the, less conservative,                                     size for the data used in this paper. Our approach is essentially an
+Hochberg [38] correction), since we are simply looking for an un-                                       implementation of a permutation-based resampling procedure [33].
+derstanding of whether there is some form of distinction between
+behaviors on different classes of diffs according to human labeling.
+We are not using the outcomes to make life-altering decisions about
+                                                                                                        A.2          Results
+drug treatments [29, 56, 58].                                                                           Overall, based on the results of the analysis, we believe that the
+   As with most scientific work, and certainly almost all Software                                      ‘Dodgy diff’ workflow does, indeed, generate more tests, and likely
+Engineering applications [10, 35] it is not just statistical significance                               also it generates more false positives. Although it generates more
+that matters, but the effect size; since we can increase the sample                                     tests overall, this does not mean it is able to catch bugs in more diffs,
+size simply by deploying additional computational resources, we                                         nor even that it generates tests for more diffs. Indeed, as shown in
+are likely to be able to find significant results, even where the effect                                Table 1 the ‘Dodgy diff’ workflow tends to generate many tests for a
+size is negligible.                                                                                     single diff, rather than covering more diffs overall, when compared
+   We are thus, obviously, more interested in those results where                                       to the intent-aware workflow.
+the effect size is larger. With this in mind, we assess the likelihood                                     We also believe that there is reason to have confidence that all
+of obtaining a statistically significant result with the given effect                                   three of the true/false assessors have some distinguishing power
+size or higher, using similar data to that we study. We achieve this                                    between ‘Good’ and ‘Bad’ diffs, both when predicting true positive
+comparison using sample sizes that are approximately the same size                                      and when predicting false positive. That is, the differences observed
+as those we study, but simply discarding labels and thereby choosing                                    between ‘good’ and ‘bad’ diffs suggest that the assessments are,
+arbitrary sets of data for each of the two simulated categories. With                                   at least, generally consistent with the human diff labeling. Taken
+these arbitrary sets of data, we can reliably estimate the chance of                                    together with the results for correlation, which indicate only weak
+                                                                                                        correlation between them, we believe that this gives us overall
+Just-in-Time Catching Test Generation at Meta                                                                     FSE Companion ’26, June, Montreal
+
+
+confidence in our assessors, but suggests that they each contribute       are observed for the category of diffs marked as ‘Needs Revisions
+a different facet of the overall decision. Therefore, they need to be     (NRS)’. This class of diffs is that for which we have the greatest
+used in concert to arrive at a final decision about the likelihood of     confidence that the human labeling signifies the presence of an
+true/false positive test failure.                                         issue, because a human reviewer has specifically identified that the
+                                                                          diff in question needs further revision.
+A.2.1 Permutation-based resampling. Table 7 presents the results
+of the Fisher’s Exact Test randomization sense check, where 100,000       A.2.3 Significant differences between diff status categories for work-
+tests were performed on randomly shuffled data (effectively dis-          flows and true/false positive assessors. Table 5 gives the top level
+carding diff labels to make arbitrary simulated ‘Good’ and ‘Bad’          results for the statistical differences between diffs labelled ‘Good’
+diff sets). With 𝛼 = 0.05, we expect approximately 5,000 spuriously       and ‘Bad’ for each of the two workflows and each of the three
+significant outcomes per metric by chance (𝑎𝑙𝑝ℎ𝑎 = 0.05). This            true/false positive assessors, based on whether they predict a true
+table is used to assess the likelihood of achieving a given minimal       positive or a false positive for each test failure. As can be seen, the
+effect size for the test we perform on diffs labelled ‘Good‘ and ‘Bad‘.   ‘dodgy diff’ workflow tends to lead to test failures for which all as-
+As can be seen from the table, the chance of obtaining a significant      sessors produce a more noticeable difference, both when predicting
+result with small effect size is approximately similar to the 𝑎𝑙𝑝ℎ𝑎       true positive and when predicting false positive.
+level traditionally used for significance (only slightly lower than          Given the results of the permutation based sampling in Table 7
+0.05).                                                                    the joint probability that these observations could have resulted
+   With more than 20 statistical tests, we can therefore expect to        merely by chance is extremely low. The ‘Dodgy diff’ workflow
+find some spurious significant results with small effect size. By         makes no attempt to produce a true positive, but merely seeks to
+contrast, the chance of obtaining a significant result with medium        maximize the generation of tests which simply distinguish between
+or large size is close to zero. Therefore, we should treat small effect   the observable behaviors of the parent of the diff and the tested
+size results with a great degree of caution, but can have considerably    diff.
+more confidence in those with medium or large size, based on this            This makes it more likely that it will produce false positives,
+size of sample between ‘Good’ and ‘Bad’.                                  and it is reassuring that the three assessors appeared to behave
+   These results are in stark contrast to those for smaller sample        significantly differently when applied to diffs labelled ‘Good’ and
+sizes. That is, Table 8 was motivated by the fact that the sample sizes   ‘Bad’ in this regard. It also meets with the underlying intuition that
+were so much smaller than those covered by the permutation-based          the assessors tend to be more likely to assess a test failure as a true
+sampling in Table 7, thereby elevating the chance of a spurious           positive on diffs labelled ‘Bad’, and more likely to assess it to be
+statistical inference.                                                    a false positive on the diffs labelled ’good’. Although not entirely
+   With 𝛼 = 0.05, we expect approximately 5,000 false positives           sufficient on its own, this is the strongest statistical evidence we
+per metric by chance (𝑎𝑙𝑝ℎ𝑎 = 0.05), as before. Indeed, with such         have that the assessors give a reasonable signal, that is significantly
+small sample sizes, the chances of a significant result are somewhat      better than random guessing.
+diminished, as the table shows. Nevertheless, and much more con-             Furthermore, they also behave significantly differently with re-
+cerning, notice the relatively high (compared to Table 7) probability     gard to true positives, and for all three assessors. This is important
+of obtaining results that are inferred to exhibit either a medium or      because good performance on predicting false positives will help
+a large effect size.                                                      us to remove strictly weak catches and avoid unnecessary drag on
+   This suggests that a great deal of caution is required when inter-     developer velocity. Essentially, the importance of this is to improve
+preting any results for subclasses of diff status. Some of these are      the precision of the overall catching technique. However, if we can
+inherently rare, such as diffs which are reverted, and therefore, even    find techniques that also have high probability of predicting true
+at Meta scale, we may not have sufficiently many data points for the      positive, then we will also improve the recall of the overall catching
+statistical power required to make confident claims. Nevertheless,        approach; catching more bugs just in time.
+for completeness and replicability, in this appendix, we present all         Tables 11 and 12 show the statistical significance and effect size
+of these results.                                                         for differences between each pairwise diff status comparison. With
+                                                                          this many inferential statistical tests, we should be very careful to
+A.2.2 Correlation and Inter-rater Agreement Between True/false
+                                                                          guard against spuriously significant outcomes. In particular, even
+Positive Assessors. Table 4 presents the inter-rater agreement be-
+                                                                          though we noticed some effect sizes which are ‘Large’ (according to
+tween the assessors and the results of the rank correlation and
+                                                                          traditional interpretations of Cohen’s ℎ statistic), we need to recall
+analysis. In both tables, we use a background gray scale to indicate
+                                                                          that there is a non-trivial probability of this occurring by chance
+the strength of correlation/agreement, with darker shades of gray
+                                                                          according to the permutation-based resampling results from Table 8.
+indicating stronger correlation/agreement. As can be seen, there
+                                                                          We include these results primarily for completeness and replicabil-
+is a greater degree of correlation and greater agreement between
+                                                                          ity, and therefore refrain from drawing any scientific conclusions
+the two LLM-based measures than there is between either and the
+                                                                          at this stage.
+rule-based approach. This is a reflection of the fact that the rule-
+based approach uses an inherently fundamentally different style,          A.2.4 Significant differences between weak catch generator rates. Ta-
+and suggests that it is highly complementary to any LLM-based             ble 10 uses the Fisher exact test and Cohen ℎ to investigate whether
+approach.                                                                 there are significant differences with non-trivial effects sizes be-
+   It is interesting that the highest degrees of inter-rater agreement,   tween the catch rates of the two techniques. Overall, there is little
+between all the assessors together, and between each pairwise,            evidence for any significant differences. This could be an instance
+FSE Companion ’26, June, Montreal                                                                                                     Becker et al.
+
+
+of Simpsons paradox [55, 66], but given the results from the permu-          a very slight effect, into which we should not read too much. If
+tation study, it could also result from a lack of sufficient statistical     indeed there is any difference, the likely explanation is that these
+power given these relatively small sample sizes for individual diff          closed diffs denote completed changes, whereas abandoned diffs
+statuses.                                                                    and those for which changes are planned, for example, may only
+   Where there is a difference, it tends to suggest that each tech-          be partially written, therefore with fewer changes at the time the
+nique has a slightly higher catch rate for closed diffs (that have           test was generated and therefore fewer opportunities to generate
+been accepted and landed into production), than for the other diff           distinguishing tests between parent and child.
+status classes. Since the effect size is negligible or small, this is only
+

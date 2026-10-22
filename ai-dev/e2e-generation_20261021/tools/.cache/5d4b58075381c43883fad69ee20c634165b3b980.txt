@@ -1,0 +1,744 @@
+__HTTP 200__
+                                                 Tracking the Moving Target: A Framework for Continuous
+                                                      Evaluation of LLM Test Generation in Industry
+                                                            Maider Azanza                                      Beatriz Pérez Lamancha                              Eneko Pizarro
+                                                    maider.azanza@ehu.eus                                            bperez@lksnext.com                    epizarro001@ikasle.ehu.eus
+                                                University of the Basque Country                                          LKS Next                       University of the Basque Country
+                                                           UPV/EHU                                                    Mondragón, Spain                              UPV/EHU
+                                                      San Sebastian, Spain                                                                                     San Sebastian, Spain
+
+                                         ABSTRACT                                                                               1    INTRODUCTION
+                                         Large Language Models (LLMs) have shown great potential in au-                         Software testing remains a critical yet resource-intensive aspect of
+
+
+
+
+arXiv:2504.18985v1 [cs.SE] 26 Apr 2025
+                                         tomating software testing tasks, including test generation. However,                   modern software development. Recent surveys reveal that writing
+                                         their rapid evolution poses a critical challenge for companies im-                     tests is one of the tasks developers enjoy least and would most
+                                         plementing DevSecOps - evaluations of their effectiveness quickly                      like to delegate to artificial intelligence [Sergeyuk et al. 2025]. This
+                                         become outdated, making it difficult to assess their reliability for                   reluctance to write tests, combined with their essential role in soft-
+                                         production use. While academic research has extensively studied                        ware quality assurance, creates a tension in software development
+                                         LLM-based test generation, evaluations typically provide point-in-                     practices - particularly in DevSecOps environments where rapid
+                                         time analyses using academic benchmarks. Such evaluations do not                       iteration and continuous delivery demand both speed and reliability.
+                                         address the practical needs of companies who must continuously                             With the emergence of Large Language Models (LLMs), compa-
+                                         assess tool reliability and integration with existing development                      nies are exploring their potential to automate test generation and
+                                         practices. This work presents a measurement framework for the                          reduce the testing burden on developers. While recent research has
+                                         continuous evaluation of commercial LLM test generators in in-                         extensively studied LLM-based test generation [Wang et al. 2024b],
+                                         dustrial environments. We demonstrate its effectiveness through                        demonstrating promising results in areas such as unit test or test
+                                         a longitudinal study at LKS Next. The framework integrates with                        oracle generation, industrial adoption faces challenges that extend
+                                         industry-standard tools like SonarQube and provides metrics that                       beyond those addressed in academic studies.
+                                         evaluate both technical adequacy (e.g., test coverage) and prac-                           A critical aspect companies must address when adopting LLM-
+                                         tical considerations (e.g., maintainability or expert assessment).                     based testing tools lies in their rapid evolution - what was true about
+                                         Our methodology incorporates strategies for test case selection,                       a tool’s capabilities six months ago may no longer reflect its current
+                                         prompt engineering, and measurement infrastructure, addressing                         performance. This is particularly challenging for organizations
+                                         challenges such as data leakage and reproducibility. Results high-                     implementing Continuous Integration/Continuous Delivery (CI/CD)
+                                         light both the rapid evolution of LLM capabilities and critical factors                pipelines, where test generation must integrate seamlessly with
+                                         for successful industrial adoption, offering practical guidance for                    existing development workflows and maintain consistent quality
+                                         companies seeking to integrate these technologies into their devel-                    standards despite the evolving capabilities of underlying LLMs.
+                                         opment pipelines.                                                                          In this evolving landscape, previous work provides valuable
+                                                                                                                                insights into LLM test generation capabilities, with rigorous evalu-
+                                         CCS CONCEPTS                                                                           ations across standardized benchmarks. However, industrial adop-
+                                                                                                                                tion requires addressing additional considerations beyond technical
+                                         • Software and its engineering → Software testing and debug-
+                                                                                                                                performance metrics. Organizations implementing these tools in
+                                         ging; Agile software development.
+                                                                                                                                production environments must continuously evaluate commercial
+                                                                                                                                tools as they evolve, assess compatibility with existing DevSec-
+                                         KEYWORDS                                                                               Ops infrastructure [Prates and Pereira 2025], balance automation
+                                         Unit Testing, Integration Testing, Large Language Models, Indus-                       benefits against the need for expert oversight, and maintain con-
+                                         trial Case Study                                                                       sistent quality standards across LLM versions. This gap between
+                                                                                                                                academic evaluation frameworks and industrial implementation
+                                         ACM Reference Format:                                                                  needs motivates our work.
+                                         Maider Azanza, Beatriz Pérez Lamancha, and Eneko Pizarro. 2025. Tracking                   This work presents a practical framework for the continuous
+                                         the Moving Target: A Framework for Continuous Evaluation of LLM Test
+                                                                                                                                evaluation of LLM-based test generators in industrial environments,
+                                         Generation in Industry. In Proceedings of The 29th International Conference
+                                                                                                                                illustrated through a longitudinal study of GitHub Copilot’s test
+                                         on Evaluation and Assessment in Software Engineering (EASE 2025). ACM,
+                                         New York, NY, USA, 11 pages. https://doi.org/10.1145/nnnnnnn.nnnnnnn                   generation capabilities at LKS Next, a medium-sized software con-
+                                                                                                                                sultancy. Our framework integrates with industry-standard tools
+                                                                                                                                like SonarQube to provide quantitative quality metrics, implements
+                                         This is the author’s version of the work. It is posted here for your personal use.
+                                                                                                                                a continuous re-evaluation pipeline that adapts to evolving LLM
+                                         EASE 2025, 17–20 June, 2025, Istanbul, Türkiye                                         capabilities, and addresses practical concerns including test main-
+                                         © 2025 Association for Computing Machinery.                                            tainability, cost efficiency, and seamless integration with existing
+                                         ACM ISBN 978-x-xxxx-xxxx-x/YY/MM. . . $15.00
+                                         https://doi.org/10.1145/nnnnnnn.nnnnnnn
+EASE 2025, 17–20 June, 2025, Istanbul, Türkiye                                                  Maider Azanza, Beatriz Pérez Lamancha, and Eneko Pizarro
+
+
+CI/CD processes. This approach helps organizations track the evo-             • Coverage vs. effectiveness gap: Achieving high coverage does
+lution of LLM-based testing tools and assess their practical utility            not necessarily guarantee meaningful tests [Kracht et al. 2014].
+in real development environments.                                             • Maintainability concerns: Understanding and evolving gen-
+   The key contributions of this work are:                                      erated code requires significant human effort [Fan 2019].
+      • A measurement framework designed specifically for contin-           These challenges highlight why expert evaluation remains cru-
+        uous evaluation of commercial LLM test generators.               cial even as automation capabilities advance. Automatically gener-
+      • Integration strategies with industry-standard quality tools      ated tests often contain issues that require human review, including
+        and development practices.                                       incorrect assertions and problematic test structures [Fan 2019].
+      • Validation through two evaluation cycles showing the evo-           The intersection of quality models, testing expertise, and
+        lution of capabilities.                                          LLM capabilities creates both opportunities and challenges for
+      • Practical insights for companies seeking to adopt LLM-based      software quality assessment [Gao et al. 2025, Sergeyuk et al. 2025,
+        testing tools.                                                   Wang et al. 2024b]. While LLMs can accelerate test creation, real-
+                                                                         izing their benefits in industrial settings requires systematic eval-
+                                                                         uation frameworks that combine automated metrics with expert
+2     BACKGROUND
+                                                                         assessment of test quality and appropriateness [Kracht et al. 2014,
+The evaluation of LLM-generated tests requires understanding the         Fan 2019].
+intersection of multiple domains in software engineering. This
+section examines the foundational concepts of software quality           3    INDUSTRY MOTIVATION: THE CASE OF LKS
+assessment, testing fundamentals, and the emerging role of LLMs
+                                                                              NEXT
+in test generation, highlighting how each domain contributes to
+effective test evaluation.                                               This reseaarch focuses on LKS Next 1 , a mid-sized technology con-
+                                                                         sultancy that provides software development and technological
+                                                                         consulting services to both corporate and public sector organiza-
+2.1     Software Quality Models and Frameworks                           tions. The company specializes in delivering customized software
+Software quality assessment orchestrates three complementary ele-        solutions across diverse technologies and programming languages,
+ments: quality models specify the dimensions and attributes to be        exemplifying the challenges organizations face when balancing
+evaluated, evaluation frameworks provide the methodological guid-        comprehensive testing requirements with market pressures and
+ance for assessment, and benchmarks establish reference values           resource constraints [Garousi et al. 2017].
+that give meaning to measurements. For example, when assessing              The company’s software development lifecycle integrates
+a software system, a quality model (e.g., [ISO/IEC 2011]) identi-        DevSecOps practices and agile methodologies [Kim et al. 2016,
+fies key characteristics like maintainability, an evaluation frame-      Prates and Pereira 2025], emphasizing automated testing as a cor-
+work prescribes how to measure specific attributes, and bench-           nerstone of their quality assurance strategy. Their continuous in-
+marks provide industry standards or historical data for comparison       tegration pipeline implements a systematic validation sequence
+[ISO/IEC 2011, Wagner et al. 2012].                                      that includes: compilation and build verification, unit testing of
+                                                                         individual components, integration testing for component interac-
+2.2     Software Testing Fundamentals                                    tions, automated code quality analysis through SonarQube2 , and de-
+Software testing is a critical component of quality assurance, requir-   pendency scanning for security vulnerabilities [Hilton et al. 2016].
+ing both technical expertise and domain knowledge. While metrics         This comprehensive automation strategy enables rapid validation
+like code coverage provide quantitative insights, experienced testers    of code changes while maintaining consistent quality standards.
+apply sophisticated techniques like equivalence partitioning and            However, like many software development organizations, the
+boundary value analysis that require human judgment [Fan 2019].          company faces increasing pressure to optimize their testing pro-
+Even when automated tools achieve similar coverage metrics to            cesses while maintaining rigorous quality standards. The resource-
+manually written tests [Fan 2019], experts must still evaluate test      intensive nature of test development, particularly for unit and inte-
+quality across multiple dimensions including maintainability, read-      gration tests, presents a significant challenge in their continuous de-
+ability, and alignment with testing best practices.                      livery environment [Beller et al. 2019, Orso and Rothermel 2014].
+                                                                         These challenges make LKS Next a relevant case for studying the
+                                                                         adoption of LLM-based testing tools in production environments.
+2.3     Large Language Models in Software
+                                                                            The emergence of AI-powered development tools, particularly
+        Engineering                                                      LLMs, creates both opportunities and challenges for quality assur-
+LLMs have emerged as powerful tools capable of aiding in several         ance. While these tools can accelerate test generation and reduce
+software engineering tasks, from code completion to documentation        developer workload [Wang et al. 2024b], their effective integration
+generation [Gao et al. 2025, Hou et al. 2024]. Consequently, their       into enterprise environments requires careful consideration of mul-
+potential to automatically create tests is being extensively analyzed    tiple factors. Specifically, the company requires generated tests to
+[Wang et al. 2024b]. However, research shows that automatically          adhere to organizational coding standards, architectural patterns,
+generated tests face several challenges:                                 and testing best practices. The company’s quality assurance team
+      • Test oracle problem: Determining correct expected outputs        1 https://www.lksnext.com
+
+        requires domain expertise. [Barr et al. 2015]                    2 https://www.sonarsource.com/products/sonarqube
+Tracking the Moving Target: A Framework for Continuous Evaluation of LLM Test Generation in Industry                        EASE 2025, 17–20 June, 2025, Istanbul, Türkiye
+
+
+identified several key requirements, including comprehensive cover-                    be useful in a production environment. A high number of compi-
+age metrics, proper test parameterization, and adherence to testing                    lation errors or structural issues indicates that LLM may require
+techniques such as equivalence partitioning and boundary value                         additional context or prompt engineering to generate viable tests
+analysis, along with appropriate use of mocking techniques and                         [Wang et al. 2024b].
+test isolation practices for integration testing [Spadini et al. 2019].                   Second, Static Analysis Issues and Setup/Teardown Usage focus on
+   Beyond technical considerations, the rapid evolution of LLM                         essential characteristics affecting long-term usability and mainte-
+capabilities demands continuous evaluation [Gao et al. 2025]. As                       nance of the test suite [Kracht et al. 2014, Fan 2019]. These aspects
+providers frequently release model improvements, quality assur-                        are critical in enterprise environments where test maintenance rep-
+ance teams must regularly reassess tool effectiveness, requiring                       resents a significant portion of testing effort [Garousi and Zhi 2016].
+systematic and reproducible evaluation frameworks. Additionally,                       Static Analysis Issues are measured using SonarQube’s Sonarway
+the pay-per-token model common among LLM providers introduces                          profile, enforcing thresholds for maintainability, reliability, and
+variable costs that scale with usage. Organizations must balance                       security [Campbell and Papapetrou 2013]. Setup/Teardown Usage
+potential productivity gains against ongoing operational expenses.                     assesses proper test lifecycle management through framework fea-
+This balance is particularly critical in continuous integration en-                    tures like @Before and @After annotations, crucial for test indepen-
+vironments where test execution occurs frequently and at scale                         dence and reducing duplication [Kim et al. 2021]. High scores in
+[Hilton et al. 2016].                                                                  these metrics indicate potential maintenance challenges that could
+   Given these industrial requirements and challenges, we devel-                       make AIGen tests unsuitable for industrial environments.
+oped a comprehensive evaluation framework with metrics specifi-
+cally designed to assess LLM-based test generators in production
+environments. The following section details these metrics and their                    4.2     White Box Testing Metrics
+implementation at LKS Next.                                                            White box testing metrics evaluate how thoroughly the generated
+                                                                                       tests exercise the code under test. These metrics provide quantita-
+4     EVALUATION FRAMEWORK: METRICS                                                    tive insights into test effectiveness by measuring different aspects
+The evaluation of tests generated by LLMs, which we term AIGen                         of code coverage, from basic line execution to complex decision
+tests (AI-Generated tests), requires balancing metrics that can be                     paths.
+automatically computed (objective metrics) with those requiring                            Table 2 details four metrics that progressively assess test thor-
+expert judgment (subjective metrics). While objective metrics like                     oughness. Line Coverage provides a basic measure of code explo-
+compilation success and code coverage can be automatically verified                    ration, tracking which executable lines are reached during test exe-
+through tools, subjective metrics require expert evaluation to assess                  cution [H. Washizaki 2024]. While necessary, line coverage alone
+aspects like test design quality and methodology alignment with                        is insufficient - tests might execute code without properly verifying
+best practices [Fan 2019]. This dual approach reflects our earlier                     its behavior [Kracht et al. 2014].
+observation about the continued importance of expert judgment in                           More sophisticated coverage metrics address this limitation.
+test evaluation.                                                                       Branch Coverage ensures each boolean sub-expression is evaluated
+   Our framework organizes metrics into three categories:                              to both true and false, while Branch/Decision Coverage combines
+                                                                                       this with ensuring different execution paths are explored. Together,
+      • Code quality Metrics: Static analysis of test code structure,
+                                                                                       these metrics help assess whether AIGen tests adequately explore
+        from basic compilation to maintainability aspects.
+                                                                                       different code paths and boundary conditions.
+      • White Box Testing Metrics: Runtime coverage and thorough-
+                                                                                           Finally, Test Isolation evaluates whether tests properly manage
+        ness measurements.
+                                                                                       their dependencies and avoid shared states. This metric is particu-
+      • Black Box Testing Metrics: Expert assessment of testing method-
+                                                                                       larly important for integration tests, where improper isolation can
+        ology and design.
+                                                                                       lead to flaky tests and maintenance challenges [Spadini et al. 2019].
+   The first two categories consist primarily of objective metrics                     Tests with poor isolation might pass individually but fail when run
+that can be automatically measured through standard development                        as part of a larger suite, making them unsuitable for continuous
+tools. The third category requires expert judgment to evaluate                         integration environments.
+testing methodology and design decisions.                                                  White box metrics are objective and can be automatically com-
+                                                                                       puted through standard tools like Jacoco3 , providing immediate
+4.1     Code Quality Metrics                                                           feedback about test thoroughness. High coverage values, while not
+Code quality metrics focus on aspects that can be analyzed without                     guaranteeing test effectiveness, indicate that the LLM is capable of
+test execution. At the most basic level, test compilation success                      generating tests that explore different code paths and conditions.
+serves as a gateway - without it, no further evaluation is possible.                   However, these metrics must be considered alongside black box
+Beyond compilation, these metrics assess maintainability through                       metrics that assess test design quality.
+static analysis and proper test structure.
+   Table 1 details the three code quality metrics. First, Test Compila-
+tion Issues track the accuracy in handling external dependencies and
+basic syntactic correctness, identifying critical issues that would
+prevent tests from being integrated into existing codebases. These
+issues establish the minimum requirements for generated tests to                       3 https://github.com/jacoco/jacoco
+EASE 2025, 17–20 June, 2025, Istanbul, Türkiye                                                     Maider Azanza, Beatriz Pérez Lamancha, and Eneko Pizarro
+
+
+                                                            Table 1: Code Quality Metrics
+
+ Metric                                 Definition                                               Measurement
+ Test Compilation Issues                Accuracy in handling external library usage and import   Number of compilation errors in AIGen tests
+                                        statements, correct usage of project-specific elements
+                                        (classes, methods, constructors), basic syntactic and
+                                        structural correctness of generated test code.
+ Static Analysis Issues                 Issues identified by SonarQube using the Sonarway Number of static analysis issues found in AIGen
+                                        profile for the AIGen tests. These issues take into ac- tests
+                                        count maintainability, readability, and security in the
+                                        test code [Campbell and Papapetrou 2013].
+ Setup/Teardown Usage                   Assessment of proper test setup and teardown imple- (Number of tests with valid setup/teardown by
+                                        mentation, focusing on the correct usage of testing AIGen/ Total number of AIGen tests) × 100
+                                        framework features (e.g., @Before, @After annotations)
+                                        for maintainability and efficiency purposes.
+
+                                                         Table 2: White Box Testing Metrics
+
+ Metric                                 Definition                                               Measurement
+ Line Coverage                          Percentage of executable lines of code that have been (Number of executed lines by AIGen tests / Total
+                                        executed during testing. Ensures basic code path exe- executable lines) × 100
+                                        cution [ISO 2021].
+ Branch Coverage                        Percentage of branches in the control flow that have     (Number of evaluated branches by AIGen tests /
+                                        been executed during testing [ISO 2021].                 Total number of branches) × 100
+ Branch/Decision Coverage               Combined measurement ensuring both branch and de- (Number of branches and decisions evaluated by
+                                        cisions are thoroughly tested [ISO 2021].         AIGen tests / Total branches and decisions) × 100
+ Test Isolation                         Assessment of test independence and proper separa- (Number of isolated AIGen tests / Total number
+                                        tion of concerns. Measures how well tests avoid shared of tests expected to be isolated) × 100
+                                        states and external dependencies [Freeman et al. 2004].
+
+
+4.3     Black Box Testing Metrics                                               tests capture the testing patterns and scenarios that experienced
+Black box testing metrics assess how well AIGen tests implement                 developers identify as important. In order to compute this metric,
+fundamental testing techniques and align with expert testing prac-              testing experts at LKS Next created manual tests for each analyzed
+tices. Unlike code quality and white box metrics that can be au-                case. This metric helps identify gaps between automated and man-
+tomatically computed, these metrics require expert judgment to                  ual approaches [Kracht et al. 2014], revealing areas where LLM test
+evaluate test design decisions and methodology.                                 generation might need enhancement.
+   Table 3 details four metrics that evaluate different aspects of                 These metrics require systematic expert evaluation using prede-
+test design quality. First, Equivalence Partitioning Coverage and               fined criteria to ensure consistent assessment across different LLMs
+Boundary Value Analysis Coverage assess the implementation of                   and versions. However, this expert-dependent evaluation is crucial
+key testing techniques. Equivalence partitioning evaluates whether              for ensuring that automatically generated tests meet the quality
+tests identify and cover distinct categories of inputs, including               standards required in industrial settings.
+both valid and invalid cases [H. Washizaki 2024]. Boundary value
+analysis focuses specifically on edge cases and threshold conditions,           4.4    Weighted Assessment Framework
+measuring if tests exercise these critical scenarios where defects              To provide practical guidance on LLM selection and evaluation,
+often occur [H. Washizaki 2024].                                                our framework combines objective and subjective metrics using a
+   Test Parameterization examines the sophistication of test im-                weighted scoring system. This system balances automated measure-
+plementation, assessing whether the LLM recognizes opportuni-                   ments with expert assessment to produce a comprehensive quality
+ties for parameterization rather than duplicating similar test cases.           score, as shown in Table 4. It is important to note that the assigned
+Well-parameterized tests are more maintainable and provide better               weights reflect LKS Next’s specific priorities, and the framework
+documentation of the testing strategy [Tillmann and Schulte 2005].              is intentionally designed to be flexible. Other organizations can
+   Finally, Expert-generated Test Coverage provides a direct com-               tailor these weights to align with their own quality standards and
+parison against expert-written tests, measuring how well AIGen                  strategic goals, while preserving the model’s overall structure as a
+Tracking the Moving Target: A Framework for Continuous Evaluation of LLM Test Generation in Industry                 EASE 2025, 17–20 June, 2025, Istanbul, Türkiye
+
+
+                                                            Table 3: Black Box Testing Metrics
+
+  Metric                             Definition                                                        Measurement
+  Equivalence Partitioning           Assessment of how well tests cover distinct input cat- (Number of equivalence partition classes identi-
+  Coverage                           egories identified through equivalence partitioning. fied by AIGen tests / Total equivalence partition
+                                     Tests should cover both valid and invalid equivalence classes identified by experts)
+                                     classes.
+  Boundary Value Analysis            Evaluation of test coverage for boundary conditions,              (Number of boundary values identified by AIGen
+  Coverage                           including minimum, maximum, and edge cases.                       tests / Total number of boundary values identified
+                                                                                                       by experts) × 100
+  Test Parameterization              Measurement of the LLM’s ability to generate parame- (Number of parameterized AIGen tests / Number
+                                     terized tests that efficiently cover multiple test cases. of expected parameterized tests) × 100
+  Expert-generated           Test    Percentage of expert-written test scenarios successfully (Number of successfully replicated test scenarios
+  Coverage                           replicated by the LLM, validating its ability to capture by AIGen tests / Number of test scenarios gener-
+                                     human testing knowledge. These tests meet the com- ated by experts) × 100
+                                     pany’s minimum quality standards.
+
+
+foundation for consistent benchmarking. In our proposal, objective                     the average score across examples. Table 4 provides the detailed
+metrics have a weight of 50% and subjective metrics the other 50%.                     formulas for calculating each metric’s contribution to the final
+   Objective metrics contribute 50% of the final score, split between                  score.
+code quality and white box metrics:
+     • Code quality metrics can penalize or reward test quality:                       5     EVALUATION FRAMEWORK:
+       – Compilation Errors (CE, -20%): Tests that fail to compile                           METHODOLOGY
+         cannot be integrated into the build pipeline, warranting a                    Our methodology followed an iterative approach for evaluating
+         20% penalty. In industrial environments, non-compiling                        and improving LLM test generation capabilities. Figure 1 illustrates
+         tests block the entire CI/CD process.                                         the complete evaluation workflow, which consists of three main
+       – Static Analysis Issues (SAI, -5%): Reduces the score by 5%                    phases: preparation, test generation and analysis, and continuous
+         due to code quality and security violations detected by                       improvement.
+         SonarQube, which indicate potential maintainability, re-
+         liability, or security issues. These findings suggest that
+         the current system version is not yet ready for production
+                                                                                       5.1     Environment Setup and Preparation
+         deployment.                                                                   The evaluation process began with environment preparation. This
+       – Setup/Teardown Usage (STU, +10%): Rewards proper test                         included setting up the IDE, managing project dependencies, and
+         structure and maintainability of AIGen test cases in 10%.                     configuring the build tooling. The preparation phase also involved
+     • White box metrics contribute positively (+40% total). with                      establishing the data collection infrastructure for metric tracking.
+       10% allocated to each of the four metrics:                                      We used Google Drive for storage with Google Drive Desktop for
+       – Line Coverage (LC, +10%): measures executed code lines.                       local replicability, and leveraged Markdown for documentation due
+       – Branch Coverage (BC, +10%): evaluates boolean expression                      to its ease of use and support for code and diagram inclusion.
+         testing.
+       – Branch/Decision Coverage (BDC, +10%): assesses branches                       5.2     Test Case Selection and Ground Truth
+         and its conditions.                                                           Selecting appropriate test cases was critical for a meaningful evalu-
+       – Test Isolation (TI, +10%): measures independence between                      ation of the LLM’s capabilities in an industrial context. A primary
+         tests using mocking techniques.                                               criterion was the avoidance of data leakage. Our initial explorations
+   Black box metrics constitute the remaining 50%, reflecting the                      confirmed previous findings [López et al. 2025, Wu et al. 2024] that
+importance of expert assessment in evaluating testing methodol-                        LLMs trained on public repositories often reproduce existing tests
+ogy and test design quality. These include Equivalence Partitioning                    rather than generating novel ones, especially when encountering
+Coverage (EPC), Boundary Value Analysis (BVA), Test Parameteriza-                      familiar code. To ensure our evaluation measured true generative
+tion (TP), and Expert-generated Test Coverage (EGTC). This equal                       ability, we deliberately selected functions and classes from projects
+weighting between objective and subjective metrics ensures that                        that did not have pre-existing, publicly accessible test suites.
+generated tests must meet both technical requirements and testing                         Beyond avoiding data leakage, the core goal was to choose test
+best practices to achieve a high score.                                                subjects that represented common challenges and complexities en-
+   The final score for each LLM is calculated by combining individ-                    countered in real-world industrial software development. Important
+ual metric scores. For penalty metrics (CE and SAI), we sum the                        consideration was given to the test compatibility with both unit and
+violations across all test cases. For all other metrics, we calculate                  integration testing approaches for allowing the evaluation of LLMs
+EASE 2025, 17–20 June, 2025, Istanbul, Türkiye                                                             Maider Azanza, Beatriz Pérez Lamancha, and Eneko Pizarro
+
+
+                                                 Table 4: Metric Weight Distribution and Scoring Formula
+
+
+     Category                      Metric                      Weight   Value for LLM                                Scoring Formula for LLM
+                                   Compilation     Errors      -20%       (CE value for each example)                -(CE value for LLM / MAX(CE
+                                                                        Í
+
+     Code Quality Metrics          (CE)                                                                              value for all LLMs))×20%
+                                   Static Analysis Issues      -5%           (SAI value for each example)            -(SAI value for LLM / MAX(SAI
+                                                                        Í
+                                   (SAI)                                                                             value for all LLMs))×5%
+                                                                             valid setup/teardown
+                                                                         Í
+                                   Setup/Teardown Usage        +10%            total examples                        (STU value for LLM)×10%
+                                   (STU)
+                                                                           LC per example
+                                                                         Í
+                                   Line Coverage (LC)                     total examples
+                                                                           BC per example                            AVG(LC, BC, BDC,
+     White Box Metrics                                         +40%
+                                                                         Í
+                                   Branch Coverage (BC)                   total examples                             TI)×40%
+                                                                           BDC per example
+                                                                         Í
+                                   Branch/Decision Cover-                  total examples
+                                   age (BDC)
+                                                                             isolation score per example
+                                                                         Í
+                                   Test Isolation (TI)                             total examples
+                                                                             EPC per example
+                                                                         Í
+                                   Equivalence Partition-                    total examples
+                                   ing Coverage (EPC)                                                                AVG(EPC, BVA, TP,
+     Black Box Metrics                                         +50%      Í
+                                                                             BVA per example
+                                   Boundary Value Analy-                     total examples                          EGTC)×50%
+                                   sis (BVA)
+                                                                           TP per example
+                                                                         Í
+                                   Test Parameterization                  total examples
+                                   (TP)
+                                                                             EGTC per example
+                                                                         Í
+                                   Expert-generated Test                      total examples
+                                   Coverage (EGTC)
+
+
+
+
+                                    Figure 1: BPMN diagram showcasing the iterative measurement process.
+
+
+across different testing scopes and complexity levels. Due to the                     (1) To assess the LLM’s handling of complex object interac-
+significant time requirements of manual expert evaluation needed                          tions and the need for mocking external dependencies (like
+for measuring subjective metrics, we limited our selection to seven                       databases), common in multi-layered enterprise applications,
+functions. These were specifically chosen to cover a diverse range                        we selected the assemble method (Rental Assembler). This
+of typical industrial programming patterns and testing challenges.                        function requires orchestrating multiple domain objects and
+   These functions were chosen not arbitrarily, but specifically for                      simulating database responses.
+the distinct enterprise-relevant testing scenarios they embodied:
+Tracking the Moving Target: A Framework for Continuous Evaluation of LLM Test Generation in Industry                   EASE 2025, 17–20 June, 2025, Istanbul, Türkiye
+
+
+   (2) Representing scenarios involving intricate algorithmic logic                       This cycle continued until the generated tests met our quality
+       and robust exception handling, we included isPrime (Prime                       standards or no further improvements could be achieved through
+       Number Checker), notable for its high cyclomatic complexity                     prompt refinement.
+       and multiple error paths that demand careful test design.
+   (3) Core enterprise functionalities often involve user input vali-                  5.4     Prompt Engineering Methodology
+       dation and database interactions. The addUser function (User
+                                                                                       Our approach to prompt engineering followed an iterative refine-
+       Management) was chosen to test the LLM’s ability to handle
+                                                                                       ment process based on Prompt Chaining [Wu et al. 2022], which
+       null conditions, simulate database access (requiring mock-
+                                                                                       structures generation into sequential components addressing dif-
+       ing), and manage basic CRUD-like operations.
+                                                                                       ferent test creation aspects. Each iteration involved generating
+   (4) Business logic frequently involves complex conditional rules
+                                                                                       tests, evaluating outputs against our quality metrics, identifying
+       and dependencies on other system parts. The getBonus func-
+                                                                                       weaknesses, and refining prompts to address specific issues.
+       tion (Bonus Calculator) served as a test case for this, featuring
+                                                                                          Our final prompt focused on six key areas identified during
+       nested conditions and reliance on external data or services.
+                                                                                       evaluation:
+   (5) Enterprise systems often rely on utility functions and re-
+       quire integration testing across multiple small components.                        (1) Addressing Foundational Quality: To combat compilation er-
+       The isIPV4Valid function (IPV4 Validator) represented this,                            rors and static analysis warnings, we introduced explicit
+       necessitating tests that validate its interaction with helper                          instructions demanding adherence to SonarQube rules. The
+       functions.                                                                             prompt was augmented with directives like: "When creating
+   (6) Some enterprise tasks involve specific data structure manip-                           the test class, do not generate any line of code that could create
+       ulations. The isStrobogrammic function (Strobogrammatic                                any Issue, nor Bug nor Code Smell. I will check with Sonar the
+       Number) provided a case for testing logic involving map or                             code statically..." Furthermore, we added verification steps
+       dictionary structures, using a less widely known algorithm                             requiring the LLM to check imports, constructors, and con-
+       unlikely to suffer from data leakage.                                                  text before finalizing its response, and crucially, to ask for
+   (7) Finally, to evaluate the LLM’s capacity to handle integration                          clarification if context was missing, rather than hallucinating
+       between multiple internal functions within a class or module,                          incorrect assumptions.
+       we used palindrome (Palindrome Detector). This function’s                          (2) Mandating Comprehensive Coverage: Low coverage scores in
+       logic depends on other helper methods within the same                                  early iterations prompted the inclusion of specific require-
+       project, testing the LLM’s ability to potentially generate                             ments for testing techniques. We mandated the use of the
+       tests for multiple functions in a coordinated manner.                                  white box method, focusing on condition/decision cover-
+                                                                                              age, instructing the LLM to "use the truth tables to cover
+   The full reference to the methods can be found in the replica-
+                                                                                              all the cases of the composed condition statements." A non-
+tion package4 . For each of these carefully selected, representative
+                                                                                              negotiable target was set: "I need a 100% of line, condition and
+functions, expert Quality Assurance engineers from LKS Next de-
+                                                                                              condition/decision coverage," explicitly mentioning that tools
+veloped comprehensive "ground truth" test suites. These manual
+                                                                                              like JaCoCo would be used for verification.
+tests were crafted following industry best practices and internal
+                                                                                          (3) Incorporating Standard Testing Techniques: Beyond coverage,
+quality standards. They were subsequently validated by a QA team
+                                                                                              the quality of test case design was often lacking. To ensure
+leader to ensure full requirements coverage and adherence to code
+                                                                                              systematic testing, we explicitly required black box testing
+quality metrics, including verification with SonarQube. This rig-
+                                                                                              techniques, namely equivalence partitioning and boundary
+orous process established a reliable benchmark against which the
+                                                                                              value analysis, as described above. Recognizing potential
+LLM-generated tests could be objectively measured, ensuring our
+                                                                                              overlap between white-box and black-box generated cases,
+findings reflected performance against realistic, high-quality indus-
+                                                                                              we added a refinement instruction: "If you find redundancy
+trial testing standards.
+                                                                                              with any of the other methods, remove the redundant tests."
+                                                                                              For integration tests requiring interaction with dependencies,
+5.3     Iterative Evaluation Process                                                          mocking was mandated using the Mockito framework, with
+Following Figure 1, once the environment and baseline tests were                              specific instructions to avoid direct database interactions to
+ready, we entered an iterative cycle:                                                         prevent potential ACID errors, instead using mocked classes.
+                                                                                          (4) Enforcing Test Engineering Best Practices: Maintainability and
+   (1) Generate tests using the current prompt.                                               readability issues led to the inclusion of test engineering
+   (2) Analyze test results through both automated tools and expert                           heuristics. The prompt evolved to include directives such as:
+       review.                                                                                "Use proper naming conventions for the tests and structure
+   (3) Compare results against our quality metrics.                                           them correctly... Organize the test class correctly and follow
+   (4) Based on the analysis, either:                                                         Clean Code rules so the tests are easily understandable and
+       • Refine the prompt if improvements are needed.                                        maintainable." To reduce redundancy within the test code
+       • Document successful results if quality thresholds are met.                           itself, the prompt specified the use of JUnit 5 annotations
+                                                                                              like @BeforeAll, @BeforeEach, @AfterAll, and @AfterEach
+                                                                                              where appropriate, and the use of @DisplayName for clear
+4 https://zenodo.org/records/15274212                                                         test descriptions.
+EASE 2025, 17–20 June, 2025, Istanbul, Türkiye                                               Maider Azanza, Beatriz Pérez Lamancha, and Eneko Pizarro
+
+
+   (5) Comprehensive Context Provision: To ensure the LLM could          integration making it particularly relevant for industrial adoption.
+        generate both structurally sound and functionally relevant       Our first iteration in March 2024 assessed Copilot when it exclu-
+        tests, providing comprehensive context was paramount. Our        sively used GPT-4, producing largely unusable tests with signifi-
+        process involved supplying the LLM with the complete source      cant compilation issues. By May 2024, after applying our iterative
+        code of the Java class under test (SUT), along with all inter-   prompt refinement process, the same model showed substantial
+        connected classes and interfaces identified through depen-       improvement. The latest evaluation in December 2024 expanded
+        dency analysis. Crucially, this context included embedded        to include newer models (OpenAI’s GPT-o series and Claude 3.5
+        JavaDoc, which had been rigorously verified by business do-      Sonnet), demonstrating the rapid advancement in this field.
+        main experts, serving as the official requirements specifica-       Table 5 presents the complete comparison across models and
+        tion. This dual provision of verified requirements (JavaDoc)     time periods. Our results reveal substantial improvement across
+        and full implementation details (source code) enabled the        the three key areas.
+        LLM to effectively apply mandated black box techniques              Code Quality Metrics show the most dramatic improvement in
+        based on the specifications, while simultaneously having the     basic viability. In March 2024, GitHub Copilot produced an average
+        necessary visibility to address white box coverage require-      of 31 compilation errors per test suite and 45 static analysis issues.
+        ments and identifying dependencies for mocking.                  By May, these numbers dropped to 3 and 18 respectively. The newest
+   (6) Context and Framework Specificity: To ensure the LLM used         models (o1-Preview and Claude 3.5 Sonnet) achieve near-perfect
+        the correct libraries and adhered to their specific APIs, the    compilation with minimal static issues. Setup/Teardown usage,
+        prompt was furnished with the exact Maven dependencies           initially surprising us with good performance (100%), maintained
+        used in the target projects (JUnit 5 Jupiter, Mockito). Links    this level across most models, with only o1-Mini showing slightly
+        to the official documentation for these frameworks were          lower performance (85.71%).
+        provided, along with explicit instructions to follow their          White Box Testing Metrics demonstrate substantial advancement.
+        methodologies. Examples of correct Mockito usage (mock           Our first tests achieved only 39.14% line coverage and similar branch
+        creation, verification, argument captors) were included as       coverage levels. The iterative prompt improvement raised these
+        templates.                                                       metrics to around 65%, while newer models reach above 95% cover-
+   Our analysis revealed significantly better results with English       age. Particularly noteworthy is the consistent achievement of 100%
+prompts compared to Spanish, aligning with findings from other           test isolation across all recent models, suggesting mature handling
+multilingual studies [Jiang et al. 2024, Wang et al. 2024a]. The final   of test independence.
+optimized prompt (available in our replication package) assigns a           Black Box Testing Metrics reveal both progress and remaining
+specific role to the LLM ("best Software Engineer specialized in         challenges. While early tests showed reasonable understanding of
+testing"), defines tasks, mandates methodologies, enforces quality       equivalence partitioning (71.19%) and boundary analysis (69.39%),
+criteria, and includes self-correction instructions. This structured     they struggled with test parameterization (12.70%). The latest mod-
+approach systematically addressed weaknesses identified during           els show more balanced performance across all metrics, with signif-
+evaluation cycles, leading to progressive improvements in test qual-     icant improvements in test parameterization (reaching 88-91%) and
+ity as documented in our results.                                        expert-generated test coverage exceeding 90% in the best cases.
+                                                                            The total weighted assessment reflects this evolution, with scores
+5.5     Tooling Infrastructure                                           rising from 32.44% in our initial evaluation to over 90% for the best
+Our evaluation framework leverages industry-standard tools to            performing models. This improvement persists across different
+ensure robust and reproducible assessments:                              weighting schemes, suggesting robust advancement in test genera-
+                                                                         tion capabilities rather than optimization for specific metrics.
+    • Testing Framework: JUnit for test execution and parameteri-
+       zation.
+    • Static Analysis: SonarQube and SonarCloud for code quality         7   DISCUSSION
+       metrics.
+                                                                         Our evaluation framework has provided valuable insights for both
+    • Coverage Analysis: JaCoCo for detailed code coverage mea-
+                                                                         research and industrial practice. The most immediate practical out-
+       surements.
+                                                                         come has been its role in the company’s decision-making process
+    • Version Control: GitHub and GitHub Actions for automation.
+                                                                         regarding LLM adoption. In March 2024, when GitHub Copilot gen-
+   All dependency management was handled through Maven, en-              erated tests that largely failed to compile and required significant
+suring reproducible builds and consistent tool versions across eval-     developer intervention to be usable, investing in the technology
+uations.                                                                 would have likely increased rather than reduced testing effort. How-
+                                                                         ever, the dramatic improvements observed by December 2024 have
+6     RESULTS                                                            led the company to reconsider this position, as the latest results
+Our longitudinal analysis of LLM-based test generators spans from        suggest potential productivity gains.
+March 2024 to December 2024, revealing both the rapid evolution             Our experience highlights several important considerations for
+of LLM capabilities and the expansion of available models. We fo-        organizations evaluating LLM-based testing tools:
+cused specifically on GitHub Copilot because it represented the
+most widely adopted commercial tool leveraging LLMs for software             • Continuous Evaluation Required: The rapid evolution of LLM
+development at the time of our research, with its seamless IDE                 capabilities means that evaluations quickly become outdated.
+Tracking the Moving Target: A Framework for Continuous Evaluation of LLM Test Generation in Industry                  EASE 2025, 17–20 June, 2025, Istanbul, Türkiye
+
+
+                                                          Table 5: Metrics Results Comparison
+
+                                                                                            ChatGPT-4 ChatGPT-4                  o1-         o1-      Claude 3.5
+                                                                                                                     GPT-o
+                                    Metric                                      Weight       1st Time  Iterative
+                                                                                                                    (Dec’24)
+                                                                                                                               Preview      Mini       Sonnet
+                                                                                             (Mar’24)  (May’24)                (Dec’24)    (Dec’24)    (Dec’24)
+
+                                    Compilation Errors*                           -20%         31          3          2       0       7                   0
+ Code Quality Metrics               Static Analysis Issues                         -5%         45         18         29      15      10                  13
+                                    Setup/Teardown Usage                           10%       100.00%    100.00%    100.00% 100.00% 85.71%              100.00%
+                                    Line Coverage                                             39.14%     65.57%     70.14% 98.00% 28.57% 95.71%
+                                    Branch Coverage                                40%        39.14%     65.57%     71.29% 95.71% 28.57% 94.00%
+ White Box Testing
+                                    Branch/Decision Coverage                                  36.57%     61.57%     68.29% 95.71% 28.57% 93.29%
+                                    Test Isolation                                            85.71%    100.00%    100.00% 100.00% 100.00% 100.00%
+                                    Equivalence Partitioning Coverage                         71.19%     75.00%    79.88%      84.52%      85.12%      86.90%
+                                    Boundary Value Analysis Coverage                          69.39%     71.77%    78.20%      81.53%      83.57%      83.67%
+ Black Box Testing                                                                 50%
+                                    Test Parameterization                                     12.70%     38.89%    83.81%      91.84%      88.10%      88.89%
+                                    Expert-generated Test Coverage                            65.77%     75.36%    66.23%      97.94%      81.57%      91.48%
+ Total Weight Assessment                                                                      32.44%     67.96%    74.97%      91.76%      63.81%      90.72%
+
+
+       Organizations need to maintain ongoing evaluation pro-                              Construct Validity: Our measurement framework relies on spe-
+       cesses rather than relying on point-in-time assessments.                        cific metrics to evaluate test quality and LLM effectiveness. There is
+     • Model Selection and Costs: While newer models like Claude                       a risk that these metrics may not fully capture all relevant aspects
+       3.5 Sonnet and o1-Preview show impressive performance,                          of test quality or may not accurately reflect the actual value of LLM-
+       they come with higher computational costs and latency. Ad-                      generated tests in industrial practice. We mitigate this threat in
+       ditionally, tools like GitHub Copilot require per-seat licens-                  several ways: (1) combining both automated metrics and expert as-
+       ing, which can be significant for larger teams. Organizations                   sessment to provide a more complete evaluation, (2) validating our
+       must balance these costs against potential productivity gains.                  measurement framework with experienced QA professionals be-
+     • Technical Investment: Success with these tools requires invest-                 fore deployment, and (3) incorporating feedback from practitioners
+       ment in two key areas. First, as shown by our results, proper                   throughout the study period to refine our metrics.
+       prompt engineering significantly impacts performance. Sec-                          Internal Validity: The observed improvements in LLM perfor-
+       ond, developers need training to effectively use them, partic-                  mance over time could be influenced by factors other than actual
+       ularly in understanding prompt engineering principles and                       evolution in LLM capabilities. In particular, our iterative refinement
+       best practices.                                                                 of prompting strategies might confound the results. To address this,
+     • Data Privacy Risks: When testing involves client code or pro-                   we: (1) maintain consistent base prompts across evaluation periods,
+       prietary information, organizations must evaluate how LLMs                      (2) clearly document any prompt modifications, and (3) validate
+       handle this data. Solutions might include air-gapped environ-                   significant changes in performance through multiple test runs.
+       ments or local LLM deployments for sensitive code, though                           External Validity: While our study provides insights from a real-
+       these come with their own technical and cost implications.                      world industrial setting, it is primarily based on experiences from
+     • Expert Oversight: Despite the high scores achieved in our                       a single organization and specific types of software projects. The
+       metrics, expert review remains essential. The black box met-                    effectiveness of our framework and findings may not generalize to
+       rics in particular show that while LLMs have improved in                        organizations with different development practices, project types,
+       applying testing techniques, they don’t yet match human                         or quality requirements. To strengthen external validity, we: (1)
+       expertise in test design decisions.                                             designed the framework to be adaptable to different organizational
+                                                                                       contexts, and (2) focused on industry-standard tools and practices
+   These findings suggest that while LLM-based test generation                         that are common across organizations.
+tools are becoming increasingly viable for industrial use, their suc-                      Reliability: The expert assessment component of our framework
+cessful adoption requires both systematic evaluation frameworks                        inherently involves subjective judgment, which could affect the re-
+and realistic expectations. Companies should view these tools as                       producibility of our results. We implement two measures to enhance
+aids to augment developer productivity rather than complete re-                        reliability: (1) establishing clear, documented evaluation criteria
+placements for human testing expertise.                                                for expert reviewers, (2) maintaining detailed documentation of
+                                                                                       all measurement procedures, tools, and decision criteria to enable
+                                                                                       replication.
+8    THREATS TO VALIDITY
+                                                                                           While these threats cannot be completely eliminated, we be-
+As with any empirical study, particularly one involving emerging                       lieve our mitigation strategies provide reasonable confidence in our
+technologies like LLMs, there are several potential threats to the                     findings.
+validity of our findings.
+EASE 2025, 17–20 June, 2025, Istanbul, Türkiye                                                Maider Azanza, Beatriz Pérez Lamancha, and Eneko Pizarro
+
+
+9    RELATED WORK                                                              • Guidance for companies seeking to adopt LLM-based testing
+In the short time since LLMs entered the software development                    tools while maintaining quality standards.
+landscape, researchers have explored their potential applications
+in software testing. Wang et al.’s comprehensive analysis of 102          10    CONCLUSIONS
+papers [Wang et al. 2024b] reveals that LLMs are predominantly            Our longitudinal evaluation of LLM-based test generators reveals
+used for test case preparation (including unit test case generation,      a technology rapidly maturing toward industrial viability. From
+test oracle generation, and system test input generation), program        April 2024 to January 2025, we observed dramatic improvements
+debugging, and bug repair. However, their application remains lim-        across all metric categories, particularly in basic test viability and
+ited in early testing lifecycle activities such as test requirements      sophistication of testing approaches.
+specification and test planning. The authors identify several key            Three key conclusions emerge from our analysis:
+challenges, including: achieving comprehensive test coverage, ad-              • Continuous Evaluation is Essential: The rapid pace of LLM
+dressing the test oracle problem, conducting rigorous evaluations,               advancement means that evaluations have a limited shelf life.
+and successfully applying LLMs in real-world testing scenarios.                  Our study showed how capabilities can transform within
+Our work contributes to addressing this last challenge through                   months, from tests that barely compiled to sophisticated
+an industry case study examining the evaluation and adoption of                  test suites achieving over 90% in our weighted assessment.
+LLM-based testing tools.                                                         Organizations need flexible, ongoing evaluation processes
+   Recent empirical studies have begun systematically evaluating                 to keep pace with these changes.
+LLM capabilities for test generation. Tang et al. [Tang et al. 2024]           • Human-AI Collaboration: While newer models show remark-
+present a comparative assessment between ChatGPT and search-                     able capabilities, our results emphasize that human oversight
+based software testing (SBST) tools, finding that while SBST achieves            remains crucial. The improvements in both objective and
+higher code coverage, LLM-generated tests demonstrate promising                  subjective metrics suggest LLMs are becoming valuable tools
+characteristics in terms of readability and assertion quality. Several           for augmenting, rather than replacing, human expertise in
+research teams have proposed frameworks to enhance LLM-based                     test generation.
+test generation. Liu et al. introduce AutoTestGPT, which leverages             • Growing Technical Sophistication: The substantial improve-
+ChatGPT’s capabilities through structured prompts and iterative                  ments in test parameterization (from 12.70% to 88.89%) and
+refinement to generate test cases across multiple testing types.                 coverage metrics (reaching over 95%) demonstrate that LLMs
+Their system demonstrates significant efficiency improvements,                   can now generate tests that align with industry practices.
+reducing framework generation time by over 70% compared to                       However, the gap in manual test coverage indicates areas
+manual approaches [Liu et al. 2024]. Similarly, Chen et al. present              still needing refinement.
+ChatUniTest, which addresses key limitations of LLM-based test-
+                                                                             Several promising directions for future work emerge from these
+ing through adaptive focal context generation and a generation-
+                                                                          findings. We see value in extending the framework to more com-
+validation-repair mechanism. Their evaluation shows ChatUniTest
+                                                                          plex scenarios, particularly integration and system testing, and
+achieving higher line coverage than both traditional and LLM-based
+                                                                          investigating how domain-specific prompting affects test quality.
+alternatives across diverse projects [Chen et al. 2024].
+                                                                          Developing automated validation techniques for LLM-generated
+   Siddiq et al. [Siddiq et al. 2024] evaluate the unit test generation
+                                                                          tests would improve efficiency, while analyzing cost-effectiveness
+capabilities of various LLMs (Codex, GPT-3.5-Turbo, and StarCoder)
+                                                                          in production environments would provide practical guidance for
+using the HumanEval and EvoSuite SF110 benchmarks. Their re-
+                                                                          adoption. Another potential path is exploring hybrid approaches
+sults highlight early challenges with coverage, compilability, and
+                                                                          combining LLM capabilities with traditional testing methodologies.
+test reliability. However, our longitudinal study reveals significant
+                                                                          Last but not least, analyzing the use of in-house deployed LLMs
+improvements in LLM test generation capabilities over time. Fur-
+                                                                          represents a critical area for investigation, as it could address pri-
+thermore, we extend beyond prior work by examining integration
+                                                                          vacy concerns by preventing sensitive client code or organizational
+testing scenarios and evaluating LLMs’ ability to generate parame-
+                                                                          know-how from being shared with third parties.
+terized tests.
+                                                                             As LLM capabilities continue to evolve, maintaining updated
+   Schäfer et al. [Schäfer et al. 2024] propose an adaptive approach
+                                                                          evaluation frameworks and benchmarks will be crucial. Our results
+for JavaScript test generation using LLMs. Their TESTPILOT sys-
+                                                                          suggest that organizations looking to optimize their testing prac-
+tem demonstrates how careful prompt engineering and iterative
+                                                                          tices should establish systematic processes for regularly reassessing
+refinement can improve the quality of generated tests. This aligns
+                                                                          and integrating these rapidly advancing technologies.
+with our findings regarding the importance of systematic evalua-
+tion frameworks for assessing and improving LLM-based testing
+                                                                          ACKNOWLEDGMENTS
+tools.
+   Our work complements these existing studies by providing:              This research is co-supported by contract MCIN/AEI/10.13039/50110
+                                                                          0011033 and the European Union NextGeneration EU/PRTR un-
+                                                                          der contract PID2021-125438OB-I00. Funding was also received
+     • A practical framework for continuous evaluation of LLM test        from the University of the Basque Country (UPV/EHU) under the
+       generators in industrial settings.                                 "University-Enterprise-Society" program (US24/10). Additional sup-
+     • Insights into the temporal evolution of LLM testing capabili-      port is provided by contract GIU21/037 under the program "Grant-
+       ties.                                                              ing Aid to Research Groups at the UPV/EHU (2021)".
+Tracking the Moving Target: A Framework for Continuous Evaluation of LLM Test Generation in Industry                                  EASE 2025, 17–20 June, 2025, Istanbul, Türkiye
+
+
+REFERENCES                                                                                     [Spadini et al. 2019] Spadini, D., Aniche, M. F., Bruntink, M., and Bacchelli, A. (2019).
+[Barr et al. 2015] Barr, E., Harman, M., McMinn, P., Shahbaz, M., and Yoo, S. (2015).           Mock objects for testing java systems - why and how developers use them, and how
+  The oracle problem in software testing: A survey. IEEE transactions on software               they evolve. Empir. Softw. Eng., 24(3):1461–1498.
+  engineering, 41(5):507–525.                                                                  [Tang et al. 2024] Tang, Y., Liu, Z., Zhou, Z., and Luo, X. (2024). Chatgpt vs sbst: A
+[Beller et al. 2019] Beller, M., Gousios, G., and Zaidman, A. (2019). Developer testing         comparative assessment of unit test suite generation. IEEE Transactions on Software
+  in the ide: Patterns, beliefs, and behavior. In IEEE Transactions on Software Engineering,    Engineering, 50(6):1340–1359.
+  volume 45, pages 261–284.                                                                    [Tillmann and Schulte 2005] Tillmann, N. and Schulte, W. (2005). Parameterized unit
+[Campbell and Papapetrou 2013] Campbell, A. and Papapetrou, P. (2013). SonarQube                tests. In Proceedings of the 10th European Software Engineering Conference. ACM.
+  in action. Manning Publications Co.                                                          [Wagner et al. 2012] Wagner, S., Goeb, A., Heinemann, L., Kläs, M., Lampasona, C.,
+[Chen et al. 2024] Chen, Y., Hu, Z., Zhi, C., Han, J., Deng, S., and Yin, J. (2024). Chatu-     Lochmann, K., Mayr, A., Plösch, R., Seidl, A., Streit, J., et al. (2012). Software qual-
+  nitest: A framework for llm-based test generation. In Companion Proceedings of the            ity models in practice: A systematic literature review. Information and Software
+  32nd ACM International Conference on the Foundations of Software Engineering (FSE).           Technology, 54(6):622–634.
+  ACM.                                                                                         [Wang et al. 2024a] Wang, C., Li, Z., Gao, C., Wang, W., Peng, T., Huang, H., Deng, Y.,
+[Fan 2019] Fan, Z. (2019). A systematic evaluation of problematic tests generated               Wang, S., and Lyu, M. (2024a). Exploring multi-lingual bias of large code models in
+  by evosuite. In 2019 IEEE/ACM International Conference on Software Engineering                code generation.
+  Companion Proceedings, pages 165–166.                                                        [Wang et al. 2024b] Wang, J., Huang, Y., Chen, C., Liu, Z., Wang, S., and Wang, Q.
+[Freeman et al. 2004] Freeman, S., Mackinnon, T., Pryce, N., and Walnes, J. (2004).             (2024b). Software testing with large language models: Survey, landscape, and vision.
+  jMock: supporting responsibility-based design with mock objects. In Companion to              IEEE Transactions on Software Engineering, 50(4):911–936.
+  the 19th Annual ACM SIGPLAN Conference on Object-Oriented Programming, Systems,              [Wu et al. 2022] Wu, T., Terry, M., and Cai, C. (2022). Ai chains: Transparent and
+  Languages, and Applications, OOPSLA. ACM.                                                     controllable human-ai interaction by chaining large language model prompts. In
+[Gao et al. 2025] Gao, C., Hu, X., Gao, S., Xia, X., and Jin, Z. (2025). The current            Proceedings of the 2022 CHI Conference on Human Factors in Computing Systems. ACM.
+  challenges of software engineering in the era of large language models. ACM Trans.           [Wu et al. 2024] Wu, Y., Li, Z., Zhang, J. M., and Liu, Y. (2024). Condefects: A comple-
+  Softw. Eng. Methodol. Just Accepted.                                                          mentary dataset to address the data leakage concern for llm-based fault localization
+[Garousi et al. 2017] Garousi, V., Felderer, M., and Hacaloğlu, T. (2017). Software test        and program repair. In Companion Proceedings of the 32nd ACM International Confer-
+  maturity assessment and test process improvement: A multivocal literature review.             ence on the Foundations of Software Engineering (FSE). ACM.
+  Information and Software Technology, 85:16–42.
+[Garousi and Zhi 2016] Garousi, V. and Zhi, J. (2016). Challenges, benefits, and best          Received 20 February 2007; revised 12 March 2009; accepted 5 June 2009
+  practices of software testing in practice: Interviews with practitioners. Journal of
+  Software: Evolution and Process, 28(11):1018–1026.
+[H. Washizaki 2024] H. Washizaki, e. (2024). Guide to the Software Engineering Body
+  of Knowledge (SWEBOK Guide). IEEE Computer Society.
+[Hilton et al. 2016] Hilton, M., Tunnell, T., Huang, K., Marinov, D., and Dig, D. (2016).
+  Usage, costs, and benefits of continuous integration in open-source projects. In
+  Proceedings of the 31st IEEE/ACM International Conference on Automated Software
+  Engineering, ASE ’16, page 426–437, New York, NY, USA. Association for Computing
+  Machinery.
+[Hou et al. 2024] Hou, X., Zhao, Y., Liu, Y., Yang, Z., Wang, K., Li, L., Luo, X., Lo, D.,
+  Grundy, J., and Wang, H. (2024). Large language models for software engineering: A
+  systematic literature review. ACM Trans. Softw. Eng. Methodol., 33(8).
+[ISO 2021] ISO (2021). IEEE/ISO/IEC international standard - software and systems
+  engineering–software testing–part 4: Test techniques. ISO/IEC/IEEE 29119-4:2021(E).
+[ISO/IEC 2011] ISO/IEC (2011). Systems and software engineering – systems and
+  software quality requirements and evaluation (square) – system and software quality
+  models.
+[Jiang et al. 2024] Jiang, W., Gao, X., Zhai, J., Ma, S., Zhang, X., and Shen, C. (2024).
+  From effectiveness to efficiency: Comparative evaluation of code generated by lcgms
+  for bilingual programming questions.
+[Kim et al. 2021] Kim, D. J., Tsantalis, N., Chen, T.-H., and Yang, J. (2021). Studying test
+  annotation maintenance in the wild. In 2021 IEEE/ACM 43rd International Conference
+  on Software Engineering (ICSE), pages 62–73.
+[Kim et al. 2016] Kim, G., Humble, J., Debois, P., and Willis, J. (2016). The DevOps
+  Handbook: How to Create World-Class Agility, Reliability, & Security in Technology
+  Organizations. IT Revolution Press.
+[Kracht et al. 2014] Kracht, J. S., Petrovic, J. Z., and Walcott-Justice, K. R. (2014). Em-
+  pirically evaluating the quality of automatically generated and manually written test
+  suites. 14th International Conference on Quality Software, pages 256–265.
+[Liu et al. 2024] Liu, H., Liu, L., Yue, C., Wang, Y., and Deng, B. (2024). Autotestgpt: A
+  system for the automated generation of software test cases based on chatgpt. Journal
+  of Software, 19(4).
+[López et al. 2025] López, J. A. H., Chen, B., Saad, M., Sharma, T., and Varró, D. (2025).
+  On inter-dataset code duplication and data leakage in large language models. IEEE
+  Transactions on Software Engineering, 51(1).
+[Orso and Rothermel 2014] Orso, A. and Rothermel, G. (2014). Software testing: a
+  research travelogue (2000–2014). Future of Software Engineering Proceedings, pages
+  117–132.
+[Prates and Pereira 2025] Prates, L. and Pereira, R. (2025). Devsecops practices and
+  tools. International Journal of Information Security, 24(1):1–25.
+[Schäfer et al. 2024] Schäfer, M., Nadi, S., Eghbali, A., and Tip, F. (2024). An empirical
+  evaluation of using large language models for automated unit test generation. IEEE
+  Transactions on Software Engineering, 50(1):85–105.
+[Sergeyuk et al. 2025] Sergeyuk, A., Golubev, Y., Bryksin, T., and Ahmed, I. (2025).
+  Using ai-based coding assistants in practice: State of affairs, perceptions, and ways
+  forward. Information and Software Technology, 178.
+[Siddiq et al. 2024] Siddiq, M., Da Silva, J., Tanvir, R., Ulfat, N., Al Rifat, F., and Car-
+  valho, V. (2024). Using large language models to generate junit tests: An empirical
+  study. In Proceedings of the 28th International Conference on Evaluation and Assessment
+  in Software Engineering (EASE). ACM.
+

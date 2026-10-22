@@ -1,0 +1,1489 @@
+__HTTP 200__
+                                         Evaluating and Mitigating the Misguidance Effect of Buggy
+                                         Code in LLM-Generated Unit Tests
+                                         JUNDA ZHAO, University of Toronto, Canada
+                                         SHURUI ZHOU, University of Toronto, Canada
+                                         ELDAN COHEN, University of Toronto, Canada
+                                         While Large Language Models (LLMs) show great promise for automating unit test generation, recent studies
+                                         suggest that the quality of generated tests can be negatively impacted when models are prompted with buggy
+                                         code. This paper presents a new metric to quantitatively measure the “misguidance effect,” a phenomenon
+                                         where buggy code steers LLMs toward generating tests that validate its erroneous behavior rather than expose
+                                         it. Our analysis reveals that prompting LLMs with buggy code has a severe, twofold impact: it significantly
+                                         increases “misguided tests” that assert incorrect behavior while simultaneously suppressing the generation of
+                                         effective, bug-finding tests. We further corroborate this effect from a model-internal perspective, showing that
+                                         buggy code skews LLMs’ preference toward tests that assert the same erroneous behavior. To counter this, we
+                                         introduce and validate a specification-based unit test generation paradigm that replaces the code under test in
+
+
+
+
+arXiv:2607.22883v1 [cs.SE] 24 Jul 2026
+                                         the prompt with an LLM-generated specification docstring. Our results show that this paradigm effectively
+                                         reduces misguided tests while substantially increasing effective tests, improves multi-round, feedback-driven
+                                         test generation pipelines, and remains applicable to both buggy and bug-free code. Overall, these results
+                                         suggest that specification-based prompting is a promising strategy for mitigating misguidance from buggy
+                                         code in LLM-generated unit tests.
+                                         CCS Concepts: • Software and its engineering → Software testing and debugging; Automatic program-
+                                         ming; Empirical software validation; • Computing methodologies → Natural language generation.
+                                         Additional Key Words and Phrases: Unit Test Generation, Large Language Models, Specification-based Testing,
+                                         Software Testing, Bug Detection
+                                         ACM Reference Format:
+                                         Junda Zhao, Shurui Zhou, and Eldan Cohen. 2026. Evaluating and Mitigating the Misguidance Effect of Buggy
+                                         Code in LLM-Generated Unit Tests. Proc. ACM Softw. Eng. 3, ISSTA, Article ISSTA113 (October 2026), 24 pages.
+                                         https://doi.org/10.1145/3832204
+
+                                         1   Introduction
+                                         Unit testing plays a pivotal role in software quality assurance, verifying that individual components
+                                         behave as expected [61]. By detecting defects early in the development life-cycle, unit tests help
+                                         reduce maintenance costs, facilitate refactoring, and enhance overall software reliability [68].
+                                         Despite these benefits, creating manual tests remains labor-intensive and error-prone, motivating
+                                         efforts to automate the process [17].
+                                            Recent advancements in Large Language Models (LLMs) have yielded powerful models such as
+                                         GPT [47], DeepSeek [20], and Claude [7], which demonstrated impressive capabilities across a range
+
+                                         Authors’ Contact Information: Junda Zhao, University of Toronto, Department of Mechanical and Industrial Engineering,
+                                         Toronto, Canada, junda.zhao@mail.utoronto.ca; Shurui Zhou, University of Toronto, Department of Electrical and Computer
+                                         Engineering, Toronto, Canada, shurui.zhou@utoronto.ca; Eldan Cohen, University of Toronto, Department of Mechanical
+                                         and Industrial Engineering, Toronto, Canada, eldan.cohen@utoronto.ca.
+
+
+
+
+                                         This work is licensed under a Creative Commons Attribution 4.0 International License.
+                                         © 2026 Copyright held by the owner/author(s).
+                                         ACM 2994-970X/2026/10-ARTISSTA113
+                                         https://doi.org/10.1145/3832204
+
+
+                                                                     Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:2                                                                                 Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+of code-related tasks and prompted several recent studies focused on leveraging and evaluating
+their performance in automating unit test generation [15, 18, 57, 73, 77].
+   Existing studies on LLM-based unit test generation have predominantly used bug-free code as
+the primary prompt input and often relied on metrics like test correctness and coverage [15, 18, 57,
+73, 77], which do not directly reflect the bug detection effectiveness of the generated tests [32]. This
+common experimental design, however, fails to mirror real-world scenarios where the code under
+test is often buggy, which may negatively impact the effectiveness of the generated test suite. To
+date, only a small number of works consider buggy code as input: Abdullin et al. [1] report on bug
+detection effectiveness when generating tests from buggy sources; Mathews et al. [43] argue that
+buggy code can impede its own detection in automatic test generation systems; and He et al. [27]
+find that, in iterative code–test generation, tests derived from buggy code generated in previous
+iterations may reinforce existing flaws in the code. Despite the emerging awareness, these studies
+neither quantify the performance degradation compared to bug-free code input nor establish the
+underlying source of this performance degradation.
+   A recent study by Huang et al. [31] has attempted to quantitatively measure the extent to which
+buggy code misguides LLMs when generating unit tests—i.e., leads models to treat the erroneous
+behavior of buggy code as intended functionality and to generate tests that validate such behavior.
+However, their metric for quantifying this misguidance effect has a critical limitation: it labels all
+tests that pass on the buggy version as “misguided.” In practice, buggy code often behaves similarly
+to correct code on many inputs and only differs on specific inputs that trigger the bug. In fact, as
+we show empirically in Section 2.6, the majority of tests generated for buggy code that successfully
+pass on the buggy version also pass on its fixed counterpart, indicating that the metric proposed by
+Huang et al. fails to capture the existence and extent of the misguidance phenomenon accurately.
+ Bug-free method                                  Buggy method                                  Docstring generated from buggy method
+public static boolean equals(                     public static boolean equals(                 /**
+  CharSequence cs1, CharSequence cs2){              CharSequence cs1, CharSequence cs2){         * Compares two CharSequence instances for
+   if (cs1 == cs2)       return true;                if (cs1 == cs2)       return true;          * equality, handling null inputs safely.
+   if (cs1 == null                                   if (cs1 == null                             *
+       || cs2 == null)   return false;                   || cs2 == null) return false;           * This method provides a null-safe, case-
+   if (cs1 instanceof String                         return cs1.equals(cs2);                     * sensitive comparison. Two CharSequence
+       && cs2 instanceof String)                  }                                              * objects are considered equal if they re-
+     return cs1.equals(cs2);                                                                     * present the same sequence of characters.
+   return CharSequenceUtils                                                                      * The method is designed to work with any
+    .regionMatches(cs1, false, 0, cs2, 0,                                                        * CharSequence implementation, such as
+     Math.max(cs1.length(), cs2.length()));                                                      * String, StringBuilder, or StringBuffer.
+}                                                                                                */
+
+ Test generated from bug-free method              Misguided Test                                Test generated from only the docstring
+@Test                                             @Test                                         @Test
+public void testEquals_sb() {                     public void testEquals_sb() {                 public void testEquals_sb() {
+  assertTrue(StringUtils.equals("abc",              assertFalse(StringUtils.equals("abc",         assertTrue(StringUtils.equals("abc",
+   new StringBuilder("abc")));                       new StringBuilder("abc")));                   new StringBuilder("abc")));
+}               test asserts correct behavior ✓   }             test asserts buggy behavior ✗   }                 test asserts correct behavior ✓
+
+
+Fig. 1. Example of a “misguided test” generated from buggy code that asserts its buggy behavior, and how the
+docstring generated from the buggy code can help correct this behavior and produce a test that detects the
+bug. The top row shows the main input to the LLM, and the bottom row shows the corresponding generated
+tests. Highlighted text marks the key differences between the code inputs and the generated tests.
+   To address these shortcomings and accurately quantify the misguidance effect, we conduct a
+large-scale empirical study that leverages a new metric explicitly measuring “misguided tests,”
+defined as tests that pass on the buggy version but fail on its bug-free counterpart. Figure 1
+presents a motivating example of misguided tests using StringUtils.equals from bug Lang-14 in
+Defects4J. This method is intended to compare the contents of two CharSequence objects, where
+CharSequence is a Java interface implemented by String, StringBuilder, and StringBuffer;
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests                 ISSTA113:3
+
+
+thus "abc" and new StringBuilder("abc") should be considered equal despite their different
+concrete types. The bug-free implementation handles this case using regionMatches, whereas the
+buggy implementation directly calls cs1.equals(cs2). Since String.equals returns true only
+when its argument is also a String with the same contents, it incorrectly returns false when
+comparing a String with a StringBuilder. When prompted with this buggy implementation, the
+LLM treats the faulty behavior as intended and generates a test that asserts this faulty behavior.
+   To compute the new metric, we leverage a parallel dataset of real-world buggy code snippets
+and their fixed versions, allowing us to measure how test results differ for buggy and bug-free code
+with the same intended functionality. By generating and executing tests against both versions, we
+reveal a critical twofold impact: relative to the fixed counterpart, prompting LLMs with buggy code
+significantly increases “misguided tests” while suppressing “effective tests”—tests that successfully
+identify the bug. Furthermore, our correlation analysis reveals a strong positive correlation between
+the reduction in misguided tests and the increase in effective tests, suggesting that mitigating the
+misguidance effect may lead to more effective test suites. To validate the misguidance effect from a
+model-internal perspective, we also analyze the sequence score, a common metric for measuring an
+LLM’s preference among candidate texts [11, 28, 45], and demonstrate that buggy input code skews
+this preference toward tests asserting its erroneous behavior. We further show that this detrimental
+effect extends to more advanced techniques, degrading the multi-round, feedback-driven prompting
+pipelines common in recent test generation work [15, 33, 77].
+   Based on our findings, we contend that the prevailing paradigm of prompting an LLM with the
+code under test has a fundamental limitation: when the code is buggy, its misguidance effect can
+steer the model toward generating tests that assert the very behaviors they are meant to expose. To
+mitigate this effect, we draw on principles from specification-based testing [24] (black-box testing),
+widely adopted in Test-Driven Development (TDD) [10], which derives tests from intended behavior
+rather than the implementation. We propose a two-step workflow: (1) use the LLM to derive a
+docstring that captures intended functionality while omitting implementation details; and (2) replace
+the source code in the prompt with this docstring, removing the buggy implementation as a source of
+misguidance. This design choice is crucial: for buggy inputs, we find that the code must be removed
+entirely, rather than merely supplemented, to meaningfully mitigate misguidance, departing from
+prior studies that use LLM-generated documentation only as additional context alongside the
+code [77]. Figure 1 also illustrates this approach on the same StringUtils.equals example:
+when the LLM-generated docstring replaces the buggy code in the test-generation prompt, the
+generated test correctly asserts that "abc" and new StringBuilder("abc") should be considered
+equal, thereby exposing the bug. Notably, even a simple specification-construction prompt yields
+markedly more effective test suites, and we further strengthen this baseline with an analysis-driven
+intent-derivation step that produces more accurate specifications, which further reduces misguided
+tests and increases effective tests without substantially increasing tests that assert hallucinated
+behavior present in neither the buggy nor the fixed code. Our specification-based approach also
+enhances the performance of the interactive, multi-round test-generation pipelines adopted in recent
+work [15, 33, 77]. We also manually inspect the quality of the generated docstrings and quantify its
+effect on the resulting tests, showing that our approach effectively blocks bug propagation into
+generated docstrings and recovers the correct behavior for a considerable fraction of buggy focal
+methods. The former results in significantly fewer misguided test suites, while the latter contributes
+to substantially more detected bugs, supporting our design intuition and underscoring the need for
+methods that can reconstruct more accurate specifications from buggy code. Overall, these results
+confirm that our specification-based approach is effective at mitigating the misguidance effect.
+   Finally, since it is often unknown whether the code under test is indeed buggy, we demonstrate
+that our approach can be applied to both buggy and bug-free code. On bug-free code, it produces
+
+                           Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:4                                                                  Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+comparable levels of compilation failures, false-alarm tests (tests that fail on correct code), and test
+coverage relative to the baseline of using the source code as input, creating no additional burden
+for developers while keeping the generated tests applicable to broader uses like regression testing.
+   In summary, this paper makes the following contributions:
+• We conduct a large-scale quantitative study that leverages a new metric to empirically validate
+   the Misguidance Effect of buggy code and confirms this effect from a model-internal perspective.
+   Our correlation analysis further reveals a strong positive correlation between mitigating the
+   misguidance effect and improving the effectiveness of the generated unit tests.
+• We introduce and evaluate a specification-based test generation paradigm that uses an LLM-
+   generated behavioral specification as the core of the prompt, rather than the buggy code. We show
+   that this paradigm significantly reduces misguided tests while improving bug-detection rates.
+   Furthermore, we show that it enhances the efficacy of an interactive, multi-round prompting
+   pipeline and analyze how the quality of the generated specification affects the final test suite.
+• We demonstrate the robustness of our method for both buggy and bug-free code. When applied
+   to bug-free code, it yields comparable levels of compilation failures, false-alarm tests, and test
+   coverage to the baseline. This ensures that our method enhances bug detection without adding
+   extra burden to developers or compromising its utility for broader uses like regression testing.
+
+2     Study Design
+2.1    Research Questions
+For our study, we investigated the following research questions (RQs) to identify, analyze, and
+mitigate the misguidance effect and its negative impact on bug detection.
+      • RQ1: How does the misguidance effect of buggy code affect the behavior of LLM-generated
+        unit tests?
+      • RQ2: How does our proposed specification-based unit test generation pipeline help mitigate
+        the misguidance effect?
+      • RQ3: Does our proposed specification-based unit test generation pipeline impact unit tests
+        generated from bug-free code?
+RQ1 investigates the existence and severity of the misguidance effect. We conduct a large-scale
+evaluation to provide empirical evidence of this phenomenon, verify its detrimental impact on
+the bug detection capability of the generated tests, and confirm this effect from a model-internal
+perspective. Furthermore, we analyze the correlation between mitigating this effect and improving
+bug detection effectiveness.
+RQ2 investigates the efficacy of our specification-based pipeline on buggy code. We first evaluate
+its ability to mitigate misguidance and improve bug detection, then examine whether its gains scale
+with specification quality and persist within multi-round, feedback-driven prompting pipelines.
+Finally, we manually inspect whether bugs are inherited by the LLM-generated specifications and
+how this affects the resulting test suites.
+RQ3 evaluates the impact of our specification-based pipeline on bug-free code to confirm its
+applicability to both buggy and bug-free code, ensuring it does not impose unnecessary burdens
+on developers or compromise its utility for broader applications like regression testing.
+
+2.2    Benchmark
+In this study, we employ Defects4J [34], a widely used dataset containing real bugs from open-source
+Java projects (e.g., JFreeChart, Commons Lang). Version 3.0 of the dataset includes 854 defects
+(bugs) across 17 projects. Each defect comes with both a buggy and a fixed version of the code and
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests                 ISSTA113:5
+
+
+may contain one or more buggy methods, which we refer to as focal methods. Human-written
+tests, including those that detect the buggy focal methods, are also provided.
+   Following prior work on evaluating LLM-based unit test generation [57, 73, 77], we focus test
+generation and evaluation on focal methods. To select focal methods, we follow the general practice
+of prior studies [3, 66, 73] and further refine the selection based on the following criteria: (1) We
+include all non-private methods (public, protected, and default) in our analysis, as their accessibility
+from the test package makes them directly testable. (2) The focal method must exist in both the
+buggy and fixed versions to enable meaningful performance comparisons. Focal methods that are
+removed or newly introduced by the patch are excluded. (3) We only retain focal methods that
+trigger at least one existing human-written test in Defects4J with its buggy version, ensuring that
+the corresponding patch is for bug fixes rather than stylistic or performance optimizations. In total,
+our curated benchmark comprises 318 focal methods covering 233 defects across all 17 projects.
+
+2.3   Test Generation Workflow
+To support a realistic and generalizable evaluation, we adopt a test-generation workflow that closely
+follows the end-to-end pipeline for evaluating LLM-generated unit tests proposed by Yang et al. [73],
+spanning prompt construction and unit test extraction. Following their findings on effective prompt
+context, we augment the focal method with additional, readily obtainable surrounding code features,
+including the method signature and parameters, the enclosing class constructor, declared fields, and
+other methods in the same class. Furthermore, we include constructors of user-defined classes that
+appear as parameter types or return types, giving the LLM the information needed to instantiate
+these object dependencies and generate more reliable tests. Depending on the experimental setting,
+the focal method body and/or a docstring generated from the focal method is used as the core
+behavioral input to the prompt. We wrap this context with a system instruction that positions the
+LLM as a professional Java developer and append an explicit request to generate unit tests for the
+provided code. We include a summary of the test generation prompt in Figure 2.
+You are a professional who writes Java test methods . Please help me write some unit tests in Java
+    language , details are listed below :
+```
+< Code under test and / or LLM - generated docstring , and other focal method - related contexts >
+```
+Please write some unit tests in Java 11 and Junit 4 with maximizing both branch and line coverage . Please
+    ensure that the output format is Markdown , and no explanations needed .
+
+
+                         Fig. 2. The prompt template used for generating unit tests.
+   We adopt Yang et al.’s prompt configuration for three reasons. First, they evaluate a broad set
+of open- and closed-source models, supporting the generality of the prompt design. Second, their
+ablation study systematically analyzes the impact of additional code context and motivates the
+specific context features we include. Third, the required context can be extracted solely from the
+code under test without manual inspection, enabling a fully automated prompt-construction and
+test-generation pipeline that aligns with the practical goal of reducing developer burden.
+   To extract unit tests from LLM outputs, we use an abstract syntax tree (AST) parser (Tree-
+sitter [12]) to identify generated test cases and related artifacts such as imports and helper functions.
+We then compose the final test files by combining the extracted content with project-specific
+dependencies and a curated set of common dependencies for the JDK (e.g., java.util) and JUnit
+(e.g., org.junit.Assert), to prevent compilation failures from missing imports.
+
+2.4   Models
+To ensure a comprehensive analysis, we selected a diverse set of 11 state-of-the-art (SOTA) Large
+Language Models from six leading developers, including both “base” and “reasoning” models where
+
+                           Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:6                                                                                      Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+available. Reasoning models are optimized for multi-step reasoning (often via an explicit chain-of-
+thought) to improve performance on tasks requiring complex logical deduction, while base models
+generate output directly. For hybrid models capable of operating in either mode, such as Claude 4
+Sonnet [9], we evaluated their performance with and without reasoning enabled. A full list of the
+evaluated models is presented in Table 1.
+                           Table 1. LLMs evaluated for unit test generation in our study.
+
+                               Developer         Model Name                     Type             Open Sourced
+                                                 Gemini 2.5 Pro [26]            Reasoning                ✗
+                               Google
+                                                 Gemini 2.5 Flash [25]          Hybrid                   ✗
+                               Anthropic         Claude 4 Sonnet [9]            Hybrid                   ✗
+                                                 Grok-4 [72]                    Reasoning                ✗
+                               xAI
+                                                 Grok-3 [71]                    Base                     ✗
+                                                 GPT-4.1 [48]                   Base                     ✗
+                               OpenAI
+                                                 GPT-O4-mini [50]               Reasoning                ✗
+                                                 DeepSeek-V3 [20]               Base                     ✓
+                               DeepSeek
+                                                 DeepSeek-R1 [19]               Reasoning                ✓
+                                                 Qwen3-Coder-Plus [53]          Base                     ✓
+                               Alibaba
+                                                 Qwen3-Plus [54]                Reasoning                ✓
+
+
+2.5   Mitigation Methodology and Baselines
+To counteract the misguidance effect caused by buggy code, we propose a specification-based testing
+approach. Prior studies [31, 39, 57] have explored using high-quality, human-written documentation
+
+ Prompt component            Prompt text
+
+ Shared Prompt Main Body    You are a professional Java developer. Please help identify the intention and functionality of the method detailed below:
+ (S.P.M.B.)                 <code under test and related information>
+
+ Base Docstring Prompt       Please provide a formal docstring that identifies the functionality and intention of the given method. Please avoid directly
+ Postfix                     quoting from the focal method code, as it might be buggy, and output only the docstring.
+ (B.D.P.P.)
+
+ Advanced Analysis           Please provide a formal docstring that identifies the functionality and intended specification of the given method. To
+ Prompt                      do this, first perform a critical analysis from the perspective of an expert software engineer auditing for quality and
+ (A.A.P.)                    correctness. Your analysis must identify two types of potential issues:
+                             1. Logical Mistakes: Scrutinize the algorithm’s logic. Based on the method’s name and context, does its implementation
+                             correctly achieve its apparent goal, or are there logical flaws that would produce an incorrect result even on a “happy
+                             path”?
+                             2. Robustness Omissions: Check for missing but necessary steps that production-quality code would include. This
+                             includes, but is not limited to, input validation, e.g., null checks and boundary conditions, proper error handling, and
+                             necessary data sanitization or escaping.
+
+ Output Reqirement for       Make sure to clearly write out your analysis. Based on this two-part analysis, the docstring should describe the specifica-
+ Reasoning Models            tion for a correct and robust version of the method, capturing the developer’s likely intent. Please avoid directly quoting
+ (O.R.R.M.)                  from the focal method code, as it might be buggy. Output the docstring in a fenced Java Markdown block, between
+                             ```java and ```, with the docstring itself wrapped between /** and */.
+
+ Output Reqirement for       Your output should come in three parts.
+ Base Models                 Part 1: Critical Analysis. Clearly state the logical mistakes and robustness omissions found. If no issues are found,
+ (O.R.B.M.)                  explicitly state: “No issues found.”
+                             Part 2: Fixes Required. List all fixes required to correct the identified logical errors and robustness omissions. If no fixes
+                             are required, state: “No fixes required.”
+                             Part 3: Final Specification Docstring. Based on Part 2, write a formal docstring describing the corrected behavior of the
+                             method with all proposed fixes applied. Please avoid directly quoting from the focal method code, as it might be buggy.
+                             Output the docstring in a fenced Java Markdown block, between ```java and ```, with the docstring itself wrapped
+                             between /** and */.
+
+ Prompt Assembly             Base Docstring Prompt = S.P.M.B. + B.D.P.P.
+                            Advanced Prompt for Reasoning Models = S.P.M.B. + A.A.P. + O.R.R.M.
+                            Advanced Prompt for Base Models = S.P.M.B. + A.A.P. + O.R.B.M.
+
+
+Fig. 3. Merged prompt templates for generating specification docstrings from code under test. Each row
+shows a reusable prompt component; the final row specifies how the three prompt variants are assembled.
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests                 ISSTA113:7
+
+
+to improve LLM-generated tests, but such documentation is often unavailable in practice. Instead,
+we use the LLM to recover the intended behavior of the code under test and focus test generation
+on it rather than on the potentially erroneous implementation details.
+   Our approach consists of a two-step process. First, we prompt the LLM to construct a behavioral
+specification of the code in the form of a docstring. Second, we use this specification docstring as the
+only behavioral input for the test-generation model, discarding the original buggy implementation.
+By compelling the model to operate on the specification rather than the buggy code, we aim to
+reduce its bias toward implementation flaws, thereby reducing the number of misguided tests
+while increasing the number of effective bug-finding tests. Compared with direct code-based test
+generation, the main additional overhead of our approach is one extra LLM call for docstring
+generation and the associated input/output token cost. This represents a key departure from prior
+work, which either uses buggy code as the sole input to the LLM [15, 36, 57] or uses LLM-generated
+documentation only as supplementary context alongside the buggy code [77]. We compare against
+these settings as baselines, as well as a baseline that removes both the code under test and the
+generated docstring, to assess whether both components of our design are necessary: (1) fully
+removing the code under test, and (2) replacing it with an LLM-generated specification. We present
+the prompt for the base version of our approach in Figure 3, labeled Base Docstring Prompt.
+   To further strengthen our approach, we introduce an advanced prompting strategy (the Ad-
+vanced Docstring Prompt) that leverages modern LLMs’ code-comprehension capabilities by
+requiring the model to perform a two-part analysis before generating the docstring: (1) identify
+logical errors where the implementation contradicts the intent inferred from the method name
+and context, and (2) detect robustness gaps, such as missing null checks, inadequate sanitization,
+or unhandled edge cases. We present the prompt that enforces this analysis in the Advanced
+Analysis Prompt row of Figure 3. This strategy is implemented differently for reasoning and base
+models to maximize its effectiveness. For reasoning models, asking the model to analyze these
+issues is sufficient to elicit the necessary reasoning process. For base models, however, the same
+instruction does not reliably elicit the required reasoning steps. We therefore require the model
+to explicitly report the identified bugs and the fixes needed to address them, and only then write
+the docstring under the assumption that those fixes have been applied. We evaluate this advanced
+prompt against two baselines: (1) the Base Docstring Prompt, to measure the benefit of advanced
+analysis over the base version of our approach, and (2) direct code-based test generation with the
+same advanced-analysis instruction. This second baseline generates tests in a single step without
+removing the buggy implementation or replacing it with an LLM-generated docstring. This comparison
+tests whether advanced analysis alone can mitigate the misguidance effect when the buggy code
+under test remains visible, or whether it must be combined with our specification-based approach
+to generate a docstring from the code under test that replaces the code during test generation.
+   Finally, we manually inspect all 636 docstrings generated with the Advanced Docstring Prompt
+by the two models that achieved the largest and smallest reductions in misguided test suites after
+applying our approach. We use this inspection to analyze how docstring quality affects downstream
+test generation. We detail the inspected docstring properties in the next section.
+
+2.6   Metrics and Statistics
+To address our research questions, we adopt several key metrics derived from executing each
+generated test against both the buggy program and its corresponding fixed version. The tests are
+classified into four categories based on the outcomes of this dual execution, as detailed in Table 2.
+   Throughout our evaluation, we treat the fixed Defects4J version as the gold standard for intended
+program behavior and define all test labels accordingly. Under this definition, any implementation
+that produces externally observable outputs that differ from the fixed version for the same inputs is
+
+                           Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:8                                                                              Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+Table 2. Test categories based on outcomes across two code versions. “Positive” indicates a flagged bug, while
+“Negative” means no bug was flagged.
+
+                                        Categories                       Fixed      Buggy
+                                        True Negative                    Passed      Passed
+                                        True Positive (Effective)        Passed      Failed
+                                        False Negative (Misguided)       Failed      Passed
+                                        False Positive                   Failed      Failed
+
+
+Table 3. Tests that pass on the buggy version, with the counts (#) and ratios (%) of True Negative (pass on
+both) and False Negative (misguided) tests among them.
+
+                                                                  True Negative Tests         False Negative Tests
+                                            Passed on Buggy
+                Model
+                                                                     #              %            #        %
+                Gemini 2.5 Pro                     2183           2010            92.08%      173       7.92%
+                Gemini 2.5 Flash                   1782           1668            93.60%      114       6.40%
+                Gemini 2.5 Flash (Reason)          2066           1911            92.50%      155       7.50%
+                Claude 4 Sonnet                    3034           2885            95.09%      149       4.91%
+                Claude 4 Sonnet (Reason)           2932           2745            93.62%      187       6.38%
+                Grok-4                             2482           2303            92.79%      179       7.21%
+                Grok-3                             1468           1397            95.16%      71        4.84%
+                GPT-4.1                            1806           1714            94.91%      92        5.09%
+                GPT-O4-mini                        1672           1542            92.22%      130       7.78%
+                DeepSeek-V3                        1750           1674            95.66%      76        4.34%
+                DeepSeek-R1                        2206           2061            93.43%      145       6.57%
+                Qwen3-Coder-Plus                   2053           1973            96.10%      80        3.90%
+                Qwen3-Plus                         2914           2675            91.80%      239       8.20%
+                Average                            2181           2043            93.77%      138       6.23%
+
+
+not considered bug-free in our evaluation. This benchmark-specific oracle allows us to consistently
+label misguided, effective, and false-alarm tests across all focal methods.
+   For RQ1, to measure the misguidance effect and its impact on bug detection effectiveness, we
+compare the number and proportion of two types of tests generated from buggy versus fixed code:
+    • Misguided tests (False Negatives): tests that pass on the buggy code and fail on its corre-
+      sponding fixed version, which serve to validate and quantify the misguidance effect.
+    • Effective tests (True Positives): tests that fail on the buggy code and pass on its corresponding
+      fixed version, which directly measure the impact on bug detection capability.
+   Our metric for quantifying the misguidance effect differs substantially from Huang et al.’s [31].
+We count as “misguided” only False Negatives—i.e., tests that pass on the buggy version but fail on
+the fixed version—because only these tests explicitly assert the buggy behavior. In contrast, Huang
+et al. treat all tests that pass on the buggy version (True Negatives + False Negatives) as evidence
+of misguidance; however, this aggregated count can be driven primarily by True Negatives—valid
+tests that pass on both versions. To illustrate this limitation, we compute and report in Table 3 the
+counts and ratios of True Negatives (pass on both) and False Negatives (pass only on buggy). We
+find that, among tests that pass on buggy code, the vast majority—over 90% on average—are, in
+fact, True Negatives. Consequently, Huang et al.’s metric based on the aggregate count does not
+accurately capture the existence and extent of the misguidance effect of buggy code.
+   To further validate these behavioral findings of LLM-generated tests from a model-internal
+perspective, we analyze the sequence score [11, 28, 45] that an LLM assigns to a given test (misguided
+or effective) when conditioned on buggy or fixed source code. This score is formally defined as:
+                                                          |𝑇 |
+                                                    1 ∑︁
+                                     𝑆 (𝑇 , 𝐶) =            log 𝑃 (𝑡𝑖 |𝐶, 𝑡 1, . . . , 𝑡𝑖 −1 )                               (1)
+                                                   |𝑇 | 𝑖=1
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests                                   ISSTA113:9
+
+
+In this equation, 𝑆 (𝑇 , 𝐶) represents the normalized score of a generated test sequence 𝑇 given input
+code context 𝐶. This score is calculated as the average log probability per token, which reflects the
+model’s confidence in generating that specific sequence. Normalizing by the sequence length |𝑇 |
+ensures a fair comparison between tests with different token sequence lengths [11].
+   For RQ2, we measure changes in both misguided and effective tests to confirm that our approach
+mitigates misguidance and improves bug detection. To ensure gains are not concentrated in a few
+focal methods, we also analyze results at the method level, reporting the number of unique methods
+where the LLM is misguided (at least one misguided test) and the number of unique buggy focal
+methods detected (at least one effective test). This verifies effectiveness across the dataset at the
+focal-method granularity. For the advanced analysis approach, because the model may hallucinate
+a non-existent “false-intent” or incorrect fix, we also report tests that assert hallucinated behavior
+present in neither the buggy nor the fixed version, i.e., False Positive tests. We further conduct a
+manual inspection to annotate whether each LLM-generated docstring (1) preserves the original
+bug from the buggy focal method, (2) describes the corrected behavior needed to fix the bug.
+   For RQ3, we measure test correctness metrics [57, 73, 77], including the rates of compilation
+failures and false-alarm tests. Figure 4 presents an example of a false-alarm test, i.e., a test that fails
+on bug-free code by asserting hallucinated behavior not present in that code. We also measure test
+coverage metrics [32, 55, 70], including line and branch coverage for the bug-free code.
+ Bug-free focal method                                                    Generated docstring with hallucinated behavior
+public String generateToolTipFragment(String toolTipText) {               /**
+  return " title=\"" + ImageMapUtilities.htmlEscape(toolTipText)           * Generates a sanitized HTML attribute fragment...
+     + "\" alt=\"\"";                                                      * <ul>
+}                                                                          *   <li>Gracefully handle null... treating null as an empty
+                                                                           *       string rather than producing a literal "null" string
+                                                                           *       or throwing an exception.</li>
+ Test asserting the hallucinated behavior
+                                                                           *   <li>Safely escape all special characters...</li>
+@Test                                                                      * </ul>
+public void testGenerateToolTipFragment_Null() {                           *
+  String result = gen.generateToolTipFragment(null);                       * @return a valid HTML attribute fragment containing the
+  Assert.assertEquals("", result);                                         *         escaped title, or an empty string if input is null
+}                                                                          */
+
+
+Fig. 4. Example of a false-alarm test generated from a hallucinated docstring. The highlighted lines mark the
+hallucinated behavior in the generated docstring and the corresponding erroneous assertion in the test.
+
+3       RQ1: Misguidance Effect of Buggy Code
+In this section, we evaluate the misguidance effect of buggy code and its impact on the bug detection
+effectiveness of generated tests from both test performance and model-internal perspectives. Our
+evaluation workflow is presented in Figure 5.
+                                                                                   Execution
+                     Test Prompt                                                                     RQ1: Misguidance      RQ1: Sequence
+    Filtered Focal                          LLMs           Compilation           on Buggy and
+                     Organization                                                                     Effect Statistics       Scores
+       Methods                                                                    Fixed Code
+
+
+
+
+       Code                                                                                          Buggy/Fixed Code         Open-
+                                          Generated        Uncompilable        Execution Results               +
+      Feature        Test Prompt                                                                                              Source
+                                            Tests           Test Filter           (Pass/Fail)        Effective/Misguided
+      Extractor                                                                                              Tests             LLMs
+
+
+
+
+                     Fig. 5. Workflow for evaluation of the misguidance effect from buggy code.
+
+3.1        The Misguidance Effect on Test Generation
+Table 4 compares tests generated from buggy versus fixed code. When prompted with buggy code,
+models produce substantially more misguided tests, which incorrectly validate buggy behavior by
+
+                                    Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:10                                                                                                 Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+passing on the buggy code but failing on the fixed version. On average, the models generate 137.69
+misguided tests (3.84%). In contrast, when given the corresponding fixed code, the average drops
+to 16.46 (0.46%). This gap provides quantitative evidence of the existence and magnitude of the
+misguidance effect, suggesting that modern LLMs can misinterpret erroneous logic as intended
+functionality.
+Table 4. Total tests generated per model, with the number (#) and percentage (%) of misguided and effective
+tests for buggy and fixed code inputs, grouped by base and reasoning model types.
+
+                                                               Buggy Input                                                Fixed Input
+              Model                                          Misguided              Effective                        Misguided             Effective
+                                            Total                                                     Total
+                                                             #            %         #           %                    #         %          #            %
+
+              Gemini 2.5 Flash              3539             114         3.22      140      3.96       3616          11       0.30       279        7.72
+              Claude 4 Sonnet               4202             149         3.55       88      2.09       4250          15       0.35       361        8.49
+              Grok-3                        2543              71         2.79       93      3.66       2581          17       0.66       199        7.71
+              GPT-4.1                       2841              92         3.24       86      3.03       2905          11       0.38       236        8.12
+              DeepSeek-V3                   3002              76         2.53      113      3.76       3008          19       0.63       241        8.01
+              Qwen3-Coder-Plus              3455              80         2.32      157      4.54       3353          10       0.30       259        7.72
+
+              Base Average                 3263.67       97.00           2.94     112.83    3.51     3285.50        13.83     0.44      262.50      7.96
+
+              Gemini 2.5 Pro                3284             173         5.27       98      2.98       3286          17       0.52       354       10.77
+              Gemini 2.5 Flash (Reason)     3957             155         3.92       99      2.50       3956           7       0.18       293       7.41
+              Claude 4 Sonnet (Reason)      4515             187         4.14       88      1.95       4553          27       0.59       372       8.17
+              Grok-4                        3923             179         4.56      145      3.70       3985          19       0.48       398       9.99
+              GPT-O4-mini                   2500             130         5.20       36      1.44       2606           7       0.27       248       9.52
+              DeepSeek-R1                   3413             145         4.25       97      2.84       3622          21       0.58       324       8.95
+              Qwen3-Plus                    4857             239         4.92      114      2.35       4808          33       0.69       389       8.09
+
+              Reasoning Average            3778.43       172.57          4.61     96.71     2.54     3830.86        18.71     0.47      339.71      8.99
+
+              Total Average                3540.85       137.69          3.84     104.15    2.98     3579.15        16.46     0.46      304.08      8.51
+
+
+
+   Beyond increasing misguided tests, the misguidance effect also directly undermines bug detection.
+For effective tests, which fail on the buggy code and pass on the fixed version, models produce
+only 104.15 on average (2.98%) when prompted with buggy code. When given the corresponding
+fixed code, this rises to 304.08 (8.51%), nearly a threefold increase. These results indicate that
+buggy input code not only leads to more incorrect tests, but also suppresses the generation of
+useful, bug-finding ones. We also observe that reasoning models tend to generate more misguided
+tests from buggy input and more effective tests from fixed input. This finding is supported by a
+correlation analysis. We find a strong positive correlation between the number of misguided tests
+
+Table 5. Average sequence scores for generated tests under varied input conditions. Rows indicate the test-
+generating model, and columns indicate the evaluator model. To prevent self-evaluation bias, scores where
+the generator and evaluator are from the same developer have been excluded. M/E: misguided/effective tests.
+
+                                                    DeepSeek-V3                         Qwen3-Coder-Plus                     GPT-OSS-120B
+               Model                       Buggy Input Fixed Input Buggy Input Fixed Input Buggy Input Fixed Input
+                                            M      E    M      E    M      E    M      E    M      E    M      E
+
+               Gemini 2.5 Pro              -1.28     -1.36       -1.35    -1.29   -1.64    -1.77    -1.76   -1.68    -2.21    -2.42     -2.30    -2.35
+               Gemini 2.5 Flash            -1.12     -1.23       -1.23    -1.17   -1.39    -1.61    -1.55   -1.52    -2.00    -2.27     -2.14    -2.19
+               Gemini 2.5 Flash (Reason)   -1.24     -1.38       -1.31    -1.32   -1.61    -1.79    -1.73   -1.71    -2.14    -2.38     -2.23    -2.31
+               Claude 4 Sonnet             -1.07     -1.22       -1.20    -1.14   -1.39    -1.65    -1.56   -1.51    -2.16    -2.44     -2.33    -2.36
+               Claude 4 Sonnet (Reason)    -1.10     -1.26       -1.21    -1.19   -1.44    -1.69    -1.62   -1.58    -2.17    -2.46     -2.34    -2.39
+               Grok-4                      -1.38     -1.37       -1.45    -1.29   -1.85    -1.85    -1.99   -1.71    -2.68    -2.58     -2.80    -2.50
+               Grok-3                      -1.23     -1.29       -1.35    -1.23   -1.58    -1.73    -1.75   -1.61    -2.44    -2.51     -2.59    -2.43
+               GPT-4.1                     -1.16     -1.31       -1.28    -1.23   -1.57    -1.73    -1.78   -1.62      -        -         -        -
+               GPT-O4-mini                 -1.40     -1.39       -1.48    -1.32   -1.85    -1.84    -1.99   -1.73      -        -         -        -
+               DeepSeek-V3                   -         -           -        -     -1.49    -1.70    -1.72   -1.57    -2.28    -2.61     -2.46    -2.53
+               DeepSeek-R1                   -         -           -        -     -1.70    -1.87    -1.84   -1.75    -2.49    -2.70     -2.60    -2.61
+               Qwen3-Coder-Plus            -1.12     -1.23       -1.27    -1.17     -        -        -       -      -2.27    -2.52     -2.45    -2.44
+               Qwen3-Plus                  -1.21     -1.29       -1.28    -1.22     -        -        -       -      -2.40    -2.56     -2.52    -2.47
+
+               Average                     -1.21     -1.30       -1.31    -1.23   -1.59    -1.75    -1.75   -1.64    -2.29    -2.50     -2.43    -2.42
+
+
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests               ISSTA113:11
+
+
+from buggy input and the number of effective tests from fixed input (𝑟 = 0.90, 𝑝 < 0.01), as well
+as a strong correlation between their respective ratios (𝑟 = 0.72, 𝑝 < 0.01). These correlations
+suggest that the models most capable of generating correct tests are also the ones most susceptible
+to being misguided by buggy code. Furthermore, we observe a strong positive correlation between
+the reduction in misguided tests and the increase in effective tests when switching from buggy to
+fixed input (𝑟 = 0.90, 𝑝 < 0.01 for numbers; 𝑟 = 0.88, 𝑝 < 0.01 for ratios). This tight linkage suggests
+that mitigating the misguidance effect may be a promising direction for improving the bug-finding
+efficacy of LLM-generated test suites.
+   In real-world scenarios, the fixed version of a buggy program is unavailable for test generation.
+Therefore, the superior performance of tests generated from fixed code serves not as a practical
+baseline, but as an oracle to demonstrate the performance degradation caused by the buggy code
+itself. Our analysis shows that the buggy code is a primary obstacle to effective test generation,
+a factor that must be considered in realistic evaluations. A critical implication of these findings
+is that prior work [18, 64, 73] that evaluated LLM-based test generation using only bug-free code
+likely overestimated the true bug detection capabilities of these models.
+
+3.2   Sequence Score
+To provide model-internal evidence for the misguidance effect, we analyze the sequence score
+an LLM assigns to each generated test. This score reveals the model’s probabilistic preference
+[11, 28, 45] for a given output: if a bug in the input skews the model’s generation preferences,
+misguided tests should receive higher sequence scores when conditioned on buggy code, while
+effective tests should score higher when conditioned on fixed code.
+   To conduct this experiment, we used three SOTA open-source models as evaluators: DeepSeek-V3
+[20], Qwen3-Coder-Plus [53], and GPT-OSS-120B [49], as sequence scores are not accessible from
+the API of proprietary models. To ensure an unbiased evaluation, we employed a cross-scoring
+methodology where each model only scored tests generated by models from different developers.
+This prevents a model from favoring its own generative style, which could be influenced by shared
+training data or a similar training process.
+   The results in Table 5 confirm that buggy source code skews the model’s generation preferences
+toward misguided tests that assert buggy behavior, as evidenced by two consistent trends. First,
+misguided tests receive higher average sequence scores when conditioned on buggy code than on
+fixed code; for example, with DeepSeek-V3 as evaluator, the average drops from −1.21 to −1.31 when
+switching from buggy to fixed input, with similar drops for Qwen3-Coder-Plus (−1.59 to −1.75)
+and GPT-OSS-120B (−2.29 to −2.43). Conversely, effective tests score higher when conditioned on
+fixed code; with DeepSeek-V3, the average rises from −1.30 to −1.23, and the same pattern holds
+for Qwen3-Coder-Plus (−1.75 to −1.64) and GPT-OSS-120B (−2.50 to −2.42). Together, these trends
+indicate that the behavioral differences observed earlier stem from the model being internally
+misguided by the buggy implementation.
+
+                                                  RQ1 Answer
+ Buggy code has a severe, twofold negative impact on LLM-generated tests. It misleads models into
+ producing misguided tests that validate the bug and simultaneously suppresses effective tests that
+ would detect it. We further corroborate this with model-internal evidence using sequence scores,
+ showing that the model’s preference is skewed toward tests that assert the buggy behavior in the
+ prompt. Moreover, our correlation analysis in Section 3.1 suggests that models with stronger code
+ comprehension capabilities can be more susceptible to misguidance, and that reductions in misguided
+ tests are correlated with increases in effective tests.
+
+
+                           Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:12                                                                                                              Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+4     RQ2: Mitigating the Misguidance Effect with a Specification-Based Method
+In RQ2, we evaluate our proposed method for mitigating the misguidance effect from buggy code.
+Table 6. Misguided (M) and effective (E) test comparison for four inputs: only an LLM-generated docstring
+from buggy code, only buggy code, neither code nor docstring, and the LLM-generated docstring with buggy
+code. Results shown as counts (#) and percentages (%).
+
+                                          Only Doc. (Ours)                         Only Code                          No Code or Doc.                           Doc. W/ Code
+        Model                              M                E                  M                     E                 M                   E                    M                 E
+                                      #         %     #          %       #          %           #            %    #         %          #        %         #             %   #          %
+
+        Gemini 2.5 Pro               110       2.77   198       4.98    173        5.27         98       2.98     49       1.33     124        3.37       165       4.89     94       2.78
+        Gemini 2.5 Flash             105       2.39   202       4.60    114        3.22        140       3.96     45       1.02      82        1.86       117       3.23    148       4.08
+        Gemini 2.5 Flash (Reason)    126       2.44   179       3.47    155        3.92         99       2.50     75       1.42      89        1.68       209       4.92     84       1.98
+        Claude 4 Sonnet              147       2.85   249       4.82    149        3.55         88       2.09     58       1.39     107        2.56       176       3.74    148       3.14
+        Claude 4 Sonnet (Reason)     165       2.91   257       4.53    187        4.14         88       1.95     70       1.56     112        2.49       196       3.90    143       2.84
+        Grok-4                       140       3.13   239       5.35    179        4.56        145       3.70    106       2.32     122        2.67       176       4.23    157       3.77
+        Grok-3                        55       2.02   119       4.37     71        2.79         93       3.66     41       1.60      93        3.64        85       3.25     89       3.40
+        GPT-4.1                       84       2.51   160       4.79     92        3.24         86       3.03     37       1.22     104        3.42       115       3.87     98       3.30
+        GPT-O4-mini                   85       3.00   112       3.95    130        5.20         36       1.44     44       1.77      91        3.65       134       5.04     76       2.86
+        DeepSeek-V3                   68       2.02   155       4.61     76        2.53        113       3.76     75       2.50      77        2.57       114       2.33    149       3.04
+        DeepSeek-R1                  125       3.29   139       3.66    145        4.25         97       2.84     70       1.34     106        2.03       109       3.18    110       3.20
+        Qwen3-Coder-Plus              91       2.41   194       5.15     80        2.32        157       4.54     71       1.56      77        1.69        95       2.70    135       3.83
+        Qwen3-Plus                   168       3.19   225       4.28    239        4.92        114       2.35     96       1.98      56        1.16       208       4.10    154       3.03
+
+        Average                     113.00 2.69 186.77 4.50 137.69 3.84 104.15 2.98 64.38 1.62 95.38 2.52 146.08 3.80 121.92 3.17
+
+
+
+Table 7. Number of focal methods with at least one misguided (M) or effective (E) test for four inputs:
+only an LLM-generated docstring from buggy code, only buggy code, neither code nor docstring, and the
+LLM-generated docstring with buggy code.
+
+                                                       Only Doc. (Ours)                   Only Code              No Code or Doc.                 Doc. W/ Code
+                      Model
+                                                          M             E                 M              E        M                E                  M             E
+
+                      Gemini 2.5 Pro                      53            86                89             45       27               80               85              42
+                      Gemini 2.5 Flash                    47            74                44             51       21               50               49              59
+                      Gemini 2.5 Flash (Reason)           54            57                64             38       34               48               65              33
+                      Claude 4 Sonnet                     52            85                59             41       26               58               59              59
+                      Claude 4 Sonnet (Reason)            49            83                63             42       33               64               63              58
+                      Grok-4                              53            93                84             60       34               70               76              65
+                      Grok-3                              32            60                46             43       26               59               44              43
+                      GPT-4.1                             42            73                56             45       24               52               61              48
+                      GPT-O4-mini                         49            61                72             29       22               53               69              41
+                      DeepSeek-V3                         39            65                42             51       28               57               40              60
+                      DeepSeek-R1                         54            68                69             45       36               42               59              53
+                      Qwen3-Coder-Plus                    42            73                43             58       26               42               44              55
+                      Qwen3-Plus                          53            75                81             43       41               46               75              58
+
+                      Average                          47.62           73.31            62.46        45.46       29.08            55.46          60.69          51.85
+
+
+
+4.1    Applying Our Approach to Buggy Code
+In this section, we evaluate the effectiveness of our approach by comparing it against three alterna-
+tive configurations that isolate the effects of code removal and specification replacement. Tables 6
+and 7 present the results for the following settings:
+• Our Approach (Only Doc.): The prompt removes the buggy implementation and uses only
+   the LLM-generated docstring as the behavioral input.
+• Direct Code-Based Approach (Only Code): The prompt contains the code under test as the
+   sole behavioral input, following prior LLM-based test-generation studies [36, 57, 77].
+• Context-Deprivation Approach (No Code or Doc.): The prompt contains only the focal
+   method contexts with no code or docstring, assessing whether the improvement comes merely
+   from withholding implementation details rather than from replacing them with an LLM-generated
+   docstring. This setting also reflects baselines adopted in prior test-generation studies [21, 29, 30].
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests                                                           ISSTA113:13
+
+
+• Supplementary Approach (Doc. W/ Code): The prompt includes the LLM-generated docstring
+  alongside the buggy code as additional context, following Yuan et al.’s setting [77].
+   Compared to the Only Code baseline, our approach significantly improves test quality: the
+average number of misguided tests across all models drops from 137.69 to 113.00, a reduction of
+24.69 tests (-1.15 pp). It also substantially improves bug detection, increasing the average number
+of effective tests from 104.15 to 186.77, an increase of 82.62 tests (+1.52 pp). These results suggest
+that focusing the LLM on the specification, rather than the buggy code, mitigates misguidance and
+yields more useful bug-finding tests.
+   For the No Code or Doc. baseline, both misguided and effective tests are substantially reduced
+compared with our approach: misguided tests drop from 113.00 to 64.38 (-1.07 pp), while effective
+tests drop from 186.77 to 95.38 (-1.98 pp). Moreover, a closer examination shows only 56.69% of its
+generated tests pass on either the buggy or fixed version, compared with 81.05% for our approach.
+This suggests that simply removing the code under test without providing behavioral information
+leaves the LLM uncertain about the expected behavior, causing many tests to align with neither
+the buggy nor the fixed version, making this baseline unreliable for effective test generation.
+   The Doc. W/ Code approach is substantially less effective than ours: on average, it produces 33.08
+more misguided tests (+1.11 pp) and, crucially, 64.85 fewer effective tests (-1.33 pp). Relative to the
+Only Code baseline, it offers only a marginal gain, generating 17.77 more effective tests (+0.19 pp)
+while also producing 8.39 more misguided tests. This suggests that adding the LLM-generated
+specification as context is insufficient.
+   The method-level results in Table 7 further corroborate these findings, showing a similar trend
+at the focal-method level. Taken together, these results demonstrate that neither removing the
+code under test nor adding an LLM-generated docstring alone is sufficient to both mitigate the
+misguidance effect and improve the number of effective tests. Instead, the two components must be
+combined: the buggy implementation should be removed from the behavioral input and replaced
+with the generated specification.
+
+Table 8. Comparison of misguided (M) and effective (E) test results between our Base Docstring Prompt,
+Advanced Docstring Prompt, and Advanced Test Prompt, grouped by model type. Results are presented as
+the number of tests (#) with the corresponding percentage (%).
+
+                                           Base Docstring Prompt               Advanced Docstring Prompt                    Advanced Test Prompt
+         Model                                  M                   E                  M                   E                 M                   E
+                                         #           %       #           %      #           %       #           %       #         %       #           %
+
+         Gemini 2.5 Flash               105         2.39    202         4.60    78         1.67    209         4.46    139       3.29    158         3.74
+         Claude 4 Sonnet                147         2.85    249         4.82    98         1.77    359         6.49    213       3.90    120         2.20
+         Grok-3                          55         2.02    119         4.37    52         1.76    130         4.39     88       2.84    115         3.72
+         GPT-4.1                         84         2.51    160         4.79    72         2.02    200         5.61    114       3.45     99         3.00
+         DeepSeek-V3                     68         2.02    155         4.61    52         1.54    138         4.09    147       2.42    184         3.03
+         Qwen3-Coder-Plus                91         2.41    194         5.15    89         2.20    215         5.31    177       3.30    151         2.82
+
+         Base Average                   91.67       2.37   179.83       4.72   73.50       1.83   208.50       5.06   146.33     3.20   137.83       3.09
+
+         Gemini 2.5 Pro                 110         2.77    198         4.98    90         2.06    232         5.30    202       5.34    116         3.06
+         Gemini 2.5 Flash (Reason)      126         2.44    179         3.47   114         2.03    238         4.24    169       3.85     91         2.07
+         Claude 4 Sonnet (Reason)       165         2.91    257         4.53   108         1.72    348         5.55    256       4.47    111         1.94
+         Grok-4                         140         3.13    239         5.35   106         1.96    288         5.33    184       3.70    261         5.25
+         GPT-O4-mini                     85         3.00    112         3.95    49         1.51    137         4.22    145       4.81     95         3.15
+         DeepSeek-R1                    125         3.29    139         3.66   113         2.62    191         4.43    187       3.87    153         3.17
+         Qwen3-Plus                     168         3.19    225         4.28   115         1.99    308         5.33    245       4.80    137         2.68
+
+         Reasoning Average             131.29       2.96   192.71       4.32   99.29       1.98   248.86       4.91   198.29     4.41   137.71       3.05
+
+         Total Average                 113.00       2.69   186.77       4.50   87.38       1.91   230.23       4.98   174.31     3.85   137.77       3.06
+
+
+
+
+                                     Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:14                                                                                    Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+Table 9. Number of focal methods with at least one misguided (M) or effective (E) test for the three prompts
+of Table 8.
+
+                                            Base Docstring Prompt         Advanced Docstring Prompt       Advanced Test Prompt
+               Model
+                                                M                E         M              E                M           E
+
+               Gemini 2.5 Flash                 47               74        38            75                53         51
+               Claude 4 Sonnet                  52               85        42            105               69         55
+               Grok-3                           32               60        38            61                43         49
+               GPT-4.1                          42               73        35            87                57         44
+               DeepSeek-V3                      39               65        35            67                50         66
+               Qwen3-Coder-Plus                 42               73        40            86                53         54
+
+               Base Average                 42.33            71.67        38.00          80.17            54.17      53.17
+
+               Gemini 2.5 Pro                   53               86        43            100               90         50
+               Gemini 2.5 Flash (Reason)        54               57        44            78                65         32
+               Claude 4 Sonnet (Reason)         49               83        42            106               65         51
+               Grok-4                           53               93        47            113               69         91
+               GPT-O4-mini                      49               61        35            82                84         41
+               DeepSeek-R1                      54               68        51            77                77         63
+               Qwen3-Plus                       53               75        51            96                79         52
+
+               Reasoning Average            52.14            74.71        44.71          93.14            75.57      54.29
+
+               Total Average                47.62            73.31        41.62          87.15            65.69      53.77
+
+
+
+Table 10. Comparison of the ratio of “False Positive” tests asserting hallucinated behavior, between generating
+from the code, the base docstring approach, and the advanced analysis approach, grouped by model type.
+
+                    Model                            Code Prompt      Base Docstring Prompt      Advanced Docstring Prompt
+
+                    Gemini 2.5 Flash                    18.79%                  17.69%                    21.27%
+                    Claude 4 Sonnet                     13.84%                  15.95%                    16.01%
+                    Grok-3                              17.81%                  16.99%                    21.82%
+                    GPT-4.1                             17.42%                  16.50%                    19.37%
+                    DeepSeek-V3                         19.37%                  19.10%                    19.66%
+                    Qwen3-Coder-Plus                    19.36%                  19.08%                    19.98%
+
+                    Base Average                        17.77%                  17.55%                    19.68%
+
+                    Gemini 2.5 Pro                      15.43%                  15.15%                    17.22%
+                    Gemini 2.5 Flash (Reason)           15.24%                  15.27%                    16.27%
+                    Claude 4 Sonnet (Reason)            14.62%                  15.59%                    16.92%
+                    Grok-4                              14.14%                  12.09%                    17.46%
+                    GPT-O4-mini                          9.24%                  12.00%                    15.78%
+                    DeepSeek-R1                         18.76%                  16.77%                    15.91%
+                    Qwen3-Plus                          18.64%                  18.26%                    18.24%
+
+                    Reasoning Average                   15.15%                  15.02%                    16.83%
+
+                    Total Average                       16.36%                  16.19%                    18.15%
+
+
+
+
+4.2   Further Enhancing Our Approach
+While our method substantially improves over generating tests directly from buggy code, the
+remaining gap in misguided and effective tests relative to prompting with fixed code highlights
+opportunities for further improvement and motivates more sophisticated specification-construction
+methods that better capture the intended behavior. As introduced in Section 2.5, we propose the
+Advanced Docstring Prompt to further leverage the code-comprehension capabilities of modern
+LLMs. We compare it against the two baselines discussed in Section 2.5: (1) the Base Docstring
+Prompt in Figure 3, corresponding to the base version of our approach evaluated in Section 4.1; and
+(2) direct code-based test generation combined with the Advanced Analysis Prompt in Figure 3,
+denoted as the Advanced Test Prompt, where the LLM is first instructed to analyze the code
+under test for potential bugs and then generate tests assuming all identified bugs have been fixed.
+   Tables 8 and 9 confirm the effectiveness of this advanced approach. For reasoning models, the
+advanced prompt yields substantial gains over the Base Docstring Prompt, reducing misguided
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests                                    ISSTA113:15
+
+Fixed Code                                                              Buggy Code
+
+ 1 public String generateToolTipFragment(String toolTipText) {          1 public String generateToolTipFragment(String toolTipText) {
+ 2 return " title=\" + ImageMapUtilities.htmlEscape(toolTipText)        2 return " title=\" + toolTipText
+ 3      + "\" alt=\"\"";                                                3     + "\" alt=\"\"";
+ 4}                                                                     4}
+Base Docstring Prompt Output
+
+ 1 /**
+ 2 * Generates an HTML fragment for a tooltip attribute in an image map.
+ 3*
+ 4 * The method constructs a standardized HTML title attribute (used for tooltips) along with an empty alt attribute.
+ 5 * The resulting string is formatted as valid HTML markup that can be inserted into an image map element.
+ 6*
+ 7 * @param toolTipText The text content to be displayed as the tooltip. This should be properly escaped for HTML inclusion.
+ 8 * @return A string containing HTML attributes for tooltip functionality, formatted as ‘ title="[toolTipText]" alt=""‘ where
+ 9 * [toolTipText] is the provided parameter value.
+10 */                                                                                    Generated 0 effective tests and 3 misguided tests ✗
+
+Advanced Docstring Prompt Output
+
+ 1 /**
+ 2 * Generates an HTML fragment for a tooltip attribute (‘title‘) and an empty ‘alt‘ attribute. The method ensures the tooltip
+ 3 * text is properly escaped to prevent HTML syntax errors or security vulnerabilities, e.g., XSS. If the input is ‘null‘, an empty
+ 4 * ‘title‘ attribute is returned.
+ 5*
+ 6 * @param toolTipText The text to be displayed as a tooltip. If ‘null‘, the ‘title‘ attribute will be empty.
+ 7 * @return A formatted HTML fragment containing the ‘title‘ and ‘alt‘ attributes. The ‘title‘ attribute will contain the escaped
+ 8 * version of ‘toolTipText‘, and the ‘alt‘ attribute will always be empty. Example: ‘ title="escaped-text" alt=""‘.
+ 9 */                                                                                    Generated 5 effective tests and 0 misguided tests ✓
+
+Fig. 6. Qualitative example comparing the Base Docstring Prompt and the Advanced Docstring Prompt.
+tests by 32.00 on average (-0.98 pp) and increasing effective tests by 56.15 (+0.59 pp). The tailored
+multi-step prompt similarly improves base models, decreasing misguided tests by 18.17 (-0.54 pp)
+and increasing effective tests by 28.67 (+0.34 pp) over the Base Docstring Prompt. Our approach
+also significantly outperforms the Advanced Test Prompt. For reasoning models, our approach
+generates 99.00 fewer misguided tests (-2.43 pp) and 111.15 more effective tests (+1.86 pp) on average
+than the Advanced Test Prompt. For base models, our approach generates 72.83 fewer misguided
+tests (-1.37 pp) and 70.67 more effective tests (+1.97 pp) on average. These results reinforce the
+necessity of combining the advanced-analysis strategy with our specification-based approach.
+   Because our advanced approach prompts the LLM to identify potential bugs and propose fixes, it
+may hallucinate non-existent “false-intent” behavior or incorrect fixes, leading to “False Positive”
+tests that assert behavior present in neither the buggy nor the fixed version and therefore fail on
+both. We report the ratio of such tests in Table 10. The base version of our approach does not
+increase this ratio. The advanced-analysis approach, in contrast, involves a trade-off: it slightly
+raises the ratio, from around 16% to around 18%, but in exchange yields considerable gains, reducing
+the number of focal methods with misguided tests by 6 on average (12.60% reduction) and detecting
+14 more bugs on average (18.88% increase) compared with the base version.
+   Figure 6 presents a qualitative example illustrating how our advanced prompt elicits a more
+accurate specification docstring. In this example, the buggy code lacks robustness because it fails
+to properly escape input text. The docstring generated by our advanced prompt correctly identifies
+this gap and includes the necessary escaping step, which leads to the generation of tests that
+successfully detect the bug. In contrast, the docstring from the Base Docstring Prompt does not
+include this step, resulting in no effective tests being generated.
+
+4.3    Impact on a Multi-Round Prompting Setup
+Recent work in unit test generation often employs multi-round prompting, in which an LLM
+iteratively refines tests based on feedback from sources such as execution results, human input, or
+other AI agents [15, 33, 77].
+   To investigate how the misguidance effect manifests in this multi-round, iterative setting, we
+adopt a feedback-driven process similar to ChatTester by Yuan et al. [77] to evaluate our proposed
+
+                                 Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:16                                                                                     Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+   Total tests successfully compiled                                Effective tests                                Misguided tests
+6000                                               400                                                 300
+5500
+                                                   350
+                                                                                                       250
+5000
+                                                   300
+                                                                    256.46           262.62   265.92
+4500
+                            4050.46        4112.92 250230.23                                           200
+                3922.00
+4000
+  3591.38                                          200                                                                                        169.46
+                                                                                                       150                      165.62
+3500                                                                                                                157.85
+                            3253.31        3304.08 150                                                   137.69
+                                                                                                                                              105.46
+3000            3146.77                                                                                             96.85       102.31
+  2840.69                                          100              114.62           119.92   121.77 10087.38
+2500                                                 104.15
+                                                    50
+2000                                                                                                    50
+       0           1            2             3           0            1               2        3            0        1            2             3
+           At least one test compiled                                   Detected                                      Misguided
+ 310
+                                                                                                       100
+                                                   120
+ 300
+                                                                                                        90
+ 290                                       286.92 100                                96.38    97.00
+                             283.46                                  94.46
+                                           287.69                                                       80
+                277.77       283.69                  87.15
+ 280
+                276.85                              80                                                  70
+                                                                                                                                              71.08
+ 270
+   265.31                                                                                                           68.00        69.85
+                                                                                                        6062.46
+ 260
+   260.77                                           60
+
+ 250                                                                                                    50
+                                                                                     50.46    51.15                 43.77        44.77        45.00
+                                                                     48.77                               41.62
+                                                    4045.46
+ 240                                                                                                    40
+
+
+       0           1            2             3           0            1               2        3            0        1            2             3
+              Rounds of Refinement                               Rounds of Refinement                             Rounds of Refinement
+
+
+                                                                          Legend
+       Claude-4-Sonnet                                   GPT-O4-MINI                          Grok-3                         Series 1: Code
+       Claude-4-Sonnet-extended-thinking                 Gemini-2-5-Pro                       Grok-4                         Series 2: Docstring
+       DeepSeek-R1                                       Gemini-2-5-flash                     Qwen-3-Coder-Plus              Overall Avg. (Code)
+       DeepSeek-V3                                       Gemini-2-5-flash-thinking            Qwen-3-Plus                    Overall Avg. (Docstring)
+       GPT-4-1
+
+
+
+
+Fig. 7. Changes in the counts of compiled, effective, and misguided tests (top) and in the number of focal
+methods whose test suite contains at least one such test (bottom), across iterative refinement rounds,
+comparing buggy-code input to our docstring input.
+
+approach. In this setup, if a generated test fails to execute, we extract the resulting error message
+and append it to the original context. This augmented prompt is then resubmitted to the LLM with
+instructions to revise the test suite. While specific multi-round pipelines vary in architecture, this
+refinement loop serves as a representative baseline for our evaluation.
+   Based on our results in Figure 7, we observe that while both prompts (buggy code and specification
+docstring) improve compilation success at a similar rate, our specification-based approach is more
+robust and effective for iterative test refinement. In each round, it consistently accelerates the
+generation of effective tests while suppressing the creation of misguided ones.
+   After three rounds of refinement, the docstring input increased the average effective test count
+by 35.69, more than double the 17.62 increase from the buggy code input, with similar superiority
+at the method level (9.85 vs. 5.69). Conversely, the misguided test count grew by only 18.08 on
+average with the docstring input compared to 31.77 with the buggy code input, a trend that also
+holds at the method level (3.38 vs. 8.62). These results confirm our approach’s effectiveness in a
+multi-round test generation setting.
+
+4.4        How Does the Quality of the Docstrings Affect the Quality of Tests?
+To complement our empirical results, we conduct a manual inspection to assess the quality of the
+docstrings generated with the Advanced Docstring Prompt and how they affect downstream
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests                        ISSTA113:17
+
+              Table 11. Cohen’s 𝜅 agreement and label-combination statistics for Gemini and Qwen.
+                                                       (b) Label-combination statistics
+           (a) Cohen’s 𝜅
+                                                                   Gemini                          Qwen
+             Gemini   Qwen                   (1)   (2)
+                                                         Count   Misguided   Detected   Count   Misguided   Detected
+     (1)      0.82     0.84                  No    No      72        6          14       101        6          17
+     (2)      0.77     0.79                  No    Yes    198       13          80       151       11          55
+                                             Yes   No      48       24           6        66       23          14
+
+
+tests. As discussed in Section 2.5, the inspection covers the two models with the largest and
+smallest reductions in misguided test suites under our approach: Gemini 2.5 Pro and Qwen3-Coder-
+Plus. Following common practice for qualitative coding [46, 56], one author and one external
+annotator, both with substantial software-development experience, independently labeled whether
+each docstring (1) preserves the original bug, (2) describes the corrected behavior. We compute
+Cohen’s 𝜅 separately for each label and model using the initial independent annotations, and report
+the results in Table 11a. Disagreements were then resolved through discussion [16, 44], and the
+consensus labels were used for the final analysis. Following Landis and Koch’s interpretation [35],
+the 𝜅 values indicate “almost perfect agreement” (0.82, 0.84) for label (1) and “substantial agreement”
+(0.77, 0.79) for label (2).
+   Table 11b presents the inspection results for all label combinations. We omit the row where both
+labels (1) and (2) are “Yes” because its counts are zero. This is expected: if a docstring preserves the
+original bug from the buggy method, it is unlikely to also describe the corrected behavior needed
+to fix that bug. We summarize our key findings from these results below:
+   Our approach effectively reduces bug propagation into generated docstrings and re-
+covers a substantial amount of correct behavior. Out of 318 generated docstrings per model,
+only 48 Gemini-generated docstrings (15.09%) and 66 Qwen-generated docstrings (20.75%) preserve
+the original bug. Meanwhile, 198 Gemini-generated docstrings (62.26%) and 151 Qwen-generated
+docstrings (47.48%) recover the correct behavior needed to fix the bug of the focal method.
+   Docstrings without buggy behavior lead to significantly fewer misguided test suites,
+while docstrings that recover correct behavior contribute to substantially more detected
+bugs. For Gemini, the 270 bug-free docstrings account for only 19/43 misguided focal methods,
+while the 48 bug-preserving docstrings account for 24/43; the 198 docstrings that recover the correct
+behavior contribute 80/100 detected bugs, compared with 20/100 from the remaining 120 docstrings.
+Similarly for Qwen: the 252 bug-free docstrings account for 17/40 misguided focal methods versus
+23/40 for the 66 bug-preserving docstrings, and the 151 docstrings that recover the correct behavior
+contribute 55/86 detected bugs versus 31/86 from the remaining 167 docstrings.
+                                                     RQ2 Answer
+ Our specification-based method is a highly effective strategy for mitigating the misguidance effect.
+ By replacing the buggy code with an LLM-generated specification, we significantly reduce misguided
+ test generation while substantially increasing the effective test count. This approach outperforms prior
+ methods that merely supplement buggy code with a specification. We also introduce an advanced,
+ analysis-driven prompting strategy that constructs a more accurate specification, further reducing
+ misguidance and improving bug detection efficacy. We show that our approach does not significantly
+ increase the generation of tests that assert hallucinated behavior. In multi-round, interactive settings,
+ our approach is more robust, accelerating bug detection while resisting error accumulation. Finally,
+ our manual inspection shows that our approach substantially blocks bug propagation into generated
+ docstrings and recovers the correct behavior for a large fraction of buggy focal methods. The former
+ leads to significantly fewer misguided test suites, while the latter contributes to substantially more
+ detected bugs. These findings show that merely removing buggy implementation details is not
+ enough; recovering the correct behavior is essential for generating effective tests.
+
+
+                              Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:18                                                                            Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+5   RQ3: Effects on Bug-Free Code
+In real-world applications, the correctness of the code under test is unknown, which means our
+approach must also be applicable to bug-free code. We verify this by applying our approach to
+the bug-free (i.e., fixed) code in our benchmark. We evaluate its applicability based on two criteria
+commonly adopted in prior works [15, 18, 57, 73, 77]: test correctness and test coverage. The results
+are compared against the baseline of using bug-free code as input.
+Table 12. Comparison of test correctness and coverage statistics between the baseline (Fixed Code Input) and
+Our Approach. Lower values are better for CFR and FAR (↓), while higher values are better for coverage (↑).
+
+                                                 Test Correctness                               Test Coverage
+          Model
+                                         Fixed Code         Our Approach           Fixed Code              Our Approach
+                                      CFR (↓)   FAR (↓)   CFR (↓)   FAR (↓)   Line (↑)   Branch (↑)     Line (↑)   Branch (↑)
+
+          Gemini 2.5 Pro              16.07%    30.55%     21.78%   38.69%    79.43%       75.70%        75.39%      70.05%
+          Gemini 2.5 Flash            29.95%    47.59%     29.87%   51.10%    68.14%       61.11%        69.03%      62.33%
+          Gemini 2.5 Flash (Reason)   32.84%    47.80%     29.19%   48.56%    63.48%       56.51%        73.32%      68.61%
+          Claude 4 Sonnet             13.76%    29.48%     13.59%   29.69%    75.89%       72.14%        81.83%      75.99%
+          Claude 4 Sonnet (Reason)    19.15%    33.82%     15.43%   31.11%    73.16%       69.49%        79.84%      75.81%
+          Grok-4                      18.17%    31.89%     21.03%   40.57%    76.16%       71.76%        75.42%      69.63%
+          Grok-3                      21.85%    39.33%     18.15%   39.38%    64.67%       61.04%        70.23%      63.55%
+          GPT-4.1                     20.34%    36.28%     14.76%   33.78%    69.29%       64.18%        77.27%      72.31%
+          GPT-O4-mini                 20.61%    32.00%     20.03%   37.26%    73.48%       68.99%        71.20%      63.74%
+          DeepSeek-V3                 22.04%    41.59%     20.79%   41.25%    69.43%       62.34%        73.27%      66.89%
+          DeepSeek-R1                 20.40%    36.17%     21.18%   38.82%    72.97%       68.31%        74.54%      68.20%
+          Qwen3-Coder-Plus            21.68%    42.71%     15.30%   35.98%    67.76%       64.12%        76.78%      73.69%
+          Qwen3-Plus                  19.99%    37.65%     20.15%   41.38%    75.54%       70.28%        78.18%      73.78%
+
+          Average                     21.30%    37.45%     20.10%   39.04%    71.49%       66.61%        75.10%      69.58%
+
+
+   First, we assess whether our approach introduces spurious issues by measuring the Compilation
+Failure Rate (CFR) and False-Alarm Rate (FAR). As shown in Table 12, our approach slightly reduces
+CFR by 1.20 percentage points and slightly increases FAR by 1.59 percentage points. Overall, for
+bug-free code, our approach performs comparably to prompting with the source code.
+   Second, we evaluate our approach’s impact on test coverage, a critical metric for applications
+such as regression testing. The results in Table 12 show that our specification-based approach
+maintains coverage comparable to the baseline of using source code directly, with minor increases
+of 3.61 percentage points in line coverage and 2.97 in branch coverage.
+                                                           RQ3 Answer
+ Our experiments confirm that our specification-based method can be applied to both buggy and
+ bug-free code. On bug-free code, it does not significantly increase compilation-failure or false-alarm
+ rates compared to the code input baseline, and it maintains a comparable level of test coverage. Thus,
+ our approach improves bug detection on faulty code without compromising the quality or reliability
+ of tests generated for correct code, making it suitable for general use and tasks like regression testing.
+
+6   Threats to Validity and Limitations
+   External Validity. Threats to external validity concern the generalizability of our findings. Our
+study relies on the Defects4J benchmark, a common choice in prior work [3, 57, 66, 73]. We used a
+diverse set of 318 focal methods that span all 17 projects in Defects4J, ensuring a reasonable breadth
+of evaluation data. Additionally, our evaluation of 11 SOTA LLMs, representing the most advanced
+models at the time of our study, supports the generalizability of our results. Nevertheless, Defects4J
+may not fully capture two real-world scenarios. First, in proprietary or highly domain-specific
+systems, LLMs may lack sufficient domain knowledge or context needed to infer intended behavior,
+potentially producing hallucinated “false-intent” or incorrect bug fixes. Second, for deeply stateful
+or dependency-rich code, a method-level docstring may omit important class, state, or dependency
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests               ISSTA113:19
+
+
+information, potentially leading to unusable tests or shallower coverage. Although our prompt
+includes surrounding class context following Yang et al. [73] and constructors of user-defined
+object types, this context may still be insufficient for large-scale, dependency-rich projects.
+   Internal Validity. Threats to internal validity stem mainly from our experimental design and
+manual analysis. To mitigate experimental-design threats, we used a consistent process across all
+experiments: all models were evaluated with the same prompt templates in each experimental
+setting and identical parameter settings, and the evaluation pipeline was applied uniformly to all
+generated tests. We also reviewed our data collection scripts to minimize errors. For the manual
+inspection, annotator subjectivity may affect the labels. To mitigate this risk, we followed common
+qualitative-coding practice: one author and one external annotator independently labeled the
+docstrings, Cohen’s 𝜅 was computed on the initial labels, and disagreements were resolved through
+discussion until consensus was reached.
+   Construct Validity. Threats to construct validity in our study stem from three main sources. First,
+to mitigate the inherent randomness of LLMs, we set the generation temperature to 0, where
+possible, to promote deterministic outputs. Second, data contamination is a potential threat, as the
+manually written tests in Defects4J may have been part of the models’ training data. However, our
+proposed docstring-based approach can be seen as a form of paraphrasing, a technique commonly
+used to reduce the impact of data contamination [41, 62, 74]. Moreover, this prompting yielded a
+significant improvement across all models rather than a drop, suggesting that the LLMs are not
+simply recalling memorized tests but operating on the information provided by the specifications.
+Third, our advanced-prompt approach may introduce hallucinated behavior that is then asserted by
+generated tests. We assess this risk by measuring “False Positive” tests that fail on both the buggy
+and fixed versions for buggy code, as well as false-alarm tests that fail on correct implementations
+for bug-free code. In both settings, we observe only minor increases compared with the source-code
+baselines, suggesting that this risk is not substantially elevated.
+
+7   Related Work
+Traditional automatic unit test generation prior to LLMs relied on techniques like symbolic execution
+[13, 52], search-based algorithms [23, 42], and model checking [6, 22]. However, these techniques
+often produce tests with low maintainability and readability compared to human-written ones,
+making it challenging for human developers to gain useful knowledge from them [73].
+   Subsequently, transformer-based models [67] demonstrated promising results in various code-
+related tasks, including code generation [14], automated program repair [76], and code translation
+[75]. Early efforts to apply these models to unit test generation treated the task as a sequence-to-
+sequence problem—akin to machine translation—using smaller-scale architectures such as BART
+[37], PLBART [2], and CodeT5 [69] trained with code–test pairs. For instance, Tufano et al. [66]
+introduced a BART-based model trained specifically for unit test generation; Alagarsamy et al.
+proposed A3Test [3], a PLBART-based approach that augments assertions to improve test quality;
+and Shin et al. [59] applied domain adaptation to CodeT5 to enhance unit test generation.
+   The emergence of large decoder-only LLMs, like GPT [11], capable of scaling to hundreds of
+billions of parameters, has enabled more natural and maintainable test generation [51]. One of
+the earliest specialized approaches, CAT-LM [55], trained a GPT-style model on aligned code–test
+data. Larger models such as GPT-4 [47], Claude [8], and Llama [65], while not explicitly trained for
+unit test generation, can still produce meaningful test cases when guided by well-crafted prompt
+instructions. Recent work has explored various prompting strategies to improve test correctness
+[36, 40, 60] and coverage [4, 5, 70] with these models. Complementary studies also investigated how
+different fine-tuning methods further enhance LLMs’ capability in unit test generation [58, 63].
+
+                           Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:20                                                                 Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+   While a significant number of prior studies have evaluated LLM-generated unit tests primarily in
+terms of test correctness and coverage, their core function—bug detection—has received relatively
+limited attention. Recent research [18, 64, 73] has begun to fill this gap by directly assessing and
+improving the bug detection capability of LLMs. However, these studies typically use correct code
+as input, overlooking the real-world scenarios where code under test can often be buggy.
+   A few recent works have begun to evaluate unit tests generated from buggy code. Abdullin
+et al. [1] report bug-detection rates when using buggy code as input to LLMs. Li et al. [38] pro-
+pose synthesizing multiple code variants from LLM-inferred intent derived from buggy code and
+generating tests based on differences among these variants. They further suggest that LLMs can
+often infer intended behavior when buggy and fixed code differ only slightly, but the evidence is
+based on a small dataset (40 programs) with relatively simple tasks. Mathews et al. [43] note that
+buggy code can prevent its own bug from being detected by the tests generated from it. Huang
+et al. [31] show that tests generated from buggy code exhibit lower correctness, coverage, and
+bug-detection capability, and make an initial attempt to frame this phenomenon as the misguidance
+effect. However, as we demonstrate in Section 2.6, their metric does not accurately capture the
+existence or magnitude of misguidance. To date, no prior study has accurately quantified how
+buggy code misleads LLMs and proposed an effective mitigation strategy.
+
+8   Conclusion and Future Work
+In this paper, we provide a large-scale quantitative study of the misguidance effect in LLM-generated
+tests: a phenomenon where buggy code causes LLMs to misinterpret erroneous behavior as in-
+tended functionality. Using a new metric we introduce, we empirically demonstrate the effect’s
+severe, twofold impact: it increases the generation of “misguided tests” that validate the bug while
+simultaneously suppressing “effective tests” that would detect it. Furthermore, we confirm this
+effect from a model-internal perspective by showing that buggy code skews the model’s preferences
+toward “misguided tests” that assert its erroneous behavior.
+   To address this, we propose and validate a specification-based approach that decouples test
+generation from the potentially flawed implementation by using a specification constructed from
+the code under test as the sole behavioral input. Our experiments show that even a simple, LLM-
+generated docstring significantly mitigates the misguidance effect and improves bug detection. We
+further demonstrate that this method can be enhanced with reasoning-based code-intent analysis
+and serves as a more effective foundation for a multi-round, interactive prompting workflow. Finally,
+our approach applies to both buggy and bug-free code, achieving comparable levels of compilation
+failures, false-alarm tests, and test coverage on the latter.
+   Our work underscores the necessity of addressing the misguidance effect and demonstrates
+that shifting the focus from faulty implementations to intended specifications is a robust and
+effective path forward for LLM-based software testing. Future work includes developing more
+robust specification-generation approaches that reliably infer intended behavior in large-scale or
+domain-specific projects, potentially by combining multi-agent LLM reasoning with behavioral
+information from static program analysis; exploring specification formats beyond natural language,
+such as UML diagrams or formal specifications; and comparing LLM-generated specifications with
+high-quality, human-written ones to evaluate their effectiveness in mitigating misguidance and to
+understand the upper bound of this approach.
+
+Acknowledgments
+This work was supported by the Natural Sciences and Engineering Research Council of Canada
+(NSERC) under Grant RGPIN-2022-04154 and by the Connaught Fund under Grant NR-2022-23. We
+thank Yuliang Song for serving as an external annotator in our qualitative analysis.
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests                   ISSTA113:21
+
+
+Data Availability
+The data used in this study is drawn from the publicly available Defects4J dataset [34]. To sup-
+port reproducibility, we provide a replication package [78] containing our data preprocessing
+scripts, manual inspection results, and the source code for our evaluation pipeline and our pro-
+posed specification-based test generation approach. The package is publicly available on GitHub
+at https://github.com/drixs2050/EvalAndMitigate and permanently archived on Zenodo (DOI:
+10.5281/zenodo.21428153).
+
+
+References
+ [1] Azat Abdullin, Pouria Derakhshanfar, and Annibale Panichella. 2025. Test Wars: A Comparative Study of SBST, Symbolic
+     Execution, and LLM-Based Approaches to Unit Test Generation. arXiv:2501.10200 [cs.SE] doi:10.48550/arXiv.2501.10200
+ [2] Wasi Ahmad, Saikat Chakraborty, Baishakhi Ray, and Kai-Wei Chang. 2021. Unified Pre-training for Program
+     Understanding and Generation. In Proceedings of the 2021 Conference of the North American Chapter of the Association
+     for Computational Linguistics: Human Language Technologies. Association for Computational Linguistics, Online,
+     2655–2668. doi:10.18653/v1/2021.naacl-main.211
+ [3] Saranya Alagarsamy, Chakkrit Tantithamthavorn, and Aldeida Aleti. 2024. A3Test: Assertion-Augmented Automated
+     Test Case Generation. Information and Software Technology 176 (2024), 107565. doi:10.1016/j.infsof.2024.107565
+ [4] Nadia Alshahwan, Jubin Chheda, Anastasia Finogenova, Beliz Gokkaya, Mark Harman, Inna Harper, Alexandru
+     Marginean, Shubho Sengupta, and Eddy Wang. 2024. Automated Unit Test Improvement using Large Language
+     Models at Meta. In Companion Proceedings of the 32nd ACM International Conference on the Foundations of Software
+     Engineering (Porto de Galinhas, Brazil) (FSE 2024). Association for Computing Machinery, New York, NY, USA, 185–196.
+     doi:10.1145/3663529.3663839
+ [5] Juan Altmayer Pizzorno and Emery D. Berger. 2025. CoverUp: Effective High Coverage Test Generation for Python.
+     Proc. ACM Softw. Eng. 2, FSE (June 2025), 2897–2919. doi:10.1145/3729398
+ [6] P.E. Ammann, P.E. Black, and W. Majurski. 1998. Using model checking to generate tests from specifications. In
+     Proceedings Second International Conference on Formal Engineering Methods (Cat.No.98EX241). 46–54. doi:10.1109/
+     ICFEM.1998.730569
+ [7] Anthropic. 2024. Claude 3.5 Sonnet. Accessed: 2025-02-19. https://www.anthropic.com/news/claude-3-5-sonnet
+ [8] Anthropic. 2024. Introducing the Next Generation of Claude. Accessed: 2025-03-13. https://www.anthropic.com/
+     news/claude-3-family
+ [9] Anthropic. 2025. Claude 4 Sonnet. Accessed: 2025-05-23. https://www.anthropic.com/claude/sonnet
+[10] Kent Beck. 2002. Test-Driven Development: By Example. Addison-Wesley Professional.
+[11] Tom B. Brown et al. 2020. Language models are few-shot learners. In Proceedings of the 34th International Conference
+     on Neural Information Processing Systems (Vancouver, BC, Canada) (NIPS ’20). Curran Associates Inc., Red Hook, NY,
+     USA, Article 159, 25 pages. doi:10.48550/arXiv.2005.14165
+[12] Max Brunsfeld. 2018. Tree-sitter: An incremental parsing system for programming tools. Accessed: 2025-02-21.
+     doi:10.5281/zenodo.4619183
+[13] Cristian Cadar, Daniel Dunbar, and Dawson Engler. 2008. KLEE: unassisted and automatic generation of high-coverage
+     tests for complex systems programs. In Proceedings of the 8th USENIX Conference on Operating Systems Design and
+     Implementation (San Diego, California) (OSDI’08). USENIX Association, USA, 209–224.
+[14] Mark Chen et al. 2021. Evaluating Large Language Models Trained on Code. arXiv:2107.03374 [cs.LG] doi:10.48550/
+     arXiv.2107.03374
+[15] Yinghao Chen, Zehao Hu, Chen Zhi, Junxiao Han, Shuiguang Deng, and Jianwei Yin. 2024. ChatUniTest: A Framework
+     for LLM-Based Test Generation. In Companion Proceedings of the 32nd ACM International Conference on the Foundations
+     of Software Engineering (Porto de Galinhas, Brazil) (FSE 2024). Association for Computing Machinery, New York, NY,
+     USA, 572–576. doi:10.1145/3663529.3663801
+[16] Bonnie Chinh, Himanshu Zade, Abbas Ganji, and Cecilia Aragon. 2019. Ways of qualitative coding: A case study of
+     four strategies for resolving disagreements. In Extended Abstracts of the 2019 CHI Conference on Human Factors in
+     Computing Systems. 1–6. doi:10.1145/3290607.3312879
+[17] Ermira Daka and Gordon Fraser. 2014. A Survey on Unit Testing Practices and Problems. In 2014 IEEE 25th International
+     Symposium on Software Reliability Engineering. 201–211. doi:10.1109/ISSRE.2014.11
+[18] Arghavan Moradi Dakhel, Amin Nikanjam, Vahid Majdinasab, Foutse Khomh, and Michel C. Desmarais. 2024. Effective
+     test generation using pre-trained Large Language Models and mutation testing. Information and Software Technology
+     171 (2024), 107468. doi:10.1016/j.infsof.2024.107468
+
+
+                             Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:22                                                                    Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+[19] DeepSeek-AI. 2025. DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.
+     arXiv:2501.12948 [cs.CL] doi:10.48550/arXiv.2501.12948
+[20] DeepSeek-AI. 2025. DeepSeek-V3 Technical Report. arXiv:2412.19437 [cs.CL] doi:10.48550/arXiv.2412.19437
+[21] Elizabeth Dinella, Gabriel Ryan, Todd Mytkowicz, and Shuvendu K. Lahiri. 2022. TOGA: a neural method for test oracle
+     generation. In Proceedings of the 44th International Conference on Software Engineering (Pittsburgh, Pennsylvania) (ICSE
+     ’22). Association for Computing Machinery, New York, NY, USA, 2130–2141. doi:10.1145/3510003.3510141
+[22] Eduard P. Enoiu, Adnan Čaušević, Thomas J. Ostrand, Elaine J. Weyuker, Daniel Sundmark, and Paul Pettersson. 2016.
+     Automated test generation using model checking: an industrial evaluation. Int. J. Softw. Tools Technol. Transf. 18, 3
+     (June 2016), 335–353. doi:10.1007/s10009-014-0355-9
+[23] Gordon Fraser and Andrea Arcuri. 2014. A Large-Scale Evaluation of Automated Unit Test Generation Using EvoSuite.
+     ACM Trans. Softw. Eng. Methodol. 24, 2, Article 8 (Dec. 2014), 42 pages. doi:10.1145/2685612
+[24] Jerry Gao, H.-S. Jacob Tsao, and Ye Wu. 2003. Testing and Quality Assurance for Component-Based Software. Artech
+     House.
+[25] Google. 2025. Gemini 2.5 Flash Model. https://ai.google.dev/gemini-api/docs/models#gemini-2.5-flash. Accessed:
+     2025-08-19.
+[26] Google. 2025. Gemini 2.5 Pro Model. https://ai.google.dev/gemini-api/docs/models#gemini-2.5-pro. Accessed:
+     2025-08-19.
+[27] Lehan He, Zeren Chen, Zhe Zhang, Jing Shao, Xiang Gao, and Lu Sheng. 2025. Use Property-Based Testing to Bridge
+     LLM Code Generation and Validation. arXiv:2506.18315 [cs.SE] doi:10.48550/arXiv.2506.18315
+[28] Ari Holtzman, Jan Buys, Li Du, Maxwell Forbes, and Yejin Choi. 2020. The Curious Case of Neural Text Degeneration.
+     In International Conference on Learning Representations. doi:10.48550/arXiv.1904.09751
+[29] Soneya Binta Hossain and Matthew B. Dwyer. 2025. TOGLL: Correct and Strong Test Oracle Generation with LLMs.
+     In 2025 IEEE/ACM 47th International Conference on Software Engineering (ICSE). 1475–1487. doi:10.1109/ICSE55347.
+     2025.00098
+[30] Soneya Binta Hossain, Raygan Taylor, and Matthew Dwyer. 2025. Doc2OracLL: Investigating the Impact of Docu-
+     mentation on LLM-Based Test Oracle Generation. Proc. ACM Softw. Eng. 2, FSE, Article FSE084 (June 2025), 22 pages.
+     doi:10.1145/3729354
+[31] Dong Huang, Jie M. Zhang, Mark Harman, Mingzhe Du, and Heming Cui. 2025. Measuring the Influence of Incorrect
+     Code on Test Generation. arXiv:2409.09464 [cs.SE] doi:10.48550/arXiv.2409.09464
+[32] Laura Inozemtseva and Reid Holmes. 2014. Coverage is not strongly correlated with test suite effectiveness. In
+     Proceedings of the 36th International Conference on Software Engineering (Hyderabad, India) (ICSE 2014). Association for
+     Computing Machinery, New York, NY, USA, 435–445. doi:10.1145/2568225.2568271
+[33] Kush Jain and Claire Le Goues. 2025.                 TestForge: Feedback-Driven, Agentic Test Suite Generation.
+     arXiv:2503.14713 [cs.SE] doi:10.48550/arXiv.2503.14713
+[34] René Just, Darioush Jalali, and Michael D. Ernst. 2014. Defects4J: a database of existing faults to enable controlled
+     testing studies for Java programs. In Proceedings of the 2014 International Symposium on Software Testing and Analysis
+     (San Jose, CA, USA) (ISSTA 2014). Association for Computing Machinery, New York, NY, USA, 437–440. doi:10.1145/
+     2610384.2628055
+[35] J. Richard Landis and Gary G. Koch. 1977. The measurement of observer agreement for categorical data. Biometrics 33,
+     1 (1977), 159–174. doi:10.2307/2529310
+[36] Caroline Lemieux, Jeevana Priya Inala, Shuvendu K. Lahiri, and Siddhartha Sen. 2023. CodaMosa: Escaping Coverage
+     Plateaus in Test Generation with Pre-trained Large Language Models. In 2023 IEEE/ACM 45th International Conference
+     on Software Engineering (ICSE). 919–931. doi:10.1109/ICSE48619.2023.00085
+[37] Mike Lewis, Yinhan Liu, Naman Goyal, Marjan Ghazvininejad, Abdelrahman Mohamed, Omer Levy, Veselin Stoyanov,
+     and Luke Zettlemoyer. 2020. BART: Denoising Sequence-to-Sequence Pre-training for Natural Language Generation,
+     Translation, and Comprehension. In Proceedings of the 58th Annual Meeting of the Association for Computational
+     Linguistics, Dan Jurafsky, Joyce Chai, Natalie Schluter, and Joel Tetreault (Eds.). Association for Computational
+     Linguistics, Online, 7871–7880. doi:10.18653/v1/2020.acl-main.703
+[38] Tsz-On Li, Wenxi Zong, Yibo Wang, Haoye Tian, Ying Wang, Shing-Chi Cheung, and Jeff Kramer. 2023. Nuances are
+     the Key: Unlocking ChatGPT to Find Failure-Inducing Tests with Differential Prompting. arXiv:2304.11686 [cs.SE]
+     doi:10.48550/arXiv.2304.11686
+[39] Kaibo Liu, Zhenpeng Chen, Yiyang Liu, Jie M. Zhang, Mark Harman, Yudong Han, Yun Ma, Yihong Dong, Ge Li, and
+     Gang Huang. 2025. LLM-Powered Test Case Generation for Detecting Bugs in Plausible Programs. In Proceedings
+     of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), Wanxiang Che,
+     Joyce Nabende, Ekaterina Shutova, and Mohammad Taher Pilehvar (Eds.). Association for Computational Linguistics,
+     Vienna, Austria, 430–440. doi:10.18653/v1/2025.acl-long.20
+
+
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+Evaluating and Mitigating the Misguidance Effect of Buggy Code in LLM-Generated Unit Tests                      ISSTA113:23
+
+
+[40] Andrea Lops, Fedelucio Narducci, Azzurra Ragone, and Michelantonio Trizio. 2024. AgoneTest: Automated creation
+     and assessment of Unit tests leveraging Large Language Models. In Proceedings of the 39th IEEE/ACM International
+     Conference on Automated Software Engineering (Sacramento, CA, USA) (ASE ’24). Association for Computing Machinery,
+     New York, NY, USA, 2440–2441. doi:10.1145/3691620.3695318
+[41] Zimu Lu, Aojun Zhou, Houxing Ren, Ke Wang, Weikang Shi, Junting Pan, Mingjie Zhan, and Hongsheng Li. 2024.
+     MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of
+     LLMs. In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long
+     Papers), Lun-Wei Ku, Andre Martins, and Vivek Srikumar (Eds.). Association for Computational Linguistics, Bangkok,
+     Thailand, 2732–2747. doi:10.18653/v1/2024.acl-long.151
+[42] Stephan Lukasczyk and Gordon Fraser. 2022. Pynguin: automated unit test generation for Python. In Proceedings of the
+     ACM/IEEE 44th International Conference on Software Engineering: Companion Proceedings (Pittsburgh, Pennsylvania)
+     (ICSE ’22). Association for Computing Machinery, New York, NY, USA, 168–172. doi:10.1145/3510454.3516829
+[43] Noble Saji Mathews and Meiyappan Nagappan. 2024. Design choices made by LLM-based test generators prevent
+     them from finding bugs. arXiv:2412.14137 [cs.SE] doi:10.48550/arXiv.2412.14137
+[44] Matthew B. Miles, A. Michael Huberman, and Johnny Saldaña. 2014. Qualitative Data Analysis: A Methods Sourcebook
+     (third ed.). SAGE Publications, Thousand Oaks, California.
+[45] Eric Mitchell, Yoonho Lee, Alexander Khazatsky, Christopher D. Manning, and Chelsea Finn. 2023. DetectGPT: zero-
+     shot machine-generated text detection using probability curvature. In Proceedings of the 40th International Conference on
+     Machine Learning (Honolulu, Hawaii, USA) (ICML’23). JMLR.org, Article 1038, 13 pages. doi:10.48550/arXiv.2301.11305
+[46] Cliodhna O’Connor and Helene Joffe. 2020. Intercoder reliability in qualitative research: Debates and practical
+     guidelines. International Journal of Qualitative Methods 19 (2020), 1609406919899220. doi:10.1177/1609406919899220
+[47] OpenAI. 2024. GPT-4o System Card. arXiv:2410.21276 [cs.CL] doi:10.48550/arXiv.2410.21276
+[48] OpenAI. 2025. GPT-4.1. https://openai.com/index/gpt-4-1/. Accessed: 2025-08-19.
+[49] OpenAI. 2025. gpt-oss-120b and gpt-oss-20b Model Card. arXiv:2508.10925 [cs.CL] doi:10.48550/arXiv.2508.10925
+[50] OpenAI. 2025. OpenAI Models - O4 Mini. https://platform.openai.com/docs/models/o4-mini. Accessed: 2025-08-19.
+[51] Rangeet Pan, Myeongsoo Kim, Rahul Krishna, Raju Pavuluri, and Saurabh Sinha. 2025. ASTER: Natural and Multi-
+     language Unit Test Generation with LLMs. arXiv:2409.03093 [cs.SE] doi:10.48550/arXiv.2409.03093
+[52] Corina S. Păsăreanu, Peter C. Mehlitz, David H. Bushnell, Karen Gundy-Burlet, Michael Lowry, Suzette Person, and
+     Mark Pape. 2008. Combining unit-level symbolic execution and system-level concrete execution for testing NASA
+     software. In Proceedings of the 2008 International Symposium on Software Testing and Analysis (Seattle, WA, USA) (ISSTA
+     ’08). Association for Computing Machinery, New York, NY, USA, 15–26. doi:10.1145/1390630.1390635
+[53] Qwen Team. 2025. Qwen3-Coder: Agentic Coding in the World. https://qwenlm.github.io/blog/qwen3-coder/. Accessed:
+     2025-08-19.
+[54] Qwen Team. 2025. Qwen3: Think Deeper, Act Faster. https://qwenlm.github.io/blog/qwen3/. Accessed: 2025-08-19.
+[55] Nikitha Rao, Kush Jain, Uri Alon, Claire Le Goues, and Vincent J. Hellendoorn. 2023. CAT-LM Training Language
+     Models on Aligned Code and Tests. In Proceedings of the 38th IEEE/ACM International Conference on Automated Software
+     Engineering (Echternach, Luxembourg) (ASE ’23). IEEE Press, 409–420. doi:10.1109/ASE56229.2023.00193
+[56] Johnny Saldaña. 2025. The Coding Manual for Qualitative Researchers (fifth ed.). SAGE Publications Ltd. doi:10.4135/
+     9781036235611
+[57] Max Schäfer, Sarah Nadi, Aryaz Eghbali, and Frank Tip. 2024. An Empirical Evaluation of Using Large Language
+     Models for Automated Unit Test Generation. IEEE Transactions on Software Engineering 50, 1 (2024), 85–105. doi:10.
+     1109/TSE.2023.3334955
+[58] Ye Shang, Quanjun Zhang, Chunrong Fang, Siqi Gu, Jianyi Zhou, and Zhenyu Chen. 2025. A Large-Scale Empirical
+     Study on Fine-Tuning Large Language Models for Unit Testing. Proc. ACM Softw. Eng. 2, ISSTA, Article ISSTA074 (June
+     2025), 23 pages. doi:10.1145/3728951
+[59] Jiho Shin, Sepehr Hashtroudi, Hadi Hemmati, and Song Wang. 2024. Domain Adaptation for Code Model-based Unit
+     Test Case Generation. arXiv:2308.08033 [cs.SE] doi:10.48550/arXiv.2308.08033
+[60] Mohammed Latif Siddiq, Joanna Cecilia Da Silva Santos, Ridwanul Hasan Tanvir, Noshin Ulfat, Fahmid Al Rifat,
+     and Vinícius Carvalho Lopes. 2024. Using Large Language Models to Generate JUnit Tests: An Empirical Study. In
+     Proceedings of the 28th International Conference on Evaluation and Assessment in Software Engineering (Salerno, Italy)
+     (EASE ’24). Association for Computing Machinery, New York, NY, USA, 313–322. doi:10.1145/3661167.3661216
+[61] Ian Sommerville. 2011. Software Engineering (ninth ed.). Pearson Education, Boston, MA.
+[62] Yuliang Song and Eldan Cohen. 2025. Do LLMs Understand Constraint Programming? Zero-Shot Constraint Pro-
+     gramming Model Generation Using LLMs. In Proceedings of the 19th Learning and Intelligent Optimization Conference
+     (LION-25). 16–31. doi:10.1007/978-3-032-09156-7_2
+[63] André Storhaug and Jingyue Li. 2024. Parameter-Efficient Fine-Tuning of Large Language Models for Unit Test
+     Generation: An Empirical Study. arXiv:2411.02462 [cs.SE] doi:10.48550/arXiv.2411.02462
+
+
+                              Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+ISSTA113:24                                                                  Junda Zhao, Shurui Zhou, and Eldan Cohen
+
+
+[64] Yutian Tang, Zhijie Liu, Zhichao Zhou, and Xiapu Luo. 2024. ChatGPT vs SBST: A Comparative Assessment of Unit
+     Test Suite Generation. IEEE Transactions on Software Engineering 50, 6 (2024), 1340–1359. doi:10.1109/TSE.2024.3382365
+[65] Hugo Touvron et al. 2023. LLaMA: Open and Efficient Foundation Language Models. arXiv:2302.13971 [cs.CL]
+     doi:10.48550/arXiv.2302.13971
+[66] Michele Tufano, Dawn Drain, Alexey Svyatkovskiy, Shao Kun Deng, and Neel Sundaresan. 2021. Unit Test Case
+     Generation with Transformers and Focal Context. arXiv:2009.05617 [cs.SE] doi:10.48550/arXiv.2009.05617
+[67] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, and Illia
+     Polosukhin. 2017. Attention Is All You Need. arXiv:1706.03762 [cs.CL] doi:10.48550/arXiv.1706.03762
+[68] Junjie Wang, Yuchao Huang, Chunyang Chen, Zhe Liu, Song Wang, and Qing Wang. 2024. Software Testing With
+     Large Language Models: Survey, Landscape, and Vision. IEEE Transactions on Software Engineering 50, 4 (April 2024),
+     911–936. doi:10.1109/TSE.2024.3368208
+[69] Yue Wang, Weishi Wang, Shafiq Joty, and Steven C. H. Hoi. 2021. CodeT5: Identifier-aware Unified Pre-trained Encoder-
+     Decoder Models for Code Understanding and Generation. arXiv:2109.00859 [cs.CL] doi:10.48550/arXiv.2109.00859
+[70] Zejun Wang, Kaibo Liu, Ge Li, and Zhi Jin. 2024. HITS: High-coverage LLM-based Unit Test Generation via Method
+     Slicing. In Proceedings of the 39th IEEE/ACM International Conference on Automated Software Engineering (Sacramento,
+     CA, USA) (ASE ’24). Association for Computing Machinery, New York, NY, USA, 1258–1268. doi:10.1145/3691620.
+     3695501
+[71] xAI. 2025. Grok-3 Model Documentation. https://docs.x.ai/docs/models/grok-3. Accessed: 2025-08-19.
+[72] xAI. 2025. Grok-4 Model Documentation. https://docs.x.ai/docs/models/grok-4. Accessed: 2025-08-19.
+[73] Lin Yang, Chen Yang, Shutao Gao, Weijing Wang, Bo Wang, Qihao Zhu, Xiao Chu, Jianyi Zhou, Guangtai Liang,
+     Qianxiang Wang, and Junjie Chen. 2024. On the Evaluation of Large Language Models in Unit Test Generation. In
+     Proceedings of the 39th IEEE/ACM International Conference on Automated Software Engineering (Sacramento, CA, USA)
+     (ASE ’24). Association for Computing Machinery, New York, NY, USA, 1607–1619. doi:10.1145/3691620.3695529
+[74] Shuo Yang, Wei-Lin Chiang, Lianmin Zheng, Joseph E. Gonzalez, and Ion Stoica. 2023. Rethinking Benchmark and
+     Contamination for Language Models with Rephrased Samples. arXiv:2311.04850 [cs.CL] doi:10.48550/arXiv.2311.04850
+[75] Zhen Yang, Fang Liu, Zhongxing Yu, Jacky Wai Keung, Jia Li, Shuo Liu, Yifan Hong, Xiaoxue Ma, Zhi Jin, and Ge Li.
+     2024. Exploring and Unleashing the Power of Large Language Models in Automated Code Translation. Proc. ACM
+     Softw. Eng. 1, FSE, Article 71 (July 2024), 24 pages. doi:10.1145/3660778
+[76] Xin Yin, Chao Ni, Shaohua Wang, Zhenhao Li, Limin Zeng, and Xiaohu Yang. 2024. ThinkRepair: Self-Directed
+     Automated Program Repair. In Proceedings of the 33rd ACM SIGSOFT International Symposium on Software Testing
+     and Analysis (Vienna, Austria) (ISSTA 2024). Association for Computing Machinery, New York, NY, USA, 1274–1286.
+     doi:10.1145/3650212.3680359
+[77] Zhiqiang Yuan, Mingwei Liu, Shiji Ding, Kaixin Wang, Yixuan Chen, Xin Peng, and Yiling Lou. 2024. Evaluating
+     and Improving ChatGPT for Unit Test Generation. Proc. ACM Softw. Eng. 1, FSE, Article 76 (July 2024), 24 pages.
+     doi:10.1145/3660783
+[78] Junda Zhao, Shurui Zhou, and Eldan Cohen. 2026. Replication Package for “Evaluating and Mitigating the Misguidance
+     Effect of Buggy Code in LLM-Generated Unit Tests”. doi:10.5281/zenodo.21428156
+
+Received 2026-01-30; accepted 2026-06-25
+
+
+
+
+Proc. ACM Softw. Eng., Vol. 3, No. ISSTA, Article ISSTA113. Publication date: October 2026.
+

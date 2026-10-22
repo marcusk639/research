@@ -11,7 +11,7 @@
 - **What clients get:** an AI assistant on a server in their own building. It:
   - answers from their own documents, with citations;
   - plugs into Microsoft 365;
-  - never sends data to an outside AI provider.
+  - never sends client data to an outside AI provider.
 
   See [06-technical-architecture.md](06-technical-architecture.md) for the limits on that last claim (backups, remote access, failover).
 
