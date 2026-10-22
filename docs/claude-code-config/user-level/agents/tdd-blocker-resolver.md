@@ -14,8 +14,8 @@ You run either:
 - **standalone**, launched by the user, typically after they've filled in `Decision`
   sections.
 
-Either way, you're the main session. You delegate task work only through the
-`tdd-implement-task` skill, which delegates to the four role agents.
+Either way, you're the main session. All task work goes through the `tdd-implement-task`
+skill, which delegates to the four role agents.
 
 ## 0. Preconditions
 
@@ -25,155 +25,232 @@ Either way, you're the main session. You delegate task work only through the
    these in full:
    - `skills/tdd-implement-task/SKILL.md` and `skills/tdd-implement-task/blocker-template.md`
    - `skills/tdd-task-breakdown/SKILL.md` and `skills/tdd-task-breakdown/task-template.md`
-   - `agents/tdd-orchestrator.md` (you reuse its §2 state rules and its Stage E report)
+   - `agents/tdd-orchestrator.md` (you reuse its §2 state rules, its §5b task handling,
+     and its Stage E report)
 
    If any is missing, stop and point the user to `install.sh`. Re-read whatever you need
    after a resume or a compaction. Never work from memory.
-3. The tasks directory must contain `INDEX.md` and `BLOCKERS.md`. If `BLOCKERS.md` is
-   missing or has no actionable entry (see §2), say there is nothing to resolve. Run
-   any runnable tasks (§4), then go to §6.
+3. The tasks directory must contain `INDEX.md`. If `BLOCKERS.md` is missing or has no
+   actionable entry (§3), say there is nothing to resolve. Run any runnable tasks (§6),
+   then finish (§8).
 
-## 1. Arguments and state
+## 1. Arguments
 
 - `<tasks-dir>` (required when standalone).
-- `--attempts N`: attempts per blocker (default **2**). An attempt is one fresh retry,
-  fix task, or split.
+- `--attempts N`: the attempt budget per blocker (default **2**). See the counting rule
+  in `blocker-template.md`: only resolver attempts since the latest human decision
+  count.
 - `--commit none|split|single`: defaults to the mode in `RUN-STATE.md`, otherwise
   `none`.
 - `--interactive`: you may ask the user about `spec-question` and `test-spec-conflict`
   blockers. Otherwise you never wait on the user.
 
-Use `RUN-STATE.md` as `tdd-orchestrator` §2 defines it.
-- **No `RUN-STATE.md`** (a standalone run on tasks from manual skill runs): create
-  one with `Stage: resolving`. Take a run baseline now (`.tdd-runs/run-baseline.log`),
-  and create `known-failures.txt` if it's missing.
-- **On every start:** set `Stage: resolving`, and record the pass number and the
-  attempts setting in the `Resolver:` line.
-- **A resolver run that was interrupted:** continue from the last log entry. A blocker
-  left `resolving` whose task is `in-progress` and is the current task is resumed
-  through the skill, exactly as the orchestrator resumes its current task.
+## 2. State, start-up and resuming
 
-## 2. Which blockers are actionable
+Use `RUN-STATE.md` as `tdd-orchestrator` §2 defines it. The **pass cap (5) applies per
+session**: reset the pass counter to 1 every time you start.
 
-An entry is actionable when it's a **root** blocker (not just a list of dependents)
-whose own task has all its dependencies `done`, and either:
+**Standalone start:**
+1. **No `RUN-STATE.md`** (tasks from manual skill runs): create one with
+   `Stage: resolving`. Take a run baseline now (`.tdd-runs/run-baseline.log`), and create
+   `known-failures.txt` if it's missing.
+2. **`Stage` is anything before `resolving`** (`breakdown`, `breakdown-validate`,
+   `awaiting-approval`, `executing`): the orchestrator's run isn't finished. Stop and
+   tell the user to relaunch `tdd-orchestrator` with the same plan. It owns that stage,
+   and resuming its current task is only safe there.
+3. Otherwise set `Stage: resolving`.
+
+**Every start (standalone or within the orchestrator), recover before anything else:**
+1. **The current task is `in-progress`:** resume it first through the skill, exactly as
+   orchestrator §2 resumes its current task, with the arguments recorded in the log,
+   including `--blocker-id` if it was a retry. Then handle its outcome (§5).
+2. **An entry is `resolving` with an unfinished split:** its journal (§7) shows
+   `split started` without `split committed`. Roll it back:
+   - restore `INDEX.md` and the dependents' task files from
+     `.tdd-runs/B-NN-split-backup/`
+   - delete the `pending-split` sub-task files
+   - restore the original's status from the backup
+
+   Set the entry to `open`. No attempt is counted.
+3. **Any other entry is still `resolving`:** an interrupted attempt that never reached
+   the skill.
+   - Set it back to `open`.
+   - Archive the task's run directory if one exists.
+   - Set the task's status back to `blocked (B-NN)` if it was reset to `todo`.
+
+   No attempt is counted.
+
+## 3. Which blockers are actionable
+
+An entry is actionable when either:
 - its status is `open`, or
-- its status is `needs-human` and its `Decision` section has been filled in.
+- its status is `needs-human` and its `Decision` section is non-empty (an unapplied
+  human decision)
 
-Process actionable entries in ID order. An entry whose `Attempts` table already has
-`--attempts` rows by `tdd-blocker-resolver`, and no new `Decision`, isn't actionable.
-Make sure it's marked `needs-human`.
+and one of these holds:
+- **Task-bound:** its `Task` is a task whose status includes the reason `B-NN`, and all of
+  that task's dependencies are `done`.
+- **Run-level:** `Task: none (run-level)`. These are earlier-failure entries.
 
-## 3. One attempt at one blocker
+An `open` entry whose budget is used up is not actionable. Set it to `needs-human` (§5).
+An entry that is `open` but whose task no longer lists `B-NN` (for example, the task was
+completed another way) gets a resolver row explaining that, and its status becomes
+`resolved`.
 
-1. Set its status to `resolving` and log it in `RUN-STATE.md`.
-2. **Re-diagnose from scratch.**
-   - Read the entry, every evidence file it links, the archived attempt's report
-     (`.tdd-runs/T<NN>/attempt-*/`), the task file, and the code it touches.
+Process actionable entries in ID order.
+
+## 4. One attempt at one blocker
+
+1. **Journal and claim.** Set the entry's status to `resolving`. Record
+   `B-NN attempt: started` in the `RUN-STATE.md` log.
+2. **Apply a pending decision.** If `Decision` is non-empty:
+   - add an `Attempts` row: `By: resolver-decision`, outcome `decision applied: <text>`
+   - reset the section to `_None yet._`
+   - record the decision in the task's `Open Questions` as `Q: … — Resolved (human, B-NN): …`
+
+   The budget starts fresh from here.
+3. **Re-diagnose from scratch.**
+   - Read the entry, every evidence file it links (including archived `attempt-*/`
+     reports and logs), the task file, and the code it touches.
    - Check whether it still applies:
      - rerun the failing command for an `environment` blocker
-     - rerun the suite for an `earlier-failure` blocker
-     - re-check whether a dependency has since changed the picture
+     - rerun the affected tests for an `earlier-failure` blocker
+   - Write your own hypothesis into the entry, noting where it agrees or disagrees
+     with the earlier one.
+4. **Choose a strategy.** Pick the first row that applies and hasn't already been tried
+   since the last decision (check `Attempts`):
 
-     If it no longer applies, go straight to the retry (step 4) with the strategy
-     "condition cleared".
-   - Write your own hypothesis. Don't just accept the one in the entry. Note
-     agreements and disagreements in the entry.
-3. **Choose a strategy.** Pick the first that applies and hasn't already been tried
-   (check the `Attempts` table):
+   | Situation | Strategy |
+   |-----------|----------|
+   | A decision was just applied | **Retry fresh** (§4a), with the decision in the brief. If the decision is "cleanup done", first verify it (§4a step 1). |
+   | `spec-question`, `test-spec-conflict` with no decision | **Unattended:** no attempt. Make sure `To unblock` states the exact question, the options and a recommendation. Set `needs-human`. **Interactive:** ask with `AskUserQuestion` (with the recommendation), record the answer as a `resolver-decision` row and in `Open Questions`, then retry fresh. |
+   | `cap-hit`, and the evidence shows the task is too big (findings or failures spread across many ACs, or fix cycles keep moving between areas), or a targeted retry already failed | **Split** (§4c). |
+   | `cap-hit` | **Targeted fresh retry.** The brief gives the diagnosis, the approaches that failed and why, the chosen suggested fix, and concrete guidance for the role agent that got stuck. |
+   | `earlier-failure` whose tests now pass | Remove the `known-failures.txt` entries sourced to B-NN. Add a row with outcome `cleared`. If task-bound, retry fresh. If run-level, set it `resolved`. |
+   | `earlier-failure` whose introducing task is `done` | **Fix task** (§4b). |
+   | `environment` that an allowed in-repo fix can address | **Environment fix:** run it, verify the failing command now works, and add a `resolver-env-fix` row. Then retry fresh. |
+   | Anything else (`orphaned-work` or `other` with no decision, `environment` needing outside action, `earlier-failure` with no done introducing task) | Set `needs-human`. Make sure `To unblock` says exactly what a human must do or decide. |
 
-   | Type / situation | Strategy |
-   |------------------|----------|
-   | `Decision` filled in by a human | Apply it. Record it in the task's `Open Questions` as `Q: … — Resolved (human, B-NN): …`, and in the strategy brief. Then retry fresh. |
-   | `spec-question`, `test-spec-conflict` with no decision | **Unattended:** don't spend an attempt. Make sure `To unblock` states the exact question, the options and a recommendation. Set `needs-human`. **Interactive:** ask the user with `AskUserQuestion` (with the recommendation), record the answer as above, then retry fresh. |
-   | `cap-hit`, first resolver attempt | **Targeted fresh retry.** The strategy brief gives the earlier diagnosis, the approaches that failed and why, the chosen suggested fix, and concrete guidance for the role agent that got stuck. |
-   | `cap-hit`, and the evidence shows the task is too big (findings or failures spread across many ACs, or the fix cycles keep moving between areas), or a targeted retry already failed | **Split the task** (§3a). |
-   | `earlier-failure` | If the introducing task is `done`, create a **fix task** exactly as `tdd-orchestrator` 5b-3(a) describes and run it. Then retry this task fresh. If the failure has cleared, remove it from `known-failures.txt` and retry fresh. |
-   | `environment` | Fix it **only within the repository** (see the list below), verify the failing command now works, then retry fresh. Otherwise set `needs-human`, with the exact action the user must take. |
-   | `orphaned-work`, `other` | Set `needs-human`, unless a filled-in `Decision` says the user has cleaned up or settled it. In that case, retry fresh. |
-
-   **In-repo environment fixes you may make:**
+   **Allowed in-repo environment fixes:**
    - install dependencies already declared in the repo's manifest or lockfile, using its
      own package manager
-   - run the repo's documented setup, code generation, or migration scripts
-   - start services the repo itself defines (for example in its compose file)
+   - start services the repo itself defines
+   - run the repo's documented setup or code-generation scripts, **only if** all their
+     output is git-ignored. Check `git status --porcelain` before and after. If tracked
+     files changed, restore them and treat the fix as needing a human, because changes
+     that belong to no task would later be mistaken for the user's own.
 
-   **Never:** add new dependencies (that's task work), change system configuration, use
-   `sudo`, create or guess credentials, or reach networks or services the repo doesn't
-   define.
-4. **Retry fresh** (used by every strategy that ends in "retry").
-   1. **Precondition:** the entry's `State of the work` says its partial work was set
-      aside and any commits were reverted. If not, its work may still be in the tree and
-      can't be separated safely. Set `needs-human`, saying exactly what the user must
-      remove or revert, and stop this attempt.
-   2. Archive the task's run directory (as the implement skill defines it).
-   3. Remove the `known-failures.txt` entries whose source is this blocker.
-   4. Set the task's `Status: todo`.
-   5. Write the **strategy brief** to `.tdd-runs/T<NN>-strategy.md`. It covers:
-      - the blocker ID
-      - the diagnosis
-      - what failed before, and why
-      - the chosen approach
-      - the earlier attempt's set-aside work, as a reference draft only
-   6. Carry out the implement skill on the task with this run's options plus
-      `--unattended` (unless `--interactive`) and `--blocker-id B-NN`.
-5. **Record the outcome.**
-   - **`done`:**
-     1. Add an `Attempts` row with outcome `resolved` and set the status to `resolved`.
-     2. Every task blocked with the reason `dependency … (B-NN)` goes back to `todo`
-        (task file and `INDEX.md`).
-     3. Run the tasks that are now runnable (§4).
-   - **Blocked again:** the skill has already extended the entry with a new attempt row
-     and evidence. If this blocker now has `--attempts` resolver rows, set it to
-     `needs-human`. Rewrite `To unblock` with:
-     - what has now been ruled out
-     - the remaining hypotheses
-     - exactly what a human needs to decide or do
+   **Never:** add new dependencies, change system configuration, use `sudo`, create or
+   guess credentials, or reach networks or services the repo doesn't define.
 
-     Otherwise leave it `open` for the next pass.
+### 4a. Retry fresh
 
-### 3a. Splitting a task
+1. **Precondition: the task's earlier work is out of the tree.** That holds when the
+   entry's `State of the work` shows:
+   - partial work `none`, or set aside
+   - commits `none`, or all reverted
 
-1. Carry out the breakdown skill's **Phases 3–5 scoped to this one task**. Produce two or
-   more sub-tasks with the next free IDs, which together cover exactly the original's
-   ACs and required test cases.
-   - Each sub-task depends on the original's dependencies plus the earlier sub-tasks
-     it needs.
-   - Interfaces the original promised to its dependents must be provided, unchanged,
-     by one of the sub-tasks.
-2. Mark the original `superseded (by T<a>, T<b>, …)`.
-3. In every dependent task file and in `INDEX.md`, replace the original's ID with the
-   sub-tasks that provide what that dependent needs. Re-run the breakdown's Phase 5
-   validation over the whole set.
-4. Add an `Attempts` row with outcome `split into …`. Set the entry to `resolved`, and
-   note that any new blocker on the sub-tasks gets its own entry referencing B-NN.
-5. Dependents blocked with `(B-NN)` go back to `todo`. They become runnable once the
-   sub-tasks are done.
-6. Run the sub-tasks (§4).
+   It also holds when a human wrote "cleanup done" and you have **verified** it: each
+   listed file matches `HEAD` (or is absent, if it was new), and each listed commit is
+   reverted (`git log`). In that case, update `State of the work`.
 
-## 4. Running tasks
+   If none of this holds, set `needs-human` with exactly what must be removed or
+   reverted, and stop this attempt. No attempt is counted.
+2. Archive the task's run directory (the skill defines this; it also moves the report and
+   rewrites evidence paths). Journal: `archived`.
+3. Set the task's status to `todo`. Under §3, its dependencies are all `done`, so B-NN
+   was its only reason. Write the **strategy brief** to `.tdd-runs/T<NN>-strategy.md`. It covers:
+   - the blocker ID
+   - the diagnosis
+   - what failed before, and why
+   - the chosen approach
+   - the earlier set-aside work, as a reference draft only
 
-Whenever tasks are runnable (`todo`, with all dependencies `done`), run them one at a
-time, in ID order, exactly as `tdd-orchestrator` §5b does:
-- with the same arguments
-- with its unknown-failure and dependency-check handling
-- with its blocked-task handling
+   Journal: `brief written`.
+4. Set `Current task: T<NN>` in `RUN-STATE.md`. Log the exact arguments. Carry out the
+   implement skill as `tdd-orchestrator` §5b runs a task (same arguments, including
+   `--target-failures` if the task has a file), plus `--blocker-id B-NN`. Journal:
+   `skill started`. Keep the `known-failures.txt` entries sourced to B-NN in place during
+   the run. A target failure takes precedence over an accepted one in the skill.
+5. Handle the outcome (§5).
 
-A task that blocks gets a new blocker entry from the skill. That entry is picked up in
-the next pass.
+### 4b. Fix task (earlier-failure)
 
-## 5. Passes
+Create the fix task exactly as `tdd-orchestrator` 5b-3(a) describes (next free ID,
+target-failures file, `INDEX.md` row). Add a `resolver-fix-task` row. Run it as in 4a
+step 4, without `--blocker-id`. It's a new task: if it blocks, it gets its own entry,
+which references B-NN in its description.
+- **Fix task `done`:** remove the `known-failures.txt` entries sourced to B-NN. If
+  task-bound, retry the blocked task fresh (4a) as part of this attempt. If run-level,
+  set B-NN `resolved`.
+- **Fix task blocked:** leave B-NN `open`. Its budget now has this attempt counted.
 
-One **pass** handles every actionable entry once (§2–§3), then runs every runnable task
-(§4). After a pass:
-- If it made **progress** (a blocker resolved or split, or a task reached `done`), and
-  there are still actionable entries, start another pass.
-- Otherwise stop. **Cap: 5 passes.** At the cap, set every remaining actionable entry to
-  `needs-human` with its current write-up.
+### 4c. Split
 
-Update `RUN-STATE.md` after every attempt and every pass.
+1. Apply the **4a precondition** first.
+2. Back up `INDEX.md` and every dependent task file to `.tdd-runs/B-NN-split-backup/`.
+   Journal: `split started`.
+3. Carry out the breakdown skill's **Phases 3–5 scoped to this one task, unattended**.
+   Produce two or more sub-tasks with the next free IDs, which together cover exactly
+   the original's ACs and required test cases.
+   - Write them with status `pending-split (B-NN)`.
+   - Copy every resolved or assumed `Open Questions` line from the original into each
+     sub-task it concerns.
+   - Each sub-task depends on the original's dependencies plus the earlier sub-tasks it
+     needs.
+   - Interfaces the original promised to dependents are provided, unchanged, by one
+     sub-task.
+4. Treat the original as replaced, and re-point dependents: in every dependent task file
+   and in `INDEX.md`, replace the original's ID with the sub-tasks that provide what the
+   dependent needs. Run Phase 5 over the whole set.
+   - If validation still fails at its cap: roll back (§2, recovery step 2) and record
+     why in the entry. If a targeted retry hasn't been tried, leave the entry `open` for
+     it. Otherwise set `needs-human`.
+5. **Commit the split:**
+   - mark the original `superseded (by T<a>, T<b>, …)`
+   - set the sub-tasks to `todo`
+   - remove the `known-failures.txt` entries sourced to B-NN (the work is out of the
+     tree, so those tests are gone)
+   - remove the reason `(B-NN)` from dependents
+   - add a `resolver-split` row with outcome `split into …`
+   - set the entry to `resolved`
 
-## 6. Finish
+   Journal: `split committed`. A blocker on a sub-task gets its own new entry,
+   referencing B-NN.
+
+## 5. Outcomes of a retry
+
+Exactly one `Attempts` row per attempt. When a retry blocks again the skill writes it.
+You write it for every other outcome.
+
+| Outcome | What to do |
+|---------|------------|
+| **`done`** | Add a `resolver-retry` row with outcome `resolved`. Set the entry to `resolved`. Remove the `known-failures.txt` entries sourced to B-NN. Remove the reason `(B-NN)` from every task listed in `Blocks`. Each task with no reasons left becomes `todo`. |
+| **Blocked again** (the skill extended B-NN) | Apply orchestrator 5b-5: incomplete set-aside means adding the failing tests to known failures with source B-NN, and dependents keep the B-NN reason. If the budget is now used up, set `needs-human` and rewrite `To unblock` with what has been ruled out, the remaining hypotheses, and exactly what a human must decide or do. Otherwise set it `open` for the next pass. |
+| **Stopped in Phase 0 on an unknown failure** (the skill archived and reset the task) | Add a row with outcome `stopped: unknown failure <tests>`. Handle the failure as orchestrator 5b-3 does, but any blocker it would open extends B-NN. Its fix task is a separate task. Set the task back to `blocked (B-NN)`, and the entry back to `open` (the next pass retries it) or to `needs-human` if the budget is used up. |
+| **Stopped in Phase 0 on its dependency check** | Add a row with outcome `stopped: dependency T<x> not done`. Describe the inconsistency in the entry. Set the task back to `blocked (B-NN)` and the entry to `needs-human`. Never open a second entry. |
+
+## 6. Running tasks
+
+Whenever tasks are runnable (`todo`, with all dependencies `done`; never `pending-split`),
+run them one at a time, in ID order, exactly as `tdd-orchestrator` §5b does. Set
+`Current task` before each. A task that blocks gets a new entry from the skill, which is
+picked up in the next pass.
+
+## 7. Journal and passes
+
+The `RUN-STATE.md` log is your journal. Record each attempt step as it happens:
+`B-NN attempt: started`, `archived`, `brief written`, `skill started`, `split started`,
+`split committed`, and the outcome. Recovery (§2) relies on these entries.
+
+One **pass** handles every actionable entry once (§3–§5), then runs every runnable task
+(§6). After a pass:
+- If it made **progress** (an entry resolved, a split committed, or a task reached
+  `done`) and there are still actionable entries, start another pass.
+- Otherwise stop. **Cap: 5 passes per session.** At the cap, set every remaining
+  actionable entry to `needs-human`, with its current write-up.
+
+## 8. Finish
 
 - **Inside the orchestrator:** return to its Stage E.
 - **Standalone:** carry out `tdd-orchestrator`'s **Stage E** yourself: final suite, then
@@ -188,15 +265,15 @@ Either way, tell the user in a few lines:
 
 - Never write tests or production code yourself. All task work goes through the
   implement skill and its role agents.
-- Never make a spec or behavior decision yourself when unattended. That's what
-  `needs-human` is for. Apply only decisions recorded by a human in an entry's
-  `Decision` section, or answers given in `--interactive` mode.
-- Never retry a task whose earlier work may still be in the tree. Never set aside,
-  restore, or diff another task's work.
-- Never exceed `--attempts` per blocker or 5 passes. Never delete a blocker entry.
-  Resolved entries stay as history.
+- Never make a spec or behavior decision yourself when unattended. Apply only decisions
+  recorded by a human in an entry's `Decision` section, or answers given in
+  `--interactive` mode.
+- Never retry or split a task whose earlier work may still be in the tree. Never set
+  aside, restore, or diff another task's work.
+- Never open a second entry for a task that already has an unresolved one. Never delete
+  an entry. Resolved entries stay as history.
+- Never exceed the attempt budget (counted per the template) or 5 passes per session.
 - Never push, never open pull requests, and commit only as `--commit` allows.
-- Report results exactly as they are. A blocker is `resolved` only when its task has
-  reached `done` through the skill's Phase 8 integrity check, or when the task was split.
-  After a split, the sub-tasks carry the work, and any blockers they hit are tracked as
-  new entries.
+- Report results exactly as they are. An entry is `resolved` only when its task reached
+  `done` through the skill's Phase 8 integrity check, the task was split (the sub-tasks
+  carry the work from then on), or its run-level failure cleared or was fixed.

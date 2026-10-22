@@ -91,8 +91,14 @@ Update it at every stage change and every task outcome.
       - `breakdown`: rerun the breakdown from its Phase 1.
       - `breakdown-validate`: rerun the breakdown's Phase 5 before the gate. Never skip
         validation because `INDEX.md` exists.
+      - `awaiting-approval`: show the approval gate again (Stage B).
+      - `executing`: continue Stage C with the current task (below), then the runnable
+        tasks.
       - `resolving`: continue with the resolver (Stage D), which resumes from its own
         records.
+      - `finished`: say so and point to `RUN-REPORT.md`. If `BLOCKERS.md` has entries with
+        a filled-in `Decision`, suggest launching `tdd-blocker-resolver`. Do nothing
+        else.
    3. The recorded **current task**, if `in-progress`, is resumed by carrying out the
       implement skill on it. The skill detects its own `state.md` and follows its
       **Resuming** rules. This is safe only because no other task has run since. Never
@@ -106,9 +112,14 @@ Update it at every stage change and every task outcome.
 4. **Orphaned work:** an `in-progress` task that isn't the recorded current task, for
    example one left by a manual `/tdd-implement-task` run. Its work can't be set aside
    safely, because other tasks may have touched the same files since.
-   - **Unattended:** mark it `blocked` and open a blocker of type `orphaned-work`. In it,
-     list its files and say the user must remove its work from the tree (and revert any
-     commits it made) before it can be retried. Set it to `needs-human`. Continue.
+   - **Unattended:** mark it `blocked` and open a blocker of type `orphaned-work`, with
+     `By: orchestrator` and every template section filled. List its files and the
+     commits recorded in its `state.md`. As suggested fixes, give:
+     1. remove its work from the tree and revert its commits, then write "cleanup done"
+        in `Decision`
+     2. keep the work, review it by hand, and mark the task done yourself
+
+     Set it to `needs-human`. Continue.
    - **Interactive:** tell the user the same, and ask whether to wait for them to clean
      up or to record that blocker.
 
@@ -181,7 +192,15 @@ For each runnable task in the wave, in ID order:
    - `--run-baseline <tasks-dir>/.tdd-runs/run-baseline.log`
    - `--known-failures <tasks-dir>/.tdd-runs/known-failures.txt`
    - `--blockers <tasks-dir>/BLOCKERS.md`
+   - `--target-failures <tasks-dir>/.tdd-runs/T<NN>-target-failures.txt`, whenever that
+     file exists (fix tasks). This applies on every run of the task: first runs,
+     resumes and retries.
    - `--unattended`, unless the run is interactive
+   - `--blocker-id B-NN`, only when the resolver is retrying a blocker
+
+   When the resolver is running this section for a retry of B-NN, every blocker that the
+   steps below would open **extends B-NN instead**. Never open a second entry for the same
+   task.
 
    Follow the skill exactly:
    - its role separation (you never write tests or production code)
@@ -210,12 +229,18 @@ For each runnable task in the wave, in ID order:
    - **(b) Accept:** add the failure to `known-failures.txt` with its source, then run this
      task again.
      - **Unattended:** use (b) only when (a) isn't available. First open a blocker of
-       type `earlier-failure` that describes the failure, the suspected cause and the
-       suggested fixes, and use that blocker as the source.
+       type `earlier-failure` with:
+       - `Task: none (run-level)`, `Introduced by: <task, or "unknown">`, `Blocks: none`
+       - `By: orchestrator`, with every section filled: the failing tests, their output,
+         the suspected cause, and ranked fixes
+
+       Use that blocker as the source.
      - **Interactive:** ask the user to choose between (a), (b) and stopping.
 4. **If the skill stops on its dependency check** (a dependency isn't `done`), don't run
    the task again. That means the graph or statuses are inconsistent. Open a blocker of
-   type `other` describing the inconsistency, mark the task `blocked` with it, and continue.
+   type `other`, with every section filled, describing the inconsistency (which
+   dependency, its status, and the `INDEX.md` row). Mark the task `blocked` with it, and
+   continue.
 5. When the task finishes:
    - **`done`:** give the user one progress line, for example
      `T03 done — 14 tests, 2 fix cycles, report: tasks/T03-….report.md (4/9 tasks)`.
@@ -223,10 +248,11 @@ For each runnable task in the wave, in ID order:
      1. The skill has already written the blocker entry and set the work aside. If the
         entry says the set-aside is incomplete, add the task's failing tests to
         `known-failures.txt` with source `B-NN`, so later tasks aren't blocked by them.
-     2. Mark every task that depends on it, directly or indirectly, `blocked` with the
-        reason `dependency T<NN> blocked (B-NN)` (task file and `INDEX.md`). List them
-        under `Blocks` in the B-NN entry, and their requirements under `Unmet
-        requirements`.
+     2. Mark every task that depends on it, directly or indirectly, `blocked`. **Add** the
+        reason `dependency T<NN> (B-NN)` to the task's list of reasons (task file and
+        `INDEX.md`), since a task can be blocked by several roots. List these tasks under
+        `Blocks` in the B-NN entry, and their requirements under `Unmet requirements`.
+        A blocked task goes back to `todo` only when its last reason is removed.
      3. Give the user one progress line, for example `T05 blocked — B-02 (cap-hit) — 2
         dependents skipped — see BLOCKERS.md`.
      4. With `--strict`, go to Stage E. Otherwise, continue with the tasks that are still

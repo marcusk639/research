@@ -17,9 +17,11 @@ is blocked do NOT get their own entry. They're listed under "Blocks" on the root
 ## B-<NN> — <one-line summary of what is blocked and why>
 
 - **Status:** open <!-- open | resolving | resolved | needs-human -->
-- **Task:** T<NN> — <task title> · **Phase:** <phase and step where it stopped>
+- **Task:** <T<NN> — task title, the task this entry blocks | none (run-level), for an earlier-failure entry not tied to a blocked task> · **Phase:** <phase and step where it stopped>
+- **Introduced by:** <T<NN>, for earlier-failure entries | n/a>
 - **Type:** <cap-hit | spec-question | test-spec-conflict | earlier-failure | environment | orphaned-work | other>
-- **Opened:** <ISO time> by <tdd-implement-task | tdd-orchestrator | tdd-blocker-resolver>
+- **Opened:** <ISO time> by <tdd-implement-task | tdd-orchestrator | tdd-blocker-resolver>.
+  Every writer fills **every** section below. None may be left as a placeholder.
 - **Blocks:** <task IDs blocked through this one, or "none"> · **Unmet requirements:** <R-IDs>
 
 ### What was being attempted
@@ -71,8 +73,21 @@ options, and a recommendation with its reason.>
 
 _None yet._
 
+<!-- When the resolver applies a decision, it copies the text into an Attempts row
+("decision applied: …") and resets this section to "_None yet._". A non-empty section
+therefore always means a new, unapplied decision. To confirm cleanup of work left in
+the tree, write "cleanup done", and list anything you did that the entry doesn't
+already show. -->
+
 ### Attempts
+
+<!-- By: original-run | orchestrator | resolver-retry | resolver-fix-task | resolver-split | resolver-env-fix | resolver-decision.
+Each attempt gets exactly one row. The skill writes it when a resolver retry blocks
+again. The resolver writes it for every other outcome. The attempt budget counts the
+resolver-retry, resolver-fix-task, resolver-split and resolver-env-fix rows after the
+latest resolver-decision row (or all of them, if there is none). So a human decision
+starts a fresh budget, and the decision row itself isn't an attempt. -->
 
 | # | When | By | Strategy | Outcome | Evidence |
 |---|------|----|----------|---------|----------|
-| 1 | <ISO time> | tdd-implement-task | original run | blocked at <phase> | `.tdd-runs/T<NN>/…` |
+| 1 | <ISO time> | original-run | — | blocked at <phase> | `.tdd-runs/T<NN>/…` |

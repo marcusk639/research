@@ -129,7 +129,14 @@ Source plan: <relative path> · Generated: <date> · Tasks: <n>
 Check the whole set against this list. Fix every failure, then run the whole
 list again. Stop only after a full pass finds nothing. **Cap: 5 passes.** If problems
 remain after that, show them to the user and ask whether to continue, accept them as
-listed assumptions, or stop.
+listed assumptions, or stop. When a caller runs these phases unattended (for example
+`tdd-blocker-resolver` splitting a task), don't ask. Return the remaining problems to the
+caller.
+
+Tasks with status `superseded` or `pending-split` are left out of the coverage, overlap
+and dependency checks. A task being split is treated as already replaced by its
+sub-tasks. When adding or replacing tasks in an existing set, update `INDEX.md` in place
+(rows and matrix) rather than rewriting it.
 
 1. **Coverage:** every requirement `R-n` maps to at least one task, and every task maps
    to at least one requirement (no scope creep).

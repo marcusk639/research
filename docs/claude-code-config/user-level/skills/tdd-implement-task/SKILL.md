@@ -81,8 +81,8 @@ says "ask the user" follows this table instead:
 | Test-change procedure step 2: the right behavior isn't clear from the spec | **Blocker** (type `test-spec-conflict`). |
 | Any cap hit | **Blocker** (type `cap-hit`). |
 | An environment or tooling failure the role agents can't fix within the task's scope (a missing tool, a service that won't start, credentials, network) | **Blocker** (type `environment`). |
-| Phase 0 unknown failure | Unchanged: stop, archive, report. The orchestrator handles it. If this skill was run directly (no orchestrator), it's a **blocker** (type `earlier-failure`). |
-| Phase 0 dependency check fails | Stop without a blocker entry. The orchestrator records it. Run directly, it's a **blocker** (type `other`). |
+| Phase 0 unknown failure | With `--run-baseline` (an orchestrator or resolver run): stop, archive, report. The caller handles it. Without it: a **blocker** (type `earlier-failure`). |
+| Phase 0 dependency check fails | With `--run-baseline`: stop without a blocker entry. The caller records it. Without it: a **blocker** (type `other`). |
 
 **The low-risk test.** Assume a default only if **all** of these hold. Otherwise it's a
 blocker.
@@ -101,10 +101,13 @@ blocker.
 2. **Write or extend the blocker entry** in the `--blockers` file (default
    `<tasks-dir>/BLOCKERS.md`), following
    [`blocker-template.md`](blocker-template.md):
-   - With `--blocker-id B-NN` (a retry of an existing blocker), add a row to that entry's
-     `Attempts` table. Update `What happened`, the hypothesis, the suggested fixes and
-     `Type` with the new evidence, and set its status back to `open`.
-   - Otherwise, append a new entry with the next free ID.
+   - With `--blocker-id B-NN` (a resolver retry), **every** blocker in this run extends
+     B-NN. Never open a second entry. Update `What happened`, the hypothesis, the
+     suggested fixes and `Type` with the new evidence. Add an `Attempts` row with
+     `By: resolver-retry` and the outcome `blocked again at <phase>`. Leave the status to
+     the resolver.
+   - Otherwise, append a new entry with the next free ID. Its first `Attempts` row says
+     `By: original-run`.
 
    Fill **every section** from the evidence in `run-dir` and the reviews. "Suggested
    fixes" must be concrete and ranked, and each must say whether it needs a human
@@ -189,8 +192,10 @@ first. Unattended runs do it automatically.
 - **Run directory:** `<task-dir>/.tdd-runs/T<NN>/`, where `T<NN>` is the task's ID
   (every task, including a fix task, has its own unique ID). **Archiving** it means
   moving its contents, except earlier `attempt-*` folders, into
-  `.tdd-runs/T<NN>/attempt-<k>/` (the next free `k`). This leaves no top-level
-  `state.md`, so the next run is a fresh start. It holds the test-guard manifest, the
+  `.tdd-runs/T<NN>/attempt-<k>/` (the next free `k`), and moving the task's report
+  `T<NN>-<slug>.report.md` in there too. Then, in every `BLOCKERS.md` entry that links
+  into the moved files, rewrite those paths to their `attempt-<k>/` location. This leaves
+  no top-level `state.md`, so the next run is a fresh start. It holds the test-guard manifest, the
   snapshot copies of guarded files, and the command logs. Create it at the start. If the
   repo isn't ignoring it, suggest adding `.tdd-runs/` to `.gitignore` (don't edit
   `.gitignore` unasked).
@@ -250,7 +255,8 @@ resume, not a fresh start.
 
      Record it in `run-dir/accepted-failures.txt`. It's not this task's to fix. It's
      excluded from "all tests pass", and the report lists it.
-   - **Target failure:** listed in `--target-failures`. Fixing it is this task's job. It
+   - **Target failure:** listed in `--target-failures`. This takes precedence over
+     "accepted" when a test is in both lists. Fixing it is this task's job. It
      is not accepted and not excluded. It counts as one of this task's tests: it should
      fail for the right reason in 4b and must pass by Phase 8.
    - **Unknown failure** (only possible with `--run-baseline`): something broken earlier

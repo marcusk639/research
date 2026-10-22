@@ -1,6 +1,6 @@
 # T<NN> — <Title: one behavioral outcome, no "and">
 
-- **Status:** todo <!-- todo | in-progress | blocked (B-NN or dependency T<NN> blocked) | done | superseded (by T<NN>, T<NN>) -->
+- **Status:** todo <!-- todo | in-progress | blocked (reasons: B-NN, and/or dependency T<NN> (B-NN); one per root) | done | superseded (by T<NN>, …) | pending-split (B-NN) — not runnable -->
 - **Depends on:** <T-IDs, or "none">
 - **Covers requirements:** <R-IDs from INDEX.md>
 - **Source plan:** <relative path to plan, section anchor>
