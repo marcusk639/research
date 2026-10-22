@@ -62,9 +62,10 @@ regression.
 ## Definition of Done
 
 - [ ] Every AC is covered by at least one passing test; every TC above exists.
-- [ ] Locked tests are unmodified, or every change is justified in the run report.
+- [ ] Guarded test files and test config are unmodified, or every change is justified in
+      the run report.
 - [ ] The full suite passes (no regressions).
-- [ ] Three-pass code review is clean.
+- [ ] Code review (three passes plus any verification passes) is clean.
 - [ ] <task-specific item, e.g. "migration is reversible">
 
 ## Open Questions

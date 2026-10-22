@@ -34,8 +34,8 @@ include:
 - the phase, and the pass focus if it's a review
 - exactly what to return
 
-Reviewers have no shell, so paste in the text they need: the current `git diff` (or the
-full contents of new files), and the relevant test-run output. Never assume a subagent
+Reviewers have no shell, so paste in the text they need: the **review diff** (defined in
+Phase 5) and the relevant test-run output. Never assume a subagent
 remembers an earlier invocation.
 
 **Spec questions from any agent.** Spec gaps reported by the test author, spec questions
@@ -74,9 +74,11 @@ task `blocked`.
     procedure) go into the second commit and are listed in the report.
   - At the start, record `git status --porcelain`. If the directory is not a git repo,
     downgrade to `none`. Before each commit, if any file to be committed already had
-    uncommitted changes before the run, skip that commit and say so. With `split`, the
-    report must state that the tests commit exists and the code is uncommitted. Never
-    commit someone else's changes.
+    uncommitted changes before the run, skip that commit and say so. With `split`, if the
+    tests commit was skipped, skip the code commit too (committed code must never ship
+    ahead of its tests). If only the code commit was skipped, the report must state that
+    the tests commit exists and the code is uncommitted. Never commit someone else's
+    changes.
 - **Run directory:** `<task-dir>/.tdd-runs/T<NN>/`. It holds the test-guard manifest, the
   snapshot copies of guarded files, and the command logs. Create it at the start. If the
   repo isn't ignoring it, suggest adding `.tdd-runs/` to `.gitignore` (don't edit
@@ -173,19 +175,39 @@ then follow the cap rule.
 
 ## Phase 4 — Lock the tests and confirm they fail
 
-**4a. Lock (the test guard).** The guard protects **every** file that decides test
-outcomes, not only this task's tests:
-- this task's test files
-- every existing test file matching the repo's test globs
-- test-runner config (for example `pytest.ini`, `pyproject.toml` test sections,
-  `jest.config.*`, `vitest.config.*`, `conftest.py`, `setupTests.*`)
-- shared fixtures and test helpers
+**4a. Lock (the test guard).** The guard protects **every** source file that decides
+test outcomes, not only this task's tests. It has two parts.
 
-Write the glob list to `run-dir/guard-globs.txt`. Hash every matching file into
-`run-dir/manifest.sha256` with `sha256sum` (or `shasum -a 256`). Copy each file into
-`run-dir/locked/`, keeping its relative path.
+1. **Guarded files**, hashed whole:
+   - this task's test files
+   - every existing test file
+   - test-only config (`pytest.ini`, `conftest.py`, `jest.config.*`, `vitest.config.*`,
+     `setupTests.*`, `.mocharc.*`, and so on)
+   - shared fixtures and test helpers
+   - committed snapshot or golden files
 
-From now on, a guarded file may change **only** through the test-change procedure below.
+   Write the globs to `run-dir/guard-globs.txt`. Globs name **source and data
+   extensions** (for example `tests/**/*.py`, `**/*.test.ts`, `**/__snapshots__/*.snap`),
+   never bare directories. Expand them only over tracked plus untracked-but-not-ignored
+   files: `git ls-files -co --exclude-standard`, or without git, `find` with caches
+   excluded. Always exclude generated output: `__pycache__`, `.pytest_cache`,
+   `node_modules`, coverage, build directories, and `.tdd-runs/`.
+
+   Hash every match into `run-dir/manifest.sha256` with `sha256sum` (or
+   `shasum -a 256`). Copy each into `run-dir/locked/`, keeping its relative path.
+2. **Mixed config files**, watched by section. These are files that hold test settings
+   alongside other settings the task may legitimately need to change (dependencies,
+   scripts), such as `package.json`, `pyproject.toml`, `setup.cfg`, `tox.ini`,
+   `Cargo.toml`. List each in `run-dir/mixed-config.txt` with its test sections (for
+   example `[tool.pytest.*]`, `[tool.coverage.*]`, the `"jest"` key, the `test` script).
+   Copy each into `run-dir/locked/`.
+
+From now on, a guarded file or a test section of a mixed config file may change **only**
+through the test-change procedure below.
+
+Run tests in **non-writing mode** where the framework has one (for example `jest --ci`),
+and never pass a snapshot-update flag. A test run must never create or update
+snapshots. Expected snapshots are authored by the test author before the lock.
 
 **4b. Confirm they fail.** Run the task's test command and save the output to
 `run-dir/red.log`. Classify every test:
@@ -199,10 +221,12 @@ From now on, a guarded file may change **only** through the test-change procedur
 - **Passes:** allowed only for a `regression`-kind test that guards existing behavior.
   Any other passing test is meaningless or tests the wrong thing.
 
-Send wrong-reason and wrongly passing tests back to the test author, run one
-verification pass (all focuses) on the changes, lock again (4a), then run 4b again.
-**Cap: 3 rounds.** Proceed only when every non-regression test fails for the right reason
-and every regression test passes. With `--commit split`, commit the tests and stubs now.
+Send wrong-reason and wrongly passing tests back to the test author. Run a
+verification pass (all focuses) on the changes. If it's blocking, fix and verify again
+within the same round. Then lock again (4a) and run 4b again. **Cap: 3 rounds**, and
+at most 3 verification passes within one round. Hitting either follows the cap rule.
+Proceed only when every non-regression test fails for the right reason and every
+regression test passes. With `--commit split`, commit the tests and stubs now.
 
 ## Phase 5 — Write the code (implementer)
 
@@ -221,19 +245,36 @@ Delegate to a **new** `tdd-implementer`. The prompt states:
 - Return: the files changed, a summary of the design, the build/typecheck result, and any
   suspected test or spec conflicts.
 
+**Review diff.** Before the first delegation in this phase, copy every production file
+the task may touch (the `Likely Files` plus the stubs) into `run-dir/reviewed/`. This is
+the reviewed baseline. The review diff is the difference between `run-dir/reviewed/` and
+the working tree, for every non-guarded file the implementer reports changing (also
+check `git status --porcelain` when in git). Produce it with
+`git diff --no-index -- run-dir/reviewed/<path> <path>` or `diff -u`. For a changed file
+with no baseline copy, use `git diff -- <path>` if it's tracked (and copy its
+pre-change version from `git show HEAD:<path>` into the baseline). Otherwise, include its
+full content. After every **clean** review, refresh `run-dir/reviewed/` with the
+current versions of those files.
+
 **Guard check, after every implementer invocation (here and in Phases 6–7):**
-1. Re-expand `guard-globs.txt`, recompute the hashes, and diff against
-   `manifest.sha256`. Any file that is changed, deleted, or **new** (a match that's not in
-   the manifest) is a violation.
-2. Also scan the task's test files for skip/only markers (`skip`, `xit`, `xdescribe`,
-   `.only`, `@pytest.mark.skip`, `t.Skip`, and the equivalents in this framework).
-3. On any violation: restore from `run-dir/locked/`, delete the new files, log the
-   incident for the report, and re-delegate with a reminder of the rule.
+1. **Guarded files:** re-expand `guard-globs.txt` (same filters as 4a), recompute the
+   hashes, and diff against `manifest.sha256`. A changed or deleted file is a
+   violation. So is a **new** match, if the implementer's own file list or the
+   timestamps show it created the file. A file produced by one of your own test runs is
+   not a violation: rehash right after each of your runs and investigate where any
+   new match came from instead of assuming.
+2. **Mixed config files:** diff each against its copy in `run-dir/locked/`. A change
+   inside a listed test section is a violation. Other changes (for example adding a
+   dependency) are allowed. Log them and include them in the review diff.
+3. On any violation: restore the guarded file or the test section from
+   `run-dir/locked/`. Move (never delete) an implementer-created new match into
+   `run-dir/quarantine/`. Log the incident for the report, and re-delegate with a
+   reminder of the rule.
 
 ## Phase 6 — Review the code (three passes, then verify)
 
 Three passes **in order**, each a fresh `tdd-code-reviewer` invocation with one focus.
-Include the task file path, the locked test paths, and the current diff. After each pass,
+Include the task file path, the locked test paths, and the review diff. After each pass,
 send its blocking findings to `tdd-implementer` to fix (guard check afterward), then start
 the next pass on the fixed code.
 
@@ -255,8 +296,7 @@ modify tests. They review code as written.
 
 Keep one flag, **`unreviewed`**:
 - It starts `false` (Phase 6 ended clean).
-- It becomes `true` whenever the implementer changes code or a test changes through the
-  test-change procedure.
+- It becomes `true` whenever the implementer changes code.
 - It becomes `false` only when a code review of those changes comes back clean.
 
 Repeat. **Cap: 5 cycles** (one cycle = one run of step 1).
@@ -280,8 +320,8 @@ Repeat. **Cap: 5 cycles** (one cycle = one run of step 1).
 
    Then go back to step 1.
 3. **If everything passes and `unreviewed` is set**, run a `tdd-code-reviewer` pass with
-   all three focuses, scoped to the changes since the last clean review (paste that
-   diff). If it's clean, clear `unreviewed` and go to step 4. Nothing changed since the
+   all three focuses, scoped to the review diff (the changes since the last clean
+   review). If it's clean, clear `unreviewed` and go to step 4. Nothing changed since the
    passing run. If it's blocking, delegate the fixes to `tdd-implementer` (run the guard
    check, keep `unreviewed` set) and go back to step 1: modified code always gets its
    tests run again.
@@ -296,18 +336,26 @@ Repeat. **Cap: 5 cycles** (one cycle = one run of step 1).
 2. If the right behavior isn't obvious from the spec, ask the user.
 3. Delegate the change to `tdd-test-author`, then run one `tdd-test-reviewer`
    verification pass (accuracy + adversarial) on the changed tests.
-4. Lock again (4a: update the manifest and `run-dir/locked/`). Log the change (test,
-   reason, before/after summary) for the report. Set `unreviewed` so the loop reruns the
-   tests and reviews.
+4. Before locking again, diff the guard against the manifest and the mixed-config
+   copies. Only the files named in step 1 may have changed. Any other change is an
+   incident: restore it and log it. Also check the changed tests for real skip or
+   only-marker syntax (`@pytest.mark.skip`, `pytest.skip(`, `it.skip(`, `describe.skip(`,
+   `.only(`, `xit(`, `xdescribe(`, `t.Skip(`, or the framework's equivalent). Any such
+   marker is rejected.
+5. Lock again (4a: update the manifest and `run-dir/locked/`). Log the change (test,
+   reason, before/after summary) for the report. Return to Phase 7 step 1, so the tests
+   rerun against the changed test.
 
 ## Phase 8 — Integrity check
 
 All of the following must hold, otherwise return to Phase 7 (this counts against
 Phase 7's cycle cap):
 
-- The guard hashes match the final manifest, with no new files matching the guard globs.
-  Every manifest change has a logged test change behind it.
-- No skip or only-markers in the task's test files. No test file was deleted.
+- The guard hashes match the final manifest, with no unexplained new matches. The test
+  sections of mixed config files match their locked copies. Every manifest change has a
+  logged test change behind it.
+- No skip or only-marker syntax (as listed in the test-change procedure) in the task's
+  test files. No test file was deleted.
 - Every `TC-n` and every row of the final matrix exists as a test, and every one passes.
 - The full suite passes apart from the pre-existing failures recorded in Phase 0.
 - `unreviewed` is clear.
@@ -331,7 +379,8 @@ Write `<task-dir>/T<NN>-<slug>.report.md` with these sections:
 - **Code review:** findings per pass and how each was resolved.
 - **Test-fix cycles:** the number of cycles, with the failures, diagnoses and reviews
   for each.
-- **Test changes and guard incidents:** each change with its reason, or "none".
+- **Test changes and guard incidents:** each change with its reason, quarantined files,
+  and allowed mixed-config changes (for example new dependencies), or "none".
 - **Pre-existing suite failures:** or "none".
 - **Caps hit and decisions:** or "none".
 - **Remaining risks / follow-ups.**

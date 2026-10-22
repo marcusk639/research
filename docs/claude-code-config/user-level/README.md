@@ -32,7 +32,8 @@ delete the old copy from `~/.claude/` by hand.
 plan ──/tdd-task-breakdown──▶ tasks/T01..Tnn + INDEX.md
 task ──/tdd-implement-task──▶ understand → clarify → tests → 3× test review
      → lock + confirm failing → code → 3× code review
-     → [run tests → fix code → rerun … → review changes → rerun]* → integrity check → report
+     → [run tests → fix code → rerun … → review changes (blocking → fix → rerun)]*
+     → integrity check → report
 ```
 
 `/tdd-implement-task` must run in the main session (subagents can't spawn
