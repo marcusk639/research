@@ -68,3 +68,15 @@ subject is written to `<subject>/.remember/remember.md`.
 - `.remember/logs/` and `.remember/tmp/` are tooling state — do not edit by hand.
 - Write session handoffs to the path the session-start hook reports, not elsewhere.
 - A subject dir containing only `.remember/` (no `REPORT.md`) is hook state, not a real subject yet — safe to scaffold into.
+
+## Task-memory learnings (`.serena/memories/`)
+
+The user-level task-memory hooks (`docs/claude-code-config/task-memory-hooks/`) append
+project learnings to `.serena/memories/learnings/<YYYY-MM>.md`. Commit these. Before each
+commit, check the state of the current branch's pull request:
+
+- **Open PR** — commit and push to that branch.
+- **Merged or closed PR** — never add to it. Restart the branch from the latest `main`
+  (`git fetch origin main && git checkout -B <branch> origin/main`), commit the learnings,
+  push, and open a new PR for them.
+- **No PR yet** — commit to the current branch; the learnings ship with its PR.
